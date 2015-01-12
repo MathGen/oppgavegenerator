@@ -24,16 +24,7 @@ def index(request):
         answer = number1 - number2
 
     question = "hva er " + str(number1) + " " + operators[opNumber] + " " + str(number2)
-    context_dict = {'title': "spaghetti", 'question' : question, 'answer' : str(answer)}
 
-    # Return a rendered response to send to the client.
-    # We make use of the shortcut function to make our lives easier.
-    # Note that the first parameter is the template we wish to use.
-    return render_to_response('Index', context_dict, context)
-
-def answers(request):
-    context = RequestContext(request)
-    context_dict = {'title': "spaghetti"}
 
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -41,11 +32,27 @@ def answers(request):
         # check whether it's valid:
         if form.is_valid():
             # process the data in form.cleaned_data as required
-            # ...
+            user_answer = str(form.process())
+
             # redirect to a new URL:
-            return HttpResponseRedirect('/answers/', context_dict, context)
+            context_dict = {'title': "spaghetti", 'question' : question, 'answer' : str(answer), 'user_answer' : user_answer}
+            return render_to_response('answers', context_dict, context)
+    else:
+      form = QuestionForm()
+    context_dict = {'title': "spaghetti", 'question' : question, 'answer' : str(answer), 'form' : form}
+    return render_to_response('Index', context_dict, context)
+
+def answers(request, context_dict, cont):
+    context = RequestContext(request)
+    context = cont
+    context_dict2 = context_dict
+
+
 
     return render_to_response('answers', context_dict, context)
 
 class QuestionForm(forms.Form):
     question = forms.CharField(label='question', max_length=100)
+    def process(self):
+        cd =  self.cleaned_data['question']
+        return cd

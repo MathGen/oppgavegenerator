@@ -6,7 +6,7 @@
 <h1> {{ question }}</h1>
 <form action="/index/" method="post">
 {% csrf_token %}
-<input id="user_answer" type="text" name="user_answer" value="">
+{{ form }}
     <input type="submit" value="Svar">
 <form>
 
