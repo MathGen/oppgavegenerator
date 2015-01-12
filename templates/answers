@@ -3,7 +3,7 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-<h1> {{ question }}</h1>
-<input type="text"/><button class="btn">button</button>
+<h1>{{ answer }}</h1>
+
 
 {% endblock %}
