@@ -46,7 +46,7 @@ def index(request):
        form.fields["answer"].initial = str(answer)
 
     context_dict = {'title': "spaghetti", 'question' : question, 'answer' : str(answer), 'form' : form}
-    return render_to_response('', context_dict, context)
+    return render_to_response('index', context_dict, context)
 
 
 class QuestionForm(forms.Form):
