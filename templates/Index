@@ -4,6 +4,10 @@
 
 {% block content %}
 <h1> {{ question }}</h1>
-<input type="text"/><button class="btn">button</button>
+<form action="/index/" method="post">
+{% csrf_token %}
+<input id="user_answer" type="text" name="user_answer" value="">
+    <input type="submit" value="Svar">
+<form>
 
 {% endblock %}
