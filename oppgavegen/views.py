@@ -24,21 +24,23 @@ def index(request):
         answer = number1 - number2
 
     question = "hva er " + str(number1) + " " + operators[opNumber] + " " + str(number2)
-
-
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = QuestionForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            user_answer = str(form.process())
+            form_values = form.process()
+            user_answer = form_values[0]
+            answer = form_values[1]
 
             # redirect to a new URL:
             context_dict = {'title': "spaghetti", 'question' : question, 'answer' : str(answer), 'user_answer' : user_answer}
             return render_to_response('answers', context_dict, context)
     else:
-      form = QuestionForm()
+       form = QuestionForm()
+       form.fields["answer"].initial = str(answer)
+
+
     context_dict = {'title': "spaghetti", 'question' : question, 'answer' : str(answer), 'form' : form}
     return render_to_response('Index', context_dict, context)
 
@@ -52,7 +54,9 @@ def answers(request, context_dict, cont):
     return render_to_response('answers', context_dict, context)
 
 class QuestionForm(forms.Form):
-    question = forms.CharField(label='question', max_length=100)
+    question = forms.CharField(label='', max_length=100)
+    answer = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=100)
+
     def process(self):
-        cd =  self.cleaned_data['question']
+        cd =  [self.cleaned_data['question'], self.cleaned_data['answer']]
         return cd
