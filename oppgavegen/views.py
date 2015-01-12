@@ -16,12 +16,14 @@ def index(request):
     context = RequestContext(request)
     number1 = randint(0,10)
     number2 = randint(0,10)
-    operators = ["+", "-"]
-    opNumber = randint(0,1)
+    operators = ["+", "-", "*"]
+    opNumber = randint(0,2)
     if opNumber == 0:
         answer = number1 + number2
-    else:
+    elif opNumber == 1:
         answer = number1 - number2
+    else:
+        answer = number1 * number2
 
     question = "hva er " + str(number1) + " " + operators[opNumber] + " " + str(number2)
     if request.method == 'POST':
@@ -32,9 +34,12 @@ def index(request):
             form_values = form.process()
             user_answer = form_values[0]
             answer = form_values[1]
-
+            if user_answer == answer:
+                answer_text = "Du har svart riktig!"
+            else:
+                answer_text = "Du har svart feil. Riktig svar er: " + str(answer)
             # redirect to a new URL:
-            context_dict = {'title': "spaghetti", 'question' : question, 'answer' : str(answer), 'user_answer' : user_answer}
+            context_dict = {'title': "spaghetti", 'question' : question, 'answer' : answer_text, 'user_answer' : user_answer}
             return render_to_response('answers', context_dict, context)
     else:
        form = QuestionForm()
@@ -44,14 +49,6 @@ def index(request):
     context_dict = {'title': "spaghetti", 'question' : question, 'answer' : str(answer), 'form' : form}
     return render_to_response('Index', context_dict, context)
 
-def answers(request, context_dict, cont):
-    context = RequestContext(request)
-    context = cont
-    context_dict2 = context_dict
-
-
-
-    return render_to_response('answers', context_dict, context)
 
 class QuestionForm(forms.Form):
     question = forms.CharField(label='', max_length=100)

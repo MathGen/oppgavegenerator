@@ -4,6 +4,6 @@
 
 {% block content %}
 <h1>{{ answer }}</h1>
-<h2> {{ user_answer }} </h2>
+
 
 {% endblock %}
