@@ -45,3 +45,14 @@ def checkAnswer(user_answer, answer):
         string = "Du har svart feil. Svaret er: " + str(answer)
 
     return string
+
+def algebra2():
+    x = randint(0,6)
+    a = randint(1,10)
+    b = randint(1,10)
+    c = randint(1,10)
+    d = randint(1,10)
+    n = randint(1,3)
+
+
+
