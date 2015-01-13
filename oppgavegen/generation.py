@@ -16,7 +16,8 @@ def arithmetics():
         answer = number1 - number2
     else:
         answer = number1 * number2
-    arr = [number1,number2,answer, operators[opNumber]]
+    string = "Hva er " + str(number1) + " " + operators[opNumber] + " " + str(number2) + "?"
+    arr = [string, answer]
     return arr
 
 def algebra():
@@ -33,5 +34,14 @@ def algebra():
         b = (n*x)+a
     else:
         b = (n*x)-a
-    arr = [x, n, a, b, operators[opNumber]]
+    string = str(n) + "x " + operators[opNumber] + " " + str(a) + " = " + str(b)
+    arr = [string, x]
     return arr
+
+def checkAnswer(user_answer, answer):
+    if user_answer == answer:
+       string = "Du har svart riktig!"
+    else:
+        string = "Du har svart feil. Svaret er: " + str(answer)
+
+    return string

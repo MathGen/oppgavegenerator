@@ -15,19 +15,16 @@ def index(request):
     #template = loader.get_template('index.html')
     context = RequestContext(request)
     arr = generation.arithmetics()
-    answer = str(arr[2])
-    question = "hva er " + str(arr[0]) + " " + arr[3]+ " " + str(arr[1])
+    answer = str(arr[1])
+    question = arr[0]
     if request.method == 'POST':
         form = QuestionForm(request.POST)
         if form.is_valid():
             form_values = form.process()
             user_answer = form_values[0]
             answer = form_values[1]
-            if user_answer == answer:
-                answer_text = "Du har svart riktig!"
-            else:
-                answer_text = "Du har svart feil. Riktig svar er: " + answer
-            # redirect to a new URL:
+
+            answer_text = generation.checkAnswer(user_answer,answer)
             context_dict = {'title': "spaghetti", 'question' : question, 'answer' : answer_text, 'user_answer' : user_answer}
             return render_to_response('answers', context_dict, context)
     else:
