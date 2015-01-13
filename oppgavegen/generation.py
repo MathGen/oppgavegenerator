@@ -1,5 +1,5 @@
 from random import randint
-
+from random import sample
 
 def printer():
     string = "Spaghetti"
@@ -100,7 +100,7 @@ def test():
         elif op_number1 == 1 and op_number2 == 0:
             dx = (ax - bx - cx) * x_placement[3]
         else:
-            dx = -(ax - bx - cx) * x_placement[3]
+            dx = -1 * (ax - bx - cx) * x_placement[3]
         d = dx / x_placement[3]
         string = str(a) + "%s" + str(operators[op_number1]) + " " + str(b) + "%s" + "= " + str(c) + "%s" + str(operators[op_number2]) + str(d) + "%s"
         s = string % (x_string[0], x_string[1], x_string[2], x_string[3])
