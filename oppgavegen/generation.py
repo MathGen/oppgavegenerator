@@ -58,9 +58,9 @@ def test():
     v = randint(1, 2)   # antall ledd (venstre)
     h = randint(1, 2)   # antall ledd (høyre)
     vh = 4
-    a = randint(0, 8)
-    b = randint(0, 8)
-    c = randint(0, 8)
+    a = randint(1, 8)
+    b = randint(1, 8)
+    c = randint(1, 8)
     x = randint(2, 6)
     number_of_x = randint(1, vh-1)
     operators = ["+", "-"]
@@ -71,17 +71,17 @@ def test():
     for i in range(0, vh):
         x_placement += [1]
     if number_of_x == 1:
-        i = randint(0, vh)
+        i = randint(0, vh-1)
         x_placement[i] = x
         x_string[i] = "x "
     elif number_of_x == 2:
-        pos = sample(range(0, vh), 2)
+        pos = sample(range(0, vh-1), 2)
         x_placement[pos[0]] = x
         x_placement[pos[1]] = x
         x_string[pos[0]] = "x "
         x_string[pos[1]] = "x "
     else:
-        pos = sample(range(0, vh), 3)
+        pos = sample(range(0, vh-1), 3)
         x_placement[pos[0]] = x
         x_placement[pos[1]] = x
         x_placement[pos[2]] = x
@@ -96,13 +96,13 @@ def test():
         if op_number1 == 0 and op_number2 == 0:
             dx = (ax + bx - cx) * x_placement[3]
         elif op_number1 == 0 and op_number2 == 1:
-            dx = -(ax + bx - cx) * x_placement[3]
+            dx = (-ax - bx + cx) * x_placement[3]
         elif op_number1 == 1 and op_number2 == 0:
             dx = (ax - bx - cx) * x_placement[3]
         else:
-            dx = -1 * (ax - bx - cx) * x_placement[3]
-        d = dx / x_placement[3]
-        string = str(a) + "%s" + str(operators[op_number1]) + " " + str(b) + "%s" + "= " + str(c) + "%s" + str(operators[op_number2]) + str(d) + "%s"
+            dx = (-ax + bx + cx) * x_placement[3]
+        d = dx
+        string = str(a) + "%s" + str(operators[op_number1]) + " " + str(b) + "%s" + "= " + str(c) + "%s" + str(operators[op_number2]) + " " + str(d) + "%s"
         s = string % (x_string[0], x_string[1], x_string[2], x_string[3])
 
     arr = [s, x]

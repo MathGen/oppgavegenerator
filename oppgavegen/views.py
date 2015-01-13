@@ -14,7 +14,7 @@ from oppgavegen import generation
 def index(request):
     #template = loader.get_template('index.html')
     context = RequestContext(request)
-    arr = generation.arithmetics()
+    arr = generation.test()
     answer = str(arr[1])
     question = arr[0]
     if request.method == 'POST':
