@@ -53,7 +53,7 @@ def test():
     # a + bx = c
     # a + b = cx
     # a + bx = cx
-    # a + b = c + d
+    # a + b = c + dx
 
     v = randint(1, 2)   # antall ledd (venstre)
     h = randint(1, 2)   # antall ledd (høyre)
