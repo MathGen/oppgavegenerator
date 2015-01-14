@@ -1,5 +1,6 @@
 from random import randint
 from random import sample
+from oppgavegen.nsp import NumericStringParser
 
 def printer():
     string = "Spaghetti"
@@ -112,5 +113,11 @@ def algebra():
     arr = [s, x]
     return arr
 
-
+def pypartest():
+    string = "4^2"
+    nsp = NumericStringParser()
+    x=nsp.eval(string)
+    s = "hva er " + string + "?"
+    arr = [s,int(x)]
+    return  arr
 
