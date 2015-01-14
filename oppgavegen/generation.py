@@ -71,16 +71,18 @@ def test():
     for i in range(0, vh):
         x_placement += [1]
     if number_of_x == 1:
-        i = randint(0, vh-1)
+        i = randint(0, vh-2)
         x_placement[i] = x
         x_string[i] = "x "
     elif number_of_x == 2:
+        print(str(vh) + "2x")
         pos = sample(range(0, vh-1), 2)
         x_placement[pos[0]] = x
         x_placement[pos[1]] = x
         x_string[pos[0]] = "x "
         x_string[pos[1]] = "x "
     else:
+        print(str(vh) + " 3x")
         pos = sample(range(0, vh-1), 3)
         x_placement[pos[0]] = x
         x_placement[pos[1]] = x
@@ -88,6 +90,8 @@ def test():
         x_string[pos[0]] = "x "
         x_string[pos[1]] = "x "
         x_string[pos[2]] = "x "
+
+    print (x_string)
 
     ax = a * x_placement[0]
     if vh == 4:
@@ -124,7 +128,7 @@ def test():
 
     if vh == 2:
         b = ax * x_placement[1]
-        string = str(a) + "%s" + "= " + str(b) + "%s"
+        string = str(a) + "%s" + "= " + str(b)  + "%s"
         s = string % (x_string[0], x_string[1])
 
     arr = [s, x]
