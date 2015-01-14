@@ -57,7 +57,7 @@ def test():
 
     v = randint(1, 2)   # antall ledd (venstre)
     h = randint(1, 2)   # antall ledd (høyre)
-    vh = 4
+    vh = v+h
     a = randint(1, 8)
     b = randint(1, 8)
     c = randint(1, 8)
@@ -94,16 +94,38 @@ def test():
         bx = b * x_placement[1]
         cx = c * x_placement[2]
         if op_number1 == 0 and op_number2 == 0:
-            dx = (ax + bx - cx) * x_placement[3]
+            d = (ax + bx - cx) * x_placement[3]
         elif op_number1 == 0 and op_number2 == 1:
-            dx = (-ax - bx + cx) * x_placement[3]
+            d = (-ax - bx + cx) * x_placement[3]
         elif op_number1 == 1 and op_number2 == 0:
-            dx = (ax - bx - cx) * x_placement[3]
+            d = (ax - bx - cx) * x_placement[3]
         else:
-            dx = (-ax + bx + cx) * x_placement[3]
-        d = dx
+            d = (-ax + bx + cx) * x_placement[3]
         string = str(a) + "%s" + str(operators[op_number1]) + " " + str(b) + "%s" + "= " + str(c) + "%s" + str(operators[op_number2]) + " " + str(d) + "%s"
         s = string % (x_string[0], x_string[1], x_string[2], x_string[3])
+
+    if vh == 3:
+        bx = b * x_placement[1]
+        m = randint(0, 1)
+        if m == 0:
+            if op_number1 == 0:
+                c = (ax + bx) * x_placement[2]
+            else:
+                c = (ax - bx) * x_placement[2]
+            string = str(a) + "%s" + str(operators[op_number1]) + " " + str(b) + "%s" + "= " + str(c) + "%s"
+            s = string % (x_string[0], x_string[1], x_string[2])
+        else:
+            if op_number1 == 0:
+                c = (ax - bx) * x_placement[2]
+            else:
+                c = (-ax + bx) * x_placement[2]
+            string = str(a) + "%s" + "= " + str(b) + "%s" + str(operators[op_number1]) + " " + str(c) + "%s"
+            s = string % (x_string[0], x_string[1], x_string[2])
+
+    if vh == 2:
+        b = ax * x_placement[1]
+        string = str(a) + "%s" + "= " + str(b) + "%s"
+        s = string % (x_string[0], x_string[1])
 
     arr = [s, x]
     return arr
