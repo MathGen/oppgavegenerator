@@ -55,17 +55,17 @@ def test():
     # a + bx = cx
     # a + b = c + dx
 
-    v = randint(1, 2)   # antall ledd (venstre)
-    h = randint(1, 2)   # antall ledd (høyre)
-    vh = v+h
-    a = randint(1, 8)
-    b = randint(1, 8)
-    c = randint(1, 8)
-    x = randint(2, 6)
-    number_of_x = randint(1, vh-1)
+    v = randint(1, 2)                   # number of terms (left)
+    h = randint(1, 2)                   # number of terms (right)
+    vh = v+h                            # number of terms (total)
+    a = randint(1, 8)                   # term a
+    b = randint(1, 8)                   # term b
+    c = randint(1, 8)                   # term c
+    x = randint(2, 6)                   # given x
+    number_of_x = randint(1, vh-1)      # amount of x
     operators = ["+", "-"]
-    op_number1 = randint(0, 1)
-    op_number2 = randint(0, 1)
+    op_number1 = randint(0, 1)          # first operator
+    op_number2 = randint(0, 1)          # second operator
     x_string = [" ", " ", " ", " "]
     x_placement = []
     for i in range(0, vh):
