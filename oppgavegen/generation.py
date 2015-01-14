@@ -73,8 +73,6 @@ def algebra():
         x_string[pos[1]] = "x "
         x_string[pos[2]] = "x "
 
-    print (x_string)
-
     ax = a * x_placement[0]
     if vh == 4:
         bx = b * x_placement[1]
