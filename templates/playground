@@ -1,0 +1,8 @@
+{% extends "playground.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+Just testing stuff
+
+{% endblock %}

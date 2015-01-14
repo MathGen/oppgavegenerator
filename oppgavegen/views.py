@@ -42,3 +42,7 @@ class QuestionForm(forms.Form):
     def process(self):
         cd =  [self.cleaned_data['question'], self.cleaned_data['answer']]
         return cd
+
+def playground(request):
+    context = RequestContext(request)
+    return render_to_response('playground', context)
