@@ -57,14 +57,12 @@ def algebra():
         x_placement[i] = x
         x_string[i] = "x "
     elif number_of_x == 2:
-        print(str(vh) + "2x")
         pos = sample(range(0, vh-1), 2)
         x_placement[pos[0]] = x
         x_placement[pos[1]] = x
         x_string[pos[0]] = "x "
         x_string[pos[1]] = "x "
     else:
-        print(str(vh) + " 3x")
         pos = sample(range(0, vh-1), 3)
         x_placement[pos[0]] = x
         x_placement[pos[1]] = x
