@@ -20,24 +20,6 @@ def arithmetics():
     arr = [string, answer]
     return arr
 
-def algebra():
-    # 2x + 4 = 10
-    # x = 3
-    # nx + a = b
-
-    x = randint(0,6)
-    n = randint(1,3)
-    a = randint(0,10)
-    operators = ["+", "-"]
-    opNumber = randint(0,1)
-    if opNumber == 0:
-        b = (n*x)+a
-    else:
-        b = (n*x)-a
-    string = str(n) + "x " + operators[opNumber] + " " + str(a) + " = " + str(b)
-    arr = [string, x]
-    return arr
-
 def checkAnswer(user_answer, answer):
     if user_answer == answer:
        string = "Du har svart riktig!"
@@ -46,7 +28,7 @@ def checkAnswer(user_answer, answer):
 
     return string
 
-def test():
+def algebra():
     # ax + b = c
     # ax + b = cx
     # ax + bx = c
