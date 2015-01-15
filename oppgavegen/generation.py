@@ -129,7 +129,8 @@ def altArithmetics():
         for i in range(ledd - 2):
             string+= operators[randint(0,2)] + str(randint(0,10))
     nsp = NumericStringParser()
-    x=nsp.eval(string)
+
+    x= nsp.eval(string)
     s = "hva er " + string + "?"
     arr = [s,int(x)]
     return arr
