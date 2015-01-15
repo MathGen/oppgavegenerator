@@ -14,17 +14,13 @@
         {% block sidebar %}
         <ul>
             <li><a href="/index">Home</a></li>
+            <li><a href="/index?q=aritmetikk">Aritmetikk</a></li>
+            <li><a href="/index?q=algebra">Algebra</a></li>
         </ul>
         {% endblock %}
     </div>
 
-    <div name="category" onchange="{% block dropdown %}'refresh page'{% endblock %}">
-        <select>
-            <option value="arithmetic">Aritmetikk</option>
-            <option value="integration">Integrasjon</option>
-            <option value="algebra">Algebra</option>
-        </select>
-    </div>
+
 
     <div id="content">
         {% block content %}{% endblock %}
