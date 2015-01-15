@@ -121,3 +121,15 @@ def pypartest():
     arr = [s,int(x)]
     return  arr
 
+def altArithmetics():
+    operators = [" + ", " - ", " * "]
+    ledd = randint(2,4)
+    string = str(randint(0,10)) + operators[randint(0,2)] + str(randint(0,10))
+    if ledd > 2:
+        for i in range(ledd - 2):
+            string+= operators[randint(0,2)] + str(randint(0,10))
+    nsp = NumericStringParser()
+    x=nsp.eval(string)
+    s = "hva er " + string + "?"
+    arr = [s,int(x)]
+    return arr
