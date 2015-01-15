@@ -27,9 +27,9 @@ def index(request):
             form_values = form.process()
             user_answer = form_values[0]
             answer = form_values[1]
-
             answer_text = generation.checkAnswer(user_answer,answer)
             context_dict = {'title': "spaghetti", 'question' : question, 'answer' : answer_text, 'user_answer' : user_answer}
+            #make a button on the anbswers page with "generate new question"
             return render_to_response('answers', context_dict, context)
     else:
        form = QuestionForm()

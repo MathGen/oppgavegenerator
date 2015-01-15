@@ -5,5 +5,4 @@
 {% block content %}
 <h1>{{ answer }}</h1>
 
-
 {% endblock %}
