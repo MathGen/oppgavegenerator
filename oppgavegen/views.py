@@ -18,7 +18,7 @@ def index(request):
     if question_type == "algebra":
         arr = generation.algebra()
     else:
-        arr = generation.altArithmetics()
+        arr = generation.sympyTest()
     answer = str(arr[1])
     question = arr[0]
     if request.method == 'POST':

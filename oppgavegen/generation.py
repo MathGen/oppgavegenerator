@@ -1,6 +1,8 @@
 from random import randint
 from random import sample
 from oppgavegen.nsp import NumericStringParser
+from sympy import *
+from sympy.parsing.sympy_parser import (parse_expr, standard_transformations, implicit_multiplication)
 
 def printer():
     string = "Spaghetti"
@@ -134,3 +136,25 @@ def altArithmetics():
     s = "hva er " + string + "?"
     arr = [s,int(x)]
     return arr
+
+def algLosning():
+    oppgave = "5x = 9 + 2x"
+    losning = oppgave + "\n vi flytter over 2x: \n 5x - 2x = 9 \n 3x = 9 \n Vi deler på 3 \n x = 3"
+
+
+
+    arr = 0
+    return arr
+def sympyTest():
+    t = standard_transformations + (implicit_multiplication,) #for sikkerhet, gjør om 2x til 2*x
+
+    x = symbols('x')
+    string = "2x + 4"
+    string2 = "8"
+
+    test = parse_expr(string, transformations = t)
+    test2 = parse_expr(string2,  transformations = t)
+    arr = solve(Eq(test, test2), x)
+    out = [string + " = " + string2, arr[0]]
+
+    return out
