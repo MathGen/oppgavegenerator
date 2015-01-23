@@ -1,0 +1,18 @@
+/* use following colors: http://paletton.com/#uid=10I0u0kdjGP3WXJ8DQyhGvZlGrw */
+body{
+	background-color: #FFD295;
+	padding-top: 65px; /*la til denne for at body ikke skal bli gjemt bak navbar (funker bare hvis navbar er fixed)*/
+	margin-bottom: 80px;
+}
+
+.page-header{
+	margin-top: 0;
+}
+
+.panel-body{
+	padding-top: 0;
+}
+
+.featuredImg{
+	margin-bottom: 15px;
+}
