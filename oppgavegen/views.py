@@ -17,6 +17,8 @@ def index(request):
     question_type = request.GET.get('q', '')
     if question_type == "algebra":
         arr = generation.algebra()
+    elif question_type == "aritmetikk":
+        arr = generation.arithmetics()
     else:
         arr = generation.sympyTest()
     answer = str(arr[1])
@@ -29,7 +31,7 @@ def index(request):
             answer = form_values[1]
             answer_text = generation.checkAnswer(user_answer,answer)
             context_dict = {'title': "spaghetti", 'question' : question, 'answer' : answer_text, 'user_answer' : user_answer}
-            #make a button on the anbswers page with "generate new question"
+            #make a button on the answers page with "generate new question"
             return render_to_response('answers', context_dict, context)
     else:
        form = QuestionForm()
