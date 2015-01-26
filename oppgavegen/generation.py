@@ -1,5 +1,6 @@
 from random import randint
 from random import sample
+from math import ceil
 from oppgavegen.nsp import NumericStringParser
 from sympy import *
 from sympy.parsing.sympy_parser import (parse_expr, standard_transformations, implicit_multiplication)
@@ -138,13 +139,60 @@ def altArithmetics():
     return arr
 
 def algLosning():
-    oppgave = "5x = 9 + 2x"
-    losning = oppgave + "\n vi flytter over 2x: \n 5x - 2x = 9 \n 3x = 9 \n Vi deler på: 3 \n x = 3"
+    oppgave = "r1x = r2 + r3x"
+    oppgavetext = "Løs likninga: r1x = r2 + r3x"
+    verdier = ['r1', 'r2', 'r3']
+    losning = str(oppgave + "\n vi flytter over r3x:\n r1x - r3x = r2\n {r1 - r3}x = r2\n Vi deler på: {r1 - r3}\n x = {r2/(r1-r3)}")
+    #Av en eller annen grunn splitter python strings med \n character..
 
-
-
-    arr = [oppgave, 3, losning]
+    #Replace numbers with random ones
+    #check if numbers make sense
+    valid_losning = False
+    while valid_losning == False:
+        nyLosning = losning
+        nyOppgave = oppgave
+        nyOppgavetext = oppgavetext
+        for i in range(len(verdier)):
+            random_tall = str(randint(1,20))
+            nyOppgave = nyOppgave.replace(verdier[i], random_tall)
+           # nyOppgavetext = nyOppgavetext.replace(verdier[i], random_tall)
+            nyLosning = nyLosning.replace(verdier[i], random_tall)
+        t = standard_transformations + (implicit_multiplication,) #for sikkerhet, gjør om 2x til 2*x
+        x = symbols('x')
+        #nyttSvar = parse_expr(nyOppgave,  transformations = t)
+        nyttSvar = nyOppgave
+        s = nyttSvar.split('=')
+        s[0] = parse_expr(s[0], transformations = t)
+        s[1] = parse_expr(s[1], transformations = t)
+        nyttSvar = solve(Eq(s[0], s[1]), x)
+        if nyttSvar != []:
+           if nyttSvar[0] == ceil(nyttSvar[0]): #Sjekker om det er desimaler
+                valid_losning = True
+    nyLosning = parseLosning(nyLosning)
+    arr = [nyLosning, nyttSvar[0]]
     return arr
+
+def parseLosning(losning):
+    arr = []
+    nsp = NumericStringParser()
+    newArr = []
+    opptak = False
+    nylosning = losning
+    for c in losning:
+        if c == '{':
+            opptak = True
+            s = ''
+        elif c == '}':
+            opptak = False
+            arr.append(s)
+        elif opptak == True:
+            s += c
+    for x in range(len(arr)):
+        newArr.append(str(int(nsp.eval(arr[x]))))
+        print(newArr[x])
+        r = '{' + arr[x] + '}'
+        nylosning = nylosning.replace(r, newArr[x])
+    return nylosning
 def sympyTest():
     t = standard_transformations + (implicit_multiplication,) #for sikkerhet, gjør om 2x til 2*x
 

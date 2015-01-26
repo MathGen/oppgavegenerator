@@ -3,7 +3,7 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-<h1> {{ question }}</h1>
+ {{ question|linebreaks }}
 <form action="/index/" method="post">
 {% csrf_token %}
 {{ form }}
