@@ -139,11 +139,11 @@ def altArithmetics():
 
 def algLosning():
     oppgave = "5x = 9 + 2x"
-    losning = oppgave + "\n vi flytter over 2x: \n 5x - 2x = 9 \n 3x = 9 \n Vi deler på 3 \n x = 3"
+    losning = oppgave + "\n vi flytter over 2x: \n 5x - 2x = 9 \n 3x = 9 \n Vi deler på: 3 \n x = 3"
 
 
 
-    arr = 0
+    arr = [oppgave, 3, losning]
     return arr
 def sympyTest():
     t = standard_transformations + (implicit_multiplication,) #for sikkerhet, gjør om 2x til 2*x
