@@ -16,3 +16,15 @@ body{
 .featuredImg{
 	margin-bottom: 15px;
 }
+
+.input_fields_wrap{
+	margin-bottom: 10px;
+}
+
+.input_fields_test{
+	margin-bottom: 10px;
+}
+
+.test_field{
+	margin-top: 5px;
+}

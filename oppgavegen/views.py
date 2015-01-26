@@ -52,3 +52,7 @@ class QuestionForm(forms.Form):
 def playground(request):
     context = RequestContext(request)
     return render_to_response('playground', context)
+
+def test(request):
+    context = RequestContext(request)
+    return render_to_response('test.html', context)
