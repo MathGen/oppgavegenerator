@@ -28,3 +28,25 @@ body{
 .test_field{
 	margin-top: 5px;
 }
+
+.button_menu_mal{
+	margin-top: 5px;
+}
+
+.btn{
+	margin-bottom: 5px;
+}
+
+.input_content_var{
+	font-size: 3.5em;
+	color: #D9534F;
+}
+
+.input_content_x{
+	font-size: 3.5em;
+	color: #F0AD4E;
+}
+
+.input_content_op{
+	font-size: 3em;
+}
