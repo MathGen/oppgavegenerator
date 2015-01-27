@@ -21,7 +21,7 @@ $(document).ready(function() {
 	var max_fields      		= 20; //maximum input boxes allowed
 	var wrapper         		= $(".input_fields_test"); //Fields wrapper
 	var add_button_text   		= $(".add_field_button_text"); //Add button ID
-	var add_button_var			= $(".add_field_button_var");
+	var add_button_var			= $(".add_field_button_var");  //Add button ID
 	var add_button_equal		= $(".add_field_button_equal");
 	var add_button_addition 	= $(".add_field_button_addition");
 	var add_button_subtraction	= $(".add_field_button_subtraction");
