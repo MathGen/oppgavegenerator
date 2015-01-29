@@ -175,7 +175,7 @@ def algSolution(): #Skriv mer generell løsning der løsningsforslaget brukes so
     return arr
 
 def task_with_solution():
-    decimal_allowed = False #Boolean for if the answer is required to be a integer
+    decimal_allowed = True #Boolean for if the answer is required to be a integer
     zero_allowed = False #Boolean for om 0 er et lovlig svar eller ikke
     task = "r1x = r2 + r3x" #The task
     task_text = "Løs likninga: r1x = r2 + r3x" #the text of the task
@@ -183,11 +183,14 @@ def task_with_solution():
     solution = str(task + "\n vi flytter over r3x:\n r1x - r3x = r2\n {r1 - r3}x = r2\n Vi deler på: {r1 - r3}\n x = {r2/(r1-r3)}") #Solution for the task
     oppgave2 = "r1 = r2x + r3"
     solution2 = str("\n Vi flytter over r3: \n r1 - r3 = r2x\n {r1 - r3} = r2x \n Vi deler på: r2 \n x = {(r1-r3)/r2}")
-    #task3 = integral oppgave \o/
-
+    task3 = "integrate(r1*x*sin(r2*x) dx" #husk pluss C
+    solution_task3 = str(task3 + "\n Bruker delvis integrasjon: \n integral(uv') dx = uv - integral(u'v) dx) \n setter: u = r1*x og v' = sin(r2*x) \n"
+                                 + "da blir: u' = r1 og v = -1/r2 cos(r2*x \n integrate(r1*x*sin(r2*x) dx = \n -(r1*x)/r2*cos(r2*x) - integrate(-1/r2*cos(r2*x))dx = \n"
+                                 + "-(r1*x)/r2*cos(r2*x) + 1/r2*integrate(cos(r2*x)) dx =\n {-(r1*x/r2)*cos(r2*x) + 1/(r2*r2)*sin(r2*x)} + C")
+    answer_task3 = 'r1*1(r2*r2)*sin(r2*x)-r1*x/r2*cos(r2*x)'
     valid_solution = False
     while valid_solution == False:
-        new_solution = solution
+        new_solution = solution #solution
         new_Oppgave = task
         new_Oppgavetext = task_text
         for i in range(len(variables)):
@@ -197,15 +200,21 @@ def task_with_solution():
             new_solution = new_solution.replace(variables[i], random_tall)
         new_Answer = getAnswerFromSolution(new_solution)
         valid_solution = validateSolution(new_Answer, decimal_allowed,zero_allowed)
-        if (decimal_allowed == False and valid_solution == True) or new_Answer == ceil(new_Answer): #Remove float status if the number is supposed to be a integer
-            print("wtf")
-            new_Answer = int(new_Answer)
+        if  '/' not in str(new_Answer) and 'cos' not in str(new_Answer) and 'sin' not in str(new_Answer) and 'tan' not in str(new_Answer):
+            if ((decimal_allowed == False and valid_solution == True) or (new_Answer == ceil(new_Answer))): #Remove float status if the number is supposed to be a integer
+                print("wtf")
+                new_Answer = int(new_Answer)
 
     new_solution = parseSolution(new_solution)
     arr = [new_solution, new_Answer]
     return arr
 def validateSolution(answer, decimal_allowed, zero_allowed):
-    decimal_answer = checkForDecimal(answer)
+
+    if  '/' not in str(answer) and 'cos' not in str(answer) and 'sin' not in str(answer) and 'tan' not in str(answer):
+        print('wtf: ' + str(answer))
+        decimal_answer = checkForDecimal(answer)
+    else:
+        decimal_answer = True
     contains_zero = answer == 0
     valid_solution = True
     if decimal_answer == True and decimal_allowed == False:
@@ -227,9 +236,9 @@ def getAnswerFromSolution(s):
             answer = c + answer
     return  #If this returns there is no calculations in the solution given, do some error handling
 def calculateAnswer(s):
-    s = sympify(s) #lag exception for Zoo (complex infinity)
-    s = RR(s)
-    s = round(s, 3)
+    s = sympify(s) #todo: lag exception for Zoo (complex infinity) og uendelig
+    #s = RR(s)
+    #s = round(s, 3)
     print(s)
     return s
 def parseSolution(solution):
@@ -238,7 +247,7 @@ def parseSolution(solution):
     newArr = []
     opptak = False
     new_solution = solution
-    for c in solution: #itererer igjennom alle tegn i stringen liste
+    for c in solution:
         if c == '{':
             opptak = True
             s = ''
@@ -248,7 +257,7 @@ def parseSolution(solution):
         elif opptak == True:
             s += c
     for x in range(len(arr)):
-        newArr.append(str(int(nsp.eval(arr[x]))))
+        newArr.append(str(simplify(arr[x])))
         #print(newArr[x])
         r = '{' + arr[x] + '}'
         new_solution = new_solution.replace(r, newArr[x])
