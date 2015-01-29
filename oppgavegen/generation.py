@@ -1,3 +1,4 @@
+
 from random import randint
 from random import sample
 from math import ceil
@@ -138,47 +139,106 @@ def altArithmetics():
     arr = [s,int(x)]
     return arr
 
-def algLosning():
+def algSolution(): #Skriv mer generell løsning der løsningsforslaget brukes som mal
+    #decimal = True/False
     oppgave = "r1x = r2 + r3x"
     oppgavetext = "Løs likninga: r1x = r2 + r3x"
     verdier = ['r1', 'r2', 'r3']
-    losning = str(oppgave + "\n vi flytter over r3x:\n r1x - r3x = r2\n {r1 - r3}x = r2\n Vi deler på: {r1 - r3}\n x = {r2/(r1-r3)}")
-    #Av en eller annen grunn splitter python strings med \n character..
+    solution = str(oppgave + "\n vi flytter over r3x:\n r1x - r3x = r2\n {r1 - r3}x = r2\n Vi deler på: {r1 - r3}\n x = {r2/(r1-r3)}")
+    oppgave2 = "r1 = r2x + r3"
+    solution2 = str("\n Vi flytter over r3: \n r1 - r3 = r2x\n {r1 - r3} = r2x \n Vi deler på: r2 \n x = {(r1-r3)/r2}")
 
-    #Replace numbers with random ones
-    #check if numbers make sense
-    valid_losning = False
-    while valid_losning == False:
-        nyLosning = losning
-        nyOppgave = oppgave
-        nyOppgavetext = oppgavetext
+    #Av en eller annen grunn splitter python strings med \n character.
+    valid_solution = False
+    while valid_solution == False:
+        new_solution = solution
+        new_Oppgave = oppgave
+        new_Oppgavetext = oppgavetext
         for i in range(len(verdier)):
             random_tall = str(randint(1,20))
-            nyOppgave = nyOppgave.replace(verdier[i], random_tall)
-           # nyOppgavetext = nyOppgavetext.replace(verdier[i], random_tall)
-            nyLosning = nyLosning.replace(verdier[i], random_tall)
+            new_Oppgave = new_Oppgave.replace(verdier[i], random_tall)
+           # new_Oppgavetext = new_Oppgavetext.replace(verdier[i], random_tall)
+            new_solution = new_solution.replace(verdier[i], random_tall)
         t = standard_transformations + (implicit_multiplication,) #for sikkerhet, gjør om 2x til 2*x
         x = symbols('x')
-        #nyttSvar = parse_expr(nyOppgave,  transformations = t)
-        nyttSvar = nyOppgave
-        s = nyttSvar.split('=')
+        #new_Answer = parse_expr(new_Oppgave,  transformations = t)
+        new_Answer = new_Oppgave
+        s = new_Answer.split('=')
         s[0] = parse_expr(s[0], transformations = t)
         s[1] = parse_expr(s[1], transformations = t)
-        nyttSvar = solve(Eq(s[0], s[1]), x)
-        if nyttSvar != []:
-           if nyttSvar[0] == ceil(nyttSvar[0]): #Sjekker om det er desimaler
-                valid_losning = True
-    nyLosning = parseLosning(nyLosning)
-    arr = [nyLosning, nyttSvar[0]]
+        new_Answer = solve(Eq(s[0], s[1]), x)
+        if new_Answer != []: #Sjekker om new_Answer inneholder svar.
+           if new_Answer[0] == ceil(new_Answer[0]): #Sjekker om det er desimaler
+                valid_solution = True
+    new_solution = parseSolution(new_solution)
+    arr = [new_solution, new_Answer[0]]
     return arr
 
-def parseLosning(losning):
+def task_with_solution():
+    decimal_allowed = False #Boolean for if the answer is required to be a integer
+    zero_allowed = False #Boolean for om 0 er et lovlig svar eller ikke
+    task = "r1x = r2 + r3x" #The task
+    task_text = "Løs likninga: r1x = r2 + r3x" #the text of the task
+    variables = ['r1', 'r2', 'r3'] #The variables used in the task
+    solution = str(task + "\n vi flytter over r3x:\n r1x - r3x = r2\n {r1 - r3}x = r2\n Vi deler på: {r1 - r3}\n x = {r2/(r1-r3)}") #Solution for the task
+    oppgave2 = "r1 = r2x + r3"
+    solution2 = str("\n Vi flytter over r3: \n r1 - r3 = r2x\n {r1 - r3} = r2x \n Vi deler på: r2 \n x = {(r1-r3)/r2}")
+    #task3 = integral oppgave \o/
+
+    valid_solution = False
+    while valid_solution == False:
+        new_solution = solution
+        new_Oppgave = task
+        new_Oppgavetext = task_text
+        for i in range(len(variables)):
+            random_tall = str(randint(1,20))
+            new_Oppgave = new_Oppgave.replace(variables[i], random_tall)
+           # new_Oppgavetext = new_Oppgavetext.replace(verdier[i], random_tall)
+            new_solution = new_solution.replace(variables[i], random_tall)
+        new_Answer = getAnswerFromSolution(new_solution)
+        valid_solution = validateSolution(new_Answer, decimal_allowed,zero_allowed)
+        if (decimal_allowed == False and valid_solution == True) or new_Answer == ceil(new_Answer): #Remove float status if the number is supposed to be a integer
+            print("wtf")
+            new_Answer = int(new_Answer)
+
+    new_solution = parseSolution(new_solution)
+    arr = [new_solution, new_Answer]
+    return arr
+def validateSolution(answer, decimal_allowed, zero_allowed):
+    decimal_answer = checkForDecimal(answer)
+    contains_zero = answer == 0
+    valid_solution = True
+    if decimal_answer == True and decimal_allowed == False:
+        valid_solution = False
+    if contains_zero == True and zero_allowed == False:
+        valid_solution = False
+    return valid_solution
+def checkForDecimal(f):
+    return False if f == ceil(f) else True #Returns false if f doesn't have a decimal
+def getAnswerFromSolution(s):
+    answer = ''
+    record = False
+    for c in s[::-1]:
+        if c == '}':
+            record = True
+        elif c == '{':
+            return calculateAnswer(answer)
+        elif record == True:
+            answer = c + answer
+    return  #If this returns there is no calculations in the solution given, do some error handling
+def calculateAnswer(s):
+    s = sympify(s) #lag exception for Zoo (complex infinity)
+    s = RR(s)
+    s = round(s, 3)
+    print(s)
+    return s
+def parseSolution(solution):
     arr = []
     nsp = NumericStringParser()
     newArr = []
     opptak = False
-    nylosning = losning
-    for c in losning:
+    new_solution = solution
+    for c in solution: #itererer igjennom alle tegn i stringen liste
         if c == '{':
             opptak = True
             s = ''
@@ -189,10 +249,10 @@ def parseLosning(losning):
             s += c
     for x in range(len(arr)):
         newArr.append(str(int(nsp.eval(arr[x]))))
-        print(newArr[x])
+        #print(newArr[x])
         r = '{' + arr[x] + '}'
-        nylosning = nylosning.replace(r, newArr[x])
-    return nylosning
+        new_solution = new_solution.replace(r, newArr[x])
+    return new_solution
 def sympyTest():
     t = standard_transformations + (implicit_multiplication,) #for sikkerhet, gjør om 2x til 2*x
 

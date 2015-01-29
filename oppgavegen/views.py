@@ -20,7 +20,7 @@ def index(request):
     elif question_type == "aritmetikk":
         arr = generation.arithmetics()
     else:
-        arr = generation.algLosning()
+        arr = generation.task_with_solution()
     answer = str(arr[1])
     question = arr[0]
     if request.method == 'POST':
