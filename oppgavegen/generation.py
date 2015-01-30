@@ -199,11 +199,13 @@ def task_with_solution():
            # new_Oppgavetext = new_Oppgavetext.replace(verdier[i], random_tall)
             new_solution = new_solution.replace(variables[i], random_tall)
         new_Answer = getAnswerFromSolution(new_solution)
+        if new_Answer == 'zoo': #error handling at its finest.
+            continue
         valid_solution = validateSolution(new_Answer, decimal_allowed,zero_allowed)
         if  '/' not in str(new_Answer) and 'cos' not in str(new_Answer) and 'sin' not in str(new_Answer) and 'tan' not in str(new_Answer):
-            if ((decimal_allowed == False and valid_solution == True) or (new_Answer == ceil(new_Answer))): #Remove float status if the number is supposed to be a integer
-                print("wtf")
-                new_Answer = int(new_Answer)
+            if ((decimal_allowed == False and valid_solution == True) or (checkForDecimal(new_Answer))): #Remove float status if the number is supposed to be a integer
+                print("answer is not a float") #todo find out if i need this anymore
+                new_Answer = str(int(new_Answer))
 
     new_solution = parseSolution(new_solution)
     arr = [new_solution, new_Answer]
@@ -223,8 +225,8 @@ def validateSolution(answer, decimal_allowed, zero_allowed):
         valid_solution = False
     return valid_solution
 def checkForDecimal(f):
-    return False if f == ceil(f) else True #Returns false if f doesn't have a decimal
-def getAnswerFromSolution(s):
+    return float(f).is_integer() #Returns false if f doesn't have a decimal
+def getAnswerFromSolution(s): #this function might not be usefull if we implement a answer for every question since we wouldn't have to find the answer then
     answer = ''
     record = False
     for c in s[::-1]:
@@ -234,13 +236,13 @@ def getAnswerFromSolution(s):
             return calculateAnswer(answer)
         elif record == True:
             answer = c + answer
-    return  #If this returns there is no calculations in the solution given, do some error handling
+    return s #Returns the original string if there are no calculations, this could be bad though since it would return the whole solution, and not just the answer
 def calculateAnswer(s):
-    s = sympify(s) #todo: lag exception for Zoo (complex infinity) og uendelig
+    s = sympify(s) #sometimes this returns the value 'zoo' | also could maybe use simplify instead of sympify
     #s = RR(s)
     #s = round(s, 3)
-    print(s)
-    return s
+    print(str(s))
+    return str(s)
 def parseSolution(solution):
     arr = []
     nsp = NumericStringParser()

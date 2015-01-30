@@ -28,6 +28,11 @@ def index(request):
         if form.is_valid():
             form_values = form.process()
             user_answer = form_values[0]
+            print('Before:' + user_answer)
+            #todo make it so that for easy questions you can't just type the questions back to get get the answer
+            #a quick fix that wouldn't work for all cases is to just compare the user input with the question
+            user_answer = generation.calculateAnswer(user_answer) #format the userinput the same way we format the solution
+            print('After:' + user_answer)
             answer = form_values[1]
             answer_text = generation.checkAnswer(user_answer,answer)
             context_dict = {'title': "spaghetti", 'question' : question, 'answer' : answer_text, 'user_answer' : user_answer}
