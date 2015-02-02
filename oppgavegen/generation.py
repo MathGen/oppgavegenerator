@@ -7,7 +7,7 @@ from sympy import *
 from sympy.parsing.sympy_parser import (parse_expr, standard_transformations, implicit_multiplication)
 
 def printer():
-    string = "Spaghetti"
+    string = "Oppgavegenerator"
     return string
 
 def arithmetics():
@@ -175,6 +175,7 @@ def algSolution(): #Skriv mer generell løsning der løsningsforslaget brukes so
     return arr
 
 def task_with_solution():
+    #todo fix error handling for decimals false (check for /)
     decimal_allowed = True #Boolean for if the answer is required to be a integer
     zero_allowed = False #Boolean for om 0 er et lovlig svar eller ikke
     task = "r1x = r2 + r3x" #The task
@@ -259,7 +260,7 @@ def parseSolution(solution):
         elif opptak == True:
             s += c
     for x in range(len(arr)):
-        newArr.append(str(simplify(arr[x])))
+        newArr.append(calculateAnswer(str((arr[x]))))
         #print(newArr[x])
         r = '{' + arr[x] + '}'
         new_solution = new_solution.replace(r, newArr[x])
