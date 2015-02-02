@@ -11,7 +11,7 @@ class Template(models.Model):
     answer = models.CharField(max_length=200)
     creator = models.ForeignKey(User)
     creation_date = models.DateTimeField('date created')
-    variabler = models.PositiveSmallIntegerField()
+    variables = models.PositiveSmallIntegerField()
     rating = models.PositiveSmallIntegerField()
     times_solved = models.PositiveIntegerField()
     times_failed = models.PositiveIntegerField()
