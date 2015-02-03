@@ -3,7 +3,7 @@ from django.contrib import admin
 
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'oppgavegenerator.views.home', name='home'),
+    url(r'^$', 'oppgavegen.views.index', name='index'),
     # url(r'^blog/', include('blog.urls')),
     url(r'^index/', 'oppgavegen.views.index', name='index'),
     url(r'^playground/', 'oppgavegen.views.playground', name='playground'),

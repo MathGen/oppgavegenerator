@@ -44,11 +44,11 @@ def algebra():
 
     v = randint(1, 2)                   # number of terms (left)
     h = randint(1, 2)                   # number of terms (right)
-    vh = v+h                            # number of terms (total)
+    vh = v+h                              # number of terms (total)
     a = randint(1, 8)                   # term a
     b = randint(1, 8)                   # term b
     c = randint(1, 8)                   # term c
-    x = randint(2, 6)                   # given x
+    x = randint(2, 6)                  # given x
     number_of_x = randint(1, vh-1)      # amount of x
     operators = ["+", "-"]
     op_number1 = randint(0, 1)          # first operator
@@ -177,7 +177,7 @@ def algSolution(): #Skriv mer generell løsning der løsningsforslaget brukes so
 def task_with_solution():
     #todo fix error handling for decimals false (check for /)
     decimal_allowed = True #Boolean for if the answer is required to be a integer
-    zero_allowed = False #Boolean for om 0 er et lovlig svar eller ikke
+    zero_allowed = False #Boolean for 0 beeing a valid answer or not.
     task = "r1x = r2 + r3x" #The task
     task_text = "Løs likninga: r1x = r2 + r3x" #the text of the task
     variables = ['r1', 'r2', 'r3'] #The variables used in the task
