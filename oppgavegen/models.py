@@ -1,9 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib import admin
 
 # Create your models here.
 class Topic(models.Model):
     topic = models.CharField(max_length=200)                # Name of the topic.
+    def clean(self):
+        if self.topic:
+            self.topic = self.topic.strip()
 
 class Template(models.Model):
     question_text = models.CharField(max_length=200)          # The template. Math expression or text question ex. "Solve: ax = b + cx"
@@ -17,5 +21,4 @@ class Template(models.Model):
     times_failed = models.PositiveIntegerField()                    # Amount of times the problem has not been solved (wrong answer.)
     topic = models.ForeignKey(Topic)                                    # ID of the topic this problem belongs to ex. 2 (where 2 means algebra.)
     number_of_decimals = models.PositiveSmallIntegerField()
-    answer_can_be_zero = models.BooleanField()
-
+    answer_can_be_zero = models.BooleanField(default=False)
