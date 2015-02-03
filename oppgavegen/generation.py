@@ -175,9 +175,10 @@ def algSolution(): #Skriv mer generell løsning der løsningsforslaget brukes so
     return arr
 
 def task_with_solution():
-    #todo fix error handling for decimals false (check for /)
-    decimal_allowed = True #Boolean for if the answer is required to be a integer
-    zero_allowed = False #Boolean for 0 beeing a valid answer or not.
+    #I changed this to contain the amount of decimals allowed in the answer, so 0 = False basically.
+    decimals_allowed = 1
+    decimal_allowed = (True if decimals_allowed > 0 else False) #Boolean for if the answer is required to be a integer
+    zero_allowed = False #Boolean for 0 being a valid answer or not.
     task = "r1x = r2 + r3x" #The task
     task_text = "Løs likninga: r1x = r2 + r3x" #the text of the task
     variables = ['r1', 'r2', 'r3'] #The variables used in the task
@@ -216,6 +217,8 @@ def validateSolution(answer, decimal_allowed, zero_allowed):
     if  '/' not in str(answer) and 'cos' not in str(answer) and 'sin' not in str(answer) and 'tan' not in str(answer):
         print('wtf: ' + str(answer))
         decimal_answer = checkForDecimal(answer)
+    elif '/' in str(answer): #checks if the answer contains /.
+        decimal_answer = False #technically the answer doesn't contain decimal numbers if for instance it is given on the form 1/5
     else:
         decimal_answer = True
     contains_zero = answer == 0
