@@ -16,4 +16,6 @@ class Template(models.Model):
     times_solved = models.PositiveIntegerField()
     times_failed = models.PositiveIntegerField()
     topic = models.ForeignKey(Topic)
+    number_of_decimals = models.PositiveSmallIntegerField()
+    answer_can_be_zero = models.BooleanField()
 
