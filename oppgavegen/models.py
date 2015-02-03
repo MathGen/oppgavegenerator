@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class Topic(models.Model):
-    topic = models.CharField(max_length=200)
+    topic = models.CharField(max_length=200)                # Name of the topic.
 
 class Template(models.Model):
     question_text = models.CharField(max_length=200)
