@@ -27,7 +27,7 @@ class Template(models.Model):
     number_of_decimals = models.PositiveSmallIntegerField()   #The number of decimals allowed in the answer.
     answer_can_be_zero = models.BooleanField(default=False)   #True/False for if the answer to a question can be Zero.
     random_domain = models.CharField(max_length=15)           #Space separated string with 2 numbers denoting which values the random numbers can be.
-    number_of_answers = models.SmallIntegerField()
+    number_of_answers = models.SmallIntegerField()            #The number of answers to to questions. (i.e. Second-degree polynomial equations may have 2 solutions
 
     def __str__(self):                                        #Makes it so that self.question_text shows up instead of topic(object)
         return self.question_text
