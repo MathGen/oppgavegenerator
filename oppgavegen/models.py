@@ -5,7 +5,7 @@ from django.contrib import admin
 # Create your models here.
 class Topic(models.Model):
     topic = models.CharField(max_length=200)                  # Name of the topic.
-    def __unicode__(self):                                    #Makes it so that self.topic shows up instead of topic(object)
+    def __str__(self):                                    #Makes it so that self.topic shows up instead of topic(object)
         return self.topic
 
     def clean(self): #Removes trailing whitespace from topic
@@ -26,5 +26,5 @@ class Template(models.Model):
     number_of_decimals = models.PositiveSmallIntegerField()
     answer_can_be_zero = models.BooleanField(default=False)
 
-    def __unicode__(self):                                    #Makes it so that self.question_text shows up instead of topic(object)
+    def __str__(self):                                    #Makes it so that self.question_text shows up instead of topic(object)
         return self.question_text
