@@ -17,7 +17,6 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</div>
-				<!--hehe-->
 				<div class="collapse navbar-collapse navHeaderCollapse">
 					<ul class="nav navbar-nav navbar-right">
 						<!--Menu items-->
@@ -66,7 +65,7 @@
 										<button class="btn btn-danger btn-group-q add_field_button_var">Variabel</button>
 										<button class="btn btn-warning btn-group-q add_field_button_x">X</button>
 										<button class="btn btn-default btn-group-q add_field_button_equal">=</button>
-                                        <button id="btn_q_parenthesis_l" class="btn btn-default btn-group-q">(</button>
+										<button id="btn_q_parenthesis_l" class="btn btn-default btn-group-q">(</button>
 										<button id="btn_q_parenthesis_r" class="btn btn-default btn-group-q">)</button>
 										<button class="btn btn-default btn-group-q add_field_button_addition">+</button>
 										<button class="btn btn-default btn-group-q add_field_button_subtraction">-</button>
@@ -104,7 +103,11 @@
 							</div>
 							<div class="panel-footer">
 								<div class="row">
-									<div class="col-sm-7">
+									<div class="col-sm-8">
+										<span id="dyn_sol_btn_solve" class="btn-group">
+											<button id="btn_sol_solve_0" class="btn btn-success btn-group-s calc_btns" data-toggle="modal" data-target=".sol_solve_input_modal">Utregning</button>
+											<!--Dynamically added solve-reference buttons-->
+										</span>
 										<span id="dyn_sol_btn" class="btn-group btn-group-s input_field_sol_btn">
 
 										</span>
@@ -116,7 +119,7 @@
 										<button id="btn_sol_subtraction" class="btn btn-default btn-group-s">-</button>
 										<button id="btn_sol_division" class="btn btn-default btn-group-s">/</button>
 									</div>
-									<div class="col-sm-5">
+									<div class="col-sm-4">
 										<div class="btn-group pull-right">
 											<button id="btn_sol_delete" class="btn btn-default btn-group-s">
 												<span class="glyphicon glyphicon-chevron-left" style="horizontal-align:middle"></span>
@@ -149,7 +152,10 @@
 							</div>
 							<div class="panel-footer">
 								<div class="row">
-									<div class="col-sm-7">
+									<div class="col-sm-8">
+										<span id="dyn_ans_btn_solve" class="btn-group">
+											<!--Dynamically added solve-reference buttons-->
+										</span>
 										<span id="dyn_ans_btn" class="btn-group input_field_ans_btn">
 
 										</span>
@@ -160,7 +166,7 @@
 										<button id="btn_ans_subtraction" class="btn btn-default">-</button>
 										<button id="btn_ans_division" class="btn btn-default">/</button>
 									</div>
-									<div class="col-sm-5">
+									<div class="col-sm-4">
 										<div class="btn-group pull-right">
 											<button id="btn_ans_delete" class="btn btn-default">
 												<span class="glyphicon glyphicon-chevron-left" style="horizontal-align:middle"></span>
@@ -218,6 +224,49 @@
 							</div>
 						</div>
 					</form>
+				</div>
+			</div>
+		</div>
+		<!--Pop-up: Solve input modal-->
+		<div class="modal fade sol_solve_input_modal" role="dialog" aria-labelledby="smInputSolveModal" aria-hidden="true">
+			<div class="modal-dialog modal-md">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<div class="row">
+							<div class="col-sm-12">
+								<h3 class="panel-title">Utregning</h3>
+							</div>
+						</div>
+					</div>
+					<div class="panel-body">
+						<div id="mal_input_field_solve" class="input_field_solve">
+
+						</div>
+					</div>
+					<div class="panel-footer">
+						<div class="row">
+							<div class="col-sm-8">
+								<span id="dyn_solve_btn" class="btn-group input_field_solve_btn">
+
+								</span>
+								<button id="btn_solve_x" class="btn btn-warning">X</button>
+								<button id="btn_solve_parenthesis_l" class="btn btn-default">(</button>
+								<button id="btn_solve_parenthesis_r" class="btn btn-default">)</button>
+								<button id="btn_solve_addition" class="btn btn-default">+</button>
+								<button id="btn_solve_subtraction" class="btn btn-default">-</button>
+								<button id="btn_solve_division" class="btn btn-default">/</button>
+							</div>
+							<div class="col-sm-4">
+								<div class="btn-group pull-right">
+									<button id="btn_solve_delete" class="btn btn-default">
+										<span class="glyphicon glyphicon-chevron-left" style="horizontal-align:middle"></span>
+									</button>
+									<button id="btn_solve_cancel" class="btn btn-default" data-dismiss="modal">Avbryt</button>
+									<button id="btn_solve_save" class="btn btn-primary" data-dismiss="modal" type="submit">OK</button>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
