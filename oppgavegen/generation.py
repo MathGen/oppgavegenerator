@@ -5,6 +5,7 @@ from math import ceil
 from oppgavegen.nsp import NumericStringParser
 from sympy import *
 from sympy.parsing.sympy_parser import (parse_expr, standard_transformations, implicit_multiplication)
+from .models import Template
 
 def printer():
     string = "Oppgavegenerator"
@@ -175,6 +176,9 @@ def algSolution(): #Skriv mer generell løsning der løsningsforslaget brukes so
     return arr
 
 def task_with_solution():
+    q = getQuestion('algebra')
+
+
     #I changed this to contain the amount of decimals allowed in the answer, so 0 = False basically.
     decimals_allowed = 1
     decimal_allowed = (True if decimals_allowed > 0 else False) #Boolean for if the answer is required to be a integer
@@ -281,3 +285,7 @@ def sympyTest():
     out = [string + " = " + string2, arr[0]]
 
     return out
+
+def getQuestion(topic):
+    q = Template.objects.filter(topic__iexact=topic)
+    return q
