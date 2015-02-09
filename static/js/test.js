@@ -53,6 +53,11 @@ $(document).ready(function() {
 	var variable_ans			= "a";
 	var z						= 0; //amount of elements in answer box
 	
+	// Option variables
+	var toggle_option			= $("#btn_ans_continue");
+	var array_submit_temp		= [];
+	var array_submit			= [];
+	
 	// Calculation variables
 	var max_fields_calc			= 10;
 	var wrapper_solve_btn		= $(".input_field_solve_btn");
@@ -71,6 +76,7 @@ $(document).ready(function() {
 	var w						= 0;
 	var solve_count				= 0;
 	var array_solve_ref			= []; // Store the reference for solve-buttons
+	var array_solve_line		= [];
 	
 	/*
 	======= QUESTION PANEL ========
@@ -83,7 +89,7 @@ $(document).ready(function() {
 			var input_text = $("#mal-input-text").val();
 			if(input_text != ""){
 				x++; //text box increment
-				$(wrapper).append('<span class="input_content_text input_content'+content_count+'"> '+input_text+' </span>');
+				$(wrapper).append('<span class="input_content_text input_content'+content_count+' input_content_q"> '+input_text+' </span>');
 				content_count = content_count + 1;
 			}
 			$("#mal-input-text").val("");
@@ -101,7 +107,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		if(x < max_fields){ //max input box allowed
 			x++; //text box increment
-			$(wrapper).append('<span id="R'+R+'" class="input_content_var input_content'+content_count+'">'+variable+'</span>');
+			$(wrapper).append('<span id="R'+R+'" class="input_content_var input_content'+content_count+' input_content_q">'+variable+'</span>');
 			variable = String.fromCharCode(variable.charCodeAt(0) + 1);
 			R = R + 1;
 			content_count = content_count + 1;
@@ -113,7 +119,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		if(x < max_fields){
 			x++;
-			$(wrapper).append('<span class="input_content_x input_content'+content_count+'">x </span>');
+			$(wrapper).append('<span class="input_content_x input_content'+content_count+' input_content_q">x </span>');
 			content_count = content_count + 1;
 		}
 	});
@@ -123,7 +129,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		if(x < max_fields){
 			x++;
-			$(wrapper).append('<span class="input_content_eq input_content'+content_count+'"> = </span>');
+			$(wrapper).append('<span class="input_content_eq input_content'+content_count+' input_content_q"> = </span>');
 			$(add_button_equal).prop('disabled', true);
 			content_count = content_count + 1;
 		}
@@ -134,7 +140,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		if(x < max_fields){
 			x++;
-			$(wrapper).append('<span class="input_content_op">(</span>');
+			$(wrapper).append('<span class="input_content_op input_content_q">(</span>');
 			content_count = content_count + 1;
 		}
 	});
@@ -144,7 +150,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		if(x < max_fields){
 			x++;
-			$(wrapper).append('<span class="input_content_op">)</span>');
+			$(wrapper).append('<span class="input_content_op input_content_q">)</span>');
 			content_count = content_count + 1;
 		}
 	});
@@ -154,7 +160,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		if(x < max_fields){
 			x++;
-			$(wrapper).append('<span class="input_content_op input_content'+content_count+'"> + </span>');
+			$(wrapper).append('<span class="input_content_op input_content'+content_count+' input_content_q"> + </span>');
 			content_count = content_count + 1;
 		}
 	});
@@ -164,7 +170,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		if(x < max_fields){
 			x++;
-			$(wrapper).append('<span class="input_content_op input_content'+content_count+'"> - </span>');
+			$(wrapper).append('<span class="input_content_op input_content'+content_count+' input_content_q"> - </span>');
 			content_count = content_count + 1;
 		}
 	});
@@ -174,7 +180,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		if(x < max_fields){
 			x++;
-			$(wrapper).append('<span class="input_content_op input_content'+content_count+'"> &#x222B; </span>');
+			$(wrapper).append('<span class="input_content_op input_content'+content_count+' input_content_q"> &#x222B; </span>');
 			content_count = content_count + 1;
 		}
 	});
@@ -239,7 +245,7 @@ $(document).ready(function() {
 				RS++;
 			}
 		}
-		$(wrapper_solution).append('<div id="container_sol'+sol_step+'" class="page-header"><form class="form-group"><h4>Steg #'+sol_step+'</h4><div class="input_fields_wrap"><input type="text" class="form-control" name="solutiontext[]" placeholder="Forklaring..."><div class="input_field_sol_'+sol_step+'"></div></div></form></div>');
+		$(wrapper_solution).append('<div id="container_sol'+sol_step+'" class="page-header"><form class="form-group"><h4>Steg #'+sol_step+'</h4><div class="input_fields_wrap"><input id="sol_val_input_'+sol_step+'" type="text" class="form-control" name="solutiontext[]" placeholder="Forklaring..."><div class="input_field_sol_'+sol_step+'"></div></div></form></div>');
 		$(".btn-group-q").prop('disabled', true);
 		$("#sol_panel").fadeToggle();
 	});
@@ -266,14 +272,16 @@ $(document).ready(function() {
 		$("#sol_panel").fadeOut();
 		y = 0;
 		array_solve_ref = [];
+		array_solve_line = [];
 	});
 	
 	// Add new step
 	$("#btn_sol_new_step").click(function(e){
 		e.preventDefault();
 		$("#mal_input_field_solution a:last").hide();
+		$(".input_field_sol_"+sol_step).append('<span class="input_content_s sol_new_line"></span>');
 		sol_step++;
-		$(wrapper_solution).append('<div id="container_sol'+sol_step+'"class="page-header"><form class="form-group"><a class="glyphicon glyphicon-remove btn_sol_del_step" style="float:right"></a><h4>Steg #'+sol_step+'</h4><div class="input_fields_wrap"><input type="text" class="form-control" name="solutiontext[]" placeholder="Forklaring..."><div class="input_field_sol_'+sol_step+'"></div></div></form></div>');
+		$(wrapper_solution).append('<div id="container_sol'+sol_step+'"class="page-header"><form class="form-group"><a class="glyphicon glyphicon-remove btn_sol_del_step" style="float:right"></a><h4>Steg #'+sol_step+'</h4><div class="input_fields_wrap"><input id="sol_val_input_'+sol_step+'" type="text" class="form-control" name="solutiontext[]" placeholder="Forklaring..."><div class="input_field_sol_'+sol_step+'"></div></div></form></div>');
 		y = 0;
 	});
 	
@@ -300,7 +308,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		if(y < max_fields_so){
 			y++;
-			$(".input_field_sol_"+sol_step).append('<span class="input_content_x sol_input_'+sol_step+'">x </span>');
+			$(".input_field_sol_"+sol_step).append('<span class="input_content_x sol_input_'+sol_step+' input_content_s">x </span>');
 		}
 	});
 	
@@ -311,7 +319,7 @@ $(document).ready(function() {
 			y++;
 			var id = parseInt($(this).attr("id").match(/[\d]+$/)); // Retrieve the variable-number at end of id.
 			variable_sol = String.fromCharCode(variable_sol.charCodeAt(0) + id);
-			$(".input_field_sol_"+sol_step).append('<span id="R'+id+'" class="input_content_var sol_input_'+sol_step+'">'+variable_sol+'</span>');
+			$(".input_field_sol_"+sol_step).append('<span id="R'+id+'" class="input_content_var sol_input_'+sol_step+' input_content_s">'+variable_sol+'</span>');
 			variable_sol = "a";
 		}
 	});
@@ -324,7 +332,7 @@ $(document).ready(function() {
 			var id = parseInt($(this).attr("id").match(/[\d]+$/));
 			variable_solve_ref = String.fromCharCode(variable_solve_ref.charCodeAt(0) + id);
 			s_id = id - 1;
-			$(".input_field_sol_"+sol_step).append('<span id="solve_content_'+s_id+'" class="input_content_calc">'+variable_solve_ref+'</span>');
+			$(".input_field_sol_"+sol_step).append('<span id="solve_content_'+s_id+'" class="input_content_calc input_content_s">'+variable_solve_ref+'</span>');
 			variable_solve_ref = "@";
 		}
 	});
@@ -334,7 +342,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		if(y < max_fields_so){
 			y++;
-			$(".input_field_sol_"+sol_step).append('<span class="input_content_eq sol_input_'+sol_step+'"> = </span>');
+			$(".input_field_sol_"+sol_step).append('<span class="input_content_eq sol_input_'+sol_step+' input_content_s"> = </span>');
 		}
 	});
 	
@@ -343,7 +351,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		if(y < max_fields_so){
 			y++;
-			$(".input_field_sol_"+sol_step).append('<span class="input_content_op sol_input_'+sol_step+'">(</span>');
+			$(".input_field_sol_"+sol_step).append('<span class="input_content_op sol_input_'+sol_step+' input_content_s">(</span>');
 		}
 	});
 	
@@ -352,7 +360,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		if(y < max_fields_so){
 			y++;
-			$(".input_field_sol_"+sol_step).append('<span class="input_content_op sol_input_'+sol_step+'">)</span>');
+			$(".input_field_sol_"+sol_step).append('<span class="input_content_op sol_input_'+sol_step+' input_content_s">)</span>');
 		}
 	});
 	
@@ -361,7 +369,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		if(y < max_fields_so){
 			y++;
-			$(".input_field_sol_"+sol_step).append('<span class="input_content_op sol_input_'+sol_step+'"> + </span>');
+			$(".input_field_sol_"+sol_step).append('<span class="input_content_op sol_input_'+sol_step+' input_content_s"> + </span>');
 		}
 	});
 	
@@ -370,7 +378,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		if(y < max_fields_so){
 			y++;
-			$(".input_field_sol_"+sol_step).append('<span class="input_content_op sol_input_'+sol_step+'"> - </span>');
+			$(".input_field_sol_"+sol_step).append('<span class="input_content_op sol_input_'+sol_step+' input_content_s"> - </span>');
 		}
 	});
 	
@@ -379,7 +387,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		if(y < max_fields_so){
 			y++;
-			$(".input_field_sol_"+sol_step).append('<span class="input_content_op sol_input_'+sol_step+'"> / </span>');
+			$(".input_field_sol_"+sol_step).append('<span class="input_content_op sol_input_'+sol_step+' input_content_s"> / </span>');
 		}
 	});
 	
@@ -425,7 +433,7 @@ $(document).ready(function() {
 	======= ANSWER PANEL ========
 	*/
 	
-	// Close solution panel
+	// Close answer panel
 	$("#ans_panel_btn_cancel").click(function(e){
 		e.preventDefault();
 		$(wrapper_answer).html("");
@@ -441,7 +449,7 @@ $(document).ready(function() {
 			z++;
 			var id = parseInt($(this).attr("id").match(/[\d]+$/)); // Retrieve the variable-number at end of id.
 			variable_ans = String.fromCharCode(variable_ans.charCodeAt(0) + id);
-			$(wrapper_answer).append('<span id="R'+id+'" class="input_content_var">'+variable_ans+'</span>');
+			$(wrapper_answer).append('<span id="R'+id+'" class="input_content_var input_content_a">'+variable_ans+'</span>');
 			variable_ans = "a";
 		}
 	});
@@ -454,7 +462,7 @@ $(document).ready(function() {
 			var id = parseInt($(this).attr("id").match(/[\d]+$/));
 			variable_solve_ref = String.fromCharCode(variable_solve_ref.charCodeAt(0) + id);
 			s_id = id - 1;
-			$('.input_field_answer').append('<span id="solve_content_'+s_id+'" class="input_content_calc">'+variable_solve_ref+'</span>');
+			$('.input_field_answer').append('<span id="solve_content_'+s_id+'" class="input_content_calc input_content_a">'+variable_solve_ref+'</span>');
 			variable_solve_ref = "@";
 		}
 	});
@@ -464,7 +472,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		if(z < max_fields_ans){
 			z++;
-			$(wrapper_answer).append('<span class="input_content_x">x </span>');
+			$(wrapper_answer).append('<span class="input_content_x input_content_a">x </span>');
 		}
 	});
 	
@@ -473,7 +481,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		if(z < max_fields_ans){
 			z++;
-			$(wrapper_answer).append('<span class="input_content_op">(</span>');
+			$(wrapper_answer).append('<span class="input_content_op input_content_a">(</span>');
 		}
 	});
 	
@@ -482,7 +490,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		if(z < max_fields_ans){
 			z++;
-			$(wrapper_answer).append('<span class="input_content_op">)</span>');
+			$(wrapper_answer).append('<span class="input_content_op input_content_a">)</span>');
 		}
 	});
 	
@@ -491,7 +499,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		if(z < max_fields_ans){
 			z++;
-			$(wrapper_answer).append('<span class="input_content_op"> + </span>');
+			$(wrapper_answer).append('<span class="input_content_op input_content_a"> + </span>');
 		}
 	});
 	
@@ -500,7 +508,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		if(z < max_fields_ans){
 			z++;
-			$(wrapper_answer).append('<span class="input_content_op"> - </span>');
+			$(wrapper_answer).append('<span class="input_content_op input_content_a"> - </span>');
 		}
 	});
 	
@@ -509,7 +517,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		if(z < max_fields_ans){
 			z++;
-			$(wrapper_answer).append('<span class="input_content_op"> / </span>');
+			$(wrapper_answer).append('<span class="input_content_op input_content_a"> / </span>');
 		}
 	});
 	
@@ -545,6 +553,119 @@ $(document).ready(function() {
 		if(z > 0){
 			z--;
 		}
+	});
+	
+	// Proceed to option panel
+	$(toggle_option).click(function(e){
+		e.preventDefault();
+		$(".btn-group-a").prop('disabled', true);
+		$("#opt_panel").fadeToggle();
+	});
+	
+	/*
+	======= OPTION PANEL ========
+	*/
+	
+	// Close option panel
+	$("#opt_panel_btn_cancel").click(function(e){
+		e.preventDefault();
+		$(".btn-group-a").prop('disabled', false);
+		$("#opt_panel").fadeOut();
+	});
+	
+	// Retrieve all values and save to database
+	var array_submit_q = [];
+	var array_submit_s = [];
+	var array_submit_a = [];
+	var array_submit_o = [];
+	var tmp_sol_step = 1;
+	var get_string_s = true;
+	$('#btn_opt_save').click(function(e){
+		e.preventDefault();
+		array_submit = [];
+		// Retrieve values in question field
+		$(".input_content_q").each(function(index){
+			var var_q = "";
+			if($(this).hasClass('input_content_var')){
+				var_q = $(this).attr('id');
+			}
+			else if($(this).hasClass('input_content_x')){
+				var_q = "*x";
+			}
+			else{
+				var_q = $(this).text();
+			}
+			array_submit_q.push(var_q);
+		});
+		// Retrieve values in solution field
+		$(".input_content_s").each(function(index){
+			var var_s = "";
+			if(get_string_s == true){
+				array_submit_s.push($("#sol_val_input_"+tmp_sol_step).val());
+				get_string_s = false;
+				tmp_sol_step++;
+			}
+			if($(this).hasClass('input_content_var')){
+				var_s = $(this).attr('id');
+			}
+			else if($(this).hasClass('input_content_x')){
+				var_s = "*x";
+			}
+			else if($(this).hasClass('input_content_calc')){
+				var id = parseInt($(this).attr("id").match(/[\d]+$/));
+				var_s = "{"+array_solve_line[id]+"}";
+			}
+			else if($(this).hasClass('sol_new_line')){
+				var_s = "\n";
+				get_string_s = true;
+			}
+			else{
+				var_s = $(this).text();
+			}
+			array_submit_s.push(var_s);
+		});
+		// Retrieve values in answer field
+		$(".input_content_a").each(function(index){
+			var var_a = "";
+			if($(this).hasClass('.input_content_var')){
+				var_a = $(this).attr('id');
+			}
+			else if($(this).hasClass('input_content_x')){
+				var_a = "*x";
+			}
+			else if($(this).hasClass('input_content_calc')){
+				var id = parseInt($(this).attr("id").match(/[\d]+$/));
+				var_a = "{"+array_solve_line[id]+"}";
+			}
+			else{
+				var_a = $(this).text();
+			}
+			array_submit_a.push(var_a);
+		});
+		// Retrieve values in option panel
+		var r_f = $('#opt_range_from').val();
+		var r_t = $('#opt_range_to').val();
+		array_submit_o.push(r_f + " " + r_t);
+		array_submit_o.push($('#opt_decimal').val());
+		var opt_allow = "";
+		if($('#opt_allow').is(':checked')){
+			opt_allow = "true";
+		}
+		else {
+			opt_allow = "false";
+		}
+		array_submit_o.push(opt_allow);
+		var var_q_final = array_submit_q.join("");
+		var var_s_final = array_submit_s.join("");
+		var var_a_final = array_submit_a.join("");
+		array_submit.push(var_q_final);
+		array_submit.push(var_s_final);
+		array_submit.push(var_a_final);
+		array_submit.push(array_submit_o[0]);
+		array_submit.push(array_submit_o[1]);
+		array_submit.push(array_submit_o[2]);
+		tmp_sol_step = 1;
+		get_string_s = true;
 	});
 	
 	/*
@@ -646,13 +767,27 @@ $(document).ready(function() {
 		var total_solve_contents = $('.solve_content').length;
 		if(total_solve_contents != 0){
 			var input_array_solve = [];
+			var input_array_solve_tmp = [];
+			var input_temp_val = "";
 			$(".solve_content").each(function(index){
+				if($(this).hasClass('input_content_var')){
+					input_temp_val = $(this).attr('id');
+				}
+				else if($(this).hasClass('input_content_x')){
+					input_temp_val = "*x";
+				}
+				else{
+					input_temp_val = $(this).text();
+				}
 				var calc_var = $(this).get(0).outerHTML //text();
 				input_array_solve.push(calc_var);
+				input_array_solve_tmp.push(input_temp_val);
 			});
 			var solve_popover = input_array_solve.join("");
+			var input_tmp_join = input_array_solve_tmp.join("");
+			array_solve_line.push(input_tmp_join); // storing the value
 			array_solve_ref.push(solve_popover); // storing the reference
-			$(".input_field_sol_"+sol_step).append('<span id="solve_content_'+solve_count+'" class="input_content_calc">'+variable_solve+'</span>');
+			$(".input_field_sol_"+sol_step).append('<span id="solve_content_'+solve_count+'" class="input_content_calc input_content_s">'+variable_solve+'</span>');
 			var solve_ref = solve_count + 1;
 			$('#btn_sol_solve_'+solve_count).after('<button id="btn_sol_solve_'+solve_ref+'" class="btn btn-success btn-group-s calc_btns btn_sol_solve_ref">'+variable_solve+'</button>');
 			$("#btn_sol_solve_"+solve_ref).popover({
