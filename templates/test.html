@@ -159,25 +159,73 @@
 										<span id="dyn_ans_btn" class="btn-group input_field_ans_btn">
 
 										</span>
-										<button id="btn_ans_x" class="btn btn-warning">X</button>
-										<button id="btn_ans_parenthesis_l" class="btn btn-default">(</button>
-										<button id="btn_ans_parenthesis_r" class="btn btn-default">)</button>
-										<button id="btn_ans_addition" class="btn btn-default">+</button>
-										<button id="btn_ans_subtraction" class="btn btn-default">-</button>
-										<button id="btn_ans_division" class="btn btn-default">/</button>
+										<button id="btn_ans_x" class="btn btn-warning btn-group-a">X</button>
+										<button id="btn_ans_parenthesis_l" class="btn btn-default btn-group-a">(</button>
+										<button id="btn_ans_parenthesis_r" class="btn btn-default btn-group-a">)</button>
+										<button id="btn_ans_addition" class="btn btn-default btn-group-a">+</button>
+										<button id="btn_ans_subtraction" class="btn btn-default btn-group-a">-</button>
+										<button id="btn_ans_division" class="btn btn-default btn-group-a">/</button>
 									</div>
 									<div class="col-sm-4">
 										<div class="btn-group pull-right">
-											<button id="btn_ans_delete" class="btn btn-default">
+											<button id="btn_ans_delete" class="btn btn-default btn-group-a">
 												<span class="glyphicon glyphicon-chevron-left" style="horizontal-align:middle"></span>
 											</button>
-											<button id="btn_ans_clear_all" class="btn btn-default">Tøm</button>
-											<button id="btn_ans_save" class="btn btn-primary" type="submit">Lagre</button>
+											<button id="btn_ans_clear_all" class="btn btn-default btn-group-a">Tøm</button>
+											<button id="btn_ans_continue" class="btn btn-primary btn-group-a" type="submit">Fortsett</button>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
+						<!--Option Panel-->
+						<form class="form-horizontal" data-toggle="validator" role="form">
+							<div id="opt_panel" class="panel panel-default" style="display:none">
+								<div class="panel-heading">
+									<div class="row">
+										<div class="col-sm-12">
+											<h3 class="panel-title">Innstillinger
+												<a id="opt_panel_btn_cancel" class="glyphicon glyphicon-remove pull-right panel-title" style="float:right"></a>
+											</h3>
+										</div>
+									</div>
+								</div>
+								<div class="panel-body">
+									<div id="opt_field">
+										<div id="opt_range_form" class="form-group">
+											<label for="opt_range" class="col-sm-3 control-label">Utvalg:</label>
+											<div class="col-sm-4">
+												<input type="number" class="form-control input-xsmall" id="opt_range_from" placeholder="Fra:" required>
+											</div>
+											<div class="col-sm-4">
+												<input type="number" class="form-control input-xsmall" id="opt_range_to" placeholder="Til:" required>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="opt_decimal" class="col-sm-3 control-label">Antall desimaler:</label>
+											<div class="col-sm-4">
+												<input type="number" class="form-control input-xsmall" id="opt_decimal" placeholder="Antall:" required>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="opt_allow" class="col-sm-3 control-label">Tillat 0 som svar?</label>
+											<div class="col-sm-4">
+												<input id="opt_allow" type="checkbox">
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="panel-footer">
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="btn-group pull-right">
+												<button id="btn_opt_save" class="btn btn-primary" type="submit">Lagre</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
 					</div>
 				</div>
 				<!--Test/Info Panel-->

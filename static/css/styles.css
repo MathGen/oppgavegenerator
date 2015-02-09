@@ -64,3 +64,7 @@ body{
 	font-size: 3.5em;
 	color: #5CB85C;
 }
+
+#opt_range_form{
+	margin-top: 15px;
+}
