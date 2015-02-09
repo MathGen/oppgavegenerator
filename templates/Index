@@ -2,8 +2,14 @@
 
 {% block title %}{{ title }}{% endblock %}
 
+
 {% block content %}
- {{ question|linebreaks }}
+<h3>
+
+{% autoescape off %}
+{{ question|linebreaks}}
+{% endautoescape %}
+</h3>
 <form action="/index/" method="post">
 {% csrf_token %}
 {{ form }}

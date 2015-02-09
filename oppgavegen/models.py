@@ -31,3 +31,5 @@ class Template(models.Model):
 
     def __str__(self):                                        #Makes it so that self.question_text shows up instead of topic(object)
         return self.question_text
+
+    #todo add random_domain to each individual random variable, yo.
