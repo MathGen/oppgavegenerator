@@ -5,6 +5,7 @@ from math import ceil
 from oppgavegen.nsp import NumericStringParser
 from sympy import *
 from sympy.parsing.sympy_parser import (parse_expr, standard_transformations, implicit_multiplication)
+from .models import Template
 
 def printer():
     string = "Oppgavegenerator"
@@ -174,17 +175,28 @@ def algSolution(): #Skriv mer generell løsning der løsningsforslaget brukes so
     arr = [new_solution, new_Answer[0]]
     return arr
 
+def make_variables(amount):
+    variables = []
+    for x in range(0, amount):
+        variables.append('r' + str(x))
+    return variables
 def task_with_solution():
+    q = getQuestion('algebra')
+
+
     #I changed this to contain the amount of decimals allowed in the answer, so 0 = False basically.
     decimals_allowed = 1
-    decimal_allowed = (True if decimals_allowed > 0 else False) #Boolean for if the answer is required to be a integer
-    zero_allowed = False #Boolean for 0 being a valid answer or not.
-    task = "r1x = r2 + r3x" #The task
-    task_text = "Løs likninga: r1x = r2 + r3x" #the text of the task
-    variables = ['r1', 'r2', 'r3'] #The variables used in the task
-    solution = str(task + "\n vi flytter over r3x:\n r1x - r3x = r2\n {r1 - r3}x = r2\n Vi deler på: {r1 - r3}\n x = {r2/(r1-r3)}") #Solution for the task
+    decimal_allowed = (True if q.number_of_decimals > 0 else False) #Boolean for if the answer is required to be a integer
+    zero_allowed = q.answer_can_be_zero#False #Boolean for 0 being a valid answer or not.
+    task = q.question_text#"r1x = r2 + r3x" #The task
+    task_text = q.question_text#"Løs likninga: r1x = r2 + r3x" #the text of the task
+    variables = make_variables(q.variables) #The variables used in the task
+    solution = str(q.solution)#str(task + "\n vi flytter over r3x:\n r1x - r3x = r2\n {r1 - r3}x = r2\n Vi deler på: {r1 - r3}\n x = {r2/(r1-r3)}") #Solution for the task
+    #todo fix a bug where \n retrived from db string somehow does not work
+    print(solution)
     oppgave2 = "r1 = r2x + r3"
     solution2 = str("\n Vi flytter over r3: \n r1 - r3 = r2x\n {r1 - r3} = r2x \n Vi deler på: r2 \n x = {(r1-r3)/r2}")
+    print(solution2)
     task3 = "integrate(r1*x*sin(r2*x) dx" #husk pluss C
     solution_task3 = str(task3 + "\n Bruker delvis integrasjon: \n integral(uv') dx = uv - integral(u'v) dx) \n setter: u = r1*x og v' = sin(r2*x) \n"
                                  + "da blir: u' = r1 og v = -1/r2 cos(r2*x \n integrate(r1*x*sin(r2*x) dx = \n -(r1*x)/r2*cos(r2*x) - integrate(-1/r2*cos(r2*x))dx = \n"
@@ -281,3 +293,13 @@ def sympyTest():
     out = [string + " = " + string2, arr[0]]
 
     return out
+
+def getQuestion(topic):
+    #todo make this general so it doesn't just return a specified result
+    q = Template.objects.get(pk=1)
+    #q = Template.objects.filter(topic__iexact=topic) #Gets all Templates in that topic
+    #q = q.filter(rating ---------)
+
+    #todo add logic for returning 1 random task at apropriate elo.
+    #something like SELECT * FROM Template WHERE rating BETWEEN user_rating+- 20
+    return q
