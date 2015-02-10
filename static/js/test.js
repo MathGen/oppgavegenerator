@@ -614,7 +614,15 @@ $(document).ready(function() {
 				var_q = $(this).attr('id');
 			}
 			else if($(this).hasClass('input_content_x')){
-				var_q = "*x";
+				if($(this).prev().hasClass('input_content_var')){
+					var_q = "*x";
+				}
+				else if($(this).prev().hasClass('input_content_calc')){
+					var_q = "*x";
+				}
+				else{
+					var_q = "x";
+				}
 			}
 			else{
 				var_q = $(this).text();
@@ -633,7 +641,15 @@ $(document).ready(function() {
 				var_s = $(this).attr('id');
 			}
 			else if($(this).hasClass('input_content_x')){
-				var_s = "*x";
+				if($(this).prev().hasClass('input_content_var')){
+					var_s = "*x";
+				}
+				else if($(this).prev().hasClass('input_content_calc')){
+					var_s = "*x";
+				}
+				else{
+					var_s = "x";
+				}
 			}
 			else if($(this).hasClass('input_content_calc')){
 				var id = parseInt($(this).attr("id").match(/[\d]+$/));
@@ -655,7 +671,15 @@ $(document).ready(function() {
 				var_a = $(this).attr('id');
 			}
 			else if($(this).hasClass('input_content_x')){
-				var_a = "*x";
+				if($(this).prev().hasClass('input_content_var')){
+					var_a = "*x";
+				}
+				else if($(this).prev().hasClass('input_content_calc')){
+					var_a = "*x";
+				}
+				else{
+					var_a = "x";
+				}
 			}
 			else if($(this).hasClass('input_content_calc')){
 				var id = parseInt($(this).attr("id").match(/[\d]+$/));
