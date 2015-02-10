@@ -56,7 +56,7 @@ $(document).ready(function() {
 	// Option variables
 	var toggle_option			= $("#btn_ans_continue");
 	var array_submit_temp		= [];
-	var array_submit			= [];
+	var array_submit			= {};
 	
 	// Calculation variables
 	var max_fields_calc			= 10;
@@ -239,7 +239,7 @@ $(document).ready(function() {
 		if(number_of_vars != 0){
 			for(i=0; i<number_of_vars; i++){
 				$(wrapper_sol_btn).append('<button id="btn_sol_R'+RS+'" class="btn btn-danger btn_sol_var btn-group-s">'+variable_s+'</button>');
-				$(wrapper_ans_btn).append('<button id="btn_ans_R'+RS+'" class="btn btn-danger btn_ans_var">'+variable_s+'</button>');
+				$(wrapper_ans_btn).append('<button id="btn_ans_R'+RS+'" class="btn btn-danger btn_ans_var btn-group-a">'+variable_s+'</button>');
 				$(wrapper_solve_btn).append('<button id="btn_calc_R'+RS+'" class="btn btn-danger btn_solve_var">'+variable_s+'</button>');
 				variable_s = String.fromCharCode(variable_s.charCodeAt(0) + 1);
 				RS++;
@@ -257,6 +257,18 @@ $(document).ready(function() {
 	// Close solution panel
 	$("#solution_panel_btn_cancel").click(function(e){
 		e.preventDefault();
+		// Close sub-panels
+		$("#opt_range_from").val("");
+		$("#opt_range_to").val("");
+		$("#opt_decimal").val("");
+		$("#opt_allow").prop("checked", false);
+		$(".btn-group-a").prop('disabled', false);
+		$("#opt_panel").fadeOut();
+		$(wrapper_answer).html("");
+		$(".btn-group-s").prop('disabled', false);
+		$("#ans_panel").fadeOut();
+		z = 0;
+		// Close solution panel
 		$("#dyn_sol_btn").html("");
 		$("#dyn_ans_btn").html("");
 		$("#dyn_solve_btn").html("");
@@ -436,6 +448,14 @@ $(document).ready(function() {
 	// Close answer panel
 	$("#ans_panel_btn_cancel").click(function(e){
 		e.preventDefault();
+		// Close sub-panels
+		$("#opt_range_from").val("");
+		$("#opt_range_to").val("");
+		$("#opt_decimal").val("");
+		$("#opt_allow").prop("checked", false);
+		$(".btn-group-a").prop('disabled', false);
+		$("#opt_panel").fadeOut();
+		// Close answer panel
 		$(wrapper_answer).html("");
 		$(".btn-group-s").prop('disabled', false);
 		$("#ans_panel").fadeOut();
@@ -569,6 +589,10 @@ $(document).ready(function() {
 	// Close option panel
 	$("#opt_panel_btn_cancel").click(function(e){
 		e.preventDefault();
+		$("#opt_range_from").val("");
+		$("#opt_range_to").val("");
+		$("#opt_decimal").val("");
+		$("#opt_allow").prop("checked", false);
 		$(".btn-group-a").prop('disabled', false);
 		$("#opt_panel").fadeOut();
 	});
@@ -658,14 +682,28 @@ $(document).ready(function() {
 		var var_q_final = array_submit_q.join("");
 		var var_s_final = array_submit_s.join("");
 		var var_a_final = array_submit_a.join("");
-		array_submit.push(var_q_final);
-		array_submit.push(var_s_final);
-		array_submit.push(var_a_final);
-		array_submit.push(array_submit_o[0]);
-		array_submit.push(array_submit_o[1]);
-		array_submit.push(array_submit_o[2]);
+		// Store in dictionary
+		array_submit["question"] 	= var_q_final;
+		array_submit["solution"] 	= var_s_final;
+		array_submit["answer"] 		= var_a_final;
+		array_submit["range"]		= array_submit_o[0];
+		array_submit["decimals"]	= array_submit_o[1];
+		array_submit["allow_zero"]	= array_submit_o[2];
+		// Reset temp lists
 		tmp_sol_step = 1;
 		get_string_s = true;
+		array_submit_q = [];
+		array_submit_s = [];
+		array_submit_a = [];
+		array_submit_o = [];
+
+		// Output testing
+		var s_output = [];
+		for(var s_u in array_submit){
+			s_output.push(s_u+":\n"+array_submit[s_u]);
+		}
+		var u_output = s_output.join("\n");
+		alert(u_output);
 	});
 	
 	/*
@@ -797,7 +835,7 @@ $(document).ready(function() {
 				trigger: 'hover',
 				container: 'body'
 			});
-			$('#dyn_ans_btn_solve').append('<button id="btn_ans_solve_'+solve_ref+'" class="btn btn-success btn_ans_solve_ref">'+variable_solve+'</button>');
+			$('#dyn_ans_btn_solve').append('<button id="btn_ans_solve_'+solve_ref+'" class="btn btn-success btn_ans_solve_ref btn-group-a">'+variable_solve+'</button>');
 			$('#btn_ans_solve_'+solve_ref).popover({
 				html: true,
 				content: array_solve_ref[solve_count],
