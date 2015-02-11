@@ -13,6 +13,8 @@ from sympy import sympify
 from sympy.printing.mathml import mathml
 from sympy import Integral, latex
 from sympy.abc import x
+from django.forms import ModelForm
+from oppgavegen.models import Template
 
 
 # Create your views here.
@@ -64,6 +66,28 @@ def playground(request):
     context = RequestContext(request)
     return render_to_response('playground', context)
 
+class TemplateForm(ModelForm):
+    class Meta:
+        Model = Template
+        fields = '__all__' #['question_text', 'solution', 'answer', 'variables','number_of_decimals','answer_can_be_zero','random_domain'] #todo add creator and number_of_answers..
+
+        def process(self):
+            cd =  [self.cleaned_data['question'], self.cleaned_data['answer']]
+            return cd
+
 def test(request):
+    if request.method == 'POST':
+        #todo check input for errors
+        form = TemplateForm(request.POST)
+        template = form.save(commit=False)
+        
+
     context = RequestContext(request)
     return render_to_response('test.html', context)
+
+def submit(request):
+    if request.method == 'POST':
+     pass
+    context = RequestContext(request)
+    return render_to_response('test.html', context)
+

@@ -728,6 +728,9 @@ $(document).ready(function() {
 		}
 		var u_output = s_output.join("\n");
 		alert(u_output);
+
+		alert(array_submit.join("\n"));
+		post(/test/, array_submit)
 	});
 	
 	/*
@@ -896,3 +899,27 @@ $(document).ready(function() {
 		e.preventDefault(); $(this).parent('font').remove(); x--;
 	})
 });
+
+function post(path, params, method) {
+    method = method || "post"; // Set method to post by default if not specified.
+
+    // The rest of this code assumes you are not using a library.
+    // It can be made less wordy if you use one.
+    var form = document.createElement("form");
+    form.setAttribute("method", method);
+    form.setAttribute("action", path);
+
+    for(var key in params) {
+        if(params.hasOwnProperty(key)) {
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", key);
+            hiddenField.setAttribute("value", params[key]);
+
+            form.appendChild(hiddenField);
+         }
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+}
