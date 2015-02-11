@@ -6,6 +6,8 @@ from oppgavegen.nsp import NumericStringParser
 from sympy import *
 from sympy.parsing.sympy_parser import (parse_expr, standard_transformations, implicit_multiplication)
 from .models import Template
+from django.template.defaultfilters import *
+import html
 
 def printer():
     string = "Oppgavegenerator"
@@ -181,18 +183,22 @@ def make_variables(amount):
         variables.append('r' + str(x))
     return variables
 def task_with_solution():
-    q = getQuestion('algebra')
-
+    q = getQuestion('algebra')  #gets a question from the DB
 
     #I changed this to contain the amount of decimals allowed in the answer, so 0 = False basically.
-    decimals_allowed = 1
-    decimal_allowed = (True if q.number_of_decimals > 0 else False) #Boolean for if the answer is required to be a integer
+    #todo make a rounding function using decimals_allowed
+    decimals_allowed = int(q.number_of_decimals)
+    decimal_allowed = (True if decimals_allowed > 0 else False) #Boolean for if the answer is required to be a integer
+    random_domain = (q.random_domain).split() #the domain of random numbers that can be generated for the question
+    print(random_domain[0])
     zero_allowed = q.answer_can_be_zero#False #Boolean for 0 being a valid answer or not.
     task = q.question_text#"r1x = r2 + r3x" #The task
     task_text = q.question_text#"Løs likninga: r1x = r2 + r3x" #the text of the task
     variables = make_variables(q.variables) #The variables used in the task
-    solution = str(q.solution)#str(task + "\n vi flytter over r3x:\n r1x - r3x = r2\n {r1 - r3}x = r2\n Vi deler på: {r1 - r3}\n x = {r2/(r1-r3)}") #Solution for the task
-    #todo fix a bug where \n retrived from db string somehow does not work
+    solution = str(q.solution).replace('\\n', '\n') #db automatically adds the escape character \ to strings, so we remove it from \n
+    #solution = solution.replace('\&\#x222B\;', '&#x222B;')
+
+    #str(task + "\n vi flytter over r3x:\n r1x - r3x = r2\n {r1 - r3}x = r2\n Vi deler på: {r1 - r3}\n x = {r2/(r1-r3)}") #Solution for the task
     print(solution)
     oppgave2 = "r1 = r2x + r3"
     solution2 = str("\n Vi flytter over r3: \n r1 - r3 = r2x\n {r1 - r3} = r2x \n Vi deler på: r2 \n x = {(r1-r3)/r2}")
@@ -208,7 +214,7 @@ def task_with_solution():
         new_Oppgave = task
         new_Oppgavetext = task_text
         for i in range(len(variables)):
-            random_tall = str(randint(1,20))
+            random_tall = str(randint(int(random_domain[0]),int(random_domain[1])))
             new_Oppgave = new_Oppgave.replace(variables[i], random_tall)
            # new_Oppgavetext = new_Oppgavetext.replace(verdier[i], random_tall)
             new_solution = new_solution.replace(variables[i], random_tall)
@@ -300,6 +306,10 @@ def getQuestion(topic):
     #q = Template.objects.filter(topic__iexact=topic) #Gets all Templates in that topic
     #q = q.filter(rating ---------)
 
-    #todo add logic for returning 1 random task at apropriate elo.
+    #todo add logic for returning 1 random task at appropriate elo.
     #something like SELECT * FROM Template WHERE rating BETWEEN user_rating+- 20
     return q
+
+@register.filter(name='cut')
+def cut(value, arg):
+    return value.replace(arg, '<math>')

@@ -8,6 +8,12 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django import forms
 from oppgavegen import generation
+#sympy
+from sympy import sympify
+from sympy.printing.mathml import mathml
+from sympy import Integral, latex
+from sympy.abc import x
+
 
 # Create your views here.
 
@@ -35,14 +41,14 @@ def index(request):
             print('After:' + user_answer)
             answer = form_values[1]
             answer_text = generation.checkAnswer(user_answer,answer)
-            context_dict = {'title': "Oppgavegen", 'question' : question, 'answer' : answer_text, 'user_answer' : user_answer}
+            context_dict = {'title': "Oppgavegen", 'question' : question, 'answer' :  str(answer), 'user_answer' : user_answer}
             #make a button on the answers page with "generate new question"
             return render_to_response('answers', context_dict, context)
     else:
        form = QuestionForm()
        form.fields["answer"].initial = answer #Setter initsiell verdi til skjult felt i form.
 
-    context_dict = {'title': generation.printer(), 'question' : question, 'answer' : str(answer), 'form' : form}
+    context_dict = {'title': generation.printer(), 'question' : question, 'answer' : answer, 'form' : form}
     return render_to_response('index', context_dict, context)
 
 
