@@ -713,6 +713,7 @@ $(document).ready(function() {
 		array_submit["range"]		= array_submit_o[0];
 		array_submit["decimals"]	= array_submit_o[1];
 		array_submit["allow_zero"]	= array_submit_o[2];
+		array_submit["topic"] 		= "7";
 		// Reset temp lists
 		tmp_sol_step = 1;
 		get_string_s = true;
