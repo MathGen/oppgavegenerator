@@ -52,12 +52,13 @@ $(document).ready(function() {
 	var ans_btn_delete			= $("#btn_ans_delete");
 	var variable_ans			= "a";
 	var z						= 0; //amount of elements in answer box
-	
+
 	// Option variables
 	var toggle_option			= $("#btn_ans_continue");
 	var array_submit_temp		= [];
 	var array_submit			= {};
-	
+	var number_of_vars		    = 0;
+
 	// Calculation variables
 	var max_fields_calc			= 10;
 	var wrapper_solve_btn		= $(".input_field_solve_btn");
@@ -235,7 +236,7 @@ $(document).ready(function() {
 	$(toggle_solution).click(function(e){
 		e.preventDefault();
 		RS = 0;
-		var number_of_vars = $('.input_content_var').length;
+		number_of_vars = $('.input_content_var').length;
 		if(number_of_vars != 0){
 			for(i=0; i<number_of_vars; i++){
 				$(wrapper_sol_btn).append('<button id="btn_sol_R'+RS+'" class="btn btn-danger btn_sol_var btn-group-s">'+variable_s+'</button>');
@@ -633,7 +634,8 @@ $(document).ready(function() {
 		$(".input_content_s").each(function(index){
 			var var_s = "";
 			if(get_string_s == true){
-				array_submit_s.push($("#sol_val_input_"+tmp_sol_step).val());
+				var step_text = $("#sol_val_input_"+tmp_sol_step).val();
+				array_submit_s.push(step_text+"\n");
 				get_string_s = false;
 				tmp_sol_step++;
 			}
@@ -707,13 +709,15 @@ $(document).ready(function() {
 		var var_s_final = array_submit_s.join("");
 		var var_a_final = array_submit_a.join("");
 		// Store in dictionary
-		array_submit["question"] 	= var_q_final;
+		array_submit["question_text"] 	= var_q_final;
 		array_submit["solution"] 	= var_s_final;
 		array_submit["answer"] 		= var_a_final;
-		array_submit["range"]		= array_submit_o[0];
-		array_submit["decimals"]	= array_submit_o[1];
-		array_submit["allow_zero"]	= array_submit_o[2];
-		array_submit["topic"] 		= "7";
+		array_submit["random_domain"]		= array_submit_o[0];
+		array_submit["number_of_decimals"]	= array_submit_o[1];
+		array_submit["answer_can_be_zero"]	= array_submit_o[2];
+		array_submit["topic"] 		= 7;
+		array_submit["csrfmiddlewaretoken"] = getCookie('csrftoken');
+		array_submit["variables"] = number_of_vars;
 		// Reset temp lists
 		tmp_sol_step = 1;
 		get_string_s = true;
@@ -727,11 +731,11 @@ $(document).ready(function() {
 		for(var s_u in array_submit){
 			s_output.push(s_u+":\n"+array_submit[s_u]);
 		}
-		var u_output = s_output.join("\n");
-		alert(u_output);
+		//var u_output = s_output.join("\n");
+		//alert(u_output);
 
-		alert(array_submit.join("\n"));
-		post(/test/, array_submit)
+		//alert(array_submit.join("\n"));
+		post(/submit/, array_submit)
 	});
 	
 	/*
@@ -923,4 +927,20 @@ function post(path, params, method) {
 
     document.body.appendChild(form);
     form.submit();
+}
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }

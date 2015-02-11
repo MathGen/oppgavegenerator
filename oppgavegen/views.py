@@ -15,7 +15,9 @@ from sympy import Integral, latex
 from sympy.abc import x
 from django.forms import ModelForm
 from oppgavegen.models import Template
-
+from oppgavegen.models import Topic
+from oppgavegen.models import User
+from datetime import datetime
 
 # Create your views here.
 
@@ -43,7 +45,7 @@ def index(request):
             print('After:' + user_answer)
             answer = form_values[1]
             answer_text = generation.checkAnswer(user_answer,answer)
-            context_dict = {'title': "Oppgavegen", 'question' : question, 'answer' :  str(answer), 'user_answer' : user_answer}
+            context_dict = {'title': "Oppgavegen", 'question' : question, 'answer' :  str(answer_text), 'user_answer' : user_answer}
             #make a button on the answers page with "generate new question"
             return render_to_response('answers', context_dict, context)
     else:
@@ -68,7 +70,7 @@ def playground(request):
 
 class TemplateForm(ModelForm):
     class Meta:
-        Model = Template
+        model = Template
         fields = '__all__' #['question_text', 'solution', 'answer', 'variables','number_of_decimals','answer_can_be_zero','random_domain'] #todo add creator and number_of_answers..
 
         def process(self):
@@ -76,18 +78,6 @@ class TemplateForm(ModelForm):
             return cd
 
 def test(request):
-    if request.method == 'POST':
-        #todo check input for errors
-        form = TemplateForm(request.POST)
-        if form.is_valid():
-            template = form.save(commit=False)
-            template.creator = 1 #todo get user from DB
-            template.rating = 1200
-            template.topic = 7
-            template.times_failed = 0
-            template.times_solved = 0
-            template.number_of_answers = 1 #todo get this from the post
-
 
 
 
@@ -95,8 +85,27 @@ def test(request):
     return render_to_response('test.html', context)
 
 def submit(request):
+    message = 'don\'t come here'
     if request.method == 'POST':
-     pass
+        message = 'failure!'
+        #todo check input for errors
+        form = TemplateForm(request.POST)
+        print(form)
+        if form.is_valid():
+            template = form.save(commit=False)
+            print(template.topic)
+            print(template.topic_id)
+            template.topic = Topic.objects.get(pk=7)
+            template.creator = User.objects.get(pk=2) #todo get user from the user submitting the form
+            template.rating = 1200
+            template.times_failed = 0
+            template.times_solved = 0
+            template.number_of_answers = 1 #todo get this from the post
+            template.creation_date = datetime.now()
+            template.save()
+            message = 'success!'
+        else:
+            print(form.errors)
     context = RequestContext(request)
-    return render_to_response('test.html', context)
+    return render_to_response('submit',{'message': message}, context)
 

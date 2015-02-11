@@ -8,6 +8,6 @@ urlpatterns = patterns('',
     url(r'^index/', 'oppgavegen.views.index', name='index'),
     url(r'^playground/', 'oppgavegen.views.playground', name='playground'),
     url(r'^test/', 'oppgavegen.views.test', name='test'),
-
+    url(r'^submit/', 'oppgavegen.views.submit', name='submit'),
     url(r'^admin/', include(admin.site.urls)),
 )

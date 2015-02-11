@@ -180,7 +180,7 @@ def algSolution(): #Skriv mer generell løsning der løsningsforslaget brukes so
 def make_variables(amount):
     variables = []
     for x in range(0, amount):
-        variables.append('r' + str(x))
+        variables.append('R' + str(x))
     return variables
 def task_with_solution():
     q = getQuestion('algebra')  #gets a question from the DB
@@ -226,6 +226,7 @@ def task_with_solution():
             if ((decimal_allowed == False and valid_solution == True) or (checkForDecimal(new_Answer))): #Remove float status if the number is supposed to be a integer
                 print("answer is not a float") #todo find out if i need this anymore
                 new_Answer = str(int(new_Answer))
+                valid_solution = True
 
     new_solution = parseSolution(new_solution)
     arr = [new_solution, new_Answer]
@@ -302,7 +303,7 @@ def sympyTest():
 
 def getQuestion(topic):
     #todo make this general so it doesn't just return a specified result
-    q = Template.objects.get(pk=1)
+    q = Template.objects.get(pk=4)
     #q = Template.objects.filter(topic__iexact=topic) #Gets all Templates in that topic
     #q = q.filter(rating ---------)
 

@@ -1,0 +1,10 @@
+{% extends "index.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+
+{% block content %}
+<h3>
+{{ message }}
+</h3>
+{% endblock %}
