@@ -79,8 +79,17 @@ def test(request):
     if request.method == 'POST':
         #todo check input for errors
         form = TemplateForm(request.POST)
-        template = form.save(commit=False)
-        
+        if form.is_valid():
+            template = form.save(commit=False)
+            template.creator = 1 #todo get user from DB
+            template.rating = 1200
+            template.topic = 7
+            template.times_failed = 0
+            template.times_solved = 0
+            template.number_of_answers = 1 #todo get this from the post
+
+
+
 
     context = RequestContext(request)
     return render_to_response('test.html', context)
