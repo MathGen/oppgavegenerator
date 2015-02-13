@@ -3,6 +3,6 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-<h1>{{ answer|safe }}</h1>
+<h1>{{ answer }}</h1>
 
 {% endblock %}

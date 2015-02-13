@@ -78,7 +78,11 @@ $(document).ready(function() {
 	var solve_count				= 0;
 	var array_solve_ref			= []; // Store the reference for solve-buttons
 	var array_solve_line		= [];
-	
+
+	//start and end variables for a calculation
+	var start_calc = "@?";
+	var end_calc = "?@";
+
 	/*
 	======= QUESTION PANEL ========
 	*/
@@ -655,7 +659,7 @@ $(document).ready(function() {
 			}
 			else if($(this).hasClass('input_content_calc')){
 				var id = parseInt($(this).attr("id").match(/[\d]+$/));
-				var_s = "{"+array_solve_line[id]+"}";
+				var_s = start_calc+array_solve_line[id]+end_calc;
 			}
 			else if($(this).hasClass('sol_new_line')){
 				var_s = "\n";
@@ -685,7 +689,7 @@ $(document).ready(function() {
 			}
 			else if($(this).hasClass('input_content_calc')){
 				var id = parseInt($(this).attr("id").match(/[\d]+$/));
-				var_a = "{"+array_solve_line[id]+"}";
+				var_a = start_calc+array_solve_line[id]+end_calc;
 			}
 			else{
 				var_a = $(this).text();

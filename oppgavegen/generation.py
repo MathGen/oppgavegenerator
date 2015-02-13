@@ -32,6 +32,8 @@ def checkAnswer(user_answer, answer):
     if user_answer == answer:
        string = "Du har svart riktig!"
     else:
+        init_printing()
+        print("Du har svart feil. Svaret er: " + "\(" + latex(answer) + "\(")
         string = "Du har svart feil. Svaret er: " + str(answer)
 
     return string
@@ -195,14 +197,13 @@ def task_with_solution():
     task = q.question_text#"r1x = r2 + r3x" #The task
     task_text = q.question_text#"Løs likninga: r1x = r2 + r3x" #the text of the task
     variables = make_variables(q.variables) #The variables used in the task
-    solution = str(q.solution).replace('\\n', '\n') #db automatically adds the escape character \ to strings, so we remove it from \n
+    solution = str(task) +"\n"+str(q.solution).replace('\\n', '\n') #db automatically adds the escape character \ to strings, so we remove it from \n
     #solution = solution.replace('\&\#x222B\;', '&#x222B;')
 
     #str(task + "\n vi flytter over r3x:\n r1x - r3x = r2\n {r1 - r3}x = r2\n Vi deler på: {r1 - r3}\n x = {r2/(r1-r3)}") #Solution for the task
     print(solution)
     oppgave2 = "r1 = r2x + r3"
     solution2 = str("\n Vi flytter over r3: \n r1 - r3 = r2x\n {r1 - r3} = r2x \n Vi deler på: r2 \n x = {(r1-r3)/r2}")
-    print(solution2)
     task3 = "integrate(r1*x*sin(r2*x) dx" #husk pluss C
     solution_task3 = str(task3 + "\n Bruker delvis integrasjon: \n integral(uv') dx = uv - integral(u'v) dx) \n setter: u = r1*x og v' = sin(r2*x) \n"
                                  + "da blir: u' = r1 og v = -1/r2 cos(r2*x \n integrate(r1*x*sin(r2*x) dx = \n -(r1*x)/r2*cos(r2*x) - integrate(-1/r2*cos(r2*x))dx = \n"
@@ -252,13 +253,15 @@ def checkForDecimal(f):
 def getAnswerFromSolution(s): #this function might not be usefull if we implement a answer for every question since we wouldn't have to find the answer then
     answer = ''
     record = False
+    b = ""
     for c in s[::-1]:
-        if c == '}':
+        if c == '?' and b == '@':
             record = True
-        elif c == '{':
-            return calculateAnswer(answer)
+        elif c == '@' and b == '?':
+            return calculateAnswer(answer[1:])
         elif record == True:
             answer = c + answer
+        b = c
     return s #Returns the original string if there are no calculations, this could be bad though since it would return the whole solution, and not just the answer
 def calculateAnswer(s):
     s = sympify(s) #sometimes this returns the value 'zoo' | also could maybe use simplify instead of sympify
@@ -268,23 +271,23 @@ def calculateAnswer(s):
     return str(s)
 def parseSolution(solution):
     arr = []
-    nsp = NumericStringParser()
     newArr = []
     opptak = False
     new_solution = solution
+    b = ''
     for c in solution:
-        if c == '{':
+        if b == '@' and c == '?':
             opptak = True
             s = ''
-        elif c == '}':
+        elif b == '?' and c == '@':
             opptak = False
-            arr.append(s)
+            arr.append(s[:-1])
         elif opptak == True:
             s += c
+        b=c
     for x in range(len(arr)):
         newArr.append(calculateAnswer(str((arr[x]))))
-        #print(newArr[x])
-        r = '{' + arr[x] + '}'
+        r = '@?' + arr[x] + '?@'
         new_solution = new_solution.replace(r, newArr[x])
     return new_solution
 def sympyTest():
@@ -303,7 +306,7 @@ def sympyTest():
 
 def getQuestion(topic):
     #todo make this general so it doesn't just return a specified result
-    q = Template.objects.get(pk=4)
+    q = Template.objects.get(pk=5)
     #q = Template.objects.filter(topic__iexact=topic) #Gets all Templates in that topic
     #q = q.filter(rating ---------)
 

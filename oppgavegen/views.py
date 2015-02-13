@@ -39,8 +39,6 @@ def index(request):
             form_values = form.process()
             user_answer = form_values[0]
             print('Before:' + user_answer)
-            #todo make it so that for easy questions you can't just type the questions back to get get the answer
-            #a quick fix that wouldn't work for all cases is to just compare the user input with the question
             user_answer = generation.calculateAnswer(user_answer) #format the userinput the same way we format the solution
             print('After:' + user_answer)
             answer = form_values[1]
@@ -97,6 +95,7 @@ def submit(request):
             print(template.topic_id)
             template.topic = Topic.objects.get(pk=7)
             template.creator = User.objects.get(pk=2) #todo get user from the user submitting the form
+            #could get creator from username=einar
             template.rating = 1200
             template.times_failed = 0
             template.times_solved = 0
