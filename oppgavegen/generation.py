@@ -144,42 +144,7 @@ def altArithmetics():
     arr = [s,int(x)]
     return arr
 
-def algSolution(): #Skriv mer generell løsning der løsningsforslaget brukes som mal
-    #decimal = True/False
-    oppgave = "r1x = r2 + r3x"
-    oppgavetext = "Løs likninga: r1x = r2 + r3x"
-    verdier = ['r1', 'r2', 'r3']
-    solution = str(oppgave + "\n vi flytter over r3x:\n r1x - r3x = r2\n {r1 - r3}x = r2\n Vi deler på: {r1 - r3}\n x = {r2/(r1-r3)}")
-    oppgave2 = "r1 = r2x + r3"
-    solution2 = str("\n Vi flytter over r3: \n r1 - r3 = r2x\n {r1 - r3} = r2x \n Vi deler på: r2 \n x = {(r1-r3)/r2}")
-
-    #Av en eller annen grunn splitter python strings med \n character.
-    valid_solution = False
-    while valid_solution == False:
-        new_solution = solution
-        new_Oppgave = oppgave
-        new_Oppgavetext = oppgavetext
-        for i in range(len(verdier)):
-            random_tall = str(randint(1,20))
-            new_Oppgave = new_Oppgave.replace(verdier[i], random_tall)
-           # new_Oppgavetext = new_Oppgavetext.replace(verdier[i], random_tall)
-            new_solution = new_solution.replace(verdier[i], random_tall)
-        t = standard_transformations + (implicit_multiplication,) #for sikkerhet, gjør om 2x til 2*x
-        x = symbols('x')
-        #new_Answer = parse_expr(new_Oppgave,  transformations = t)
-        new_Answer = new_Oppgave
-        s = new_Answer.split('=')
-        s[0] = parse_expr(s[0], transformations = t)
-        s[1] = parse_expr(s[1], transformations = t)
-        new_Answer = solve(Eq(s[0], s[1]), x)
-        if new_Answer != []: #Sjekker om new_Answer inneholder svar.
-           if new_Answer[0] == ceil(new_Answer[0]): #Sjekker om det er desimaler
-                valid_solution = True
-    new_solution = parseSolution(new_solution)
-    arr = [new_solution, new_Answer[0]]
-    return arr
-
-def make_variables(amount):
+def make_variables(amount): #this is not needed anymore
     variables = []
     for x in range(0, amount):
         variables.append('R' + str(x))
@@ -187,6 +152,7 @@ def make_variables(amount):
 def task_with_solution():
     q = getQuestion('algebra')  #gets a question from the DB
 
+    hardcoded_variables = ['R22', 'R21','R20','R19','R18','R17','R16','R15','R14','R13','R12','R11','R10','R9','R8','R7','R6','R3','R2','R1','R0']
     #I changed this to contain the amount of decimals allowed in the answer, so 0 = False basically.
     #todo make a rounding function using decimals_allowed
     decimals_allowed = int(q.number_of_decimals)
@@ -194,31 +160,20 @@ def task_with_solution():
     random_domain = (q.random_domain).split() #the domain of random numbers that can be generated for the question
     print(random_domain[0])
     zero_allowed = q.answer_can_be_zero#False #Boolean for 0 being a valid answer or not.
-    task = q.question_text#"r1x = r2 + r3x" #The task
-    task_text = q.question_text#"Løs likninga: r1x = r2 + r3x" #the text of the task
-    variables = make_variables(q.variables) #The variables used in the task
+    task = q.question_text
     solution = str(task) +"\n"+str(q.solution).replace('\\n', '\n') #db automatically adds the escape character \ to strings, so we remove it from \n
     #solution = solution.replace('\&\#x222B\;', '&#x222B;')
 
-    #str(task + "\n vi flytter over r3x:\n r1x - r3x = r2\n {r1 - r3}x = r2\n Vi deler på: {r1 - r3}\n x = {r2/(r1-r3)}") #Solution for the task
     print(solution)
-    oppgave2 = "r1 = r2x + r3"
-    solution2 = str("\n Vi flytter over r3: \n r1 - r3 = r2x\n {r1 - r3} = r2x \n Vi deler på: r2 \n x = {(r1-r3)/r2}")
-    task3 = "integrate(r1*x*sin(r2*x) dx" #husk pluss C
-    solution_task3 = str(task3 + "\n Bruker delvis integrasjon: \n integral(uv') dx = uv - integral(u'v) dx) \n setter: u = r1*x og v' = sin(r2*x) \n"
-                                 + "da blir: u' = r1 og v = -1/r2 cos(r2*x \n integrate(r1*x*sin(r2*x) dx = \n -(r1*x)/r2*cos(r2*x) - integrate(-1/r2*cos(r2*x))dx = \n"
-                                 + "-(r1*x)/r2*cos(r2*x) + 1/r2*integrate(cos(r2*x)) dx =\n {-(r1*x/r2)*cos(r2*x) + 1/(r2*r2)*sin(r2*x)} + C")
-    answer_task3 = 'r1*1(r2*r2)*sin(r2*x)-r1*x/r2*cos(r2*x)'
     valid_solution = False
     while valid_solution == False:
         new_solution = solution #solution
         new_Oppgave = task
-        new_Oppgavetext = task_text
-        for i in range(len(variables)):
-            random_tall = str(randint(int(random_domain[0]),int(random_domain[1])))
-            new_Oppgave = new_Oppgave.replace(variables[i], random_tall)
-           # new_Oppgavetext = new_Oppgavetext.replace(verdier[i], random_tall)
-            new_solution = new_solution.replace(variables[i], random_tall)
+        for i in range(len(hardcoded_variables)):
+            if new_Oppgave.count(hardcoded_variables[i]) > 0:
+                random_tall = str(randint(int(random_domain[0]),int(random_domain[1])))
+                new_Oppgave = new_Oppgave.replace(hardcoded_variables[i], random_tall)
+                new_solution = new_solution.replace(hardcoded_variables[i], random_tall)
         new_Answer = getAnswerFromSolution(new_solution)
         if new_Answer == 'zoo': #error handling at its finest.
             continue
@@ -317,3 +272,15 @@ def getQuestion(topic):
 @register.filter(name='cut')
 def cut(value, arg):
     return value.replace(arg, '<math>')
+
+def to_asciimath(s):
+    new_s = s
+    index = 0
+    counter = 0
+    #todo: do this only between asciimath delimeters: ``
+    for c in s:
+        if c == '/' or c == '^':
+            new_s = new_s[:index] + c + new_s[index:]
+            counter += 1
+        index += 1
+    return new_s

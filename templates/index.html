@@ -2,14 +2,21 @@
 <html>
 	<head>
     	<!-- Mathjax so mathml works -->
+        <!-- tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} -->
         <script type="text/x-mathjax-config">
+            // sdad
             MathJax.Hub.Config({
-				tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
-
+            	AsciiMath: {
+    			fixphi: true,
+    			useMathMLspacing: true,
+    			displaystyle: true,
+            	decimalsign: ".",
+            	delimiters: [['`','`'], ['$$','$$']]
+  				}
             });
 		</script>
         <script type="text/javascript"
-			src="http://cdn.mathjax.org/mathjax/2.1-latest/MathJax.js?config=TeX-AMS_HTML-full,Safe">
+			src="http://cdn.mathjax.org/mathjax/2.1-latest/MathJax.js?config=TeX-MML-AM_HTMLorMML,Safe">
 		</script>
 		<meta name="viewport" charset="UTF-8" content="width=device-width, initial-scale=1.0">
 		<link href="/static/css/bootstrap.min.css" rel = "stylesheet">
