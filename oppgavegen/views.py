@@ -49,8 +49,10 @@ def index(request):
     else:
        form = QuestionForm()
        form.fields["answer"].initial = answer #Setter initsiell verdi til skjult felt i form.
-
-    context_dict = {'title': generation.printer(), 'question' : question, 'answer' : answer, 'form' : form}
+    choices = arr[3]
+    template_type = arr[2]
+    #todo get type and choices in the template and generate a form with jquery acordingly
+    context_dict = {'title': generation.printer(), 'question' : question, 'answer' : answer, 'form' : form, 'choices' : choices, 'template_type' : template_type}
     return render_to_response('index', context_dict, context)
 
 
@@ -76,9 +78,6 @@ class TemplateForm(ModelForm):
             return cd
 
 def test(request):
-
-
-
     context = RequestContext(request)
     return render_to_response('test.html', context)
 

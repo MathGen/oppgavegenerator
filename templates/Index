@@ -4,6 +4,8 @@
 
 
 {% block content %}
+<script src="/static/js/jquery-1.11.2.min.js"></script>
+<script src="/static/js/answer_input.js"></script>
 <h3>
 
 {% autoescape off %}
@@ -15,5 +17,8 @@
 {{ form }}
     <input type="submit" value="Svar">
 <form>
+<div id="target"></div>
+
+
 
 {% endblock %}
