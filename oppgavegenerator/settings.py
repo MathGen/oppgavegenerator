@@ -34,13 +34,16 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
+    'registration',                 #django-registration-redux
     'django.contrib.admin',
-    'django.contrib.auth',
+    'django.contrib.auth',          # needed for registration
+    'django.contrib.sites',         # needed for registration (?)
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages', #I don't think we need this -Einar
+    'django.contrib.messages',      # I don't think we need this -Einar / do something about it - Eirik
     'django.contrib.staticfiles',
     'oppgavegen',
+    'bootstrap3',                   # django-bootstrap-3
 )
 
 MIDDLEWARE_CLASSES = (
@@ -90,3 +93,8 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 #PATH_PROJECT = os.path.realpath(os.path.dirname(__file__))
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
+
+#REGISTRATION SETTINGS
+ACCOUNT_ACTIVATION_DAYS = 7     # Amount of days a user has to activate their account
+REGISTRATION_AUTO_LOGIN = True  # Auto-login after activation. True/False
+SITE_ID = 1                     # Temporary solution for local production-environment
