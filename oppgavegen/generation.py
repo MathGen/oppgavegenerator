@@ -151,7 +151,7 @@ def make_variables(amount): #this is not needed anymore
     return variables
 def task_with_solution():
     q = getQuestion('algebra')  #gets a question from the DB
-
+    #The list is written in reverse to get to the single digit numbers last, as R1 would replace R11-> R19.
     hardcoded_variables = ['R22', 'R21','R20','R19','R18','R17','R16','R15','R14','R13','R12','R11','R10','R9','R8','R7','R6','R3','R2','R1','R0']
     #I changed this to contain the amount of decimals allowed in the answer, so 0 = False basically.
     #todo make a rounding function using decimals_allowed
@@ -161,19 +161,23 @@ def task_with_solution():
     print(random_domain[0])
     zero_allowed = q.answer_can_be_zero#False #Boolean for 0 being a valid answer or not.
     task = q.question_text
+    type = q.type
+    choices = q.choices
     solution = str(task) +"\n"+str(q.solution).replace('\\n', '\n') #db automatically adds the escape character \ to strings, so we remove it from \n
     #solution = solution.replace('\&\#x222B\;', '&#x222B;')
 
     print(solution)
     valid_solution = False
-    while valid_solution == False:
-        new_solution = solution #solution
+    while valid_solution == False: #loop until we get a form of the task that has a valid solution
+        new_solution = solution
         new_Oppgave = task
         for i in range(len(hardcoded_variables)):
             if new_Oppgave.count(hardcoded_variables[i]) > 0:
                 random_tall = str(randint(int(random_domain[0]),int(random_domain[1])))
                 new_Oppgave = new_Oppgave.replace(hardcoded_variables[i], random_tall)
                 new_solution = new_solution.replace(hardcoded_variables[i], random_tall)
+                if(type.lower() != 'normal'):
+                    choices = choices.replace(hardcoded_variables[i], random_tall)
         new_Answer = getAnswerFromSolution(new_solution)
         if new_Answer == 'zoo': #error handling at its finest.
             continue
@@ -185,7 +189,11 @@ def task_with_solution():
                 valid_solution = True
 
     new_solution = parseSolution(new_solution)
-    arr = [new_solution, new_Answer]
+    if type.lower() != 'normal':
+        choices = parseSolution(choices)
+        choices = choices.split('§') #if only 1 choice is given it might bug out, we can just enforce 2 choices to be given though..
+
+    arr = [new_solution, new_Answer, type, choices]
     return arr
 def validateSolution(answer, decimal_allowed, zero_allowed):
 
