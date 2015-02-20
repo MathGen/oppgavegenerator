@@ -10,4 +10,5 @@ urlpatterns = patterns('',
     url(r'^test/', 'oppgavegen.views.test', name='test'),
     url(r'^submit/', 'oppgavegen.views.submit', name='submit'),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^user/', include('registration.backends.default.urls')),              # registration views
 )
