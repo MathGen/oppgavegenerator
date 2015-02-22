@@ -49,10 +49,12 @@ def index(request):
     else:
        form = QuestionForm()
        form.fields["answer"].initial = answer #Setter initsiell verdi til skjult felt i form.
-    choices = arr[3]
+    choices = str(arr[3])
+    print(choices)
     template_type = arr[2]
+    number_of_answers = arr[4]
     #todo get type and choices in the template and generate a form with jquery acordingly
-    context_dict = {'title': generation.printer(), 'question' : question, 'answer' : answer, 'form' : form, 'choices' : choices, 'template_type' : template_type}
+    context_dict = {'title': generation.printer(), 'question' : question, 'answer' : answer, 'form' : form, 'choices' : choices, 'template_type' : template_type, 'number_of_answers' : number_of_answers}
     return render_to_response('index', context_dict, context)
 
 

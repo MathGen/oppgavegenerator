@@ -37,7 +37,7 @@ class Template(models.Model):
     number_of_decimals = models.PositiveSmallIntegerField()   #The number of decimals allowed in the answer.
     answer_can_be_zero = models.BooleanField(default=False)   #True/False for if the answer to a question can be Zero.
     random_domain = models.CharField(max_length=15)           #Space separated string with 2 numbers denoting which values the random numbers can be.
-    number_of_answers = models.SmallIntegerField(blank=True, null=True)  #The number of answers to to questions. (i.e. Second-degree polynomial equations may have 2 solutions
+    number_of_answers = models.SmallIntegerField(default=1, blank=True, null=True)  #The number of answers to to questions. (i.e. Second-degree polynomial equations may have 2 solutions
     type = models.CharField(max_length=200)
     choices = models.CharField(max_length=700, blank=True, null=True) #Different choices for multiple choice, empty for normal templates
 

@@ -1,6 +1,7 @@
 
 from random import randint
 from random import sample
+from random import shuffle
 from math import ceil
 from oppgavegen.nsp import NumericStringParser
 from sympy import *
@@ -163,6 +164,7 @@ def task_with_solution():
     task = q.question_text
     type = q.type
     choices = q.choices
+    number_of_answers = q.number_of_answers
     solution = str(task) +"\n"+str(q.solution).replace('\\n', '\n') #db automatically adds the escape character \ to strings, so we remove it from \n
     #solution = solution.replace('\&\#x222B\;', '&#x222B;')
 
@@ -189,11 +191,15 @@ def task_with_solution():
                 valid_solution = True
 
     new_solution = parseSolution(new_solution)
-    if type.lower() != 'normal':
+    if type.lower() == 'multiple':
         choices = parseSolution(choices)
         choices = choices.split('§') #if only 1 choice is given it might bug out, we can just enforce 2 choices to be given though..
+        choices.append(new_Answer)
+        shuffle(choices) #Shuffles the choices so that the answer is not always in the same place.
+        choices = '§'.join(choices)
 
-    arr = [new_solution, new_Answer, type, choices]
+
+    arr = [new_solution, new_Answer, type, choices, number_of_answers]
     return arr
 def validateSolution(answer, decimal_allowed, zero_allowed):
 
@@ -269,7 +275,7 @@ def sympyTest():
 
 def getQuestion(topic):
     #todo make this general so it doesn't just return a specified result
-    q = Template.objects.get(pk=5)
+    q = Template.objects.get(pk=7)
     #q = Template.objects.filter(topic__iexact=topic) #Gets all Templates in that topic
     #q = q.filter(rating ---------)
 

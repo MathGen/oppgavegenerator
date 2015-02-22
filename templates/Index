@@ -6,6 +6,12 @@
 {% block content %}
 <script src="/static/js/jquery-1.11.2.min.js"></script>
 <script src="/static/js/answer_input.js"></script>
+<script src="/static/js/test_file.js"></script>
+<!-- this might seem a bit redundant, but for some reason using var choices = {{choices}} did not work -->
+<div hidden id="answer">{{answer}}</div>
+<div hidden id="template_type">{{template_type}}</div>
+<div hidden id="choices">{{choices}}</div>
+<div hidden id="number_of_answers">{{number_of_answers}}</div>
 <h3>
 
 {% autoescape off %}
