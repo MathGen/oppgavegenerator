@@ -34,7 +34,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
-    'registration',                 #django-registration-redux
+    'registration',                 # django-registration-redux
     'django.contrib.admin',
     'django.contrib.auth',          # needed for registration
     'django.contrib.sites',         # needed for registration (?)
@@ -97,4 +97,4 @@ TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 #REGISTRATION SETTINGS
 ACCOUNT_ACTIVATION_DAYS = 7     # Amount of days a user has to activate their account
 REGISTRATION_AUTO_LOGIN = True  # Auto-login after activation. True/False
-SITE_ID = 1                     # Temporary solution for local production-environment
+SITE_ID = 1                     # Temporary solution for local production-environment (contrib.sites)
