@@ -29,7 +29,6 @@ class Template(models.Model):
     answer = models.CharField(max_length=200)                 #A simple math operation to calculate the problem template. Should be the last step in the solution.
     creator = models.ForeignKey(User, blank=True, null=True)             #User ID of creator of template
     creation_date = models.DateTimeField('date created', blank=True, null=True)      #Date and time of creation
-    variables = models.PositiveSmallIntegerField()            #A number of how many variables are in the problem template.
     rating = models.PositiveSmallIntegerField(blank=True, null=True)     #Difficulty rating. Defaults to 1200.
     times_solved = models.PositiveIntegerField(blank=True, null=True)    #Amount of times the problem has been solved.
     times_failed = models.PositiveIntegerField(blank=True, null=True)    #Amount of times the problem has not been solved (wrong answer.)
@@ -37,7 +36,6 @@ class Template(models.Model):
     number_of_decimals = models.PositiveSmallIntegerField()   #The number of decimals allowed in the answer.
     answer_can_be_zero = models.BooleanField(default=False)   #True/False for if the answer to a question can be Zero.
     random_domain = models.CharField(max_length=15)           #Space separated string with 2 numbers denoting which values the random numbers can be.
-    number_of_answers = models.SmallIntegerField(default=1, blank=True, null=True)  #The number of answers to to questions. (i.e. Second-degree polynomial equations may have 2 solutions
     type = models.CharField(max_length=200)
     choices = models.CharField(max_length=700, blank=True, null=True) #Different choices for multiple choice, empty for normal templates
 
