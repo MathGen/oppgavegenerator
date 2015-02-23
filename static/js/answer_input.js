@@ -1,14 +1,16 @@
 $(document).ready(function () {
-    var answer_box = '<input type="textbox" name="answer_box" />';
+    alert('wtf');
     var text = 'some text';
     var answer = $('#answer').html();
     var template_type = $('#template_type').html();
     var number_of_answers = 1;
-    if(answer.contains('§')){
+    if(answer.indexOf('§') > -1){
         number_of_answers = answer.split('§');
         number_of_answers = number_of_answers.length;
     }
+    alert(template_type);
     if (String(template_type) == 'multiple') {
+        alert('choo choo mothafucka');
         choices = $('#choices').html();
         choices = choices.split('§');
         for (i = 0; i < choices.length; i++) {

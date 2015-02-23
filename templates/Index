@@ -12,9 +12,8 @@
 <div hidden id="choices">{{choices}}</div>
 <h3>
 
-{% autoescape off %}
 {{ question|linebreaks}}
-{% endautoescape %}
+
 <form>
 {% csrf_token %}
 </form>
