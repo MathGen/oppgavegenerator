@@ -11,7 +11,7 @@ $(document).ready(function () {
         choices = $('#choices').html();
         choices = choices.split('§');
         for (i = 0; i < choices.length; i++) {
-            text = choices[i] + '<br />';
+            text = '`' + choices[i] + '`' + '<br />';
             $('#target').append('<input type="radio" name="answer_button" id="radio' + i + '" value="' + choices[i] + '"/>' + text);
         }
     }
@@ -26,32 +26,30 @@ $(document).ready(function () {
         }
     }
 
-    $('#submit').click(function(e){
-    var user_answer;
-    if(template_type == 'multiple'){
-        user_answer = getRadioValue('answer_button');
-    }
-    else{
-        for(i = 0; i < number_of_answers; i++) {
-            if(i > 0){
-                user_answer += '§';
-            }
-            user_answer += document.getElementById('ans_box' + i).value;
+
+    $('#submit_answer').click(function (e) {
+        e.preventDefault();
+        var user_answer = "";
+        if (template_type == 'multiple') {
+            user_answer = getRadioValue('answer_button');
         }
-    }
+        else {
+            for (i = 0; i < number_of_answers; i++) {
+                if (i > 0) {
+                    user_answer += '§';
+                }
+                user_answer += document.getElementById('ans_box' + i).value;
+            }
+        }
 
-    //make a dict with the user answer and the answer:
-        var submit_dict = [];
-        submit_dict.push({
-        key:   "user_answer",
-        value: user_answer,
-        key:   "answer",
-        value: answer,
-        key:   "csrfmiddlewaretoken",
-        value: getCookie('csrftoken')
-        });
+        //make a dict with the user answer and the answer:
+        var submit_dict = {
+            "user_answer" : String(user_answer),
+            "answer" : String(answer),
+            "csrfmiddlewaretoken" : getCookie('csrftoken')
+        };
 
-    post(/answer/, submit_dict);
+        post(/answers/, submit_dict);
 
     });
 
@@ -101,7 +99,7 @@ function getCookie(name) {
 }
 
 function getRadioValue(groupName) {
-    var radios = theFormName.elements[groupName];
+    var radios = document.getElementsByName(groupName);
     var rdValue; // declares the global variable 'rdValue'
     for (var i = 0; i < radios.length; i++) {
         var someRadio = radios[i];

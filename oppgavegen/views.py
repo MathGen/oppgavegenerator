@@ -58,11 +58,11 @@ def index(request):
 
 
 class QuestionForm(forms.Form):
-    question = forms.CharField(label='', max_length=100)
-    answer = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=100)
+    user_answer = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400)
+    answer = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400)
 
     def process(self):
-        cd =  [self.cleaned_data['question'], self.cleaned_data['answer']]
+        cd =  [self.cleaned_data['user_answer'], self.cleaned_data['answer']]
         return cd
 
 def playground(request):
@@ -115,8 +115,10 @@ def answers(request):
     #todo: move logic from index post to here.
     context = RequestContext(request)
     if request.method == 'POST':
+        print("honka_")
         form = QuestionForm(request.POST)
         if form.is_valid():
+            print("dory")
             form_values = form.process()
             user_answer = form_values[0]
             print('Before:' + user_answer)
@@ -127,4 +129,6 @@ def answers(request):
             context_dict = {'title': "Oppgavegen",  'answer' :  str(answer_text), 'user_answer' : user_answer}
             #todo make a button on the answers page with "generate new question"
             return render_to_response('answers', context_dict, context)
-    return  ;
+        else:
+            print(form.errors)
+    return  render_to_response('answers')
