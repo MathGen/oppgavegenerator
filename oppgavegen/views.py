@@ -83,6 +83,10 @@ def test(request):
     context = RequestContext(request)
     return render_to_response('test.html', context)
 
+def gen(request):
+    context = RequestContext(request)
+    return render_to_response('gen.html', context)
+
 def submit(request):
     message = 'don\'t come here'
     if request.method == 'POST':
