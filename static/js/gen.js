@@ -500,7 +500,7 @@ $(document).ready(function() {
 		array_submit['question_text']		= latex_to_asciimath($(Q_INPUT).mathquill('latex'));
 		var tmp_solution = [];
 		for(var i = 1; i <= STEP; i++){
-			tmp_solution.push(latex_to_asciimath($(S_INPUT + i).mathquill('latex')));
+			tmp_solution.push(latex_to_asciimath('\\text{' + $('#s_text_1').val() + '}' + $(S_INPUT + i).mathquill('latex')));
 		}
 		array_submit['solution']			= tmp_solution.join('\n');
 		var tmp_answer = [];
@@ -574,7 +574,10 @@ function latex_to_asciimath(latex){
 	while(i < la.length){
 		if(la[i] == '\\'){
 			if(la[i + 1] == 't' && la[i + 2] == 'e' && la[i + 3] == 'x' && la[i + 4] == 't'){
-				while(la[i] != ')' && counter == 0){
+				while(true){
+					if(la[i] == ')' && counter == 0){
+						break
+					}
 					if(la[i] == '('){
 						counter++;
 					}
