@@ -4,67 +4,55 @@ body{
 	padding-top: 65px; /*la til denne for at body ikke skal bli gjemt bak navbar (funker bare hvis navbar er fixed)*/
 	margin-bottom: 80px;
 }
-
-.page-header{
-	margin-top: 0;
+/**********************************/
+sup{							/**/
+    top: 0em;					/* Due to a */
+}								/* conflict*/
+sub{							/* between bootstrap*/
+	bottom: 0em;				/* and mathquill, we*/
+}								/* need to make these*/
+.denominator{					/* new rules*/
+    box-sizing: content-box;	/**/
+}								/**/
+/**********************************/
+.input_field{
+	display: table;
+	width: 100%;
 }
-
-.panel-body{
-	padding-top: 0;
+.input_mathquill{
+	display: table-cell;
+	vertical-align: middle;
 }
-
-.featuredImg{
-	margin-bottom: 15px;
-}
-
-.input_fields_wrap{
-	margin-top: 10px;
-}
-
-.input_fields_test{
-	margin-bottom: 10px;
-}
-
-.test_field{
-	margin-top: 5px;
-}
-
-.button_menu_mal{
-	margin-top: 5px;
-}
-
 .btn{
 	margin-bottom: 5px;
 }
-
-.input_content_var{
-	font-size: 3.5em;
-	color: #D9534F;
+.mathquill-editable{
+	font-size: 2em;
 }
-
-.input_content_x{
-	font-size: 3.5em;
-	color: #F0AD4E;
-}
-
-.input_content_op{
-	font-size: 3em;
-}
-
-.input_content_eq{
-	font-size: 3em;
-}
-
-.input_content_text{
-	font-size: 2.5em;
+.text{
 	color: #5BC0DE;
 }
-
-.input_content_calc{
-	font-size: 3.5em;
+.content_var{
+	color: #D9534F;
+}
+.content_x{
+	color: #F0AD4E;
+}
+.content_calc{
 	color: #5CB85C;
 }
-
-#opt_range_form{
+.sup_btn{
+	top: -0.5em;
+}
+.sub_btn{
+	bottom: -0.5em;
+}
+.s_input_field{
 	margin-top: 15px;
 }
+
+/*
+var{
+	color: #D9534F;
+}
+*/
