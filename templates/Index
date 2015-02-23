@@ -10,7 +10,6 @@
 <div hidden id="answer">{{answer}}</div>
 <div hidden id="template_type">{{template_type}}</div>
 <div hidden id="choices">{{choices}}</div>
-<div hidden id="number_of_answers">{{number_of_answers}}</div>
 <h3>
 
 {% autoescape off %}

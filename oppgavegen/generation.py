@@ -164,7 +164,7 @@ def task_with_solution():
     task = q.question_text
     type = q.type
     choices = q.choices
-    number_of_answers = q.number_of_answers
+
     solution = str(task) +"\n"+str(q.solution).replace('\\n', '\n') #db automatically adds the escape character \ to strings, so we remove it from \n
     #solution = solution.replace('\&\#x222B\;', '&#x222B;')
 
@@ -199,7 +199,7 @@ def task_with_solution():
         choices = '§'.join(choices)
 
 
-    arr = [new_solution, new_Answer, type, choices, number_of_answers]
+    arr = [new_solution, new_Answer, type, choices]
     return arr
 def validateSolution(answer, decimal_allowed, zero_allowed):
 

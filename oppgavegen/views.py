@@ -52,9 +52,8 @@ def index(request):
     choices = str(arr[3])
     print(choices)
     template_type = arr[2]
-    number_of_answers = arr[4]
     #todo get type and choices in the template and generate a form with jquery acordingly
-    context_dict = {'title': generation.printer(), 'question' : question, 'answer' : answer, 'form' : form, 'choices' : choices, 'template_type' : template_type, 'number_of_answers' : number_of_answers}
+    context_dict = {'title': generation.printer(), 'question' : question, 'answer' : answer, 'form' : form, 'choices' : choices, 'template_type' : template_type}
     return render_to_response('index', context_dict, context)
 
 
@@ -104,7 +103,6 @@ def submit(request):
             template.rating = 1200
             template.times_failed = 0
             template.times_solved = 0
-            template.number_of_answers = 1 #todo get this from the post
             template.creation_date = datetime.now()
             template.save()
             message = 'success!'
