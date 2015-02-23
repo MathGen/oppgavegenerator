@@ -3,6 +3,11 @@ $(document).ready(function () {
     var text = 'some text';
     var answer = $('#answer').html();
     var template_type = $('#template_type').html();
+    var number_of_answers = 1;
+    if(answer.contains('§')){
+        number_of_answers = answer.split('§');
+        number_of_answers = number_of_answers.length;
+    }
     if (String(template_type) == 'multiple') {
         choices = $('#choices').html();
         choices = choices.split('§');
@@ -12,20 +17,42 @@ $(document).ready(function () {
         }
     }
     else if (template_type == 'normal') {
-        var number_of_answers = $('#number_of_answers').html();
         for (i = 0; i < number_of_answers; i++) {
             $('#target').append('<input type="textbox" name="answer_box" id="ans_box'+ i +'" />');
         }
     }
     else if (template_type == 'insert') {
-        var number_of_answers = $('#number_of_answers').html();
         for (i = 0; i < number_of_answers; i++) {
             $('#target').append(answer_box); //todo: This needs to be inserted into text where needed.
         }
     }
 
     $('#submit').click(function(e){
+    var user_answer;
+    if(template_type == 'multiple'){
+        user_answer = getRadioValue('answer_button');
+    }
+    else{
+        for(i = 0; i < number_of_answers; i++) {
+            if(i > 0){
+                user_answer += '§';
+            }
+            user_answer += document.getElementById('ans_box' + i).value;
+        }
+    }
 
+    //make a dict with the user answer and the answer:
+        var submit_dict = [];
+        submit_dict.push({
+        key:   "user_answer",
+        value: user_answer,
+        key:   "answer",
+        value: answer,
+        key:   "csrfmiddlewaretoken",
+        value: getCookie('csrftoken')
+        });
+
+    post(/answer/, submit_dict);
 
     });
 
@@ -72,4 +99,18 @@ function getCookie(name) {
         }
     }
     return cookieValue;
+}
+
+function getRadioValue(groupName) {
+    var radios = theFormName.elements[groupName];
+    var rdValue; // declares the global variable 'rdValue'
+    for (var i = 0; i < radios.length; i++) {
+        var someRadio = radios[i];
+        if (someRadio.checked) {
+            rdValue = someRadio.value;
+            break;
+        }
+        else rdValue = 'noRadioChecked'; //todo prevent this from happening by forcing the user to select one before submitting
+    }
+    return rdValue;
 }

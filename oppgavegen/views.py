@@ -73,7 +73,7 @@ def playground(request):
 class TemplateForm(ModelForm):
     class Meta:
         model = Template
-        fields = '__all__' #['question_text', 'solution', 'answer', 'variables','number_of_decimals','answer_can_be_zero','random_domain'] #todo add creator and number_of_answers..
+        fields = '__all__' #['question_text', 'solution', 'answer', 'variables','number_of_decimals','answer_can_be_zero','random_domain'] #todo add creator..
 
         def process(self):
             cd =  [self.cleaned_data['question'], self.cleaned_data['answer']]
@@ -109,3 +109,20 @@ def submit(request):
     context = RequestContext(request)
     return render_to_response('submit',{'message': message}, context)
 
+def answers(request):
+    #todo: move logic from index post to here.
+    context = RequestContext(request)
+    if request.method == 'POST':
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            form_values = form.process()
+            user_answer = form_values[0]
+            print('Before:' + user_answer)
+            user_answer = generation.calculateAnswer(user_answer) #format the userinput the same way we format the solution
+            print('After:' + user_answer)
+            answer = form_values[1]
+            answer_text = generation.checkAnswer(user_answer,answer)
+            context_dict = {'title': "Oppgavegen",  'answer' :  str(answer_text), 'user_answer' : user_answer}
+            #todo make a button on the answers page with "generate new question"
+            return render_to_response('answers', context_dict, context)
+    return  ;

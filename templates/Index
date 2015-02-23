@@ -16,12 +16,9 @@
 {% autoescape off %}
 {{ question|linebreaks}}
 {% endautoescape %}
-</h3>
-<form action="/index/" method="post">
-{% csrf_token %}
-{{ form }}
-    <input type="submit" value="Svar">
 <form>
+{% csrf_token %}
+</form>
 <div id="target"></div>
 
 

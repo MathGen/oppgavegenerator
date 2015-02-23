@@ -29,7 +29,7 @@ def arithmetics():
     arr = [string, answer]
     return arr
 
-def checkAnswer(user_answer, answer):
+def checkAnswer(user_answer, answer): #todo add support for multiple answers and also return solution if the answer is wrong
     if user_answer == answer:
        string = "Du har svart riktig!"
     else:
