@@ -521,13 +521,16 @@ $(document).ready(function() {
 			tmp_allow_zero = 'false';
 		}
 		array_submit['answer_can_be_zero']	= tmp_allow_zero;
+		array_submit["csrfmiddlewaretoken"] = getCookie('csrftoken');
 		
 		// Testing output
-		var test_output = [];
-		for(var s in array_submit){
-			test_output.push(s + '\n' + array_submit[s]);
-		}
-		alert(test_output.join('\n'));
+		//var test_output = [];
+		//for(var s in array_submit){
+		//	test_output.push(s + '\n' + array_submit[s]);
+		//}
+		//alert(test_output.join('\n'));
+
+		post(/submit/, array_submit);
 	});
 });
 
