@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    alert('wtf');
     var text = 'some text';
     var answer = $('#answer').html();
     var template_type = $('#template_type').html();
@@ -8,9 +7,7 @@ $(document).ready(function () {
         number_of_answers = answer.split('§');
         number_of_answers = number_of_answers.length;
     }
-    alert(template_type);
     if (String(template_type) == 'multiple') {
-        alert('choo choo mothafucka');
         choices = $('#choices').html();
         choices = choices.split('§');
         for (i = 0; i < choices.length; i++) {
