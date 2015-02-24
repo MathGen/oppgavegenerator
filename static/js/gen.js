@@ -521,6 +521,7 @@ $(document).ready(function() {
 		}
 		array_submit['answer_can_be_zero']	= tmp_allow_zero;
 		array_submit["csrfmiddlewaretoken"] = getCookie('csrftoken');
+		array_submit['type'] = 'normal';
 		
 		// Testing output
 		//var test_output = [];
