@@ -54,9 +54,6 @@ $(document).ready(function () {
     });
 
 });
-//todo: event listener to the submit button and then post dat shit, yo.
-//todo: add answer textbox, yo.
-//todo: Split answers with § to find number of answers find out where the best place to do that is.
 
 function post(path, params, method) {
     method = method || "post"; // Set method to post by default if not specified.
