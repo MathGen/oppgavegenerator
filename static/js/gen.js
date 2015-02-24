@@ -495,7 +495,7 @@ $(document).ready(function() {
 	$(o_btn_save).click(function(e){
 		e.preventDefault();
 		var array_submit = {};
-		array_submit['topic']				= $('#category_selection').find(':selected').text();
+		array_submit['topic']				= $('#category_selection').find(':selected').attr('id');
 		array_submit['question_text']		= latex_to_asciimath($(Q_INPUT).mathquill('latex'));
 		var tmp_solution = [];
 		for(var i = 1; i <= STEP; i++){
@@ -531,6 +531,16 @@ $(document).ready(function() {
 		//alert(test_output.join('\n'));
 		post(/submit/, array_submit);
 	});
+
+	//create a drop down list from db values
+	var formated_db_topics = "";
+	var db_topics = $('#db_topics').html();
+	db_topics = db_topics.split('§');
+	for(i = 0; i < db_topics.length; i+=2){
+		formated_db_topics = db_topics[i+1].charAt(0).toUpperCase() + db_topics[i+1].slice(1);
+		$("#category_selection").append('<option id="'+db_topics[i] + '">'+ formated_db_topics +'</option>');
+	}
+
 });
 
 /**

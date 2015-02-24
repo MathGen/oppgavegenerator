@@ -84,7 +84,14 @@ def test(request):
 
 def gen(request):
     context = RequestContext(request)
-    return render_to_response('gen.html', context)
+    #retrieves a list of topics and passes them to the view.
+    topics = ""
+    for e in Topic.objects.all():
+        topics += '§' + str(e.pk) + '§'
+        topics += e.topic
+    topics = topics[1:]
+    context_dict = {'topics':topics}
+    return render_to_response('gen.html', context_dict, context)
 
 def submit(request):
     message = 'don\'t come here'
@@ -92,12 +99,8 @@ def submit(request):
         message = 'failure!'
         #todo check input for errors
         form = TemplateForm(request.POST)
-        #print(form)
         if form.is_valid():
             template = form.save(commit=False)
-            print(template.topic)
-            print(template.topic_id)
-            template.topic = Topic.objects.get(pk=7)
             template.creator = User.objects.get(pk=2) #todo get user from the user submitting the form
             #could get creator from username=einar
             template.rating = 1200

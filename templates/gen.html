@@ -9,6 +9,7 @@
 		<script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
 	</head>
 	<body>
+    	<div hidden id="db_topics">{{topics}}</div>
     	<form>
 		{% csrf_token %}
 		</form>
@@ -53,9 +54,7 @@
 										<div class="col-sm-10">
 											<select id="category_selection" class="form-control">
 												<option disabled selected>Velg en kategori...</option>
-												<option>9</option>
-												<option>7</option>
-												<option>8</option>
+
 											</select>
 										</div>
 									</div>
