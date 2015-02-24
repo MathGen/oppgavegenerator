@@ -7,7 +7,6 @@ var STEP					= 1;
 var ANSWER					= 1;
 var c_count 				= 0;
 var array_calc				= [];
-var array_submit			= {};
 
 $(document).ready(function() {
 	// Common variables
@@ -495,7 +494,7 @@ $(document).ready(function() {
 	var o_btn_save = $('#o_btn_save');
 	$(o_btn_save).click(function(e){
 		e.preventDefault();
-		array_submit = {};
+		var array_submit = {};
 		array_submit['topic']				= $('#category_selection').find(':selected').text();
 		array_submit['question_text']		= latex_to_asciimath($(Q_INPUT).mathquill('latex'));
 		var tmp_solution = [];
@@ -529,7 +528,6 @@ $(document).ready(function() {
 		//	test_output.push(s + '\n' + array_submit[s]);
 		//}
 		//alert(test_output.join('\n'));
-
 		post(/submit/, array_submit);
 	});
 });
@@ -655,3 +653,43 @@ function isUpperCase(str){
 //$('<span>\sqrt{2}</span>').mathquill().appendTo('#q_input_mathquill').mathquill('editable');
 //$('<span/>').mathquill().appendTo('#q_input_mathquill').mathquill('latex','a_n x^n');
 //$('#q_input_mathquill').append('<span>$</span>').mathquill('editable');
+
+function post(path, params, method) {
+    method = method || "post"; // Set method to post by default if not specified.
+
+    // The rest of this code assumes you are not using a library.
+    // It can be made less wordy if you use one.
+    var form = document.createElement("form");
+    form.setAttribute("method", method);
+    form.setAttribute("action", path);
+
+    for(var key in params) {
+        if(params.hasOwnProperty(key)) {
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", key);
+            hiddenField.setAttribute("value", params[key]);
+
+            form.appendChild(hiddenField);
+         }
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+}
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}

@@ -92,7 +92,7 @@ def submit(request):
         message = 'failure!'
         #todo check input for errors
         form = TemplateForm(request.POST)
-        print(form)
+        #print(form)
         if form.is_valid():
             template = form.save(commit=False)
             print(template.topic)
@@ -104,7 +104,9 @@ def submit(request):
             template.times_failed = 0
             template.times_solved = 0
             template.creation_date = datetime.now()
+            template.choices = ""
             template.save()
+
             message = 'success!'
         else:
             print(form.errors)
