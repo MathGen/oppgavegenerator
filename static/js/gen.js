@@ -20,6 +20,11 @@ $(document).ready(function() {
 		var t_input = $('#t_input').val();
 		$(Q_INPUT).mathquill('cmd', '\\text').mathquill('cmd', t_input);
 		$('#t_input').val("");
+		var custom_tab_event = $.Event('keydown');
+		custom_tab_event.bubbles = true;
+		custom_tab_event.cancelable = true;
+		custom_tab_event.keyCode = 9;
+		$(Q_INPUT).trigger(custom_tab_event);
 	});
 	
 	// Cancel text-input
@@ -192,10 +197,37 @@ $(document).ready(function() {
 	var btn_delete = $('.btn_delete');
 	$(btn_delete).click(function(e){
 		e.preventDefault();
-		if($(get_input_field(this) + ' :last').is('textarea')){}
-		else{
-			$(get_input_field(this) + ' :last').remove();
+		var custom_del_event = $.Event('keydown');
+		custom_del_event.bubbles = true;
+		custom_del_event.cancelable = true;
+		custom_del_event.keyCode = 8;
+		$(get_input_field(this)).trigger(custom_del_event);
+		var id = $(this).attr('id');
+		var id_group = id[0];
+		if(id_group == 'q'){
+			var check_char = [];
+			var check_id = [];
+			for(var i = 0; i < 23; i++){
+				if($('#q_btn_abc_' + i).length > 0){
+					check_char.push($('#q_btn_abc_' + i).html());
+					check_id.push(i);
+				}
+			}
+			for(var n = 0; n < check_char.length; n++){
+				found = false;
+				$(Q_INPUT).find('var').each(function(){
+					if($(this).html() == check_char[n]){
+						found = true;
+					}
+				});
+				if(!found){
+					$('#q_btn_abc_' + check_id[n]).remove();
+					$('#s_btn_abc_' + check_id[n]).remove();
+					$('#c_btn_abc_' + check_id[n]).remove();
+				}
+			}
 		}
+		//$(get_input_field(this)).find('textarea').focus();
 	});
 	
 	// Clear input
@@ -205,22 +237,13 @@ $(document).ready(function() {
 		var btn_id = $(this).attr('id');
 		btn_id = btn_id[0];
 		if(btn_id == 'q'){
-			$('#q_input_mathquill .textarea').nextAll().html('');
+			$(Q_INPUT).mathquill('revert').mathquill('editable');
 			$('.btn_var_abc').remove();
-			q_var = "a";
-			q_var_id = 0;
 		}
-		else if(btn_id == 's'){
-			for(var i = STEP; i > 1; i--){
-				$('#s_input_mathquill_'+i+' .textarea').nextAll().html('');
-				$('#step_' + i).fadeOut();
-			}
-			$('#s_input_mathquill_1 .textarea').nextAll().html('');
-			STEP = 1;
+		else{
+			$(get_input_field(this)).mathquill('revert').mathquill('editable');
 		}
-		else if(btn_id == 'c'){
-			$(C_INPUT + ' .textarea').nextAll().html('');
-		}
+		//$(get_input_field(this)).find('textarea').focus();
 	});
 	
 	// Add required ids/classes to manually typed variables
@@ -318,6 +341,11 @@ $(document).ready(function() {
 				$(Q_INPUT).mathquill('cmd', '\\text').mathquill('cmd', t_input);
 				$('#t_input').val("");
 				$('#text_modal').modal('toggle');
+				var custom_tab_event = $.Event('keydown');
+				custom_tab_event.bubbles = true;
+				custom_tab_event.cancelable = true;
+				custom_tab_event.keyCode = 9;
+				$(Q_INPUT).trigger(custom_tab_event);
 			}
 		}
 	});
@@ -372,6 +400,7 @@ $(document).ready(function() {
 	$(s_btn_del_step).click(function(e){
 		e.preventDefault();
 		var btn_id = parseInt($(this).attr("id").match(/[\d]+$/));
+		$(get_input_field(this)).mathquill('revert').mathquill('editable');
 		$('#step_' + btn_id).fadeOut();
 		STEP--;
 		$('#s_btn_del_' + STEP).show();
@@ -385,6 +414,7 @@ $(document).ready(function() {
 		if(ANSWER == 2){
 			$('#ans_title_1').hide();
 		}
+		$(get_input_field(this)).mathquill('revert').mathquill('editable');
 		$('#answer_' + btn_id).fadeOut();
 		ANSWER--;
 		$('#a_btn_del_' + ANSWER).show();
@@ -400,31 +430,36 @@ $(document).ready(function() {
 			$('#o_panel').fadeOut();
 			$('.btn-group-a').prop('disabled', false);
 			for(var i = ANSWER; i > 1; i--){
+				$(A_INPUT + ANSWER).mathquill('revert').mathquill('editable');
 				$('#answer_' + i).fadeOut();
 			}
 			ANSWER = 1;
+			$(A_INPUT + ANSWER).mathquill('revert').mathquill('editable');
 			$('#a_panel').fadeOut();
 			$('.btn-group-s').prop('disabled', false);
 			for(var i = STEP; i > 1; i--){
-				//$('#s_input_mathquill_'+i+' .textarea').nextAll().remove();
+				$(get_input_field(this)).mathquill('revert').mathquill('editable');
 				$('#step_' + i).fadeOut();
 			}
-			//$('#s_input_mathquill_1 .textarea').nextAll().remove();
 			STEP = 1;
+			$(get_input_field(this)).mathquill('revert').mathquill('editable');
 			$(s_panel).fadeOut();
 			$('.btn-group-q').prop('disabled', false);
 		}
 		else if(btn_id == 'c'){
-			//$(C_INPUT + ' .textarea').nextAll().html('');
+			$(C_INPUT).mathquill('revert').mathquill('editable');
 		}
 		else if(btn_id == 'a'){
 			$('#o_panel').fadeOut();
 			$('.btn-group-a').prop('disabled', false);
 			for(var i = ANSWER; i > 1; i--){
+				$(get_input_field(this)).mathquill('revert').mathquill('editable');
 				$('#answer_' + i).fadeOut();
 			}
 			ANSWER = 1;
+			$(get_input_field(this)).mathquill('revert').mathquill('editable');
 			$('#a_panel').fadeOut();
+			$('#ans_title_1').hide();
 			$('.btn-group-s').prop('disabled', false);
 		}
 		else if(btn_id == 'o'){
@@ -461,7 +496,8 @@ $(document).ready(function() {
 			la.push('@?' + latex_to_asciimath(c_latex) + '?@');
 			la.join('');
 			array_calc.push(la);
-			
+			$(C_INPUT).mathquill('revert').mathquill('editable');
+
 			$('<button id="s_btn_calc_'+c_count+'" class="btn btn-success btn_calc">'+c_var+'</button>').insertBefore('#s_btn_calc_delete');
 			$('#s_btn_calc_' + c_count).popover({
 				html: true,
