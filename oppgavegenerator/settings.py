@@ -34,7 +34,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
-    'registration',                 # django-registration-redux
     'django.contrib.admin',
     'django.contrib.auth',          # needed for registration
     'django.contrib.sites',         # needed for registration (?)
@@ -44,6 +43,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'oppgavegen',
     'bootstrap3',                   # django-bootstrap-3
+    'registration'                 # django-registration-redux
 )
 
 MIDDLEWARE_CLASSES = (
