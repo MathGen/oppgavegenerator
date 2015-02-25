@@ -35,7 +35,7 @@ $(document).ready(function() {
 	});
 	
 	// Open text-input with focus
-	var btn_text = $('#q_btn_text')
+	var btn_text = $('#q_btn_text');
 	$(btn_text).click(function(e){
 		$('#text_modal').on('shown.bs.modal', function () {
 			$('#t_input').focus();
