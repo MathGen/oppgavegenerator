@@ -39,7 +39,7 @@ def checkAnswer(user_answer, answer): #todo add support for multiple answers and
 
     return string
 
-def algebra():
+def algebra(): #Legacy function 
     # ax + b = c
     # ax + b = cx
     # ax + bx = c
@@ -164,6 +164,7 @@ def task_with_solution():
     task = q.question_text
     type = q.type
     choices = q.choices
+    dictionary = q.dictionary
 
     solution = str(task) +"\n"+str(q.solution).replace('\\n', '\n') #db automatically adds the escape character \ to strings, so we remove it from \n
     #solution = solution.replace('\&\#x222B\;', '&#x222B;')
@@ -172,34 +173,39 @@ def task_with_solution():
     valid_solution = False
     while valid_solution == False: #loop until we get a form of the task that has a valid solution
         new_solution = solution
-        new_Oppgave = task
+        new_task = task
         for i in range(len(hardcoded_variables)):
-            if new_Oppgave.count(hardcoded_variables[i]) > 0:
+            if new_task.count(hardcoded_variables[i]) > 0:
                 random_tall = str(randint(int(random_domain[0]),int(random_domain[1])))
-                new_Oppgave = new_Oppgave.replace(hardcoded_variables[i], random_tall)
+                new_task = new_task.replace(hardcoded_variables[i], random_tall)
                 new_solution = new_solution.replace(hardcoded_variables[i], random_tall)
                 if(type.lower() != 'normal'):
                     choices = choices.replace(hardcoded_variables[i], random_tall)
-        new_Answer = getAnswerFromSolution(new_solution)
-        if new_Answer == 'zoo': #error handling at its finest.
+        new_answer = getAnswerFromSolution(new_solution)
+        if new_answer == 'zoo': #error handling at its finest.
             continue
-        valid_solution = validateSolution(new_Answer, decimal_allowed,zero_allowed)
-        if  '/' not in str(new_Answer) and 'cos' not in str(new_Answer) and 'sin' not in str(new_Answer) and 'tan' not in str(new_Answer):
-            if ((decimal_allowed == False and valid_solution == True) or (checkForDecimal(new_Answer))): #Remove float status if the number is supposed to be a integer
+        valid_solution = validateSolution(new_answer, decimal_allowed,zero_allowed)
+        if  '/' not in str(new_answer) and 'cos' not in str(new_answer) and 'sin' not in str(new_answer) and 'tan' not in str(new_answer):
+            if ((decimal_allowed == False and valid_solution == True) or (checkForDecimal(new_answer))): #Remove float status if the number is supposed to be a integer
                 print("answer is not a float") #todo find out if i need this anymore
-                new_Answer = str(int(new_Answer))
+                new_answer = str(int(new_answer))
                 valid_solution = True
 
     new_solution = parseSolution(new_solution)
     if type.lower() == 'multiple':
         choices = parseSolution(choices)
         choices = choices.split('§') #if only 1 choice is given it might bug out, we can just enforce 2 choices to be given though..
-        choices.append(new_Answer)
+        choices.append(new_answer)
         shuffle(choices) #Shuffles the choices so that the answer is not always in the same place.
         choices = '§'.join(choices)
 
+    if len(dictionary) > 1:
+        new_task = replace_words(new_task, dictionary)
+        new_solution = replace_words(new_solution, dictionary)
+        new_answer = replace_words(new_answer, dictionary)
+        choices = replace_words(choices,dictionary)
 
-    arr = [new_solution, new_Answer, type, choices]
+    arr = [new_solution, new_answer, type, choices]
     return arr
 def validateSolution(answer, decimal_allowed, zero_allowed):
 
@@ -265,7 +271,6 @@ def sympyTest():
     x = symbols('x')
     string = "2x + 4"
     string2 = "8"
-
     test = parse_expr(string, transformations = t)
     test2 = parse_expr(string2,  transformations = t)
     arr = solve(Eq(test, test2), x)
@@ -301,7 +306,7 @@ def to_asciimath(s): #legacy function, we probably won't need this
 
 def replace_words(sentence, dictionary):
     for i in range(len(dictionary)):
-        replace_words = dictionary[i+1].split(',')
-        sentence = sentence.replace[i, replace_words[randint(0,len(replace_words))]]
+        replace_strings = dictionary[i+1].split(',')
+        sentence = sentence.replace[i, replace_strings[randint(0,len(replace_strings))]]
         i += 1
     return sentence
