@@ -287,7 +287,7 @@ def getQuestion(topic):
 def cut(value, arg):
     return value.replace(arg, '<math>')
 
-def to_asciimath(s):
+def to_asciimath(s): #legacy function, we probably won't need this
     new_s = s
     index = 0
     counter = 0
@@ -298,3 +298,10 @@ def to_asciimath(s):
             counter += 1
         index += 1
     return new_s
+
+def replace_words(sentence, dictionary):
+    for i in range(len(dictionary)):
+        replace_words = dictionary[i+1].split(',')
+        sentence = sentence.replace[i, replace_words[randint(0,len(replace_words))]]
+        i += 1
+    return sentence

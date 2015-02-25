@@ -50,6 +50,10 @@ sub{							/* between bootstrap*/
 .s_input_field{
 	margin-top: 15px;
 }
+.mathquill-embedded-latex{
+	height: 34px;
+	width: 36px;
+}
 
 /*
 var{
