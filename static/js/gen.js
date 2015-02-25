@@ -337,15 +337,13 @@ $(document).ready(function() {
 		}
 		else if(e.keyCode == 13){
 			if(id_group == 't'){
-				var t_input = $('#t_input').val();
-				$(Q_INPUT).mathquill('cmd', '\\text').mathquill('cmd', t_input);
-				$('#t_input').val("");
-				$('#text_modal').modal('toggle');
-				var custom_tab_event = $.Event('keydown');
-				custom_tab_event.bubbles = true;
-				custom_tab_event.cancelable = true;
-				custom_tab_event.keyCode = 9;
-				$(Q_INPUT).trigger(custom_tab_event);
+				$('#t_btn_ok').click();
+			}
+			else if(id_group == 'c'){
+				$('#c_btn_ok').click();
+			}
+			else{
+				$('#' + id_group + '_btn_proceed').click();
 			}
 		}
 	});
