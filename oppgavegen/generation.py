@@ -280,7 +280,7 @@ def sympyTest():
 
 def getQuestion(topic):
     #todo make this general so it doesn't just return a specified result
-    q = Template.objects.get(pk=7)
+    q = Template.objects.get(pk=10)
     #q = Template.objects.filter(topic__iexact=topic) #Gets all Templates in that topic
     #q = q.filter(rating ---------)
 
@@ -305,8 +305,9 @@ def to_asciimath(s): #legacy function, we probably won't need this
     return new_s
 
 def replace_words(sentence, dictionary):
-    for i in range(len(dictionary)):
+    dictionary = dictionary.split('§')
+    for i in range(len(dictionary)-1):
         replace_strings = dictionary[i+1].split(',')
-        sentence = sentence.replace[i, replace_strings[randint(0,len(replace_strings))]]
+        sentence = sentence.replace(dictionary[i], replace_strings[randint(0,len(replace_strings)-1)])
         i += 1
     return sentence

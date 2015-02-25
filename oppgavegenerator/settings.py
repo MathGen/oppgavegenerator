@@ -43,7 +43,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'oppgavegen',
     'bootstrap3',                   # django-bootstrap-3
-    'registration'                 # django-registration-redux
+    'registration',                 # django-registration-redux
 )
 
 MIDDLEWARE_CLASSES = (
