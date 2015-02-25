@@ -5,6 +5,7 @@ var A_INPUT					= '#a_input_mathquill_';
 var C_INPUT					= '#c_input_mathquill';
 var STEP					= 1;
 var ANSWER					= 1;
+var SUB						= 1;
 var c_count 				= 0;
 var array_calc				= [];
 
@@ -392,7 +393,26 @@ $(document).ready(function() {
 			$('#answer_' + ANSWER).fadeIn();
 		}
 	});
-	
+
+	// Add another text-substitution
+	var e_btn_next = $('#e_btn_next');
+	e_btn_next.click(function(e){
+		e.preventDefault();
+		var e_form = $('#e_form');
+		$('#e_btn_del_' +SUB).hide();
+		SUB++;
+		e_form.append('<div id="e_sub_'+SUB+'" style="display:none"><hr><div class="form-group"><label class="col-md-4 control-label">Bytt ut ord/setning:</label><div class="col-md-7"><input id="e_from_'+SUB+'" type="text" class="form-control" placeholder="Epler"></div><div class="col-md-1"><a id="e_btn_del_'+SUB+'" class="glyphicon glyphicon-remove del_sub" style="float:right"></a></div></div><div class="form-group"><label class="col-md-4 control-label">Med ord/setning:</label><div class="col-md-7"><textarea id="e_to_'+SUB+'" type="text" class="form-control" rows="2" placeholder="Bananer, P&#xE6;rer, Appelsiner, Druer"></textarea></div></div></div>');
+		$('#e_sub_' + SUB).fadeIn();
+	});
+
+	// Delete last text-substitution
+	$(document).on('click', '.del_sub', function(e){
+		e.preventDefault();
+		$('#e_sub_' + SUB).remove();
+		SUB--;
+		$('#e_btn_del_' +SUB).show();
+	});
+
 	// Delete solution step
 	var s_btn_del_step = $('.del_step');
 	$(s_btn_del_step).click(function(e){
@@ -533,7 +553,12 @@ $(document).ready(function() {
 		array_submit['question_text']		= latex_to_asciimath($(Q_INPUT).mathquill('latex'));
 		var tmp_solution = [];
 		for(var i = 1; i <= STEP; i++){
-			tmp_solution.push(latex_to_asciimath('\\text{' + $('#s_text_1').val() + '}' + $(S_INPUT + i).mathquill('latex')));
+			if($('#s_text_1').val() != ''){
+				tmp_solution.push(latex_to_asciimath('\\text{' + $('#s_text_1').val() + '}' + $(S_INPUT + i).mathquill('latex')));
+			}
+			else{
+				tmp_solution.push(latex_to_asciimath($(S_INPUT + i).mathquill('latex')));
+			}
 		}
 		array_submit['solution']			= tmp_solution.join('\n');
 		var tmp_answer = [];
@@ -554,6 +579,22 @@ $(document).ready(function() {
 			tmp_allow_zero = 'false';
 		}
 		array_submit['answer_can_be_zero']	= tmp_allow_zero;
+		var array_dict = [];
+		var e_empty = true;
+		for(var i = 1; i <= SUB; i++){
+			var e_from = $('#e_from_' + i).val();
+			var e_to = $('#e_to_' + i).val();
+			if(e_from != '' && e_to != ''){
+				array_dict.push(e_from + '§' + e_to);
+				e_empty = false;
+			}
+		}
+		if(e_empty){
+			array_submit['dictionary'] = "";
+		}
+		else{
+			array_submit['dictionary'] = array_dict.join('§');
+		}
 		array_submit["csrfmiddlewaretoken"] = getCookie('csrftoken');
 		array_submit['type'] = 'normal';
 		
@@ -604,6 +645,7 @@ function latex_to_asciimath(latex){
 	var la = latex;
 	la = la.replace(/{/g,'(');
 	la = la.replace(/}/g,')');
+	la = la.replace(/\\cdot/g,'*');
 	la = la.replace(/\\left/g,'');
 	la = la.replace(/\\right/g,'');
 	

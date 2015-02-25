@@ -70,7 +70,10 @@
 							<div class="panel-footer">
 								<div class="row">
 									<div class="col-md-9">
-										<button id="q_btn_text" class="btn btn-info btn_text" data-toggle="modal" data-target="#text_modal">Tekst</button>
+										<div class="btn-group">
+											<button id="q_btn_text" class="btn btn-info btn_text" data-toggle="modal" data-target="#text_modal">Tekst</button>
+											<button id="q_btn_text_edit" class="btn btn-info" data-toggle="modal" data-target="#text_edit_modal"><span class="glyphicon glyphicon-pencil"></span></button>
+										</div>
 										<div id="q_btn_var_dyn" class="btn-group">
 											<button id="q_btn_var" class="btn btn-danger btn_var">Variabel</button>
 										</div>
@@ -425,6 +428,50 @@
 								<button class="btn btn-default btn_close_text" data-dismiss="modal">Avbryt</button>
 								<button id="t_btn_ok" class="btn btn-primary" data-dismiss="modal" type="submit">OK</button>
 							</span>
+						</div>
+					</div>
+				</section>
+			</div>
+		</div>
+        <!--POP-UP: TEXT-SUBSTITUTION-->
+		<div id="text_edit_modal" class="modal fade" role="dialog">
+			<div class="modal-dialog modal-md">
+				<section class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Tekst-substitusjon<a class="glyphicon glyphicon-remove pull-right" data-dismiss="modal"></a></h3>
+					</div>
+					<div class="panel-body">
+						<form id="e_form" class="form-horizontal">
+							<!--TEXT-SUBSTITUTION: 1-->
+							<div id="e_sub_1">
+								<div class="form-group">
+									<label class="col-md-4 control-label">Bytt ut ord/setning:</label>
+									<div class="col-md-7">
+										<input id="e_from_1" type="text" class="form-control" placeholder="Epler">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label">Med ord/setning:</label>
+									<div class="col-md-7">
+										<textarea id="e_to_1" type="text" class="form-control" rows="2" placeholder="Bananer, Pærer, Appelsiner, Druer"></textarea>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="panel-footer">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="btn-group pull-right">
+									<button id="e_btn_clear" class="btn btn-default btn_clear">
+										<span class="glyphicon glyphicon-trash" style="horizontal-align:middle"></span>
+									</button>
+									<button id="e_btn_next" class="btn btn-default">
+										<span class="glyphicon glyphicon-plus" style="horizontal-align:middle"></span>
+									</button>
+									<button class="btn btn-primary" data-dismiss="modal" type="submit">OK</button>
+								</div>
+							</div>
 						</div>
 					</div>
 				</section>
