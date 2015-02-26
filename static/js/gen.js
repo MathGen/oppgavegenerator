@@ -510,6 +510,8 @@ $(document).ready(function() {
 			c_var = String.fromCharCode(c_var.charCodeAt(0) + c_count);
 			
 			var c_latex = $(C_INPUT).mathquill('latex');
+			c_latex = c_latex.replace(/\\?/g,'');
+			c_latex = c_latex.replace(/@/g,'');
 			var la = [];
 			la.push('@?' + latex_to_asciimath(c_latex) + '?@');
 			la.join('');
@@ -553,8 +555,8 @@ $(document).ready(function() {
 		array_submit['question_text']		= '`' + latex_to_asciimath($(Q_INPUT).mathquill('latex')) + '`';
 		var tmp_solution = [];
 		for(var i = 1; i <= STEP; i++){
-			if($('#s_text_1').val() != ''){
-				tmp_solution.push(latex_to_asciimath('\\text{' + $('#s_text_1').val() + '}' + $(S_INPUT + i).mathquill('latex')));
+			if($('#s_text_' + i).val() != ''){
+				tmp_solution.push(latex_to_asciimath('\\text{' + $('#s_text_' + i).val() + '}' + $(S_INPUT + i).mathquill('latex')));
 			}
 			else{
 				tmp_solution.push(latex_to_asciimath($(S_INPUT + i).mathquill('latex')));
