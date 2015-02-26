@@ -13,7 +13,16 @@ $(document).ready(function() {
 	// Common variables
 	var q_input					= $('#q_input_mathquill');
 	var input_field				= "";
-	
+
+	// Topic selection validation
+	var category_selection = $('#category_selection');
+	category_selection.change(function() {
+		if(TOPIC_SELECTED == false){
+			$('#category_selection').removeClass('select_error');
+			TOPIC_SELECTED = true;
+		}
+	});
+
 	// Insert text
 	var t_btn_ok = $('#t_btn_ok');
 	$(t_btn_ok).click(function(e){
@@ -356,8 +365,13 @@ $(document).ready(function() {
 		var btn_id = $(this).attr('id');
 		btn_id = btn_id[0];
 		if(btn_id == 'q'){
-			$('.btn-group-q').prop('disabled', true);
-			$(s_panel).fadeIn();
+			if(TOPIC_SELECTED){
+				$('.btn-group-q').prop('disabled', true);
+				$(s_panel).fadeIn();
+			}
+			else{
+				$('#category_selection').addClass('select_error');
+			}
 		}
 		else if(btn_id == 's'){
 			$('.btn-group-s').prop('disabled', true);
@@ -602,13 +616,7 @@ $(document).ready(function() {
 		}
 		array_submit["csrfmiddlewaretoken"] = getCookie('csrftoken');
 		array_submit['type'] = 'normal';
-		
-		// Testing output
-		//var test_output = [];
-		//for(var s in array_submit){
-		//	test_output.push(s + '\n' + array_submit[s]);
-		//}
-		//alert(test_output.join('\n'));
+
 		post(/submit/, array_submit);
 	});
 
@@ -618,7 +626,7 @@ $(document).ready(function() {
 	db_topics = db_topics.split('§');
 	for(i = 0; i < db_topics.length; i+=2){
 		formated_db_topics = db_topics[i+1].charAt(0).toUpperCase() + db_topics[i+1].slice(1);
-		$("#category_selection").append('<option id="'+db_topics[i] + '">'+ formated_db_topics +'</option>');
+		category_selection.append('<option id="'+db_topics[i] + '">'+ formated_db_topics +'</option>');
 	}
 
 });
