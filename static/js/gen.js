@@ -510,12 +510,10 @@ $(document).ready(function() {
 			c_var = String.fromCharCode(c_var.charCodeAt(0) + c_count);
 			
 			var c_latex = $(C_INPUT).mathquill('latex');
-			c_latex = c_latex.replace(/\\?/g,'');
-			c_latex = c_latex.replace(/@/g,'');
-			var la = [];
-			la.push('@?' + latex_to_asciimath(c_latex) + '?@');
-			la.join('');
-			array_calc.push(la);
+			var la = latex_to_asciimath(c_latex);
+			la = la.replace(/\?/g,'');
+			la = la.replace(/\@/g,'');
+			array_calc.push('@?' + la + '?@');
 			$(C_INPUT).mathquill('revert').mathquill('editable');
 
 			$('<button id="s_btn_calc_'+c_count+'" class="btn btn-success btn_calc">'+c_var+'</button>').insertBefore('#s_btn_calc_delete');
@@ -556,13 +554,13 @@ $(document).ready(function() {
 		var tmp_solution = [];
 		for(var i = 1; i <= STEP; i++){
 			if($('#s_text_' + i).val() != ''){
-				tmp_solution.push(latex_to_asciimath('\\text{' + $('#s_text_' + i).val() + '}' + $(S_INPUT + i).mathquill('latex')));
+				tmp_solution.push(latex_to_asciimath('\\text{' + $('#s_text_' + i).val() + '}') + '`\\n`' + latex_to_asciimath($(S_INPUT + i).mathquill('latex')));
 			}
 			else{
 				tmp_solution.push(latex_to_asciimath($(S_INPUT + i).mathquill('latex')));
 			}
 		}
-		array_submit['solution']			= '`' + tmp_solution.join('`\n`') + '`';
+		array_submit['solution']			= '`' + tmp_solution.join('`\\n`') + '`';
 		var tmp_answer = [];
 		for(var i = 1; i <=ANSWER; i++){
 			tmp_answer.push(latex_to_asciimath($(A_INPUT + i).mathquill('latex')));
@@ -656,7 +654,7 @@ function latex_to_asciimath(latex){
 	var recorder = true;
 	var dict_letters = {'a' : 'R0', 'b' : 'R1', 'c' : 'R2', 'd' : 'R3', 'g' : 'R6', 'h' : 'R7', 'i' : 'R8', 'j' : 'R9', 'k' : 'R10', 
 						'l' : 'R11', 'm' : 'R12', 'n' : 'R13', 'o' : 'R14', 'p' : 'R15', 'q' : 'R16', 'r' : 'R17', 's' : 'R18', 't' : 'R19',
-						'u' : 'R20', 'v' : 'R21', 'w' : 'R22', 'A' : array_calc[0], 'B' : array_calc[1],'C' : array_calc[2],'D' : array_calc[3],
+						'u' : 'R20', 'v' : 'R21', 'w' : 'R22', 'A' : array_calc[0] , 'B' : array_calc[1],'C' : array_calc[2],'D' : array_calc[3],
 						'E' : array_calc[4],'F' : array_calc[5],'G' : array_calc[6],'H' : array_calc[7],'I' : array_calc[8], 'J' : array_calc[9],
 						'K' : array_calc[10],'L' : array_calc[11],'M' : array_calc[12],'N' : array_calc[13],'O' : array_calc[14], 'P' : array_calc[15],
 						'Q' : array_calc[16],'R' : array_calc[17],'S' : array_calc[18],'T' : array_calc[19],'U' : array_calc[20], 'V' : array_calc[21]};

@@ -3,6 +3,7 @@ $(document).ready(function () {
     var answer = $('#answer').html();
     var template_type = $('#template_type').html();
     var number_of_answers = 1;
+    alert(answer);
     if(answer.indexOf('§') > -1){
         number_of_answers = answer.split('§');
         number_of_answers = number_of_answers.length;
@@ -21,9 +22,9 @@ $(document).ready(function () {
         }
     }
     else if (template_type == 'insert') {
-        for (i = 0; i < number_of_answers; i++) {
+
             $('#target').append(answer_box); //todo: This needs to be inserted into text where needed.
-        }
+
     }
 
 
