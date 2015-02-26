@@ -155,7 +155,14 @@ $(document).ready(function() {
 		e.preventDefault();
 		$(get_input_field(this)).mathquill('write', '\\frac{}{}');
 	});
-	
+
+	// Insert plus-minus
+	var btn_pm = $('.btn_pm');
+	btn_pm.click(function(e){
+		e.preventDefault();
+		$(get_input_field(this)).mathquill('write', '\\pm');
+	});
+
 	// Insert exponent
 	var q_btn_exponent = $('.btn_exponent');
 	$(q_btn_exponent).click(function(e){
@@ -190,7 +197,14 @@ $(document).ready(function() {
 		e.preventDefault();
 		$(get_input_field(this)).mathquill('write', '\\int_{}^{}\\left(\\right)');
 	});
-	
+
+	// Insert binomial
+	var btn_binom = $('.btn_binom');
+	btn_binom.click(function(e){
+		e.preventDefault();
+		$(get_input_field(this)).mathquill('write', '\\binom{}{}');
+	});
+
 	// Insert calculated A,B,C,..
 	$(document).on('click', '.btn_calc', function(e){
 		var id = parseInt($(this).attr("id").match(/[\d]+$/));
@@ -580,7 +594,7 @@ $(document).ready(function() {
 		for(var i = 1; i <=ANSWER; i++){
 			tmp_answer.push(latex_to_asciimath($(A_INPUT + i).mathquill('latex')));
 		}
-		array_submit['answer']				= '`' + tmp_answer.join('`§`') + '`';
+		array_submit['answer']				= tmp_answer.join('`§`');
 		var tmp_r_domain = [];
 		tmp_r_domain.push($('#opt_range_from').val());
 		tmp_r_domain.push($('#opt_range_to').val());

@@ -54,6 +54,9 @@ sub{							/* between bootstrap*/
 	height: 34px;
 	width: 34px;
 }
+.select_error{
+	border: 2px solid #D9534F;
+}
 
 /*
 var{
