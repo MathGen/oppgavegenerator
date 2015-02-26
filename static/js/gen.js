@@ -6,6 +6,7 @@ var C_INPUT					= '#c_input_mathquill';
 var STEP					= 1;
 var ANSWER					= 1;
 var SUB						= 1;
+var TOPIC_SELECTED			= false;
 var c_count 				= 0;
 var array_calc				= [];
 
