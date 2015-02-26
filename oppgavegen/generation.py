@@ -2,6 +2,7 @@
 from random import randint
 from random import sample
 from random import shuffle
+import collections
 from math import ceil
 from oppgavegen.nsp import NumericStringParser
 from sympy import *
@@ -9,6 +10,7 @@ from sympy.parsing.sympy_parser import (parse_expr, standard_transformations, im
 from .models import Template
 from django.template.defaultfilters import *
 import html
+
 
 def printer():
     string = "Oppgavegenerator"
@@ -29,15 +31,13 @@ def arithmetics():
     arr = [string, answer]
     return arr
 
-def checkAnswer(user_answer, answer): #todo add support for multiple answers and also return solution if the answer is wrong
-    if user_answer == answer:
-       string = "Du har svart riktig!"
+def checkAnswer(user_answer, answer):
+    if collections.Counter(user_answer) == collections.Counter(answer):
+        string = "Du har svart riktig!"
     else:
-        init_printing()
-        print("Du har svart feil. Svaret er: " + "\(" + latex(answer) + "\(")
         string = "Du har svart feil. Svaret er: " + str(answer)
-
     return string
+
 
 def algebra(): #Legacy function 
     # ax + b = c
@@ -151,6 +151,7 @@ def make_variables(amount): #this is not needed anymore
         variables.append('R' + str(x))
     return variables
 def task_with_solution():
+    error = 0
     q = getQuestion('algebra')  #gets a question from the DB
     #The list is written in reverse to get to the single digit numbers last, as R1 would replace R11-> R19.
     hardcoded_variables = ['R22', 'R21','R20','R19','R18','R17','R16','R15','R14','R13','R12','R11','R10','R9','R8','R7','R6','R3','R2','R1','R0']
@@ -165,6 +166,7 @@ def task_with_solution():
     type = q.type
     choices = q.choices
     dictionary = q.dictionary
+    answer = q.answer
 
     solution = str(task) +"\n"+str(q.solution).replace('\\n', '\n') #db automatically adds the escape character \ to strings, so we remove it from \n
     #solution = solution.replace('\&\#x222B\;', '&#x222B;')
@@ -174,26 +176,41 @@ def task_with_solution():
     while valid_solution == False: #loop until we get a form of the task that has a valid solution
         new_solution = solution
         new_task = task
+        new_answer = answer
         for i in range(len(hardcoded_variables)):
             if new_task.count(hardcoded_variables[i]) > 0:
                 random_tall = str(randint(int(random_domain[0]),int(random_domain[1])))
                 new_task = new_task.replace(hardcoded_variables[i], random_tall)
                 new_solution = new_solution.replace(hardcoded_variables[i], random_tall)
+                new_answer = new_answer.replace(hardcoded_variables[i], random_tall)
                 if(type.lower() != 'normal'):
                     choices = choices.replace(hardcoded_variables[i], random_tall)
-        new_answer = getAnswerFromSolution(new_solution)
-        if new_answer == 'zoo': #error handling at its finest.
-            continue
-        valid_solution = validateSolution(new_answer, decimal_allowed,zero_allowed)
-        if  '/' not in str(new_answer) and 'cos' not in str(new_answer) and 'sin' not in str(new_answer) and 'tan' not in str(new_answer):
-            if ((decimal_allowed == False and valid_solution == True) or (checkForDecimal(new_answer))): #Remove float status if the number is supposed to be a integer
+        if "§" in new_answer:
+            new_answer = new_answer.split('§')
+            counter = 0
+            for s in new_answer:
+                new_answer[counter] = parse_solution(s)
+                if new_answer[counter] == 'zoo':
+                    error = 1
+                    continue
+                counter += 1
+            new_answer = '§'.join(new_answer)
+        else:
+            new_answer = parse_solution(new_answer)
+            if new_answer == 'zoo':
+                error = 1
+        if error == 1: #error handling at its finest.
+            continue #maybe add a counter everytime this happens so that it doesn't loop infinitely for bad templates
+        valid_solution = validate_solution(new_answer, decimal_allowed,zero_allowed)
+        if  '/' not in str(new_answer) and 'cos' not in str(new_answer) and 'sin' not in str(new_answer) and 'tan' not in str(new_answer) and '§' not in str(new_answer):
+            if ((decimal_allowed == False and valid_solution == True) or (check_for_decimal(new_answer))): #Remove float status if the number is supposed to be a integer
                 print("answer is not a float") #todo find out if i need this anymore
                 new_answer = str(int(new_answer))
                 valid_solution = True
 
-    new_solution = parseSolution(new_solution)
+    new_solution = parse_solution(new_solution)
     if type.lower() == 'multiple':
-        choices = parseSolution(choices)
+        choices = parse_solution(choices)
         choices = choices.split('§') #if only 1 choice is given it might bug out, we can just enforce 2 choices to be given though..
         choices.append(new_answer)
         shuffle(choices) #Shuffles the choices so that the answer is not always in the same place.
@@ -207,11 +224,11 @@ def task_with_solution():
 
     arr = [new_solution, new_answer, type, choices]
     return arr
-def validateSolution(answer, decimal_allowed, zero_allowed):
+def validate_solution(answer, decimal_allowed, zero_allowed):
 
-    if  '/' not in str(answer) and 'cos' not in str(answer) and 'sin' not in str(answer) and 'tan' not in str(answer):
+    if  '/' not in str(answer) and 'cos' not in str(answer) and 'sin' not in str(answer) and 'tan' not in str(answer) and '§' not in str(answer):
         print('wtf: ' + str(answer))
-        decimal_answer = checkForDecimal(answer)
+        decimal_answer = check_for_decimal(answer)
     elif '/' in str(answer): #checks if the answer contains /.
         decimal_answer = False #technically the answer doesn't contain decimal numbers if for instance it is given on the form 1/5
     else:
@@ -223,9 +240,9 @@ def validateSolution(answer, decimal_allowed, zero_allowed):
     if contains_zero == True and zero_allowed == False:
         valid_solution = False
     return valid_solution
-def checkForDecimal(f):
+def check_for_decimal(f):
     return float(f).is_integer() #Returns false if f doesn't have a decimal
-def getAnswerFromSolution(s): #this function might not be usefull if we implement a answer for every question since we wouldn't have to find the answer then
+def get_answer_from_solution(s): #this function might not be usefull if we implement a answer for every question since we wouldn't have to find the answer then
     answer = ''
     record = False
     b = ""
@@ -233,18 +250,18 @@ def getAnswerFromSolution(s): #this function might not be usefull if we implemen
         if c == '?' and b == '@':
             record = True
         elif c == '@' and b == '?':
-            return calculateAnswer(answer[1:])
+            return calculate_answer(answer[1:])
         elif record == True:
             answer = c + answer
         b = c
     return s #Returns the original string if there are no calculations, this could be bad though since it would return the whole solution, and not just the answer
-def calculateAnswer(s):
+def calculate_answer(s):
     s = sympify(s) #sometimes this returns the value 'zoo' | also could maybe use simplify instead of sympify
     #s = RR(s)
     #s = round(s, 3)
     print(str(s))
     return str(s)
-def parseSolution(solution):
+def parse_solution(solution):
     arr = []
     newArr = []
     opptak = False
@@ -261,7 +278,7 @@ def parseSolution(solution):
             s += c
         b=c
     for x in range(len(arr)):
-        newArr.append(calculateAnswer(str((arr[x]))))
+        newArr.append(calculate_answer(str((arr[x]))))
         r = '@?' + arr[x] + '?@'
         new_solution = new_solution.replace(r, newArr[x])
     return new_solution
@@ -311,3 +328,9 @@ def replace_words(sentence, dictionary):
         sentence = sentence.replace(dictionary[i], replace_strings[randint(0,len(replace_strings)-1)])
         i += 1
     return sentence
+
+def calculate_array(array):
+    out_arr = []
+    for s in array:
+        out_arr.append(calculate_answer(s))
+    return out_arr

@@ -39,7 +39,7 @@ def index(request):
             form_values = form.process()
             user_answer = form_values[0]
             print('Before:' + user_answer)
-            user_answer = generation.calculateAnswer(user_answer) #format the userinput the same way we format the solution
+            user_answer = generation.calculate_answer(user_answer) #format the userinput the same way we format the solution
             print('After:' + user_answer)
             answer = form_values[1]
             answer_text = generation.checkAnswer(user_answer,answer)
@@ -120,16 +120,22 @@ def answers(request):
     #todo: move logic from index post to here.
     context = RequestContext(request)
     if request.method == 'POST':
-        print("honka_")
         form = QuestionForm(request.POST)
+        counter = 0
         if form.is_valid():
-            print("dory")
             form_values = form.process()
             user_answer = form_values[0]
-            print('Before:' + user_answer)
-            user_answer = generation.calculateAnswer(user_answer) #format the userinput the same way we format the solution
-            print('After:' + user_answer)
             answer = form_values[1]
+            if '§' in user_answer and '§' in answer:
+                user_answer = user_answer.split('§')
+                answer = answer.replace('`','')
+                answer = answer.split('§')
+                user_answer = generation.calculate_array(user_answer)
+                answer = generation.calculate_array(answer)
+            else:
+                user_answer = generation.calculate_answer(user_answer) #it's important we format the user answer the same way we format the answer
+                answer = generation.calculate_answer(answer)
+
             answer_text = generation.checkAnswer(user_answer,answer)
             context_dict = {'title': "Oppgavegen",  'answer' :  str(answer_text), 'user_answer' : user_answer}
             #todo make a button on the answers page with "generate new question"
