@@ -550,7 +550,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		var array_submit = {};
 		array_submit['topic']				= $('#category_selection').find(':selected').attr('id');
-		array_submit['question_text']		= latex_to_asciimath($(Q_INPUT).mathquill('latex'));
+		array_submit['question_text']		= '`' + latex_to_asciimath($(Q_INPUT).mathquill('latex')) + '`';
 		var tmp_solution = [];
 		for(var i = 1; i <= STEP; i++){
 			if($('#s_text_1').val() != ''){
@@ -560,12 +560,12 @@ $(document).ready(function() {
 				tmp_solution.push(latex_to_asciimath($(S_INPUT + i).mathquill('latex')));
 			}
 		}
-		array_submit['solution']			= tmp_solution.join('\n');
+		array_submit['solution']			= '`' + tmp_solution.join('`\n`') + '`';
 		var tmp_answer = [];
 		for(var i = 1; i <=ANSWER; i++){
 			tmp_answer.push(latex_to_asciimath($(A_INPUT + i).mathquill('latex')));
 		}
-		array_submit['answer']				= tmp_answer.join('§');
+		array_submit['answer']				= '`' + tmp_answer.join('`§`') + '`';
 		var tmp_r_domain = [];
 		tmp_r_domain.push($('#opt_range_from').val());
 		tmp_r_domain.push($('#opt_range_to').val());
