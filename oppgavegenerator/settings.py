@@ -28,7 +28,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '158.38.101.36']
 
 
 # Application definition
@@ -93,6 +93,8 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 #PATH_PROJECT = os.path.realpath(os.path.dirname(__file__))
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
+TEMPLATE_LOADERS = ['django.template.loaders.filesystem.Loader',
+                    'django.template.loaders.app_directories.Loader']
 
 #REGISTRATION SETTINGS
 ACCOUNT_ACTIVATION_DAYS = 7     # Amount of days a user has to activate their account

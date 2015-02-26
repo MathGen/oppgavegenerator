@@ -589,6 +589,11 @@ $(document).ready(function() {
 				e_empty = false;
 			}
 		}
+		array_dict.sort(function(a,b){
+			var s_a = a.split('§');
+			var s_b = b.split('§');
+			return s_b[0].length - s_a[0].length; // ASC -> a - b; DESC -> b - a
+		});
 		if(e_empty){
 			array_submit['dictionary'] = "";
 		}
