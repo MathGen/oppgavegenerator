@@ -3,23 +3,31 @@
 {% block title %}{{ title }}{% endblock %}
 
 
-{% block content %}
-<script src="/static/js/jquery-1.11.2.min.js"></script>
+{% block panels %}
+<!-- QUESTION PANEL -->
 <script src="/static/js/answer_input.js"></script>
-<!-- this might seem a bit redundant, but for some reason using var choices = {{choices}} did not work -->
-<div hidden id="answer">{{answer}}</div>
-<div hidden id="template_type">{{template_type}}</div>
-<div hidden id="choices">{{choices}}</div>
-<h5>
-<div id="question">
-{{ question|linebreaks}}
-</div>
-</h5>
-<form>
-{% csrf_token %}
-</form>
-<div id="target"></div>
-<button id="submit_answer" class="btn btn-primary" type="submit">Svar</button>
-
-
+<section id="q_panel" class="panel panel-default">
+    <div class="panel-heading"><h3 class="panel-title">Spørsmål</h3></div>
+    <div class="panel-body">
+        <form class="form-horizontal">
+                <!-- this might seem a bit redundant, but for some reason using var choices = {{choices}} did not work -->
+                <div hidden id="answer">{{answer}}</div>
+                <div hidden id="template_type">{{template_type}}</div>
+                <div hidden id="choices">{{choices}}</div>
+                <h5><div id="question">{{ question|linebreaks}}</div></h5>
+                <form>{% csrf_token %}</form>
+        </form>
+    </div>
+    <!-- USER-INPUT -->
+    <div class="panel-footer">
+        <div class="row">
+            <div class="col-md-10">
+                <div id="target"></div>
+            </div>
+            <div class="col-md-2">
+                <div class="pull-right"><button id="submit_answer" class="btn btn-primary" type="submit">Svar</button></div>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

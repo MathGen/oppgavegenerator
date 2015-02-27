@@ -2,7 +2,17 @@
 
 {% block title %}{{ title }}{% endblock %}
 
-{% block content %}
-<h1>{{ answer }}</h1>
+{% block panels %}
+<!-- ANSWER PANEL -->
+<section id="a_panel" class="panel panel-default">
+    <div class="panel-heading"><h3 class="panel-title">Svar</h3></div>
+    <div class="panel-body">
+        <form class="form-horizontal">
+            <h1>{{ answer }}</h1>
+        </form>
+    </div>
+    <div class="panel-footer"
 
+    </div>
+</section>
 {% endblock %}

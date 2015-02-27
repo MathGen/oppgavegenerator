@@ -13,12 +13,12 @@ $(document).ready(function () {
         choices = choices.split('§');
         for (i = 0; i < choices.length; i++) {
             text = '`' + choices[i] + '`' + '<br />';
-            $('#target').append('<input type="radio" name="answer_button" id="radio' + i + '" value="' + choices[i] + '"/>' + text);
+            $('#target').append('<input class="form-control" type="radio" name="answer_button" id="radio' + i + '" value="' + choices[i] + '"/>' + text);
         }
     }
     else if (template_type == 'normal') {
         for (i = 0; i < number_of_answers; i++) {
-            $('#target').append('<input type="textbox" name="answer_box" id="ans_box'+ i +'" />');
+            $('#target').append('<input class="form-control" type="textbox" name="answer_box" id="ans_box'+ i +'" />');
         }
     }
     else if (template_type == 'insert') {
