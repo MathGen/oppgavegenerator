@@ -10,11 +10,11 @@
 <div hidden id="answer">{{answer}}</div>
 <div hidden id="template_type">{{template_type}}</div>
 <div hidden id="choices">{{choices}}</div>
-<h1>
+<h5>
 <div id="question">
 {{ question|linebreaks}}
 </div>
-</h1>
+</h5>
 <form>
 {% csrf_token %}
 </form>
