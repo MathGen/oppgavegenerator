@@ -11,8 +11,16 @@
             <h1>{{ answer }} </h1>
         </form>
     </div>
-    <div class="panel-footer"
-
+    <!-- ANSWER MENU -->
+    <div class="panel-footer">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="pull-right">
+                    <button id="a_solution" class="btn btn-default">Løsningsforslag</button>
+                    <button id="a_new_question" class="btn btn-primary">Nytt spørsmål</button>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 {% endblock %}
