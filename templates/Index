@@ -6,7 +6,7 @@
 {% block panels %}
 <!-- QUESTION PANEL -->
 <script src="/static/js/answer_input.js"></script>
-<section id="q_panel" class="panel panel-default">
+<section class="panel panel-default">
     <div class="panel-heading"><h3 class="panel-title">Spørsmål</h3></div>
     <div class="panel-body">
         <form class="form-horizontal">
@@ -15,19 +15,20 @@
                 <div hidden id="template_type">{{template_type}}</div>
                 <div hidden id="choices">{{choices}}</div>
                 <h5><div id="question">{{ question|linebreaks}}</div></h5>
+                <hr>
+                <h4>Ditt svar</h4>
+                <div id="w_target" class="input_field"></div>
                 <form>{% csrf_token %} </form>
         </form>
     </div>
     <!-- USER-INPUT -->
     <div class="panel-footer">
         <div class="row">
-            <div class="col-md-10">
-                <div class="form-group">
-                    <div id="target"></div>
-                </div>
+            <div class="col-md-9">
+
             </div>
-            <div class="col-md-2">
-                <div class="pull-right"><button id="submit_answer" class="btn btn-primary" type="submit">Svar</button></div>
+            <div class="col-md-3 pull-right">
+                <button id="submit_answer" class="btn btn-primary pull-right" type="submit">Svar</button>
             </div>
         </div>
     </div>

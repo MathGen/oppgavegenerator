@@ -3,6 +3,7 @@ $(document).ready(function () {
     var answer = $('#answer').html();
     var template_type = $('#template_type').html();
     var number_of_answers = 1;
+    var w_target = $('#w_target');
 
 
     if(answer.indexOf('§') > -1){
@@ -14,17 +15,19 @@ $(document).ready(function () {
         choices = choices.split('§');
         for (i = 0; i < choices.length; i++) {
             text = '`' + choices[i] + '`' + '<br />';
-            $('#target').append('<input class="form-control" type="radio" name="answer_button" id="radio' + i + '" value="' + choices[i] + '"/>' + text);
+            w_target.append('<input type="radio" name="answer_button" id="radio' + i + '" value="' + choices[i] + '"/>' + text);
         }
     }
     else if (template_type == 'normal') {
         for (i = 0; i < number_of_answers; i++) {
-            $('#target').append('<input class="form-control" type="textbox" name="answer_box" id="ans_box'+ i +'" />');
+            //$('#a_target').append('<input class="form-control" type="textbox" name="answer_box" id="ans_box'+ i +'" />');
+            w_target.append('<span id="w_input_mathquill_'+i+'" class="mathquill-editable form-control input_mathquill"><span class="textarea"><textarea></textarea></span></span>');
+            $('#w_input_mathquill_' + i).mathquill('revert').mathquill('editable');
         }
     }
     else if (template_type == 'insert') {
 
-            $('#target').append(answer_box); //todo: This needs to be inserted into text where needed.
+            w_target.append(answer_box); //todo: This needs to be inserted into text where needed.
 
     }
 
@@ -40,7 +43,9 @@ $(document).ready(function () {
                 if (i > 0) {
                     user_answer += '§';
                 }
-                user_answer += document.getElementById('ans_box' + i).value;
+                //user_answer += document.getElementById('ans_box' + i).value;
+                var w_input = ($('#w_input_mathquill_' + i).mathquill('latex'));
+                user_answer += input_to_asciimath(w_input); // BUG: will return a empty string
             }
         }
 
@@ -109,4 +114,68 @@ function getRadioValue(groupName) {
         else rdValue = 'noRadioChecked'; //todo prevent this from happening by forcing the user to select one before submitting
     }
     return rdValue;
+}
+
+function input_to_asciimath(latex){
+    var la = latex;
+	la = la.replace(/{/g,'(');
+	la = la.replace(/}/g,')');
+	la = la.replace(/\\cdot/g,'*');
+	la = la.replace(/\\left/g,'');
+	la = la.replace(/\\right/g,'');
+
+    var la2 = "";
+	while(i < la.length){
+		if(la[i] == '\\'){
+			if(la[i + 1] == 't' && la[i + 2] == 'e' && la[i + 3] == 'x' && la[i + 4] == 't'){
+				while(true){
+					if(la[i] == ')' && counter == 0){
+						break
+					}
+					if(la[i] == '('){
+						counter++;
+					}
+					else if(la[i+1] == ')'){
+						counter--;
+					}
+					la2 += la[i];
+					i++;
+				}
+			}
+			else{
+				while(la[i] != '(' && la[i] != ' '){
+					la2 += la[i];
+					i++;
+				}
+			}
+		}
+        i++;
+	}
+	la = la2;
+
+    i = 0;
+	counter = 0;
+	recorder = false;
+	while(i < la.length){ //logic for insering a / in fractals
+		if(la.charAt(i) == 'c' && la.charAt(i-1) == 'a' && la.charAt(i-2) == 'r' && la.charAt(i-3) == 'f' && la.charAt(i-4) == '\\'){
+			recorder = true;
+		}
+		if(recorder){
+			if(la.charAt(i) == '('){
+				counter++;
+			}
+			else if(la.charAt(i) == ')'){
+				counter--;
+			}
+			if(la.charAt(i) == ')' && counter == 0){
+				la = la.substring(0, i+1) + "/" + la.substring(i+1,la.length);
+				recorder = false;
+			}
+		}
+		i++;
+	}
+	la = la.replace(/\\/g,'');
+	la = la.replace(/cdot/g,'*');
+	la = la.replace(/frac/g,'');
+	return la;
 }
