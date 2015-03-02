@@ -160,7 +160,6 @@ def task_with_solution():
     decimals_allowed = int(q.number_of_decimals)
     decimal_allowed = (True if decimals_allowed > 0 else False) #Boolean for if the answer is required to be a integer
     random_domain = (q.random_domain).split() #the domain of random numbers that can be generated for the question
-    print(random_domain[0])
     zero_allowed = q.answer_can_be_zero#False #Boolean for 0 being a valid answer or not.
     task = q.question_text
     type = q.type
@@ -297,7 +296,7 @@ def sympyTest():
 
 def getQuestion(topic):
     #todo make this general so it doesn't just return a specified result
-    q = Template.objects.get(pk=2)
+    q = Template.objects.get(pk=11)
     #q = Template.objects.filter(topic__iexact=topic) #Gets all Templates in that topic
     #q = q.filter(rating ---------)
 

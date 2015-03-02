@@ -39,14 +39,15 @@ $(document).ready(function () {
             user_answer = getRadioValue('answer_button');
         }
         else {
-            for (i = 0; i < number_of_answers; i++) {
-                if (i > 0) {
+            for (j = 0; j < number_of_answers; j++) {
+                if (j > 0) {
                     user_answer += '§';
                 }
                 //user_answer += document.getElementById('ans_box' + i).value;
-                var w_input = ($('#w_input_mathquill_' + i).mathquill('latex'));
+                var w_input = ($('#w_input_mathquill_' + j).mathquill('latex'));
                 user_answer += latex_to_sympy(w_input);
             }
+
         }
 
         //make a dict with the user answer and the answer:
@@ -122,8 +123,8 @@ function latex_to_sympy(latex){
 	la = la.replace(/\\cdot/g,'*');
 	la = la.replace(/\\left/g,'');
 	la = la.replace(/\\right/g,'');
-
     var la2 = "";
+    i = 0;
 	while(i < la.length){
 		if(la[i] == '\\'){
 			if(la[i + 1] == 't' && la[i + 2] == 'e' && la[i + 3] == 'x' && la[i + 4] == 't'){
@@ -148,11 +149,10 @@ function latex_to_sympy(latex){
 				}
 			}
 		}
+        la2 += la[i];
         i++;
 	}
-    if(la2 != ""){
-        la = la2;
-    }
+    la = la2;
 
     i = 0;
 	counter = 0;
@@ -178,5 +178,5 @@ function latex_to_sympy(latex){
 	la = la.replace(/\\/g,'');
 	la = la.replace(/cdot/g,'*');
 	la = la.replace(/frac/g,'');
-	return la;
+    return la;
 }

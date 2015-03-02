@@ -117,7 +117,6 @@ def submit(request):
     return render_to_response('submit',{'message': message}, context)
 
 def answers(request):
-    #todo: move logic from index post to here.
     context = RequestContext(request)
     if request.method == 'POST':
         form = QuestionForm(request.POST)
@@ -126,13 +125,18 @@ def answers(request):
             form_values = form.process()
             user_answer = form_values[0]
             answer = form_values[1]
+            answer = answer.replace('`','')
+            print(user_answer)
+            print(answer)
+
             if '§' in user_answer and '§' in answer:
+                print('besj')
                 user_answer = user_answer.split('§')
-                answer = answer.replace('`','')
                 answer = answer.split('§')
                 user_answer = generation.calculate_array(user_answer)
                 answer = generation.calculate_array(answer)
             else:
+                print('tiss')
                 user_answer = generation.calculate_answer(user_answer) #it's important we format the user answer the same way we format the answer
                 answer = generation.calculate_answer(answer)
 
