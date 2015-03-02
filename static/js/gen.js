@@ -579,7 +579,22 @@ $(document).ready(function() {
 			c_count++;
 		}
 	});
-	
+
+	// ANSWER: See step-by-step solution
+	var v_solution = $('#v_solution');
+	var v_panel = $('#v_panel');
+	v_solution.click(function(e){
+		e.preventDefault();
+		v_panel.fadeIn();
+	});
+
+	// ANSWER: Close step-by-step solution
+	var v_ok = $('#v_ok');
+	v_ok.click(function(e){
+		e.preventDefault();
+		v_panel.fadeOut();
+	});
+
 	// Retrieve all values and save to database
 	var o_btn_save = $('#o_btn_save');
 	$(o_btn_save).click(function(e){
