@@ -1,5 +1,6 @@
 $(document).ready(function(){
    //create a drop down list from db values
+	var category_selection = $('#category_selection');
 	var formated_db_topics = "";
 	var db_topics = $('#db_topics').html();
 	db_topics = db_topics.split('§');

@@ -45,7 +45,7 @@ $(document).ready(function () {
                 }
                 //user_answer += document.getElementById('ans_box' + i).value;
                 var w_input = ($('#w_input_mathquill_' + i).mathquill('latex'));
-                user_answer += input_to_asciimath(w_input); // BUG: will return a empty string
+                user_answer += latex_to_sympy(w_input); // BUG: will return a empty string
             }
         }
 
@@ -116,7 +116,7 @@ function getRadioValue(groupName) {
     return rdValue;
 }
 
-function input_to_asciimath(latex){
+function latex_to_sympy(latex){
     var la = latex;
 	la = la.replace(/{/g,'(');
 	la = la.replace(/}/g,')');
@@ -151,7 +151,9 @@ function input_to_asciimath(latex){
 		}
         i++;
 	}
-	la = la2;
+    if(la2 != ""){
+        la = la2;
+    }
 
     i = 0;
 	counter = 0;
