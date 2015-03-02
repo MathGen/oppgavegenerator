@@ -35,7 +35,7 @@ def checkAnswer(user_answer, answer):
     if collections.Counter(user_answer) == collections.Counter(answer):
         string = "Du har svart riktig!"
     else:
-        string = "Du har svart feil. Svaret er: " + str(answer)
+        string = "Du har svart feil. Svaret er: `" + ' og '.join(answer) + '`'
     return string
 
 
