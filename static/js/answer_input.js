@@ -21,7 +21,10 @@ $(document).ready(function () {
     else if (template_type == 'normal') {
         for (i = 0; i < number_of_answers; i++) {
             //$('#a_target').append('<input class="form-control" type="textbox" name="answer_box" id="ans_box'+ i +'" />');
-            w_target.append('<span id="w_input_mathquill_'+i+'" class="mathquill-editable form-control input_mathquill"><span class="textarea"><textarea></textarea></span></span>');
+            if(i > 0){
+                w_target.append('<div class="col-md-12"><h4>og</h4></div>');
+            }
+            w_target.append('<div class="col-md-12 input_field"><span id="w_input_mathquill_'+i+'" class="mathquill-editable form-control input_mathquill"><span class="textarea"><textarea></textarea></span></span></div>');
             $('#w_input_mathquill_' + i).mathquill('revert').mathquill('editable');
         }
     }

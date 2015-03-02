@@ -17,7 +17,7 @@
                 <h5><div id="question">{{ question|linebreaks}}</div></h5>
                 <hr>
                 <h4>Ditt svar</h4>
-                <div id="w_target" class="input_field"></div>
+                <div id="w_target" class="row"></div>
                 <form>{% csrf_token %} </form>
         </form>
     </div>
