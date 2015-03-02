@@ -45,7 +45,7 @@ $(document).ready(function () {
                 }
                 //user_answer += document.getElementById('ans_box' + i).value;
                 var w_input = ($('#w_input_mathquill_' + i).mathquill('latex'));
-                user_answer += latex_to_sympy(w_input); // BUG: will return a empty string
+                user_answer += latex_to_sympy(w_input);
             }
         }
 
@@ -59,7 +59,6 @@ $(document).ready(function () {
         post(/answers/, submit_dict);
 
     });
-
 });
 
 function post(path, params, method) {

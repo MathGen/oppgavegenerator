@@ -25,7 +25,13 @@
     <div class="panel-footer">
         <div class="row">
             <div class="col-md-9">
-
+                <button id="w_btn_addition" class="btn btn-default btn_addition btn-xs mathquill-embedded-latex">+</button>
+                <button id="w_btn_subtraction" class="btn btn-default btn_subtraction btn-xs mathquill-embedded-latex">-</button>
+                <button id="w_btn_multiplication" class="btn btn-default btn_multiplication btn-xs mathquill-embedded-latex">&#xd7;</button>
+                <button id="w_btn_division" class="btn btn-default btn_division btn-xs mathquill-embedded-latex">&#xf7;</button>
+                <button id="w_btn_par" class="btn btn-default btn_par btn-xs mathquill-embedded-latex">()</button>
+                <button id="w_btn_exponent" class="btn btn-default btn_exponent btn-xs mathquill-embedded-latex">a^n</button>
+                <button id="w_btn_sqrt" class="btn btn-default btn_sqrt btn-xs mathquill-embedded-latex">&#x221a;</button>
             </div>
             <div class="col-md-3 pull-right">
                 <button id="submit_answer" class="btn btn-primary pull-right" type="submit">Svar</button>

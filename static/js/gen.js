@@ -7,6 +7,7 @@ var STEP					= 1;
 var ANSWER					= 1;
 var SUB						= 1;
 var TOPIC_SELECTED			= false;
+var INPUT_FIELD				= '';
 var c_count 				= 0;
 var array_calc				= [];
 
@@ -23,6 +24,12 @@ $(document).ready(function() {
 			TOPIC_SELECTED = true;
 		}
 	});
+
+	// Set which input-field is active
+	$(document).on('click', '.input_mathquill', function(e){
+		e.preventDefault();
+		INPUT_FIELD = '#' + $(this).attr('id');
+    });
 
 	// Insert text
 	var t_btn_ok = $('#t_btn_ok');
@@ -653,6 +660,9 @@ function get_input_field(obj){
 	}
 	else if(btn_id == 'a'){
 		return A_INPUT + ANSWER;
+	}
+	else if(btn_id == 'w'){
+		return INPUT_FIELD;
 	}
 }
 
