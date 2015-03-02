@@ -215,7 +215,7 @@ def task_with_solution():
         shuffle(choices) #Shuffles the choices so that the answer is not always in the same place.
         choices = '§'.join(choices)
 
-    if len(dictionary) > 1:
+    if dictionary is not None:
         new_task = replace_words(new_task, dictionary)
         new_solution = replace_words(new_solution, dictionary)
         new_answer = replace_words(new_answer, dictionary)
@@ -296,7 +296,7 @@ def sympyTest():
 
 def getQuestion(topic):
     #todo make this general so it doesn't just return a specified result
-    q = Template.objects.get(pk=3)
+    q = Template.objects.get(pk=11)
     #q = Template.objects.filter(topic__iexact=topic) #Gets all Templates in that topic
     #q = q.filter(rating ---------)
 
@@ -333,3 +333,9 @@ def calculate_array(array):
     for s in array:
         out_arr.append(calculate_answer(s))
     return out_arr
+
+def after_equal_sign(s): #a function that returns everything after the last = sign of the string
+    if '=' in s:
+        s = s.split("=")
+        s = s[len(s)-1]
+    return s

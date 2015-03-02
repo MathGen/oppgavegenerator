@@ -129,14 +129,15 @@ def answers(request):
             print(user_answer)
             print(answer)
 
-            if '§' in user_answer and '§' in answer:
-                user_answer = user_answer.split('§')
-                answer = answer.split('§')
-                user_answer = generation.calculate_array(user_answer)
-                answer = generation.calculate_array(answer)
-            else:
-                user_answer = generation.calculate_answer(user_answer) #it's important we format the user answer the same way we format the answer
-                answer = generation.calculate_answer(answer)
+
+            user_answer = user_answer.split('§') #if a string doesn't contain the split character it returns as a list with 1 element
+            answer = answer.split('§')
+            #We format both the user answer and the answer the same way.
+            user_answer = [ generation.after_equal_sign(x) for x in user_answer ]
+            answer = [ generation.after_equal_sign(x) for x in answer ]
+            user_answer = generation.calculate_array(user_answer)
+            answer = generation.calculate_array(answer)
+
 
             answer_text = generation.checkAnswer(user_answer,answer)
             context_dict = {'title': "Oppgavegen",  'answer' :  str(answer_text), 'user_answer' : user_answer}
