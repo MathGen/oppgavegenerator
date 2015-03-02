@@ -4,7 +4,7 @@
 
 {% block panels %}
 <!-- ANSWER PANEL -->
-<section id="a_panel" class="panel panel-default">
+<section class="panel panel-default">
     <div class="panel-heading"><h3 class="panel-title">Svar</h3></div>
     <div class="panel-body">
         <form class="form-horizontal">
@@ -16,8 +16,26 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="pull-right">
-                    <button id="a_solution" class="btn btn-default">Løsningsforslag</button>
-                    <button id="a_new_question" class="btn btn-primary">Nytt spørsmål</button>
+                    <button id="v_solution" class="btn btn-default">Se Løsningsforslag</button>
+                    <button id="v_new_question" class="btn btn-primary">Nytt spørsmål</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- SOLUTION PANEL -->
+<section id="v_panel" class="panel panel-default" style="display:none">
+    <div class="panel-heading"><h3 class="panel-title">Løsningsforslag</h3></div>
+    <div class="panel-body">
+        <form class="form-horizontal">
+            <span>Her kommer løsningsforslag</span>
+        </form>
+    </div>
+    <div class="panel-footer">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="pull-right">
+                    <button id="v_ok" class="btn btn-default">OK</button>
                 </div>
             </div>
         </div>
