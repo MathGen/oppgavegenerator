@@ -653,16 +653,16 @@ $(document).ready(function() {
 		var tmp_solution = [];
 		for(var i = 1; i <= STEP; i++){
 			if($('#s_text_' + i).val() != ''){
-				tmp_solution.push(latex_to_asciimath('\\text{' + $('#s_text_' + i).val() + '}') + '`\\n`' + latex_to_asciimath($(S_INPUT + i).mathquill('latex')));
+				tmp_solution.push(latex_to_asciimath('\\text{' + $('#s_text_' + i).val() + '}') + '`\\n`' + latex_to_asciimath($('#s_input_mathquill_' + i).mathquill('latex')));
 			}
 			else{
-				tmp_solution.push(latex_to_asciimath($(S_INPUT + i).mathquill('latex')));
+				tmp_solution.push(latex_to_asciimath($('#s_input_mathquill_' + i).mathquill('latex')));
 			}
 		}
 		array_submit['solution']			= '`' + tmp_solution.join('`\\n`') + '`';
 		var tmp_answer = [];
 		for(var i = 1; i <=ANSWER; i++){
-			tmp_answer.push(latex_to_asciimath($(A_INPUT + i).mathquill('latex')));
+			tmp_answer.push(latex_to_asciimath($('#a_input_mathquill_' + i).mathquill('latex')));
 		}
 		array_submit['answer']				= tmp_answer.join('`§`');
 		var tmp_r_domain = [];
