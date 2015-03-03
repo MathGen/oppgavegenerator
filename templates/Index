@@ -28,7 +28,7 @@
             <div id="w_target" class="row"></div>
             <form>{% csrf_token %} </form>
         </form>
-        <form id="w_question_loading"><img src="http://i.stack.imgur.com/FhHRx.gif"/></form>
+        <form id="w_question_loading" class="loading"></form>
     </div>
     <!-- USER-INPUT -->
     <div class="panel-footer">
