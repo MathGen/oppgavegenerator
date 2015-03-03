@@ -394,13 +394,18 @@ $(document).ready(function() {
 		btn_id = btn_id[0];
 		if(btn_id == 'q'){
 			if(TOPIC_SELECTED){
-				$('.btn-group-q').prop('disabled', true);
-				var s_panel = $('#s_panel');
-				s_panel.fadeIn();
-				scrollTo(s_panel);
+				if($(Q_INPUT).mathquill('latex') != ''){
+					$('.btn-group-q').prop('disabled', true);
+					var s_panel = $('#s_panel');
+					s_panel.fadeIn();
+					scrollTo(s_panel);
+				}
+				else{
+					$(Q_INPUT).addClass('select_error');
+				}
 			}
 			else{
-				$('#category_selection').addClass('select_error');
+				//$('#category_selection').addClass('select_error'); //TODO: make error message.
 			}
 		}
 		else if(btn_id == 's'){
