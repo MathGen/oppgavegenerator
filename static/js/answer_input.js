@@ -1,15 +1,12 @@
 $(document).ready(function () {
     var text = 'some text';
-    var answer = $('#answer').html();
     var template_type = $('#template_type').html();
-    var number_of_answers = 1;
+    var number_of_answers = $('#number_of_answers').html();;
+    var primary_key = $('#primary_key').html();
+    var variable_dictionary = $('#variable_dictionary').html();
     var w_target = $('#w_target');
 
 
-    if(answer.indexOf('§') > -1){
-        number_of_answers = answer.split('§');
-        number_of_answers = number_of_answers.length;
-    }
     if (String(template_type) == 'multiple') {
         choices = $('#choices').html();
         choices = choices.split('§');
@@ -56,8 +53,9 @@ $(document).ready(function () {
         //make a dict with the user answer and the answer:
         var submit_dict = {
             "user_answer" : String(user_answer),
-            "answer" : String(answer),
-            "csrfmiddlewaretoken" : getCookie('csrftoken')
+            "csrfmiddlewaretoken" : getCookie('csrftoken'),
+            "primary_key" : primary_key,
+            "variable_dictionary" : variable_dictionary
         };
 
         post(/answers/, submit_dict);
