@@ -3,19 +3,15 @@ var Q_INPUT					= '#q_input_mathquill';
 var S_INPUT					= '#s_input_mathquill_';
 var A_INPUT					= '#a_input_mathquill_';
 var C_INPUT					= '#c_input_mathquill';
+var W_INPUT					= '#w_input_mathquill_0';
 var STEP					= 1;
 var ANSWER					= 1;
 var SUB						= 1;
 var TOPIC_SELECTED			= false;
-var INPUT_FIELD				= '';
 var c_count 				= 0;
 var array_calc				= [];
 
 $(document).ready(function() {
-	// Common variables
-	var q_input					= $('#q_input_mathquill');
-	var input_field				= "";
-
 	// Topic selection validation
 	var category_selection = $('#category_selection');
 	category_selection.change(function() {
@@ -28,7 +24,17 @@ $(document).ready(function() {
 	// Set which input-field is active
 	$(document).on('click', '.input_mathquill', function(e){
 		e.preventDefault();
-		INPUT_FIELD = '#' + $(this).attr('id');
+		var input_id = $(this).attr('id');
+		var input_group = input_id[0];
+		if(input_group == 's'){
+			S_INPUT = '#' + input_id;
+		}
+		else if(input_group == 'a'){
+			A_INPUT = '#' + input_id;
+		}
+		else if(input_group == 'w'){
+			W_INPUT = '#' + input_id;
+		}
     });
 
 	// Insert text
@@ -668,16 +674,16 @@ function get_input_field(obj){
 		return Q_INPUT;
 	}
 	else if(btn_id == 's'){
-		return S_INPUT + STEP;
+		return S_INPUT;
 	}
 	else if(btn_id == 'c'){
 		return C_INPUT;
 	}
 	else if(btn_id == 'a'){
-		return A_INPUT + ANSWER;
+		return A_INPUT;
 	}
 	else if(btn_id == 'w'){
-		return INPUT_FIELD;
+		return W_INPUT;
 	}
 }
 
