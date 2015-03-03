@@ -44,7 +44,7 @@ INSTALLED_APPS = (
     'oppgavegen',
     'bootstrap3',                   # django-bootstrap-3
     'registration',                 # django-registration-redux
-    'gunicorn'
+    'gunicorn'                      # gunicorn (for unix deployment)
 )
 
 MIDDLEWARE_CLASSES = (
