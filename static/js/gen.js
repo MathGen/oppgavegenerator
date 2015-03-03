@@ -1,7 +1,7 @@
 // Common variables
 var Q_INPUT					= '#q_input_mathquill';
-var S_INPUT					= '#s_input_mathquill_';
-var A_INPUT					= '#a_input_mathquill_';
+var S_INPUT					= '#s_input_mathquill_1';
+var A_INPUT					= '#a_input_mathquill_1';
 var C_INPUT					= '#c_input_mathquill';
 var W_INPUT					= '#w_input_mathquill_0';
 var STEP					= 1;
@@ -419,6 +419,7 @@ $(document).ready(function() {
 			$('#s_btn_del_' + STEP).hide();
 			STEP++;
 			$('#step_' + STEP).fadeIn();
+			S_INPUT = '#s_input_mathquill_' + STEP;
 		}
 	});
 	
@@ -433,6 +434,7 @@ $(document).ready(function() {
 			$('#a_btn_del_' + ANSWER).hide();
 			ANSWER++;
 			$('#answer_' + ANSWER).fadeIn();
+			A_INPUT = '#a_input_mathquill_' + ANSWER;
 		}
 	});
 
@@ -464,6 +466,7 @@ $(document).ready(function() {
 		$('#step_' + btn_id).fadeOut();
 		STEP--;
 		$('#s_btn_del_' + STEP).show();
+		S_INPUT = '#s_input_mathquill_' + STEP;
 	});
 	
 	// Delete alternative answer
@@ -478,6 +481,7 @@ $(document).ready(function() {
 		$('#answer_' + btn_id).fadeOut();
 		ANSWER--;
 		$('#a_btn_del_' + ANSWER).show();
+		A_INPUT = '#a_input_mathquill_' + ANSWER;
 	});
 	
 	// Close panel
