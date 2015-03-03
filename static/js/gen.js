@@ -395,7 +395,9 @@ $(document).ready(function() {
 		if(btn_id == 'q'){
 			if(TOPIC_SELECTED){
 				$('.btn-group-q').prop('disabled', true);
-				$(s_panel).fadeIn();
+				var s_panel = $('#s_panel');
+				s_panel.fadeIn();
+				scrollTo(s_panel);
 			}
 			else{
 				$('#category_selection').addClass('select_error');
@@ -403,11 +405,15 @@ $(document).ready(function() {
 		}
 		else if(btn_id == 's'){
 			$('.btn-group-s').prop('disabled', true);
-			$('#a_panel').fadeIn();
+			var a_panel = $('#a_panel');
+			a_panel.fadeIn();
+			scrollTo(a_panel);
 		}
 		else if(btn_id == 'a'){
 			$('.btn-group-a').prop('disabled', true);
-			$('#o_panel').fadeIn();
+			var o_panel = $('#o_panel');
+			o_panel.fadeIn();
+			scrollTo(o_panel);
 		}
 	});
 	
@@ -420,6 +426,7 @@ $(document).ready(function() {
 			STEP++;
 			$('#step_' + STEP).fadeIn();
 			S_INPUT = '#s_input_mathquill_' + STEP;
+			scrollTo($('#step_' + STEP));
 		}
 	});
 	
@@ -435,6 +442,7 @@ $(document).ready(function() {
 			ANSWER++;
 			$('#answer_' + ANSWER).fadeIn();
 			A_INPUT = '#a_input_mathquill_' + ANSWER;
+			scrollTo($('#answer_' + ANSWER));
 		}
 	});
 
@@ -467,6 +475,12 @@ $(document).ready(function() {
 		STEP--;
 		$('#s_btn_del_' + STEP).show();
 		S_INPUT = '#s_input_mathquill_' + STEP;
+		if(STEP == 1){
+			scrollTo($('#s_panel'));
+		}
+		else{
+			scrollTo($('#step_' + STEP));
+		}
 	});
 	
 	// Delete alternative answer
@@ -482,6 +496,12 @@ $(document).ready(function() {
 		ANSWER--;
 		$('#a_btn_del_' + ANSWER).show();
 		A_INPUT = '#a_input_mathquill_' + ANSWER;
+		if(ANSWER == 1){
+			scrollTo($('#a_panel'));
+		}
+		else{
+			scrollTo($('#answer_' + ANSWER));
+		}
 	});
 	
 	// Close panel
@@ -509,6 +529,7 @@ $(document).ready(function() {
 			$(get_input_field(this)).mathquill('revert').mathquill('editable');
 			$(s_panel).fadeOut();
 			$('.btn-group-q').prop('disabled', false);
+			scrollTo($('#q_panel'));
 		}
 		else if(btn_id == 'c'){
 			$(C_INPUT).mathquill('revert').mathquill('editable');
@@ -525,10 +546,22 @@ $(document).ready(function() {
 			$('#a_panel').fadeOut();
 			$('#ans_title_1').hide();
 			$('.btn-group-s').prop('disabled', false);
+			if(STEP == 1){
+				scrollTo($('#s_panel'));
+			}
+			else{
+				scrollTo($('#step_' + STEP));
+			}
 		}
 		else if(btn_id == 'o'){
 			$('#o_panel').fadeOut();
 			$('.btn-group-a').prop('disabled', false);
+			if(ANSWER == 1){
+				scrollTo($('#a_panel'));
+			}
+			else{
+				scrollTo($('#answer_' + ANSWER));
+			}
 		}
 	});
 	
@@ -786,6 +819,14 @@ function latex_to_asciimath(latex){
 */
 function isUpperCase(str){
     return str === str.toUpperCase();
+}
+
+/**
+ * Scroll to specific element given by id.
+ * @param id - id of element to scroll to.
+ */
+function scrollTo(id){
+	$('html,body').animate({scrollTop: id.offset().top - 65}); // -65 because of the navbar.
 }
 
 //$('#q_input_mathquill').append('<span>x^2</span>').mathquill('editable');
