@@ -11,6 +11,10 @@ from .models import Template
 from django.template.defaultfilters import *
 import html
 
+#new error message "(╯°□°）╯︵ ┻━┻"
+errorino = "ಠ_ಠ"
+errorino2 = "Q_Q"
+testerino = "☺☻"
 
 def printer():
     string = "Oppgavegenerator"
@@ -166,11 +170,12 @@ def task_with_solution():
     choices = q.choices
     dictionary = q.dictionary
     answer = q.answer
+    primary_key = q.pk
+    variable_dictionary = "" #sends a splitab le string since dictionaries can't be passed between layers.
 
     solution = str(task) +"\n"+str(q.solution).replace('\\n', '\n') #db automatically adds the escape character \ to strings, so we remove it from \n
     #solution = solution.replace('\&\#x222B\;', '&#x222B;')
 
-    print(solution)
     valid_solution = False
     while valid_solution == False: #loop until we get a form of the task that has a valid solution
         new_solution = solution
@@ -182,23 +187,12 @@ def task_with_solution():
                 new_task = new_task.replace(hardcoded_variables[i], random_tall)
                 new_solution = new_solution.replace(hardcoded_variables[i], random_tall)
                 new_answer = new_answer.replace(hardcoded_variables[i], random_tall)
+                variable_dictionary += '§' + hardcoded_variables[i]+ '§' + random_tall #Remove the § later using variable_dictionary[1:]
                 if(type.lower() != 'normal'):
                     choices = choices.replace(hardcoded_variables[i], random_tall)
-        if "§" in new_answer:
-            new_answer = new_answer.split('§')
-            counter = 0
-            for s in new_answer:
-                new_answer[counter] = parse_solution(s)
-                if new_answer[counter] == 'zoo':
-                    error = 1
-                    continue
-                counter += 1
-            new_answer = '§'.join(new_answer)
-        else:
-            new_answer = parse_solution(new_answer)
-            if new_answer == 'zoo':
-                error = 1
-        if error == 1: #error handling at its finest.
+        new_answer = parse_answer(new_answer)
+
+        if new_answer == 'error': #error handling at its finest.
             continue #maybe add a counter everytime this happens so that it doesn't loop infinitely for bad templates
         valid_solution = validate_solution(new_answer, decimal_allowed,zero_allowed)
         if  '/' not in str(new_answer) and 'cos' not in str(new_answer) and 'sin' not in str(new_answer) and 'tan' not in str(new_answer) and '§' not in str(new_answer):
@@ -220,13 +214,14 @@ def task_with_solution():
         new_solution = replace_words(new_solution, dictionary)
         new_answer = replace_words(new_answer, dictionary)
         choices = replace_words(choices,dictionary)
-
-    arr = [new_solution, new_answer, type, choices]
+    number_of_answers = len(new_answer.split('§'))
+    #todo replace new_solution with new_task
+    arr = [new_solution, variable_dictionary[1:], type, choices, primary_key, number_of_answers] #Use [1:] to remove unnecessary §
     return arr
 def validate_solution(answer, decimal_allowed, zero_allowed):
 
     if  '/' not in str(answer) and 'cos' not in str(answer) and 'sin' not in str(answer) and 'tan' not in str(answer) and '§' not in str(answer):
-        print('wtf: ' + str(answer))
+        print('(╯°□°）╯︵ ┻━┻: ' + str(answer))
         decimal_answer = check_for_decimal(answer)
     elif '/' in str(answer): #checks if the answer contains /.
         decimal_answer = False #technically the answer doesn't contain decimal numbers if for instance it is given on the form 1/5
@@ -258,7 +253,6 @@ def calculate_answer(s):
     s = sympify(s) #sometimes this returns the value 'zoo' | also could maybe use simplify instead of sympify
     #s = RR(s)
     #s = round(s, 3)
-    print(str(s))
     return str(s)
 def parse_solution(solution):
     arr = []
@@ -322,10 +316,9 @@ def to_asciimath(s): #legacy function, we probably won't need this
 
 def replace_words(sentence, dictionary):
     dictionary = dictionary.split('§')
-    for i in range(len(dictionary)-1):
+    for i in range(0,len(dictionary)-1,2):
         replace_strings = dictionary[i+1].split(',')
         sentence = sentence.replace(dictionary[i], replace_strings[randint(0,len(replace_strings)-1)])
-        i += 1
     return sentence
 
 def calculate_array(array):
@@ -339,3 +332,19 @@ def after_equal_sign(s): #a function that returns everything after the last = si
         s = s.split("=")
         s = s[len(s)-1]
     return s
+
+def replace_variables_from_array(arr, s): #a function that replaces variables in a string from array
+    for x in range(0,len(arr)-1,2): #set increment size to 2.
+        s = s.replace(arr[x], arr[x+1])
+    return s
+
+def parse_answer(answer):
+    answer = answer.split('§')
+    counter = 0
+    for s in answer:
+        answer[counter] = parse_solution(s)
+        if answer[counter] == 'zoo':
+            answer = ['error'] #This is an array so that join doesn't return e§r§r§o§r
+            continue
+        counter += 1
+    return('§'.join(answer)) #join doesn't do anything if the list has 1 element, except converting it to str
