@@ -216,12 +216,13 @@ def task_with_solution():
         choices = replace_words(choices,dictionary)
     number_of_answers = len(new_answer.split('§'))
     #todo replace new_solution with new_task
+    #todo also remove parsing of solution in this function as it is not needed before the answer page
     arr = [new_solution, variable_dictionary[1:], type, choices, primary_key, number_of_answers] #Use [1:] to remove unnecessary §
     return arr
 def validate_solution(answer, decimal_allowed, zero_allowed):
 
     if  '/' not in str(answer) and 'cos' not in str(answer) and 'sin' not in str(answer) and 'tan' not in str(answer) and '§' not in str(answer):
-        print('(╯°□°）╯︵ ┻━┻: ' + str(answer))
+        print('inside validate solution: ' + str(answer))
         decimal_answer = check_for_decimal(answer)
     elif '/' in str(answer): #checks if the answer contains /.
         decimal_answer = False #technically the answer doesn't contain decimal numbers if for instance it is given on the form 1/5
@@ -290,7 +291,7 @@ def sympyTest():
 
 def getQuestion(topic):
     #todo make this general so it doesn't just return a specified result
-    q = Template.objects.get(pk=11)
+    q = Template.objects.get(pk=16)
     #q = Template.objects.filter(topic__iexact=topic) #Gets all Templates in that topic
     #q = q.filter(rating ---------)
 
