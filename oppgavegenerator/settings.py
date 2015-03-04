@@ -89,7 +89,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_ROOT = '/var/www/oppgavegenerator/static/'
+STATIC_ROOT = '/var/www/oppgavegenerator/static/'           # Static files on production server. Edit this accordingly.
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
@@ -100,6 +100,7 @@ TEMPLATE_LOADERS = ['django.template.loaders.filesystem.Loader',
                     'django.template.loaders.app_directories.Loader']
 
 #REGISTRATION SETTINGS
+REGISTRATION_OPEN = True
 ACCOUNT_ACTIVATION_DAYS = 7     # Amount of days a user has to activate their account
 REGISTRATION_AUTO_LOGIN = True  # Auto-login after activation. True/False
 SITE_ID = 1                     # Temporary solution for local production-environment (contrib.sites)
