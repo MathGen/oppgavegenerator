@@ -21,8 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'x7m%)nsw^0^haut=++^iv0-k8!c-fctda)3j=$*cq*%cv#^i38'
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -90,7 +89,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_ROOT = '/var/www/oppgavegenerator/static/'
+STATIC_ROOT = '/var/www/oppgavegenerator/static/'           # Static files on production server. Edit this accordingly.
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
@@ -101,6 +100,7 @@ TEMPLATE_LOADERS = ['django.template.loaders.filesystem.Loader',
                     'django.template.loaders.app_directories.Loader']
 
 #REGISTRATION SETTINGS
+REGISTRATION_OPEN = True
 ACCOUNT_ACTIVATION_DAYS = 7     # Amount of days a user has to activate their account
 REGISTRATION_AUTO_LOGIN = True  # Auto-login after activation. True/False
 SITE_ID = 1                     # Temporary solution for local production-environment (contrib.sites)
