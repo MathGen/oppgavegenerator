@@ -18,6 +18,7 @@ from oppgavegen.models import Template
 from oppgavegen.models import Topic
 from oppgavegen.models import User
 from datetime import datetime
+from oppgavegen.templatetags.app_filters import is_teacher
 
 def is_member(user): #Checks if a user is a member of a group
     if user.is_superuser:
@@ -76,7 +77,7 @@ def test(request):
     return render_to_response('test.html', context)
 
 @login_required
-@user_passes_test(is_member, '/user/login/')
+@user_passes_test(is_teacher, '/user/login/')
 def gen(request):
     context = RequestContext(request)
     #retrieves a list of topics and passes them to the view.
@@ -89,7 +90,7 @@ def gen(request):
     return render_to_response('gen.html', context_dict, context)
 
 @login_required
-@user_passes_test(is_member, '/user/login/')
+@user_passes_test(is_teacher, '/user/login/')
 def submit(request):
     message = 'don\'t come here'
     if request.method == 'POST':
