@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import Context, loader
@@ -12,15 +13,20 @@ from oppgavegen import generation
 from sympy import sympify
 from sympy.printing.mathml import mathml
 from sympy import Integral, latex
-from sympy.abc import x
 from django.forms import ModelForm
 from oppgavegen.models import Template
 from oppgavegen.models import Topic
 from oppgavegen.models import User
 from datetime import datetime
+from oppgavegen.templatetags.app_filters import is_teacher
 
-# Create your views here.
+def is_member(user): #Checks if a user is a member of a group
+    if user.is_superuser:
+        return True
+    return user.groups.filter(name='Teacher').exists()
 
+
+@login_required
 def index(request):
     #template = loader.get_template('index.html')
     context = RequestContext(request)
@@ -70,6 +76,8 @@ def test(request):
     context = RequestContext(request)
     return render_to_response('test.html', context)
 
+@login_required
+@user_passes_test(is_teacher, '/user/login/')
 def gen(request):
     context = RequestContext(request)
     #retrieves a list of topics and passes them to the view.
@@ -81,6 +89,8 @@ def gen(request):
     context_dict = {'topics':topics}
     return render_to_response('gen.html', context_dict, context)
 
+@login_required
+@user_passes_test(is_teacher, '/user/login/')
 def submit(request):
     message = 'don\'t come here'
     if request.method == 'POST':
@@ -104,6 +114,7 @@ def submit(request):
     context = RequestContext(request)
     return render_to_response('submit',{'message': message}, context)
 
+@login_required
 def answers(request):
     context = RequestContext(request)
     if request.method == 'POST':
@@ -139,3 +150,4 @@ def answers(request):
         else:
             print(form.errors)
     return  render_to_response('answers')
+

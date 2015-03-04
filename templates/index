@@ -1,7 +1,7 @@
 {% extends "index.html" %}
 
 {% block title %}{{ title }}{% endblock %}
-
+{% load app_filters %}
 
 {% block panels %}
 <!-- QUESTION PANEL -->
@@ -25,10 +25,12 @@
             <h5><div id="question">{{ question|linebreaks}}</div></h5>
             <hr>
             <h4>Ditt svar</h4>
+
             <div id="w_target" class="row"></div>
             <form>{% csrf_token %} </form>
         </form>
         <form id="w_question_loading" class="loading"></form>
+
     </div>
     <!-- USER-INPUT -->
     <div class="panel-footer">
@@ -48,4 +50,9 @@
         </div>
     </div>
 </section>
+{% if user|is_teacher   %}
+    <h5> Dette vises bare til lærere </h5>
+{% else %}
+    <h1>Dette vises til alle </h1>
+{% endif %}
 {% endblock %}
