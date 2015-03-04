@@ -1,3 +1,4 @@
+from oppgavegenerator.settings_secret import *
 """
 Django settings for oppgavegenerator project.
 
