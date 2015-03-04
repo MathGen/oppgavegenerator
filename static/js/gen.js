@@ -26,7 +26,10 @@ $(document).ready(function() {
 		e.preventDefault();
 		var input_id = $(this).attr('id');
 		var input_group = input_id[0];
-		if(input_group == 's'){
+		if(input_group == 'q'){
+			$(Q_INPUT).removeClass('select_error');
+		}
+		else if(input_group == 's'){
 			S_INPUT = '#' + input_id;
 		}
 		else if(input_group == 'a'){
@@ -402,10 +405,12 @@ $(document).ready(function() {
 				}
 				else{
 					$(Q_INPUT).addClass('select_error');
+					error_message('q_input_field', 'Dette feltet kan ikke være tom.');
 				}
 			}
 			else{
-				//$('#category_selection').addClass('select_error'); //TODO: make error message.
+				$('#category_selection').addClass('select_error');
+				error_message('category_selection', 'Velg kategori.')
 			}
 		}
 		else if(btn_id == 's'){
@@ -832,6 +837,21 @@ function isUpperCase(str){
  */
 function scrollTo(id){
 	$('html,body').animate({scrollTop: id.offset().top - 65}); // -65 because of the navbar.
+}
+
+/**
+ * Add a error message under the given element.
+ * @param element_id - id of element to apply error message to.
+ * @param message - the error message.
+ */
+function error_message(element_id, message){
+	var element = $('#' + element_id);
+	$(document).ready(function(){
+		element.after('<p class="error_content" style="color: red; display: none">*'+message+'</p>');
+		$('.error_content').show(100).delay(5000).hide(100).queue(function(){
+			$(this).remove();
+		});
+	});
 }
 
 //$('#q_input_mathquill').append('<span>x^2</span>').mathquill('editable');
