@@ -12,6 +12,6 @@ urlpatterns = patterns('',
     url(r'^gen/', 'oppgavegen.views.gen', name='gen'),
     url(r'^submit/', 'oppgavegen.views.submit', name='submit'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^user/', include('registration.backends.simple.urls'))
+    url(r'^user/', include('registration.backends.default.urls'))
 
 )
