@@ -51,8 +51,8 @@
     </div>
 </section>
 {% if user|is_teacher   %}
-<h1> U R TEACHUR? </h1>
+    <h5> Dette vises bare til lærere </h5>
 {% else %}
-    <h1>Tiss</h1>
+    <h1>Dette vises til alle </h1>
 {% endif %}
 {% endblock %}
