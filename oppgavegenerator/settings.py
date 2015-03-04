@@ -103,3 +103,6 @@ TEMPLATE_LOADERS = ['django.template.loaders.filesystem.Loader',
 ACCOUNT_ACTIVATION_DAYS = 7     # Amount of days a user has to activate their account
 REGISTRATION_AUTO_LOGIN = True  # Auto-login after activation. True/False
 SITE_ID = 1                     # Temporary solution for local production-environment (contrib.sites)
+
+LOGIN_URL = '/user/login/'
+LOGOUT_URL = '/user/logout/'

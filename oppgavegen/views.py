@@ -77,7 +77,7 @@ def test(request):
     return render_to_response('test.html', context)
 
 @login_required
-@user_passes_test(is_teacher, '/user/login/')
+@user_passes_test(is_teacher, '/')
 def gen(request):
     context = RequestContext(request)
     #retrieves a list of topics and passes them to the view.
@@ -90,7 +90,7 @@ def gen(request):
     return render_to_response('gen.html', context_dict, context)
 
 @login_required
-@user_passes_test(is_teacher, '/user/login/')
+@user_passes_test(is_teacher, '/')
 def submit(request):
     message = 'don\'t come here'
     if request.method == 'POST':
