@@ -8,7 +8,7 @@
 <script src="/static/js/answer_input.js"></script>
 <script>
     MathJax.Hub.Register.StartupHook("End",function () {
-  		$('#w_question_loading').hide();
+  		$('#w_question_loading').remove();
   		$('#w_question_display').fadeIn();
 	});
 </script>

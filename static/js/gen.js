@@ -1,21 +1,17 @@
 // Common variables
 var Q_INPUT					= '#q_input_mathquill';
-var S_INPUT					= '#s_input_mathquill_';
-var A_INPUT					= '#a_input_mathquill_';
+var S_INPUT					= '#s_input_mathquill_1';
+var A_INPUT					= '#a_input_mathquill_1';
 var C_INPUT					= '#c_input_mathquill';
+var W_INPUT					= '#w_input_mathquill_0';
 var STEP					= 1;
 var ANSWER					= 1;
 var SUB						= 1;
 var TOPIC_SELECTED			= false;
-var INPUT_FIELD				= '';
 var c_count 				= 0;
 var array_calc				= [];
 
 $(document).ready(function() {
-	// Common variables
-	var q_input					= $('#q_input_mathquill');
-	var input_field				= "";
-
 	// Topic selection validation
 	var category_selection = $('#category_selection');
 	category_selection.change(function() {
@@ -28,7 +24,17 @@ $(document).ready(function() {
 	// Set which input-field is active
 	$(document).on('click', '.input_mathquill', function(e){
 		e.preventDefault();
-		INPUT_FIELD = '#' + $(this).attr('id');
+		var input_id = $(this).attr('id');
+		var input_group = input_id[0];
+		if(input_group == 's'){
+			S_INPUT = '#' + input_id;
+		}
+		else if(input_group == 'a'){
+			A_INPUT = '#' + input_id;
+		}
+		else if(input_group == 'w'){
+			W_INPUT = '#' + input_id;
+		}
     });
 
 	// Insert text
@@ -388,20 +394,31 @@ $(document).ready(function() {
 		btn_id = btn_id[0];
 		if(btn_id == 'q'){
 			if(TOPIC_SELECTED){
-				$('.btn-group-q').prop('disabled', true);
-				$(s_panel).fadeIn();
+				if($(Q_INPUT).mathquill('latex') != ''){
+					$('.btn-group-q').prop('disabled', true);
+					var s_panel = $('#s_panel');
+					s_panel.fadeIn();
+					scrollTo(s_panel);
+				}
+				else{
+					$(Q_INPUT).addClass('select_error');
+				}
 			}
 			else{
-				$('#category_selection').addClass('select_error');
+				//$('#category_selection').addClass('select_error'); //TODO: make error message.
 			}
 		}
 		else if(btn_id == 's'){
 			$('.btn-group-s').prop('disabled', true);
-			$('#a_panel').fadeIn();
+			var a_panel = $('#a_panel');
+			a_panel.fadeIn();
+			scrollTo(a_panel);
 		}
 		else if(btn_id == 'a'){
 			$('.btn-group-a').prop('disabled', true);
-			$('#o_panel').fadeIn();
+			var o_panel = $('#o_panel');
+			o_panel.fadeIn();
+			scrollTo(o_panel);
 		}
 	});
 	
@@ -413,6 +430,8 @@ $(document).ready(function() {
 			$('#s_btn_del_' + STEP).hide();
 			STEP++;
 			$('#step_' + STEP).fadeIn();
+			S_INPUT = '#s_input_mathquill_' + STEP;
+			scrollTo($('#step_' + STEP));
 		}
 	});
 	
@@ -427,6 +446,8 @@ $(document).ready(function() {
 			$('#a_btn_del_' + ANSWER).hide();
 			ANSWER++;
 			$('#answer_' + ANSWER).fadeIn();
+			A_INPUT = '#a_input_mathquill_' + ANSWER;
+			scrollTo($('#answer_' + ANSWER));
 		}
 	});
 
@@ -458,6 +479,13 @@ $(document).ready(function() {
 		$('#step_' + btn_id).fadeOut();
 		STEP--;
 		$('#s_btn_del_' + STEP).show();
+		S_INPUT = '#s_input_mathquill_' + STEP;
+		if(STEP == 1){
+			scrollTo($('#s_panel'));
+		}
+		else{
+			scrollTo($('#step_' + STEP));
+		}
 	});
 	
 	// Delete alternative answer
@@ -472,6 +500,13 @@ $(document).ready(function() {
 		$('#answer_' + btn_id).fadeOut();
 		ANSWER--;
 		$('#a_btn_del_' + ANSWER).show();
+		A_INPUT = '#a_input_mathquill_' + ANSWER;
+		if(ANSWER == 1){
+			scrollTo($('#a_panel'));
+		}
+		else{
+			scrollTo($('#answer_' + ANSWER));
+		}
 	});
 	
 	// Close panel
@@ -499,6 +534,7 @@ $(document).ready(function() {
 			$(get_input_field(this)).mathquill('revert').mathquill('editable');
 			$(s_panel).fadeOut();
 			$('.btn-group-q').prop('disabled', false);
+			scrollTo($('#q_panel'));
 		}
 		else if(btn_id == 'c'){
 			$(C_INPUT).mathquill('revert').mathquill('editable');
@@ -515,10 +551,22 @@ $(document).ready(function() {
 			$('#a_panel').fadeOut();
 			$('#ans_title_1').hide();
 			$('.btn-group-s').prop('disabled', false);
+			if(STEP == 1){
+				scrollTo($('#s_panel'));
+			}
+			else{
+				scrollTo($('#step_' + STEP));
+			}
 		}
 		else if(btn_id == 'o'){
 			$('#o_panel').fadeOut();
 			$('.btn-group-a').prop('disabled', false);
+			if(ANSWER == 1){
+				scrollTo($('#a_panel'));
+			}
+			else{
+				scrollTo($('#answer_' + ANSWER));
+			}
 		}
 	});
 	
@@ -605,16 +653,16 @@ $(document).ready(function() {
 		var tmp_solution = [];
 		for(var i = 1; i <= STEP; i++){
 			if($('#s_text_' + i).val() != ''){
-				tmp_solution.push(latex_to_asciimath('\\text{' + $('#s_text_' + i).val() + '}') + '`\\n`' + latex_to_asciimath($(S_INPUT + i).mathquill('latex')));
+				tmp_solution.push(latex_to_asciimath('\\text{' + $('#s_text_' + i).val() + '}') + '`\\n`' + latex_to_asciimath($('#s_input_mathquill_' + i).mathquill('latex')));
 			}
 			else{
-				tmp_solution.push(latex_to_asciimath($(S_INPUT + i).mathquill('latex')));
+				tmp_solution.push(latex_to_asciimath($('#s_input_mathquill_' + i).mathquill('latex')));
 			}
 		}
 		array_submit['solution']			= '`' + tmp_solution.join('`\\n`') + '`';
 		var tmp_answer = [];
 		for(var i = 1; i <=ANSWER; i++){
-			tmp_answer.push(latex_to_asciimath($(A_INPUT + i).mathquill('latex')));
+			tmp_answer.push(latex_to_asciimath($('#a_input_mathquill_' + i).mathquill('latex')));
 		}
 		array_submit['answer']				= tmp_answer.join('`§`');
 		var tmp_r_domain = [];
@@ -668,16 +716,16 @@ function get_input_field(obj){
 		return Q_INPUT;
 	}
 	else if(btn_id == 's'){
-		return S_INPUT + STEP;
+		return S_INPUT;
 	}
 	else if(btn_id == 'c'){
 		return C_INPUT;
 	}
 	else if(btn_id == 'a'){
-		return A_INPUT + ANSWER;
+		return A_INPUT;
 	}
 	else if(btn_id == 'w'){
-		return INPUT_FIELD;
+		return W_INPUT;
 	}
 }
 
@@ -776,6 +824,14 @@ function latex_to_asciimath(latex){
 */
 function isUpperCase(str){
     return str === str.toUpperCase();
+}
+
+/**
+ * Scroll to specific element given by id.
+ * @param id - id of element to scroll to.
+ */
+function scrollTo(id){
+	$('html,body').animate({scrollTop: id.offset().top - 65}); // -65 because of the navbar.
 }
 
 //$('#q_input_mathquill').append('<span>x^2</span>').mathquill('editable');
