@@ -136,7 +136,7 @@ def answers(request):
 
             solution = generation.replace_variables_from_array(variable_dictionary, q.solution)
             solution = generation.parse_solution(solution)
-            solution = str(q.task.replace('\\n', '\n')) +"\n"+str(solution).replace('\\n', '\n')
+            solution = str((q.question_text).replace('\\n', '\n')) +"\n"+str(solution).replace('\\n', '\n')
 
             user_answer = user_answer.split('§') #if a string doesn't contain the split character it returns as a list with 1 element
             answer = answer.split('§')
