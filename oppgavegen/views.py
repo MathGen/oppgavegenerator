@@ -99,7 +99,8 @@ def submit(request):
         form = TemplateForm(request.POST)
         if form.is_valid():
             template = form.save(commit=False)
-            template.creator = User.objects.get(pk=2) #todo get user from the user submitting the form
+
+            template.creator = request.user
             #could get creator from username=einar as well
             template.rating = 1200
             template.times_failed = 0

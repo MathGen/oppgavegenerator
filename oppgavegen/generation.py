@@ -196,11 +196,15 @@ def task_with_solution():
         if new_answer == 'error': #error handling at its finest.
             continue #maybe add a counter everytime this happens so that it doesn't loop infinitely for bad templates
         valid_solution = validate_solution(new_answer, decimal_allowed,zero_allowed)
-        if  '/' not in str(new_answer) and 'cos' not in str(new_answer) and 'sin' not in str(new_answer) and 'tan' not in str(new_answer) and '§' not in str(new_answer):
+
+        try:
+            int(new_answer) #Check if the answer is a number.
             if ((decimal_allowed == False and valid_solution == True) or (check_for_decimal(new_answer))): #Remove float status if the number is supposed to be a integer
                 print("answer is not a float") #todo find out if i need this anymore
                 new_answer = str(int(new_answer))
                 valid_solution = True
+        except:
+            pass
 
     new_solution = parse_solution(new_solution)
     if type.lower() == 'multiple':
