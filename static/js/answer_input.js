@@ -5,8 +5,6 @@ $(document).ready(function () {
     var primary_key = $('#primary_key').html();
     var variable_dictionary = $('#variable_dictionary').html();
     var w_target = $('#w_target');
-
-
     if (String(template_type) == 'multiple') {
         choices = $('#choices').html();
         choices = choices.split('§');
@@ -30,7 +28,6 @@ $(document).ready(function () {
             w_target.append(answer_box); //todo: This needs to be inserted into text where needed.
 
     }
-
 
     $('#submit_answer').click(function (e) {
         e.preventDefault();
