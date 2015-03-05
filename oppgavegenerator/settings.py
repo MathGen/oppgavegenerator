@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['localhost', '158.38.101.36']
 # Application definition
 
 INSTALLED_APPS = (
+    'oppgavegen',
     'django.contrib.admin',
     'django.contrib.auth',          # needed for registration
     'django.contrib.sites',         # needed for registration (?)
@@ -38,10 +39,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',      # I don't think we need this -Einar / do something about it - Eirik
     'django.contrib.staticfiles',
-    'oppgavegen',
     'bootstrap3',                   # django-bootstrap-3
     'registration',                 # django-registration-redux
-    'gunicorn'                      # gunicorn (for unix deployment)
+    'gunicorn',                      # gunicorn (for unix deployment)
 )
 
 MIDDLEWARE_CLASSES = (
