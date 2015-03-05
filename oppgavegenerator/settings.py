@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-#import dj_database_url
+import socket
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -22,15 +22,20 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '158.38.101.36']
+#if socket.gethostname() == '158.38.101.36':     # Edit this to your domain name or production server IP-address
+#    DEBUG = TEMPLATE_DEBUG = False
+#else:
+#    DEBUG = TEMPLATE_DEBUG = True
+
+ALLOWED_HOSTS = ['localhost', '158.38.101.36']  # Edit this to your domain name or production server IP-address
 
 
 # Application definition
 
 INSTALLED_APPS = (
+    'oppgavegen',
     'django.contrib.admin',
     'django.contrib.auth',          # needed for registration
     'django.contrib.sites',         # needed for registration (?)
@@ -38,10 +43,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',      # I don't think we need this -Einar / do something about it - Eirik
     'django.contrib.staticfiles',
-    'oppgavegen',
     'bootstrap3',                   # django-bootstrap-3
     'registration',                 # django-registration-redux
-    'gunicorn'                      # gunicorn (for unix deployment)
+    'gunicorn',                      # gunicorn (for unix deployment)
 )
 
 MIDDLEWARE_CLASSES = (
@@ -86,7 +90,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_ROOT = '/var/www/oppgavegenerator/static/'           # Static files on production server. Edit this accordingly.
+STATIC_ROOT = '/var/www/oppgavegenerator/collectstatic/' # Static files on production server. Edit this accordingly. Should not be the same as STATIC_URL
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 

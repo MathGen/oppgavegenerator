@@ -40,7 +40,7 @@ def checkAnswer(user_answer, answer):
     if collections.Counter(user_answer) == collections.Counter(answer):
         string = "Du har svart riktig!"
     else:
-        string = "Du har svart feil. Svaret er: `" + ' og '.join(answer) + '`'
+        string = "Du har svart feil. Svaret er: `" + '` og `'.join(answer) + '`'
     return string
 
 
@@ -164,34 +164,27 @@ def task_with_solution():
     #todo make a rounding function using decimals_allowed
     decimals_allowed = int(q.number_of_decimals)
     decimal_allowed = (True if decimals_allowed > 0 else False) #Boolean for if the answer is required to be a integer
-    random_domain = (q.random_domain).split() #the domain of random numbers that can be generated for the question
+    #the domain of random numbers that can be generated for the question
+    random_domain_list = (q.random_domain).split('§')
+    print(random_domain_list)
     zero_allowed = q.answer_can_be_zero#False #Boolean for 0 being a valid answer or not.
     task = q.question_text
-    type = q.type
+    template_type = q.type
     choices = q.choices
     dictionary = q.dictionary
     answer = q.answer
     primary_key = q.pk
-    variable_dictionary = "" #sends a splitab le string since dictionaries can't be passed between layers.
-
+    variable_dictionary = "" #sends a splitable string since dictionaries can't be passed between layers.
     solution = str(task) +"\n"+str(q.solution).replace('\\n', '\n') #db automatically adds the escape character \ to strings, so we remove it from \n
     #solution = solution.replace('\&\#x222B\;', '&#x222B;')
 
     valid_solution = False
     while valid_solution == False: #loop until we get a form of the task that has a valid solution
-        new_solution = solution
-        new_task = task
-        new_answer = answer
-        for i in range(len(hardcoded_variables)):
-            if new_task.count(hardcoded_variables[i]) > 0:
-                random_tall = str(randint(int(random_domain[0]),int(random_domain[1])))
-                new_task = new_task.replace(hardcoded_variables[i], random_tall)
-                new_solution = new_solution.replace(hardcoded_variables[i], random_tall)
-                new_answer = new_answer.replace(hardcoded_variables[i], random_tall)
-                variable_dictionary += '§' + hardcoded_variables[i]+ '§' + random_tall #Remove the § later using variable_dictionary[1:]
-                if(type.lower() != 'normal'):
-                    choices = choices.replace(hardcoded_variables[i], random_tall)
-        new_answer = parse_answer(new_answer)
+        random_replacement_array = replace_numbers(task, answer, solution, random_domain_list, template_type)
+        new_task = random_replacement_array[0]
+        new_answer = parse_answer(random_replacement_array[1])
+        new_solution = random_replacement_array[2]
+        variable_dictionary = random_replacement_array[3]
 
         if new_answer == 'error': #error handling at its finest.
             continue #maybe add a counter everytime this happens so that it doesn't loop infinitely for bad templates
@@ -207,7 +200,7 @@ def task_with_solution():
             pass
 
     new_solution = parse_solution(new_solution)
-    if type.lower() == 'multiple':
+    if template_type.lower() == 'multiple':
         choices = parse_solution(choices)
         choices = choices.split('§') #if only 1 choice is given it might bug out, we can just enforce 2 choices to be given though..
         choices.append(new_answer)
@@ -220,9 +213,11 @@ def task_with_solution():
         new_answer = replace_words(new_answer, dictionary)
         choices = replace_words(choices,dictionary)
     number_of_answers = len(new_answer.split('§'))
+    print(number_of_answers)
+    print('arrrrrr')
     #todo replace new_solution with new_task
     #todo also remove parsing of solution in this function as it is not needed before the answer page
-    arr = [new_solution, variable_dictionary[1:], type, choices, primary_key, number_of_answers] #Use [1:] to remove unnecessary §
+    arr = [new_solution, variable_dictionary, template_type, choices, primary_key, number_of_answers] #Use [1:] to remove unnecessary §
     return arr
 def validate_solution(answer, decimal_allowed, zero_allowed):
 
@@ -354,3 +349,28 @@ def parse_answer(answer):
             continue
         counter += 1
     return('§'.join(answer)) #join doesn't do anything if the list has 1 element, except converting it to str
+
+def replace_numbers(task, solution, answer, random_domain_list, template_type):
+    hardcoded_variables = ['R22', 'R21','R20','R19','R18','R17','R16','R15','R14','R13','R12','R11','R10','R9','R8','R7','R6','R3','R2','R1','R0']
+    variable_dictionary = ""
+
+    counter = 0
+    for i in range(len(hardcoded_variables)):
+            if task.count(hardcoded_variables[i]) > 0:
+                try: #in case of index out of bounds it just uses the first element of the array
+                    random_domain = random_domain_list[counter].split()
+                except IndexError:
+                    print('Objection!')
+                    random_domain = random_domain_list[0].split()
+
+                random_tall = str(randint(int(random_domain[0]),int(random_domain[1])))
+                task = task.replace(hardcoded_variables[i], random_tall)
+                solution = solution.replace(hardcoded_variables[i], random_tall)
+                answer = answer.replace(hardcoded_variables[i], random_tall)
+                variable_dictionary += '§' + hardcoded_variables[i]+ '§' + random_tall #Remove the § later using variable_dictionary[1:]
+                if template_type.lower() != 'normal': #incase template_type has been capitalized
+                    choices = choices.replace(hardcoded_variables[i], random_tall)
+                counter += 1
+    return_arr = [task,solution,answer,variable_dictionary[1:]] #Use [1:] to remove unnecessary § from variable_dictionary
+
+    return return_arr
