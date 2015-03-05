@@ -97,6 +97,7 @@ $(document).ready(function() {
 		$(s_btn_var_dyn).append('<button id="s_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
 		$(c_btn_var_dyn).append('<button id="c_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
 		$(a_btn_var_dyn).append('<button id="a_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
+		$('#o_adv_domain').append('<tr id="o_adv_'+q_var_id+'" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">'+q_var+':</td><td><input id="o_adv_from_'+q_var_id+'" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_'+q_var_id+'" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td></td></tr>');
 		q_var = String.fromCharCode(q_var.charCodeAt(0) + 1);
 		q_var_id++;
 	});
@@ -265,6 +266,7 @@ $(document).ready(function() {
 					$('#q_btn_abc_' + check_id[n]).remove();
 					$('#s_btn_abc_' + check_id[n]).remove();
 					$('#c_btn_abc_' + check_id[n]).remove();
+					$('#o_adv_' + check_id[n]).remove();
 				}
 			}
 		}
@@ -280,6 +282,7 @@ $(document).ready(function() {
 		if(btn_id == 'q'){
 			$(Q_INPUT).mathquill('revert').mathquill('editable');
 			$('.btn_var_abc').remove();
+			$('.o_adv_dyn').remove();
 		}
 		else{
 			$(get_input_field(this)).mathquill('revert').mathquill('editable');
@@ -321,7 +324,8 @@ $(document).ready(function() {
 								tmp_var_typed = String.fromCharCode(tmp_var_typed.charCodeAt(0) + var_id);
 								$(q_btn_var_dyn).append('<button id="q_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc">'+tmp_var_typed+'</button>');
 								$(s_btn_var_dyn).append('<button id="s_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc">'+tmp_var_typed+'</button>');
-								$(c_btn_var_dyn).append('<button id="c_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc">'+tmp_var_typed+'</button>');
+								$('#c_btn_var_dyn').append('<button id="c_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc">'+tmp_var_typed+'</button>');
+								$('#o_adv_domain').append('<tr id="o_adv_'+var_id+'" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">'+tmp_var_typed+':</td><td><input id="o_adv_from_'+var_id+'" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_'+var_id+'" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td></td></tr>');
 							}
 						}
 					}
@@ -372,6 +376,7 @@ $(document).ready(function() {
 						$('#q_btn_abc_' + check_id[n]).remove();
 						$('#s_btn_abc_' + check_id[n]).remove();
 						$('#c_btn_abc_' + check_id[n]).remove();
+						$('#o_adv_' + check_id[n]).remove();
 					}
 				}
 			}
@@ -584,7 +589,25 @@ $(document).ready(function() {
 		c_count = 0;
 		array_calc = [];
 	});
-	
+
+	// Show advanced domain settings
+	var btn_adv_domain = $('#o_btn_adv_domain');
+	btn_adv_domain.click(function(e){
+		e.preventDefault();
+		$('#o_adv_domain').fadeToggle();
+		$('#o_adv_caret').toggleClass('dropup');
+	});
+
+	// Domain input-insertion to advanced settings
+	var opt_domain_from = $('#opt_domain_from');
+	var opt_domain_to = $('#opt_domain_to');
+	opt_domain_from.on('input', function(){
+		$('.opt_domain_from').val(opt_domain_from.val());
+	});
+	opt_domain_to.on('input', function(){
+		$('.opt_domain_to').val(opt_domain_to.val());
+	});
+
 	// Retrieve and insert calculation to solution
 	var c_btn_ok = $('#c_btn_ok');
 	$(c_btn_ok).click(function(e){
@@ -670,10 +693,16 @@ $(document).ready(function() {
 			tmp_answer.push(latex_to_asciimath($('#a_input_mathquill_' + i).mathquill('latex')));
 		}
 		array_submit['answer']				= tmp_answer.join('`§`');
+
+		// retrieves the list from latest letter in alphabet (w) to earliest (a) as that is the formatting used server side.
 		var tmp_r_domain = [];
-		tmp_r_domain.push($('#opt_range_from').val());
-		tmp_r_domain.push($('#opt_range_to').val());
-		array_submit['random_domain']		= tmp_r_domain.join(" ");
+		for(var i = 22; i >= 0; i--){
+			if($('#o_adv_' + i).length){
+				tmp_r_domain.push($('#o_adv_from_' + i).val() + " " + $('#o_adv_to_' + i).val());
+			}
+		}
+		array_submit['random_domain']		= tmp_r_domain.join('§');
+
 		array_submit['number_of_decimals']	= $('#opt_decimal').val();
 		var tmp_allow_zero = "";
 		if($('#opt_allow').is(':checked')){

@@ -327,32 +327,32 @@
 									<a id="o_btn_close" class="glyphicon glyphicon-remove pull-right btn_close"></a>
 								</h3>
 							</div>
-							<!--OPTION CONTENT-->
-							<div class="panel-body">
-								<form id="o_form" class="form-horizontal">
-									<div class="form-group">
-										<label for="opt_range" class="col-sm-4 control-label">Utvalg:</label>
-										<div class="col-xs-3">
-											<input id="opt_range_from" type="number" class="form-control input-xsmall" placeholder="Fra:">
-										</div>
-										<div class="col-xs-3">
-											<input id="opt_range_to" type="number" class="form-control input-xsmall" placeholder="Til:">
-										</div>
-									</div>
-									<div class="form-group">
-										<label for="opt_decimal" class="col-sm-4 control-label">Antall desimaler i svar:</label>
-										<div class="col-xs-3">
-											<input id="opt_decimal" type="number" class="form-control input-xsmall" placeholder="Antall:">
-										</div>
-									</div>
-									<div class="form-group">
-										<label for="opt_allow" class="col-sm-4 control-label">Tillat 0 som svar?</label>
-										<div class="col-xs-3">
-											<input id="opt_allow" type="checkbox">
-										</div>
-									</div>
-								</form>
-							</div>
+                            <!--OPTION CONTENT-->
+                            <table class="table table-condensed">
+                                <tbody>
+                                <tr>
+                                    <td class="col-sm-3" style="vertical-align: middle; text-align: right">Utvalg:</td>
+                                    <td class="col-sm-3"><input id="opt_domain_from" type="number" class="form-control input-sm" placeholder="Fra:"></td>
+                                    <td class="col-sm-3"><input id="opt_domain_to" type="number" class="form-control input-sm" placeholder="Til:"></td>
+                                    <td style="vertical-align: middle"><a id="o_btn_adv_domain">Avansert<span id="o_adv_caret"><b class="caret"></b></span></a></td>
+                                </tr>
+                                </tbody>
+                                <tbody id="o_adv_domain" style="display:none; border-top: 0">
+                                	<!-- DYNAMIC TABLE ROWS -->
+                                </tbody>
+                                <tbody style="border-top: 0">
+                                <tr>
+                                    <td class="col-sm-3" style="vertical-align: middle; text-align: right">Antall desimaler i svar:</td>
+                                    <td class="col-sm-3"><input id="opt_decimal" type="number" class="form-control input-sm" placeholder="Antall:"></td>
+                                    <td class="col-sm-3"></td><td></td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-3" style="vertical-align: middle; text-align: right; height: 41px">Tillat 0 som svar:</td>
+                                    <td class="col-sm-3" style="vertical-align: middle"><input id="opt_allow" type="checkbox"></td>
+                                    <td></td><td></td>
+                                </tr>
+                                </tbody>
+                            </table>
 							<!--OPTION KEYBOARD-->
 							<div class="panel-footer">
 								<div class="row">
