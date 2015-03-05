@@ -21,8 +21,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-TEMPLATE_DEBUG = False
+DEBUG = True
+TEMPLATE_DEBUG = True
 
 #if socket.gethostname() == '158.38.101.36':     # Edit this to your domain name or production server IP-address
 #    DEBUG = TEMPLATE_DEBUG = False
