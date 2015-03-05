@@ -136,13 +136,15 @@ def answers(request):
 
             solution = generation.replace_variables_from_array(variable_dictionary, q.solution)
             solution = generation.parse_solution(solution)
+            solution = str((q.question_text).replace('\\n', '\n')) +"\n"+str(solution).replace('\\n', '\n')
 
             user_answer = user_answer.split('§') #if a string doesn't contain the split character it returns as a list with 1 element
             answer = answer.split('§')
+
             #We format both the user answer and the answer the same way.
             user_answer = [ generation.after_equal_sign(x) for x in user_answer ]
-            answer = [ generation.after_equal_sign(x) for x in answer ]
             user_answer = generation.calculate_array(user_answer)
+            answer = [ generation.after_equal_sign(x) for x in answer ]
             answer = generation.calculate_array(answer)
 
             answer_text = generation.checkAnswer(user_answer,answer)

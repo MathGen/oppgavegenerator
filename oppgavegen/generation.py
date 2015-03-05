@@ -168,7 +168,7 @@ def task_with_solution():
     random_domain_list = (q.random_domain).split('§')
     print(random_domain_list)
     zero_allowed = q.answer_can_be_zero#False #Boolean for 0 being a valid answer or not.
-    task = q.question_text
+    task = str(q.question_text).replace('\\n', '\n')
     template_type = q.type
     choices = q.choices
     dictionary = q.dictionary
@@ -213,11 +213,10 @@ def task_with_solution():
         new_answer = replace_words(new_answer, dictionary)
         choices = replace_words(choices,dictionary)
     number_of_answers = len(new_answer.split('§'))
-    print(number_of_answers)
-    print('arrrrrr')
+
     #todo replace new_solution with new_task
     #todo also remove parsing of solution in this function as it is not needed before the answer page
-    arr = [new_solution, variable_dictionary, template_type, choices, primary_key, number_of_answers] #Use [1:] to remove unnecessary §
+    arr = [new_task, variable_dictionary, template_type, choices, primary_key, number_of_answers] #Use [1:] to remove unnecessary §
     return arr
 def validate_solution(answer, decimal_allowed, zero_allowed):
 
@@ -291,7 +290,7 @@ def sympyTest():
 
 def getQuestion(topic):
     #todo make this general so it doesn't just return a specified result
-    q = Template.objects.get(pk=16)
+    q = Template.objects.get(pk=18)
     #q = Template.objects.filter(topic__iexact=topic) #Gets all Templates in that topic
     #q = q.filter(rating ---------)
 
