@@ -291,7 +291,7 @@ def sympyTest():
 
 def getQuestion(topic):
     #todo make this general so it doesn't just return a specified result
-    q = Template.objects.get(pk=18)
+    q = Template.objects.get(pk=6)
     #q = Template.objects.filter(topic__iexact=topic) #Gets all Templates in that topic
     #q = q.filter(rating ---------)
 
