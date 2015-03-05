@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-#import dj_database_url
+import socket
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -21,9 +21,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG = True
+#TEMPLATE_DEBUG = True
 
-TEMPLATE_DEBUG = True
+if socket.gethostname() == '158.38.101.36':     # Edit this to your domain name or production server IP
+    DEBUG = TEMPLATE_DEBUG = False
+else:
+    DEBUG = TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '158.38.101.36']
 
