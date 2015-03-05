@@ -217,7 +217,7 @@ def task_with_solution():
     print('arrrrrr')
     #todo replace new_solution with new_task
     #todo also remove parsing of solution in this function as it is not needed before the answer page
-    arr = [new_solution, variable_dictionary, template_type, choices, primary_key, number_of_answers] #Use [1:] to remove unnecessary §
+    arr = [new_task, variable_dictionary, template_type, choices, primary_key, number_of_answers] #Use [1:] to remove unnecessary §
     return arr
 def validate_solution(answer, decimal_allowed, zero_allowed):
 
@@ -291,7 +291,7 @@ def sympyTest():
 
 def getQuestion(topic):
     #todo make this general so it doesn't just return a specified result
-    q = Template.objects.get(pk=16)
+    q = Template.objects.get(pk=18)
     #q = Template.objects.filter(topic__iexact=topic) #Gets all Templates in that topic
     #q = q.filter(rating ---------)
 
