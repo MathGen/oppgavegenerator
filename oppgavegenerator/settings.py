@@ -24,12 +24,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 #DEBUG = True
 #TEMPLATE_DEBUG = True
 
-if socket.gethostname() == '158.38.101.36':     # Edit this to your domain name or production server IP
+if socket.gethostname() == '158.38.101.36':     # Edit this to your domain name or production server IP-address
     DEBUG = TEMPLATE_DEBUG = False
 else:
     DEBUG = TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '158.38.101.36']
+ALLOWED_HOSTS = ['localhost', '158.38.101.36']  # Edit this to your domain name or production server IP-address
 
 
 # Application definition
