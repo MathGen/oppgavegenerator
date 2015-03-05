@@ -168,7 +168,7 @@ def task_with_solution():
     new_random_domain = (q.random_domain).split('§')
     zero_allowed = q.answer_can_be_zero#False #Boolean for 0 being a valid answer or not.
     task = q.question_text
-    type = q.type
+    template_type = q.type
     choices = q.choices
     dictionary = q.dictionary
     answer = q.answer
@@ -180,7 +180,7 @@ def task_with_solution():
 
     valid_solution = False
     while valid_solution == False: #loop until we get a form of the task that has a valid solution
-        random_replacement_array = replace_numbers(task, answer, solution, new_random_domain)
+        random_replacement_array = replace_numbers(task, answer, solution, new_random_domain, template_type)
         new_task = random_replacement_array[0]
         new_answer = parse_answer(random_replacement_array[1])
         new_solution = random_replacement_array[2]
@@ -200,7 +200,7 @@ def task_with_solution():
             pass
 
     new_solution = parse_solution(new_solution)
-    if type.lower() == 'multiple':
+    if template_type.lower() == 'multiple':
         choices = parse_solution(choices)
         choices = choices.split('§') #if only 1 choice is given it might bug out, we can just enforce 2 choices to be given though..
         choices.append(new_answer)
@@ -348,7 +348,7 @@ def parse_answer(answer):
         counter += 1
     return('§'.join(answer)) #join doesn't do anything if the list has 1 element, except converting it to str
 
-def replace_numbers(task, solution, answer, random_domain_list):
+def replace_numbers(task, solution, answer, random_domain_list, template_type):
     hardcoded_variables = ['R22', 'R21','R20','R19','R18','R17','R16','R15','R14','R13','R12','R11','R10','R9','R8','R7','R6','R3','R2','R1','R0']
     variable_dictionary = ""
 
@@ -365,7 +365,7 @@ def replace_numbers(task, solution, answer, random_domain_list):
                 solution = solution.replace(hardcoded_variables[i], random_tall)
                 answer = answer.replace(hardcoded_variables[i], random_tall)
                 variable_dictionary += '§' + hardcoded_variables[i]+ '§' + random_tall #Remove the § later using variable_dictionary[1:]
-                if(type.lower() != 'normal'): #incase type has been capitalized
+                if template_type.lower() != 'normal': #incase type has been capitalized
                     choices = choices.replace(hardcoded_variables[i], random_tall)
                 counter += 1
     return_arr = [task,solution,answer,variable_dictionary[1:]]
