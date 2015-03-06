@@ -31,9 +31,11 @@ $(document).ready(function() {
 		}
 		else if(input_group == 's'){
 			S_INPUT = '#' + input_id;
+			$(S_INPUT).removeClass('select_error');
 		}
 		else if(input_group == 'a'){
 			A_INPUT = '#' + input_id;
+			$(A_INPUT).removeClass('select_error');
 		}
 		else if(input_group == 'w'){
 			W_INPUT = '#' + input_id;
@@ -410,7 +412,7 @@ $(document).ready(function() {
 				}
 				else{
 					$(Q_INPUT).addClass('select_error');
-					error_message('q_input_field', 'Dette feltet kan ikke være tom.');
+					error_message('q_input_field', 'Dette feltet kan ikke være tomt.');
 				}
 			}
 			else{
@@ -419,16 +421,36 @@ $(document).ready(function() {
 			}
 		}
 		else if(btn_id == 's'){
-			$('.btn-group-s').prop('disabled', true);
-			var a_panel = $('#a_panel');
-			a_panel.fadeIn();
-			scrollTo(a_panel);
+			var solution_valid = true;
+			for(var step = 1; step <= STEP; step++){
+				if($('#s_input_mathquill_' + step).mathquill('latex') == ''){
+					solution_valid = false;
+					$('#s_input_mathquill_' + step).addClass('select_error');
+					error_message('step_' + step, 'Dette feltet kan ikke være tomt.');
+				}
+			}
+			if(solution_valid == true){
+				$('.btn-group-s').prop('disabled', true);
+				var a_panel = $('#a_panel');
+				a_panel.fadeIn();
+				scrollTo(a_panel);
+			}
 		}
 		else if(btn_id == 'a'){
-			$('.btn-group-a').prop('disabled', true);
-			var o_panel = $('#o_panel');
-			o_panel.fadeIn();
-			scrollTo(o_panel);
+			var answer_valid = true;
+			for(var ans = 1; ans <= ANSWER; ans++){
+				if($('#a_input_mathquill_' + ans).mathquill('latex') == ''){
+					answer_valid = false;
+					$('#a_input_mathquill_' + ans).addClass('select_error');
+					error_message('answer_' + ans, 'Dette feltet kan ikke være tomt.');
+				}
+			}
+			if(answer_valid == true){
+				$('.btn-group-a').prop('disabled', true);
+				var o_panel = $('#o_panel');
+				o_panel.fadeIn();
+				scrollTo(o_panel);
+			}
 		}
 	});
 	
@@ -736,7 +758,9 @@ $(document).ready(function() {
 		array_submit["csrfmiddlewaretoken"] = getCookie('csrftoken');
 		array_submit['type'] = 'normal';
 
-		post(/submit/, array_submit);
+		if(submit_validation()){
+			post(/submit/, array_submit);
+		}
 	});
 });
 
@@ -883,11 +907,53 @@ function error_message(element_id, message){
 	});
 }
 
-//$('#q_input_mathquill').append('<span>x^2</span>').mathquill('editable');
-//$('#q_input_mathquill').mathquill('cmd', '\\sqrt');
-//$('<span>\sqrt{2}</span>').mathquill().appendTo('#q_input_mathquill').mathquill('editable');
-//$('<span/>').mathquill().appendTo('#q_input_mathquill').mathquill('latex','a_n x^n');
-//$('#q_input_mathquill').append('<span>$</span>').mathquill('editable');
+/**
+ * Validates required fields before submitting.
+ * @returns {boolean} returns true if the validation pass.
+ */
+function submit_validation(){
+	var valid = true;
+	if($(Q_INPUT).mathquill('latex') == ''){
+		valid = false;
+		$(Q_INPUT).addClass('select_error');
+		error_message('q_input_field', 'Dette feltet kan ikke være tomt.');
+	}
+	for(var step = 1; step <= STEP; step++){
+		if($('#s_input_mathquill_' + step).mathquill('latex') == ''){
+			valid = false;
+			$('#s_input_mathquill_' + step).addClass('select_error');
+			error_message('step_' + step, 'Dette feltet kan ikke være tomt.');
+		}
+	}
+	for(var ans = 1; ans <= ANSWER; ans++){
+		if($('#a_input_mathquill_' + ans).mathquill('latex') == ''){
+			valid = false;
+			$('#a_input_mathquill_' + ans).addClass('select_error');
+			error_message('answer_' + ans, 'Dette feltet kan ikke være tomt.');
+		}
+	}
+	for(var adv = 22; adv >= 0; adv--){
+		if($('#o_adv_from_' + adv).length){
+			if($('#o_adv_from_' + adv).val() == ''){
+				valid = false;
+				error_message('o_adv_from_' + adv, 'Fyll ut!');
+				$('#o_adv_domain').fadeIn();
+				$('#o_adv_caret').addClass('dropup');
+			}
+			else if($('#o_adv_to_' + adv).val() == ''){
+				valid = false;
+				error_message('o_adv_to_' + adv, 'Fyll ut!');
+				$('#o_adv_domain').fadeIn();
+				$('#o_adv_caret').addClass('dropup');
+			}
+		}
+	}
+	if($('#opt_decimal').val() == ''){
+		valid = false;
+		error_message('opt_decimal', 'Fyll ut!');
+	}
+	return valid;
+}
 
 function post(path, params, method) {
     method = method || "post"; // Set method to post by default if not specified.
