@@ -6,7 +6,6 @@
 		<link href="/static/css/bootstrap.min.css" rel = "stylesheet">
 		<link rel="stylesheet" type="text/css" href="/static/css/mathquill.css">
 		<link href="/static/css/styles.css" rel="stylesheet">
-		<script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
 	</head>
 	<body>
     	<div hidden id="db_topics">{{topics}}</div>
@@ -70,26 +69,31 @@
 							<div class="panel-footer">
 								<div class="row">
 									<div class="col-md-9">
-										<button id="q_btn_text" class="btn btn-info btn_text" data-toggle="modal" data-target="#text_modal">Tekst</button>
+										<div class="btn-group">
+											<button id="q_btn_text" class="btn btn-info btn_text" data-toggle="modal" data-target="#text_modal">Tekst</button>
+											<button id="q_btn_text_edit" class="btn btn-info" data-toggle="modal" data-target="#text_edit_modal"><span class="glyphicon glyphicon-pencil"></span></button>
+										</div>
 										<div id="q_btn_var_dyn" class="btn-group">
 											<button id="q_btn_var" class="btn btn-danger btn_var">Variabel</button>
 										</div>
 										<div class="btn-group">
-											<button id="q_btn_x_0" class="btn btn-warning btn_x">x</button>
-											<button id="q_btn_x_1" class="btn btn-warning btn_x">y</button>
-											<button id="q_btn_x_2" class="btn btn-warning btn_x">z</button>
+											<button id="q_btn_x_0" class="btn btn-warning btn_x mathquill-embedded-latex">x</button>
+											<button id="q_btn_x_1" class="btn btn-warning btn_x mathquill-embedded-latex">y</button>
+											<button id="q_btn_x_2" class="btn btn-warning btn_x mathquill-embedded-latex">z</button>
 										</div>
-										<button id="q_btn_equal" class="btn btn-default btn_equal">=</button>
-										<button id="q_btn_par" class="btn btn-default btn_par">()</button>
-										<button id="q_btn_addition" class="btn btn-default btn_addition">+</button>
-										<button id="q_btn_subtraction" class="btn btn-default btn_subtraction">-</button>
-										<button id="q_btn_multiplication" class="btn btn-default btn_multiplication">&#xd7;</button>
-										<button id="q_btn_division" class="btn btn-default btn_division">&#xf7;</button>
-										<button id="q_btn_exponent" class="btn btn-default btn_exponent">a<sup class="sup_btn">b</sup></button>
-										<button id="q_btn_subscript" class="btn btn-default btn_subscript">a<sub class="sub_btn">n</sub></button>
-										<button id="q_btn_sqrt" class="btn btn-default btn_sqrt">&#x221a;</button>
-										<button id="q_btn_integral" class="btn btn-default btn_int">&#x222B;</button>
-										<button id="q_btn_integral_ab" class="btn btn-default btn_int_ab">&#x222B;<sub class="sub_btn">a</sub><sup class="sup_btn">b</sup></button>
+										<button id="q_btn_equal" class="btn btn-default btn_equal btn-xs mathquill-embedded-latex">=</button>
+										<button id="q_btn_par" class="btn btn-default btn_par btn-xs mathquill-embedded-latex">()</button>
+										<button id="q_btn_addition" class="btn btn-default btn_addition btn-xs mathquill-embedded-latex">+</button>
+										<button id="q_btn_subtraction" class="btn btn-default btn_subtraction btn-xs mathquill-embedded-latex">-</button>
+										<button id="q_btn_multiplication" class="btn btn-default btn_multiplication btn-xs mathquill-embedded-latex">&#xd7;</button>
+										<button id="q_btn_division" class="btn btn-default btn_division btn-xs mathquill-embedded-latex">&#xf7;</button>
+                                        <button id="q_btn_pm" class="btn btn-default btn_pm btn-xs mathquill-embedded-latex">\pm</button>
+										<button id="q_btn_exponent" class="btn btn-default btn_exponent btn-xs mathquill-embedded-latex">a^n</button>
+										<button id="q_btn_subscript" class="btn btn-default btn_subscript btn-xs mathquill-embedded-latex">a_n</button>
+										<button id="q_btn_sqrt" class="btn btn-default btn_sqrt btn-xs mathquill-embedded-latex">&#x221a;</button>
+										<button id="q_btn_integral" class="btn btn-default btn_int btn-xs mathquill-embedded-latex">\int</button>
+										<button id="q_btn_integral_ab" class="btn btn-default btn_int_ab btn-xs mathquill-embedded-latex">\int_a^b</button>
+                                        <button id="q_btn_binom" class="btn btn-default btn_binom btn-xs mathquill-embedded-latex">\binom{n}{k}</button>
 									</div>
 									<div class="col-md-3">
 										<div class="btn-group pull-right">
@@ -195,21 +199,23 @@
 										</span>
 										<span id="s_btn_var_dyn" class="btn-group"><!--SOLUTION DYN VAR BTN--></span>
 										<div class="btn-group">
-											<button id="s_btn_x_0" class="btn btn-warning btn_x">x</button>
-											<button id="s_btn_x_1" class="btn btn-warning btn_x">y</button>
-											<button id="s_btn_x_2" class="btn btn-warning btn_x">z</button>
+											<button id="s_btn_x_0" class="btn btn-warning btn_x mathquill-embedded-latex">x</button>
+											<button id="s_btn_x_1" class="btn btn-warning btn_x mathquill-embedded-latex">y</button>
+											<button id="s_btn_x_2" class="btn btn-warning btn_x mathquill-embedded-latex">z</button>
 										</div>
-										<button id="s_btn_equal" class="btn btn-default btn_equal">=</button>
-										<button id="s_btn_par" class="btn btn-default btn_par">()</button>
-										<button id="s_btn_addition" class="btn btn-default btn_addition">+</button>
-										<button id="s_btn_subtraction" class="btn btn-default btn_subtraction">-</button>
-										<button id="s_btn_multiplication" class="btn btn-default btn_multiplication">&#xd7;</button>
-										<button id="s_btn_division" class="btn btn-default btn_division">&#xf7;</button>
-										<button id="s_btn_exponent" class="btn btn-default btn_exponent">a<sup class="sup_btn">b</sup></button>
-										<button id="s_btn_subscript" class="btn btn-default btn_subscript">a<sub class="sub_btn">n</sub></button>
-										<button id="s_btn_sqrt" class="btn btn-default btn_sqrt">&#x221a;</button>
-										<button id="s_btn_integral" class="btn btn-default btn_int">&#x222B;</button>
-										<button id="s_btn_integral_ab" class="btn btn-default btn_int_ab">&#x222B;<sub class="sub_btn">a</sub><sup class="sup_btn">b</sup></button>
+										<button id="s_btn_equal" class="btn btn-default btn_equal btn-xs mathquill-embedded-latex">=</button>
+										<button id="s_btn_par" class="btn btn-default btn_par btn-xs mathquill-embedded-latex">()</button>
+										<button id="s_btn_addition" class="btn btn-default btn_addition btn-xs mathquill-embedded-latex">+</button>
+										<button id="s_btn_subtraction" class="btn btn-default btn_subtraction btn-xs mathquill-embedded-latex">-</button>
+										<button id="s_btn_multiplication" class="btn btn-default btn_multiplication btn-xs mathquill-embedded-latex">&#xd7;</button>
+										<button id="s_btn_division" class="btn btn-default btn_division btn-xs mathquill-embedded-latex">&#xf7;</button>
+                                        <button id="s_btn_pm" class="btn btn-default btn_pm btn-xs mathquill-embedded-latex">\pm</button>
+										<button id="s_btn_exponent" class="btn btn-default btn_exponent btn-xs mathquill-embedded-latex">a^n</button>
+										<button id="s_btn_subscript" class="btn btn-default btn_subscript btn-xs mathquill-embedded-latex">a_n</button>
+										<button id="s_btn_sqrt" class="btn btn-default btn_sqrt btn-xs mathquill-embedded-latex">&#x221a;</button>
+										<button id="s_btn_integral" class="btn btn-default btn_int btn-xs mathquill-embedded-latex">\int</button>
+										<button id="s_btn_integral_ab" class="btn btn-default btn_int_ab btn-xs mathquill-embedded-latex">\int_a^b</button>
+                                        <button id="s_btn_binom" class="btn btn-default btn_binom btn-xs mathquill-embedded-latex">\binom{n}{k}</button>
 									</div>
 									<div class="col-md-4">
 										<div class="btn-group pull-right">
@@ -279,21 +285,23 @@
 										</span>
 										<span id="a_btn_var_dyn" class="btn-group"><!--ANSWER DYN VAR BTN--></span>
 										<div class="btn-group">
-											<button id="a_btn_x_0" class="btn btn-warning btn_x">x</button>
-											<button id="a_btn_x_1" class="btn btn-warning btn_x">y</button>
-											<button id="a_btn_x_2" class="btn btn-warning btn_x">z</button>
+											<button id="a_btn_x_0" class="btn btn-warning btn_x mathquill-embedded-latex">x</button>
+											<button id="a_btn_x_1" class="btn btn-warning btn_x mathquill-embedded-latex">y</button>
+											<button id="a_btn_x_2" class="btn btn-warning btn_x mathquill-embedded-latex">z</button>
 										</div>
-										<button id="a_btn_equal" class="btn btn-default btn_equal">=</button>
-										<button id="a_btn_par" class="btn btn-default btn_par">()</button>
-										<button id="a_btn_addition" class="btn btn-default btn_addition">+</button>
-										<button id="a_btn_subtraction" class="btn btn-default btn_subtraction">-</button>
-										<button id="a_btn_multiplication" class="btn btn-default btn_multiplication">&#xd7;</button>
-										<button id="a_btn_division" class="btn btn-default btn_division">&#xf7;</button>
-										<button id="a_btn_exponent" class="btn btn-default btn_exponent">a<sup class="sup_btn">b</sup></button>
-										<button id="a_btn_subscript" class="btn btn-default btn_subscript">a<sub class="sub_btn">n</sub></button>
-										<button id="a_btn_sqrt" class="btn btn-default btn_sqrt">&#x221a;</button>
-										<button id="a_btn_integral" class="btn btn-default btn_int">&#x222B;</button>
-										<button id="a_btn_integral_ab" class="btn btn-default btn_int_ab">&#x222B;<sub class="sub_btn">a</sub><sup class="sup_btn">b</sup></button>
+										<button id="a_btn_equal" class="btn btn-default btn_equal btn-xs mathquill-embedded-latex">=</button>
+										<button id="a_btn_par" class="btn btn-default btn_par btn-xs mathquill-embedded-latex">()</button>
+										<button id="a_btn_addition" class="btn btn-default btn_addition btn-xs mathquill-embedded-latex">+</button>
+										<button id="a_btn_subtraction" class="btn btn-default btn_subtraction btn-xs mathquill-embedded-latex">-</button>
+										<button id="a_btn_multiplication" class="btn btn-default btn_multiplication btn-xs mathquill-embedded-latex">&#xd7;</button>
+										<button id="a_btn_division" class="btn btn-default btn_division btn-xs mathquill-embedded-latex">&#xf7;</button>
+                                        <button id="a_btn_pm" class="btn btn-default btn_pm btn-xs mathquill-embedded-latex">\pm</button>
+										<button id="a_btn_exponent" class="btn btn-default btn_exponent btn-xs mathquill-embedded-latex">a^n</button>
+										<button id="a_btn_subscript" class="btn btn-default btn_subscript btn-xs mathquill-embedded-latex">a_n</button>
+										<button id="a_btn_sqrt" class="btn btn-default btn_sqrt btn-xs mathquill-embedded-latex">&#x221a;</button>
+										<button id="a_btn_integral" class="btn btn-default btn_int btn-xs mathquill-embedded-latex">\int</button>
+										<button id="a_btn_integral_ab" class="btn btn-default btn_int_ab btn-xs mathquill-embedded-latex">\int_a^b</button>
+                                        <button id="a_btn_binom" class="btn btn-default btn_binom btn-xs mathquill-embedded-latex">\binom{n}{k}</button>
 									</div>
 									<div class="col-md-4">
 										<div class="btn-group pull-right">
@@ -319,32 +327,32 @@
 									<a id="o_btn_close" class="glyphicon glyphicon-remove pull-right btn_close"></a>
 								</h3>
 							</div>
-							<!--OPTION CONTENT-->
-							<div class="panel-body">
-								<form id="o_form" class="form-horizontal">
-									<div class="form-group">
-										<label for="opt_range" class="col-sm-4 control-label">Utvalg:</label>
-										<div class="col-xs-3">
-											<input id="opt_range_from" type="number" class="form-control input-xsmall" placeholder="Fra:">
-										</div>
-										<div class="col-xs-3">
-											<input id="opt_range_to" type="number" class="form-control input-xsmall" placeholder="Til:">
-										</div>
-									</div>
-									<div class="form-group">
-										<label for="opt_decimal" class="col-sm-4 control-label">Antall desimaler i svar:</label>
-										<div class="col-xs-3">
-											<input id="opt_decimal" type="number" class="form-control input-xsmall" placeholder="Antall:">
-										</div>
-									</div>
-									<div class="form-group">
-										<label for="opt_allow" class="col-sm-4 control-label">Tillat 0 som svar?</label>
-										<div class="col-xs-3">
-											<input id="opt_allow" type="checkbox">
-										</div>
-									</div>
-								</form>
-							</div>
+                            <!--OPTION CONTENT-->
+                            <table class="table table-condensed">
+                                <tbody>
+                                <tr>
+                                    <td class="col-sm-3" style="vertical-align: middle; text-align: right">Utvalg:</td>
+                                    <td class="col-sm-3"><input id="opt_domain_from" type="number" class="form-control input-sm" placeholder="Fra:"></td>
+                                    <td class="col-sm-3"><input id="opt_domain_to" type="number" class="form-control input-sm" placeholder="Til:"></td>
+                                    <td style="vertical-align: middle"><a id="o_btn_adv_domain">Avansert<span id="o_adv_caret"><b class="caret"></b></span></a></td>
+                                </tr>
+                                </tbody>
+                                <tbody id="o_adv_domain" style="display:none; border-top: 0">
+                                	<!-- DYNAMIC TABLE ROWS -->
+                                </tbody>
+                                <tbody style="border-top: 0">
+                                <tr>
+                                    <td class="col-sm-3" style="vertical-align: middle; text-align: right">Antall desimaler i svar:</td>
+                                    <td class="col-sm-3"><input id="opt_decimal" type="number" class="form-control input-sm" placeholder="Antall:"></td>
+                                    <td class="col-sm-3"></td><td></td>
+                                </tr>
+                                <tr>
+                                    <td class="col-sm-3" style="vertical-align: middle; text-align: right; height: 41px">Tillat 0 som svar:</td>
+                                    <td class="col-sm-3" style="vertical-align: middle"><input id="opt_allow" type="checkbox"></td>
+                                    <td></td><td></td>
+                                </tr>
+                                </tbody>
+                            </table>
 							<!--OPTION KEYBOARD-->
 							<div class="panel-footer">
 								<div class="row">
@@ -381,17 +389,18 @@
 							<div class="col-sm-8">
 								<span id="c_btn_calc_dyn" class="btn-group"><!--DYNAMIC CALCULATION BTNs--></span>
 								<span id="c_btn_var_dyn" class="btn-group"><!--DYNAMIC VARIABLE BTNs--></span>
-								<button id="c_btn_equal" class="btn btn-default btn_equal">=</button>
-								<button id="c_btn_par" class="btn btn-default btn_par">()</button>
-								<button id="c_btn_addition" class="btn btn-default btn_addition">+</button>
-								<button id="c_btn_subtraction" class="btn btn-default btn_subtraction">-</button>
-								<button id="c_btn_multiplication" class="btn btn-default btn_multiplication">&#xd7;</button>
-								<button id="c_btn_division" class="btn btn-default btn_division">&#xf7;</button>
-								<button id="c_btn_exponent" class="btn btn-default btn_exponent">a<sup class="sup_btn">b</sup></button>
-								<button id="c_btn_subscript" class="btn btn-default btn_subscript">a<sub class="sub_btn">n</sub></button>
-								<button id="c_btn_sqrt" class="btn btn-default btn_sqrt">&#x221a;</button>
-								<button id="c_btn_integral" class="btn btn-default btn_int">&#x222B;</button>
-								<button id="c_btn_integral_ab" class="btn btn-default btn_int_ab">&#x222B;<sub class="sub_btn">a</sub><sup class="sup_btn">b</sup></button>
+								<button id="c_btn_equal" class="btn btn-default btn_equal btn-xs mathquill-embedded-latex">=</button>
+								<button id="c_btn_par" class="btn btn-default btn_par btn-xs mathquill-embedded-latex">()</button>
+								<button id="c_btn_addition" class="btn btn-default btn_addition btn-xs mathquill-embedded-latex">+</button>
+								<button id="c_btn_subtraction" class="btn btn-default btn_subtraction btn-xs mathquill-embedded-latex">-</button>
+								<button id="c_btn_multiplication" class="btn btn-default btn_multiplication btn-xs mathquill-embedded-latex">&#xd7;</button>
+								<button id="c_btn_division" class="btn btn-default btn_division btn-xs mathquill-embedded-latex">&#xf7;</button>
+								<button id="c_btn_exponent" class="btn btn-default btn_exponent btn-xs mathquill-embedded-latex">a^n</button>
+								<button id="c_btn_subscript" class="btn btn-default btn_subscript btn-xs mathquill-embedded-latex">a_n</button>
+								<button id="c_btn_sqrt" class="btn btn-default btn_sqrt btn-xs mathquill-embedded-latex">&#x221a;</button>
+								<button id="c_btn_integral" class="btn btn-default btn_int btn-xs mathquill-embedded-latex">\int</button>
+								<button id="c_btn_integral_ab" class="btn btn-default btn_int_ab btn-xs mathquill-embedded-latex">\int_a^b</button>
+                                <button id="c_btn_binom" class="btn btn-default btn_binom btn-xs mathquill-embedded-latex">\binom{n}{k}</button>
 							</div>
 							<div class="col-sm-4">
 								<div class="btn-group pull-right">
@@ -430,6 +439,50 @@
 				</section>
 			</div>
 		</div>
+        <!--POP-UP: TEXT-SUBSTITUTION-->
+		<div id="text_edit_modal" class="modal fade" role="dialog">
+			<div class="modal-dialog modal-md">
+				<section class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Tekst-substitusjon<a class="glyphicon glyphicon-remove pull-right" data-dismiss="modal"></a></h3>
+					</div>
+					<div class="panel-body">
+						<form id="e_form" class="form-horizontal">
+							<!--TEXT-SUBSTITUTION: 1-->
+							<div id="e_sub_1">
+								<div class="form-group">
+									<label class="col-md-4 control-label">Bytt ut ord/setning:</label>
+									<div class="col-md-7">
+										<input id="e_from_1" type="text" class="form-control" placeholder="Epler">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label">Med ord/setning:</label>
+									<div class="col-md-7">
+										<textarea id="e_to_1" type="text" class="form-control" rows="2" placeholder="Bananer, Pærer, Appelsiner, Druer"></textarea>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="panel-footer">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="btn-group pull-right">
+									<button id="e_btn_clear" class="btn btn-default btn_clear">
+										<span class="glyphicon glyphicon-trash" style="horizontal-align:middle"></span>
+									</button>
+									<button id="e_btn_next" class="btn btn-default">
+										<span class="glyphicon glyphicon-plus" style="horizontal-align:middle"></span>
+									</button>
+									<button class="btn btn-primary" data-dismiss="modal" type="submit">OK</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+			</div>
+		</div>
 		<!-- Bootstrap core JavaScript
 		================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
@@ -437,5 +490,6 @@
 		<script src="/static/js/bootstrap.js"></script>
 		<script src="/static/js/mathquill.min.js"></script>
 		<script src="/static/js/gen.js"></script>
+    	<script src="/static/js/make_dropdown.js"></script>
 	</body>
 </html>

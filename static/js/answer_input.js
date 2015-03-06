@@ -1,31 +1,33 @@
 $(document).ready(function () {
     var text = 'some text';
-    var answer = $('#answer').html();
     var template_type = $('#template_type').html();
-    var number_of_answers = 1;
-    if(answer.indexOf('§') > -1){
-        number_of_answers = answer.split('§');
-        number_of_answers = number_of_answers.length;
-    }
+    var number_of_answers = $('#number_of_answers').html();;
+    var primary_key = $('#primary_key').html();
+    var variable_dictionary = $('#variable_dictionary').html();
+    var w_target = $('#w_target');
     if (String(template_type) == 'multiple') {
         choices = $('#choices').html();
         choices = choices.split('§');
         for (i = 0; i < choices.length; i++) {
             text = '`' + choices[i] + '`' + '<br />';
-            $('#target').append('<input type="radio" name="answer_button" id="radio' + i + '" value="' + choices[i] + '"/>' + text);
+            w_target.append('<input type="radio" name="answer_button" id="radio' + i + '" value="' + choices[i] + '"/>' + text);
         }
     }
     else if (template_type == 'normal') {
         for (i = 0; i < number_of_answers; i++) {
-            $('#target').append('<input type="textbox" name="answer_box" id="ans_box'+ i +'" />');
+            //$('#a_target').append('<input class="form-control" type="textbox" name="answer_box" id="ans_box'+ i +'" />');
+            if(i > 0){
+                w_target.append('<div class="col-md-12"><h4>og</h4></div>');
+            }
+            w_target.append('<div class="col-md-12 input_field"><span id="w_input_mathquill_'+i+'" class="mathquill-editable form-control input_mathquill"><span class="textarea"><textarea></textarea></span></span></div>');
+            $('#w_input_mathquill_' + i).mathquill('revert').mathquill('editable');
         }
     }
     else if (template_type == 'insert') {
-        for (i = 0; i < number_of_answers; i++) {
-            $('#target').append(answer_box); //todo: This needs to be inserted into text where needed.
-        }
-    }
 
+            w_target.append(answer_box); //todo: This needs to be inserted into text where needed.
+
+    }
 
     $('#submit_answer').click(function (e) {
         e.preventDefault();
@@ -34,25 +36,28 @@ $(document).ready(function () {
             user_answer = getRadioValue('answer_button');
         }
         else {
-            for (i = 0; i < number_of_answers; i++) {
-                if (i > 0) {
+            for (j = 0; j < number_of_answers; j++) {
+                if (j > 0) {
                     user_answer += '§';
                 }
-                user_answer += document.getElementById('ans_box' + i).value;
+                //user_answer += document.getElementById('ans_box' + i).value;
+                var w_input = ($('#w_input_mathquill_' + j).mathquill('latex'));
+                user_answer += latex_to_sympy(w_input);
             }
+
         }
 
         //make a dict with the user answer and the answer:
         var submit_dict = {
             "user_answer" : String(user_answer),
-            "answer" : String(answer),
-            "csrfmiddlewaretoken" : getCookie('csrftoken')
+            "csrfmiddlewaretoken" : getCookie('csrftoken'),
+            "primary_key" : primary_key,
+            "variable_dictionary" : variable_dictionary
         };
 
         post(/answers/, submit_dict);
 
     });
-
 });
 
 function post(path, params, method) {
@@ -107,4 +112,69 @@ function getRadioValue(groupName) {
         else rdValue = 'noRadioChecked'; //todo prevent this from happening by forcing the user to select one before submitting
     }
     return rdValue;
+}
+
+function latex_to_sympy(latex){
+    var la = latex;
+	la = la.replace(/{/g,'(');
+	la = la.replace(/}/g,')');
+	la = la.replace(/\\cdot/g,'*');
+	la = la.replace(/\\left/g,'');
+	la = la.replace(/\\right/g,'');
+    var la2 = "";
+    i = 0;
+	while(i < la.length){
+		if(la[i] == '\\'){
+			if(la[i + 1] == 't' && la[i + 2] == 'e' && la[i + 3] == 'x' && la[i + 4] == 't'){
+				while(true){
+					if(la[i] == ')' && counter == 0){
+						break
+					}
+					if(la[i] == '('){
+						counter++;
+					}
+					else if(la[i+1] == ')'){
+						counter--;
+					}
+					la2 += la[i];
+					i++;
+				}
+			}
+			else{
+				while(la[i] != '(' && la[i] != ' '){
+					la2 += la[i];
+					i++;
+				}
+			}
+		}
+        la2 += la[i];
+        i++;
+	}
+    la = la2;
+
+    i = 0;
+	counter = 0;
+	recorder = false;
+	while(i < la.length){ //logic for insering a / in fractals
+		if(la.charAt(i) == 'c' && la.charAt(i-1) == 'a' && la.charAt(i-2) == 'r' && la.charAt(i-3) == 'f' && la.charAt(i-4) == '\\'){
+			recorder = true;
+		}
+		if(recorder){
+			if(la.charAt(i) == '('){
+				counter++;
+			}
+			else if(la.charAt(i) == ')'){
+				counter--;
+			}
+			if(la.charAt(i) == ')' && counter == 0){
+				la = la.substring(0, i+1) + "/" + la.substring(i+1,la.length);
+				recorder = false;
+			}
+		}
+		i++;
+	}
+	la = la.replace(/\\/g,'');
+	la = la.replace(/cdot/g,'*');
+	la = la.replace(/frac/g,'');
+    return la;
 }

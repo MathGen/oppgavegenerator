@@ -1,18 +1,45 @@
 // Common variables
 var Q_INPUT					= '#q_input_mathquill';
-var S_INPUT					= '#s_input_mathquill_';
-var A_INPUT					= '#a_input_mathquill_';
+var S_INPUT					= '#s_input_mathquill_1';
+var A_INPUT					= '#a_input_mathquill_1';
 var C_INPUT					= '#c_input_mathquill';
+var W_INPUT					= '#w_input_mathquill_0';
 var STEP					= 1;
 var ANSWER					= 1;
+var SUB						= 1;
+var TOPIC_SELECTED			= false;
 var c_count 				= 0;
 var array_calc				= [];
 
 $(document).ready(function() {
-	// Common variables
-	var q_input					= $('#q_input_mathquill');
-	var input_field				= "";
-	
+	// Topic selection validation
+	var category_selection = $('#category_selection');
+	category_selection.change(function() {
+		if(TOPIC_SELECTED == false){
+			$('#category_selection').removeClass('select_error');
+			TOPIC_SELECTED = true;
+		}
+	});
+
+	// Set which input-field is active
+	$(document).on('click', '.input_mathquill', function(e){
+		e.preventDefault();
+		var input_id = $(this).attr('id');
+		var input_group = input_id[0];
+		if(input_group == 'q'){
+			$(Q_INPUT).removeClass('select_error');
+		}
+		else if(input_group == 's'){
+			S_INPUT = '#' + input_id;
+		}
+		else if(input_group == 'a'){
+			A_INPUT = '#' + input_id;
+		}
+		else if(input_group == 'w'){
+			W_INPUT = '#' + input_id;
+		}
+    });
+
 	// Insert text
 	var t_btn_ok = $('#t_btn_ok');
 	$(t_btn_ok).click(function(e){
@@ -70,6 +97,7 @@ $(document).ready(function() {
 		$(s_btn_var_dyn).append('<button id="s_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
 		$(c_btn_var_dyn).append('<button id="c_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
 		$(a_btn_var_dyn).append('<button id="a_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
+		$('#o_adv_domain').append('<tr id="o_adv_'+q_var_id+'" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">'+q_var+':</td><td><input id="o_adv_from_'+q_var_id+'" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_'+q_var_id+'" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td></td></tr>');
 		q_var = String.fromCharCode(q_var.charCodeAt(0) + 1);
 		q_var_id++;
 	});
@@ -144,7 +172,14 @@ $(document).ready(function() {
 		e.preventDefault();
 		$(get_input_field(this)).mathquill('write', '\\frac{}{}');
 	});
-	
+
+	// Insert plus-minus
+	var btn_pm = $('.btn_pm');
+	btn_pm.click(function(e){
+		e.preventDefault();
+		$(get_input_field(this)).mathquill('write', '\\pm');
+	});
+
 	// Insert exponent
 	var q_btn_exponent = $('.btn_exponent');
 	$(q_btn_exponent).click(function(e){
@@ -179,7 +214,14 @@ $(document).ready(function() {
 		e.preventDefault();
 		$(get_input_field(this)).mathquill('write', '\\int_{}^{}\\left(\\right)');
 	});
-	
+
+	// Insert binomial
+	var btn_binom = $('.btn_binom');
+	btn_binom.click(function(e){
+		e.preventDefault();
+		$(get_input_field(this)).mathquill('write', '\\binom{}{}');
+	});
+
 	// Insert calculated A,B,C,..
 	$(document).on('click', '.btn_calc', function(e){
 		var id = parseInt($(this).attr("id").match(/[\d]+$/));
@@ -224,6 +266,7 @@ $(document).ready(function() {
 					$('#q_btn_abc_' + check_id[n]).remove();
 					$('#s_btn_abc_' + check_id[n]).remove();
 					$('#c_btn_abc_' + check_id[n]).remove();
+					$('#o_adv_' + check_id[n]).remove();
 				}
 			}
 		}
@@ -239,6 +282,7 @@ $(document).ready(function() {
 		if(btn_id == 'q'){
 			$(Q_INPUT).mathquill('revert').mathquill('editable');
 			$('.btn_var_abc').remove();
+			$('.o_adv_dyn').remove();
 		}
 		else{
 			$(get_input_field(this)).mathquill('revert').mathquill('editable');
@@ -280,7 +324,8 @@ $(document).ready(function() {
 								tmp_var_typed = String.fromCharCode(tmp_var_typed.charCodeAt(0) + var_id);
 								$(q_btn_var_dyn).append('<button id="q_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc">'+tmp_var_typed+'</button>');
 								$(s_btn_var_dyn).append('<button id="s_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc">'+tmp_var_typed+'</button>');
-								$(c_btn_var_dyn).append('<button id="c_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc">'+tmp_var_typed+'</button>');
+								$('#c_btn_var_dyn').append('<button id="c_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc">'+tmp_var_typed+'</button>');
+								$('#o_adv_domain').append('<tr id="o_adv_'+var_id+'" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">'+tmp_var_typed+':</td><td><input id="o_adv_from_'+var_id+'" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_'+var_id+'" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td></td></tr>');
 							}
 						}
 					}
@@ -331,6 +376,7 @@ $(document).ready(function() {
 						$('#q_btn_abc_' + check_id[n]).remove();
 						$('#s_btn_abc_' + check_id[n]).remove();
 						$('#c_btn_abc_' + check_id[n]).remove();
+						$('#o_adv_' + check_id[n]).remove();
 					}
 				}
 			}
@@ -355,16 +401,34 @@ $(document).ready(function() {
 		var btn_id = $(this).attr('id');
 		btn_id = btn_id[0];
 		if(btn_id == 'q'){
-			$('.btn-group-q').prop('disabled', true);
-			$(s_panel).fadeIn();
+			if(TOPIC_SELECTED){
+				if($(Q_INPUT).mathquill('latex') != ''){
+					$('.btn-group-q').prop('disabled', true);
+					var s_panel = $('#s_panel');
+					s_panel.fadeIn();
+					scrollTo(s_panel);
+				}
+				else{
+					$(Q_INPUT).addClass('select_error');
+					error_message('q_input_field', 'Dette feltet kan ikke være tom.');
+				}
+			}
+			else{
+				$('#category_selection').addClass('select_error');
+				error_message('category_selection', 'Velg kategori.')
+			}
 		}
 		else if(btn_id == 's'){
 			$('.btn-group-s').prop('disabled', true);
-			$('#a_panel').fadeIn();
+			var a_panel = $('#a_panel');
+			a_panel.fadeIn();
+			scrollTo(a_panel);
 		}
 		else if(btn_id == 'a'){
 			$('.btn-group-a').prop('disabled', true);
-			$('#o_panel').fadeIn();
+			var o_panel = $('#o_panel');
+			o_panel.fadeIn();
+			scrollTo(o_panel);
 		}
 	});
 	
@@ -376,6 +440,8 @@ $(document).ready(function() {
 			$('#s_btn_del_' + STEP).hide();
 			STEP++;
 			$('#step_' + STEP).fadeIn();
+			S_INPUT = '#s_input_mathquill_' + STEP;
+			scrollTo($('#step_' + STEP));
 		}
 	});
 	
@@ -390,9 +456,30 @@ $(document).ready(function() {
 			$('#a_btn_del_' + ANSWER).hide();
 			ANSWER++;
 			$('#answer_' + ANSWER).fadeIn();
+			A_INPUT = '#a_input_mathquill_' + ANSWER;
+			scrollTo($('#answer_' + ANSWER));
 		}
 	});
-	
+
+	// Add another text-substitution
+	var e_btn_next = $('#e_btn_next');
+	e_btn_next.click(function(e){
+		e.preventDefault();
+		var e_form = $('#e_form');
+		$('#e_btn_del_' +SUB).hide();
+		SUB++;
+		e_form.append('<div id="e_sub_'+SUB+'" style="display:none"><hr><div class="form-group"><label class="col-md-4 control-label">Bytt ut ord/setning:</label><div class="col-md-7"><input id="e_from_'+SUB+'" type="text" class="form-control" placeholder="Epler"></div><div class="col-md-1"><a id="e_btn_del_'+SUB+'" class="glyphicon glyphicon-remove del_sub" style="float:right"></a></div></div><div class="form-group"><label class="col-md-4 control-label">Med ord/setning:</label><div class="col-md-7"><textarea id="e_to_'+SUB+'" type="text" class="form-control" rows="2" placeholder="Bananer, P&#xE6;rer, Appelsiner, Druer"></textarea></div></div></div>');
+		$('#e_sub_' + SUB).fadeIn();
+	});
+
+	// Delete last text-substitution
+	$(document).on('click', '.del_sub', function(e){
+		e.preventDefault();
+		$('#e_sub_' + SUB).remove();
+		SUB--;
+		$('#e_btn_del_' +SUB).show();
+	});
+
 	// Delete solution step
 	var s_btn_del_step = $('.del_step');
 	$(s_btn_del_step).click(function(e){
@@ -402,6 +489,13 @@ $(document).ready(function() {
 		$('#step_' + btn_id).fadeOut();
 		STEP--;
 		$('#s_btn_del_' + STEP).show();
+		S_INPUT = '#s_input_mathquill_' + STEP;
+		if(STEP == 1){
+			scrollTo($('#s_panel'));
+		}
+		else{
+			scrollTo($('#step_' + STEP));
+		}
 	});
 	
 	// Delete alternative answer
@@ -416,6 +510,13 @@ $(document).ready(function() {
 		$('#answer_' + btn_id).fadeOut();
 		ANSWER--;
 		$('#a_btn_del_' + ANSWER).show();
+		A_INPUT = '#a_input_mathquill_' + ANSWER;
+		if(ANSWER == 1){
+			scrollTo($('#a_panel'));
+		}
+		else{
+			scrollTo($('#answer_' + ANSWER));
+		}
 	});
 	
 	// Close panel
@@ -443,6 +544,7 @@ $(document).ready(function() {
 			$(get_input_field(this)).mathquill('revert').mathquill('editable');
 			$(s_panel).fadeOut();
 			$('.btn-group-q').prop('disabled', false);
+			scrollTo($('#q_panel'));
 		}
 		else if(btn_id == 'c'){
 			$(C_INPUT).mathquill('revert').mathquill('editable');
@@ -459,10 +561,22 @@ $(document).ready(function() {
 			$('#a_panel').fadeOut();
 			$('#ans_title_1').hide();
 			$('.btn-group-s').prop('disabled', false);
+			if(STEP == 1){
+				scrollTo($('#s_panel'));
+			}
+			else{
+				scrollTo($('#step_' + STEP));
+			}
 		}
 		else if(btn_id == 'o'){
 			$('#o_panel').fadeOut();
 			$('.btn-group-a').prop('disabled', false);
+			if(ANSWER == 1){
+				scrollTo($('#a_panel'));
+			}
+			else{
+				scrollTo($('#answer_' + ANSWER));
+			}
 		}
 	});
 	
@@ -475,7 +589,25 @@ $(document).ready(function() {
 		c_count = 0;
 		array_calc = [];
 	});
-	
+
+	// Show advanced domain settings
+	var btn_adv_domain = $('#o_btn_adv_domain');
+	btn_adv_domain.click(function(e){
+		e.preventDefault();
+		$('#o_adv_domain').fadeToggle();
+		$('#o_adv_caret').toggleClass('dropup');
+	});
+
+	// Domain input-insertion to advanced settings
+	var opt_domain_from = $('#opt_domain_from');
+	var opt_domain_to = $('#opt_domain_to');
+	opt_domain_from.on('input', function(){
+		$('.opt_domain_from').val(opt_domain_from.val());
+	});
+	opt_domain_to.on('input', function(){
+		$('.opt_domain_to').val(opt_domain_to.val());
+	});
+
 	// Retrieve and insert calculation to solution
 	var c_btn_ok = $('#c_btn_ok');
 	$(c_btn_ok).click(function(e){
@@ -490,10 +622,10 @@ $(document).ready(function() {
 			c_var = String.fromCharCode(c_var.charCodeAt(0) + c_count);
 			
 			var c_latex = $(C_INPUT).mathquill('latex');
-			var la = [];
-			la.push('@?' + latex_to_asciimath(c_latex) + '?@');
-			la.join('');
-			array_calc.push(la);
+			var la = latex_to_asciimath(c_latex);
+			la = la.replace(/\?/g,'');
+			la = la.replace(/\@/g,'');
+			array_calc.push('@?' + la + '?@');
 			$(C_INPUT).mathquill('revert').mathquill('editable');
 
 			$('<button id="s_btn_calc_'+c_count+'" class="btn btn-success btn_calc">'+c_var+'</button>').insertBefore('#s_btn_calc_delete');
@@ -523,28 +655,54 @@ $(document).ready(function() {
 			c_count++;
 		}
 	});
-	
+
+	// ANSWER: See step-by-step solution
+	var v_solution = $('#v_solution');
+	var v_panel = $('#v_panel');
+	v_solution.click(function(e){
+		e.preventDefault();
+		v_panel.fadeIn();
+	});
+
+	// ANSWER: Close step-by-step solution
+	var v_ok = $('#v_ok');
+	v_ok.click(function(e){
+		e.preventDefault();
+		v_panel.fadeOut();
+	});
+
 	// Retrieve all values and save to database
 	var o_btn_save = $('#o_btn_save');
 	$(o_btn_save).click(function(e){
 		e.preventDefault();
 		var array_submit = {};
 		array_submit['topic']				= $('#category_selection').find(':selected').attr('id');
-		array_submit['question_text']		= latex_to_asciimath($(Q_INPUT).mathquill('latex'));
+		array_submit['question_text']		= '`' + latex_to_asciimath($(Q_INPUT).mathquill('latex')) + '`';
 		var tmp_solution = [];
 		for(var i = 1; i <= STEP; i++){
-			tmp_solution.push(latex_to_asciimath('\\text{' + $('#s_text_1').val() + '}' + $(S_INPUT + i).mathquill('latex')));
+			if($('#s_text_' + i).val() != ''){
+				tmp_solution.push(latex_to_asciimath('\\text{' + $('#s_text_' + i).val() + '}') + '`\\n`' + latex_to_asciimath($('#s_input_mathquill_' + i).mathquill('latex')));
+			}
+			else{
+				tmp_solution.push(latex_to_asciimath($('#s_input_mathquill_' + i).mathquill('latex')));
+			}
 		}
-		array_submit['solution']			= tmp_solution.join('\n');
+		array_submit['solution']			= '`' + tmp_solution.join('`\\n`') + '`';
 		var tmp_answer = [];
 		for(var i = 1; i <=ANSWER; i++){
-			tmp_answer.push(latex_to_asciimath($(A_INPUT + i).mathquill('latex')));
+			tmp_answer.push(latex_to_asciimath($('#a_input_mathquill_' + i).mathquill('latex')));
 		}
-		array_submit['answer']				= tmp_answer.join('§');
+		array_submit['answer']				= tmp_answer.join('`§`');
+
+		// retrieves the list from latest letter in alphabet (w) to earliest (a) as that is the formatting used server side.
 		var tmp_r_domain = [];
-		tmp_r_domain.push($('#opt_range_from').val());
-		tmp_r_domain.push($('#opt_range_to').val());
-		array_submit['random_domain']		= tmp_r_domain.join(" ");
+		for(var i = 22; i >= 0; i--){
+			if($('#o_adv_' + i).length){
+				tmp_r_domain.push($('#o_adv_from_' + i).val() + " " + $('#o_adv_to_' + i).val());
+			}
+		}
+		array_submit['random_domain']		= tmp_r_domain.join('§');
+
 		array_submit['number_of_decimals']	= $('#opt_decimal').val();
 		var tmp_allow_zero = "";
 		if($('#opt_allow').is(':checked')){
@@ -554,27 +712,32 @@ $(document).ready(function() {
 			tmp_allow_zero = 'false';
 		}
 		array_submit['answer_can_be_zero']	= tmp_allow_zero;
+		var array_dict = [];
+		var e_empty = true;
+		for(var i = 1; i <= SUB; i++){
+			var e_from = $('#e_from_' + i).val();
+			var e_to = $('#e_to_' + i).val();
+			if(e_from != '' && e_to != ''){
+				array_dict.push(e_from + '§' + e_to);
+				e_empty = false;
+			}
+		}
+		array_dict.sort(function(a,b){
+			var s_a = a.split('§');
+			var s_b = b.split('§');
+			return s_b[0].length - s_a[0].length; // ASC -> a - b; DESC -> b - a
+		});
+		if(e_empty){
+			array_submit['dictionary'] = "";
+		}
+		else{
+			array_submit['dictionary'] = array_dict.join('§');
+		}
 		array_submit["csrfmiddlewaretoken"] = getCookie('csrftoken');
 		array_submit['type'] = 'normal';
-		
-		// Testing output
-		//var test_output = [];
-		//for(var s in array_submit){
-		//	test_output.push(s + '\n' + array_submit[s]);
-		//}
-		//alert(test_output.join('\n'));
+
 		post(/submit/, array_submit);
 	});
-
-	//create a drop down list from db values
-	var formated_db_topics = "";
-	var db_topics = $('#db_topics').html();
-	db_topics = db_topics.split('§');
-	for(i = 0; i < db_topics.length; i+=2){
-		formated_db_topics = db_topics[i+1].charAt(0).toUpperCase() + db_topics[i+1].slice(1);
-		$("#category_selection").append('<option id="'+db_topics[i] + '">'+ formated_db_topics +'</option>');
-	}
-
 });
 
 /**
@@ -587,13 +750,16 @@ function get_input_field(obj){
 		return Q_INPUT;
 	}
 	else if(btn_id == 's'){
-		return S_INPUT + STEP;
+		return S_INPUT;
 	}
 	else if(btn_id == 'c'){
 		return C_INPUT;
 	}
 	else if(btn_id == 'a'){
-		return A_INPUT + ANSWER;
+		return A_INPUT;
+	}
+	else if(btn_id == 'w'){
+		return W_INPUT;
 	}
 }
 
@@ -604,6 +770,7 @@ function latex_to_asciimath(latex){
 	var la = latex;
 	la = la.replace(/{/g,'(');
 	la = la.replace(/}/g,')');
+	la = la.replace(/\\cdot/g,'*');
 	la = la.replace(/\\left/g,'');
 	la = la.replace(/\\right/g,'');
 	
@@ -612,7 +779,7 @@ function latex_to_asciimath(latex){
 	var recorder = true;
 	var dict_letters = {'a' : 'R0', 'b' : 'R1', 'c' : 'R2', 'd' : 'R3', 'g' : 'R6', 'h' : 'R7', 'i' : 'R8', 'j' : 'R9', 'k' : 'R10', 
 						'l' : 'R11', 'm' : 'R12', 'n' : 'R13', 'o' : 'R14', 'p' : 'R15', 'q' : 'R16', 'r' : 'R17', 's' : 'R18', 't' : 'R19',
-						'u' : 'R20', 'v' : 'R21', 'w' : 'R22', 'A' : array_calc[0], 'B' : array_calc[1],'C' : array_calc[2],'D' : array_calc[3],
+						'u' : 'R20', 'v' : 'R21', 'w' : 'R22', 'A' : array_calc[0] , 'B' : array_calc[1],'C' : array_calc[2],'D' : array_calc[3],
 						'E' : array_calc[4],'F' : array_calc[5],'G' : array_calc[6],'H' : array_calc[7],'I' : array_calc[8], 'J' : array_calc[9],
 						'K' : array_calc[10],'L' : array_calc[11],'M' : array_calc[12],'N' : array_calc[13],'O' : array_calc[14], 'P' : array_calc[15],
 						'Q' : array_calc[16],'R' : array_calc[17],'S' : array_calc[18],'T' : array_calc[19],'U' : array_calc[20], 'V' : array_calc[21]};
@@ -691,6 +858,29 @@ function latex_to_asciimath(latex){
 */
 function isUpperCase(str){
     return str === str.toUpperCase();
+}
+
+/**
+ * Scroll to specific element given by id.
+ * @param id - id of element to scroll to.
+ */
+function scrollTo(id){
+	$('html,body').animate({scrollTop: id.offset().top - 65}); // -65 because of the navbar.
+}
+
+/**
+ * Add a error message under the given element.
+ * @param element_id - id of element to apply error message to.
+ * @param message - the error message.
+ */
+function error_message(element_id, message){
+	var element = $('#' + element_id);
+	$(document).ready(function(){
+		element.after('<p class="error_content" style="color: red; display: none">* '+message+'</p>');
+		$('.error_content').show(100).delay(5000).hide(100).queue(function(){
+			$(this).remove();
+		});
+	});
 }
 
 //$('#q_input_mathquill').append('<span>x^2</span>').mathquill('editable');

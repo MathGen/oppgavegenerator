@@ -52,11 +52,13 @@ sub{							/* between bootstrap*/
 }
 .mathquill-embedded-latex{
 	height: 34px;
-	width: 36px;
+	width: 34px;
 }
-
-/*
-var{
-	color: #D9534F;
+.select_error{
+	border: 2px solid #D9534F;
 }
-*/
+.loading{
+	background-image: url('/static/img/loading.gif');
+	width: 31px;
+	height: 31px;
+}

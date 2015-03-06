@@ -1,3 +1,4 @@
+from oppgavegenerator.settings_secret import *
 """
 Django settings for oppgavegenerator project.
 
@@ -10,30 +11,31 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-#import dj_database_url
+import socket
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
-
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'x7m%)nsw^0^haut=++^iv0-k8!c-fctda)3j=$*cq*%cv#^i38'
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+#if socket.gethostname() == '158.38.101.36':     # Edit this to your domain name or production server IP-address
+#    DEBUG = TEMPLATE_DEBUG = False
+#else:
+#    DEBUG = TEMPLATE_DEBUG = True
+
+ALLOWED_HOSTS = ['localhost', '158.38.101.36']  # Edit this to your domain name or production server IP-address
 
 
 # Application definition
 
 INSTALLED_APPS = (
+    'oppgavegen',
     'django.contrib.admin',
     'django.contrib.auth',          # needed for registration
     'django.contrib.sites',         # needed for registration (?)
@@ -41,9 +43,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',      # I don't think we need this -Einar / do something about it - Eirik
     'django.contrib.staticfiles',
-    'oppgavegen',
     'bootstrap3',                   # django-bootstrap-3
-    'registration'                 # django-registration-redux
+    'registration',                 # django-registration-redux
+    'gunicorn',                      # gunicorn (for unix deployment)
 )
 
 MIDDLEWARE_CLASSES = (
@@ -88,13 +90,21 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
+STATIC_ROOT = '/var/www/oppgavegenerator/collectstatic/' # Static files on production server. Edit this accordingly. Should not be the same as STATIC_URL
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+
 
 #PATH_PROJECT = os.path.realpath(os.path.dirname(__file__))
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
+TEMPLATE_LOADERS = ['django.template.loaders.filesystem.Loader',
+                    'django.template.loaders.app_directories.Loader']
 
 #REGISTRATION SETTINGS
+REGISTRATION_OPEN = True
 ACCOUNT_ACTIVATION_DAYS = 7     # Amount of days a user has to activate their account
 REGISTRATION_AUTO_LOGIN = True  # Auto-login after activation. True/False
 SITE_ID = 1                     # Temporary solution for local production-environment (contrib.sites)
+
+LOGIN_URL = '/user/login/'
+LOGOUT_URL = '/user/logout/'
