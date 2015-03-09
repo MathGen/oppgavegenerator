@@ -180,11 +180,12 @@ def task_with_solution():
 
     valid_solution = False
     while valid_solution == False: #loop until we get a form of the task that has a valid solution
-        random_replacement_array = replace_numbers(task, answer, solution, random_domain_list, template_type)
+        random_replacement_array = replace_numbers(task, answer, solution, random_domain_list, template_type, choices)
         new_task = random_replacement_array[0]
         new_answer = parse_answer(random_replacement_array[1])
         new_solution = random_replacement_array[2]
         variable_dictionary = random_replacement_array[3]
+        choices = random_replacement_array[4]
 
         if new_answer == 'error': #error handling at its finest.
             continue #maybe add a counter everytime this happens so that it doesn't loop infinitely for bad templates
@@ -213,7 +214,8 @@ def task_with_solution():
         new_answer = replace_words(new_answer, dictionary)
         choices = replace_words(choices,dictionary)
     number_of_answers = len(new_answer.split('§'))
-
+    if template_type == 'blanks':
+        new_task = new_solution
     #todo replace new_solution with new_task
     #todo also remove parsing of solution in this function as it is not needed before the answer page
     arr = [new_task, variable_dictionary, template_type, choices, primary_key, number_of_answers] #Use [1:] to remove unnecessary §
@@ -290,9 +292,9 @@ def sympyTest():
 
 def getQuestion(topic):
     #todo make this general so it doesn't just return a specified result
-    #q = Template.objects.get(pk=18)
     q = Template.objects.all()
     q = q.latest('id')
+    #q = Template.objects.get(pk=7)
 
 
     #q = Template.objects.filter(topic__iexact=topic) #Gets all Templates in that topic
@@ -353,7 +355,7 @@ def parse_answer(answer):
         counter += 1
     return('§'.join(answer)) #join doesn't do anything if the list has 1 element, except converting it to str
 
-def replace_numbers(task, solution, answer, random_domain_list, template_type):
+def replace_numbers(task, solution, answer, random_domain_list, template_type,choices):
     hardcoded_variables = ['R22', 'R21','R20','R19','R18','R17','R16','R15','R14','R13','R12','R11','R10','R9','R8','R7','R6','R3','R2','R1','R0']
     variable_dictionary = ""
 
@@ -374,6 +376,52 @@ def replace_numbers(task, solution, answer, random_domain_list, template_type):
                 if template_type.lower() != 'normal': #incase template_type has been capitalized
                     choices = choices.replace(hardcoded_variables[i], random_tall)
                 counter += 1
-    return_arr = [task,solution,answer,variable_dictionary[1:]] #Use [1:] to remove unnecessary § from variable_dictionary
-
+    return_arr = [task,solution,answer,variable_dictionary[1:],choices] #Use [1:] to remove unnecessary § from variable_dictionary
+    #todo add a dict where the variables in the task that are used gets added sp dict = {R22 : 5, R8 : 1}
     return return_arr
+
+### conditions ###
+def conditions(string):
+
+    return
+
+def lesser_than(string, domain, variables):
+    #string "r1 < r2"
+    #variables is maybe a dict with {R22 : 5, R21 : 2..}
+    arr_changed = string_replace(string, variables).split('<')
+    arr_unchanged = string.split('<')
+    variables_left = get_variables_used(arr_unchanged, variables)
+    variables_right = get_variables_used(arr_unchanged, variables)
+    #todo Probably sympify
+    while arr_changed[0] > arr_changed[1]:
+        change = randint(0,1)
+        #I need to find variables in a string
+        if change == 0: #change in arr[0]
+            variables[variables_left[randint[0,len(variables_left)-1]]] = new_random_value()
+            pass
+        else: #change in arr[1]
+
+            pass
+        pass
+    return
+
+def string_replace(string, variables):
+    for key in variables:
+        string = string.replace(key, variables[key])
+    return
+
+def get_variables_used(string, variables): #gets the variables used in a string and adds them to a array
+    used_variables = []
+    for key in variables:
+        temp_string = string.replace(key, "")
+        if temp_string == string:
+            used_variables.append(key)
+            string = temp_string
+    return used_variables
+
+def new_random_value(value, domain, bonus):
+    #value R2
+    #todo: lage et dict med key variabel og value domain.
+    #todo Lage dict med key variabel (r2) og value tall begge disse gjøres i replace numbers
+    #domain ['2 3', '3 4']
+    return

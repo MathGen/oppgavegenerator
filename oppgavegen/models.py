@@ -39,6 +39,7 @@ class Template(models.Model):
     type = models.CharField(max_length=200)
     choices = models.CharField(max_length=700, blank=True, null=True) #Different choices for multiple choice, empty for normal templates
     dictionary = models.CharField(max_length=10000, blank=True, null=True, default="")
+    conditions = models.CharField(max_length=10000, blank=True, null=True, default="")
 
     def __str__(self):                                        #Makes it so that self.question_text shows up instead of topic(object)
         return self.question_text
