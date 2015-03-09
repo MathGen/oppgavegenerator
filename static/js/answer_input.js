@@ -23,9 +23,14 @@ $(document).ready(function () {
             $('#w_input_mathquill_' + i).mathquill('revert').mathquill('editable');
         }
     }
-    else if (template_type == 'insert') {
+    else if (template_type == 'blanks') {
+        for(j=0;j<number_of_answers;j++){
+            var replaced = $("body").html().replace('@boxx@','`<div class="col-md-12 input_field"><span id="w_input_mathquill_'+j+'" class="mathquill-editable form-control input_mathquill"><span class="textarea"><textarea></textarea></span></span></div>`');
+            $("body").html(replaced);
+            $('#w_input_mathquill_' + j).mathquill('revert').mathquill('editable');
+        }
 
-            w_target.append(answer_box); //todo: This needs to be inserted into text where needed.
+        w_target.append(answer_box); //todo: This needs to be inserted into text where needed.
 
     }
 
