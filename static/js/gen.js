@@ -8,6 +8,7 @@ var STEP					= 1;
 var ANSWER					= 1;
 var SUB						= 1;
 var TOPIC_SELECTED			= false;
+var MULTI_CHOICE			= 0;
 var c_count 				= 0;
 var array_calc				= [];
 
@@ -292,7 +293,7 @@ $(document).ready(function() {
 		//$(get_input_field(this)).find('textarea').focus();
 	});
 	
-	// Add required ids/classes to manually typed variables
+	// Keyboard-listener for input-fields
 	$('.input_mathquill').keyup(function(e){
 		var id = $(this).attr('id');
 		var id_group = id[0];
@@ -628,6 +629,38 @@ $(document).ready(function() {
 	});
 	opt_domain_to.on('input', function(){
 		$('.opt_domain_to').val(opt_domain_to.val());
+	});
+
+	// Open multiple-choice modal
+	var radio_multiple_choice = $('#opt_multiple_choice');
+	radio_multiple_choice.change(function(){
+		if ($(this).is(':checked')) {
+			if(MULTI_CHOICE == 0) {
+				MULTI_CHOICE++;
+				$('#m_dyn_multi_input').append('<div class="input_field"><span id="m_input_mathquill_1" class="mathquill-editable form-control input_mathquill"></span></div>');
+				$('#m_input_mathquill_1').mathquill('revert').mathquill('editable');
+			}
+			$('#multiple_choice_modal').modal('show');
+		}
+	});
+
+	// Add new multiple-choices
+	var btn_new_multi = $('#m_btn_new');
+	btn_new_multi.click(function(e){
+		e.preventDefault();
+		$('#m_btn_del_' + MULTI_CHOICE).hide();
+		MULTI_CHOICE++;
+		$('#m_dyn_multi_input').append('<div id="m_field_'+MULTI_CHOICE+'" class="input_field multi_field"><span id="m_input_mathquill_'+MULTI_CHOICE+'" class="mathquill-editable form-control input_mathquill"></span><a id="m_btn_del_'+MULTI_CHOICE+'" class="glyphicon glyphicon-remove pull-right del_multi"></a></div>');
+		$('#m_input_mathquill_' + MULTI_CHOICE).mathquill('revert').mathquill('editable');
+	});
+
+	// Delete last multiple-choice
+	$(document).on('click', '.del_multi', function(e){
+		e.preventDefault();
+		e.preventDefault();
+		$('#m_field_' + MULTI_CHOICE).remove();
+		MULTI_CHOICE--;
+		$('#m_btn_del_' + MULTI_CHOICE).show();
 	});
 
 	// Retrieve and insert calculation to solution

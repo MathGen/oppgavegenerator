@@ -23,6 +23,9 @@ sub{							/* between bootstrap*/
 	display: table-cell;
 	vertical-align: middle;
 }
+.multi_field{
+	margin-top: 10px;
+}
 .btn{
 	margin-bottom: 5px;
 }
