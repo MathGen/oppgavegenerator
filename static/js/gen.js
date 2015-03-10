@@ -4,6 +4,7 @@ var S_INPUT					= '#s_input_mathquill_1';
 var A_INPUT					= '#a_input_mathquill_1';
 var C_INPUT					= '#c_input_mathquill';
 var W_INPUT					= '#w_input_mathquill_0';
+var M_INPUT					= '#m_input_mathquill_1';
 var STEP					= 1;
 var ANSWER					= 1;
 var SUB						= 1;
@@ -40,6 +41,9 @@ $(document).ready(function() {
 		}
 		else if(input_group == 'w'){
 			W_INPUT = '#' + input_id;
+		}
+		else if(input_group == 'm'){
+			M_INPUT = '#' + input_id;
 		}
     });
 
@@ -294,7 +298,7 @@ $(document).ready(function() {
 	});
 	
 	// Keyboard-listener for input-fields
-	$('.input_mathquill').keyup(function(e){
+	$(document).on('keyup', '.input_mathquill', function(e){
 		var id = $(this).attr('id');
 		var id_group = id[0];
 		if(e.keyCode == 88 || e.keyCode == 89 || e.keyCode == 90){
@@ -565,7 +569,7 @@ $(document).ready(function() {
 			}
 			STEP = 1;
 			$(get_input_field(this)).mathquill('revert').mathquill('editable');
-			$(s_panel).fadeOut();
+			$('#s_panel').fadeOut();
 			$('.btn-group-q').prop('disabled', false);
 			scrollTo($('#q_panel'));
 		}
@@ -657,10 +661,17 @@ $(document).ready(function() {
 	// Delete last multiple-choice
 	$(document).on('click', '.del_multi', function(e){
 		e.preventDefault();
-		e.preventDefault();
 		$('#m_field_' + MULTI_CHOICE).remove();
 		MULTI_CHOICE--;
 		$('#m_btn_del_' + MULTI_CHOICE).show();
+	});
+
+	// Open fill-in-the-blanks modal
+	var radio_fill_blanks = $('#opt_fill_blanks');
+	radio_fill_blanks.change(function(){
+		if($(this).is(':checked')){
+			$('#fill_blanks_modal').modal('show');
+		}
 	});
 
 	// Retrieve and insert calculation to solution
@@ -788,6 +799,12 @@ $(document).ready(function() {
 		else{
 			array_submit['dictionary'] = array_dict.join('§');
 		}
+		if($('#opt_multiple_choice').is(':checked')){
+			array_submit['choices'] = get_multiple_choices();
+		}
+		else{
+			array_submit['choices'] = "";
+		}
 		array_submit["csrfmiddlewaretoken"] = getCookie('csrftoken');
 		array_submit['type'] = 'normal';
 
@@ -817,6 +834,9 @@ function get_input_field(obj){
 	}
 	else if(btn_id == 'w'){
 		return W_INPUT;
+	}
+	else if(btn_id == 'm'){
+		return M_INPUT;
 	}
 }
 
@@ -986,6 +1006,18 @@ function submit_validation(){
 		error_message('opt_decimal', 'Fyll ut!');
 	}
 	return valid;
+}
+
+/**
+ * Retrieve multiple choices
+ * @returns {string} returns all multiple choices as a string.
+ */
+function get_multiple_choices(){
+	var multiple_choices = [];
+	for(var m = 1; m <= MULTI_CHOICE; m++){
+		multiple_choices.push(latex_to_asciimath($('#m_input_mathquill_' + m).mathquill('latex')));
+	}
+	return multiple_choices.join('§');
 }
 
 function post(path, params, method) {
