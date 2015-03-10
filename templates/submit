@@ -3,7 +3,7 @@
 {% block title %}{{ title }}{% endblock %}
 
 
-{% block content %}
+{% block panels %}
 <h3>
 {{ message }}
 </h3>
