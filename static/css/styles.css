@@ -32,6 +32,9 @@ sub{							/* between bootstrap*/
 .mathquill-editable{
 	font-size: 2em;
 }
+.mathquill-embedded-latex:not(.btn){
+	font-size: 2em;
+}
 .text{
 	color: #5BC0DE;
 }

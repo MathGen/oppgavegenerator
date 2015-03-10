@@ -670,6 +670,12 @@ $(document).ready(function() {
 	var radio_fill_blanks = $('#opt_fill_blanks');
 	radio_fill_blanks.change(function(){
 		if($(this).is(':checked')){
+			$('#f_fill_content').removeClass('mathquill-embedded-latex').html("");
+			for(var f = 1; f <= STEP; f++){
+				var f_latex = $('#s_input_mathquill_' + f).mathquill('latex');
+				$('#f_fill_content').append(f_latex);
+			}
+			$('#f_fill_content').addClass('mathquill-embedded-latex').mathquill();
 			$('#fill_blanks_modal').modal('show');
 		}
 	});
@@ -691,7 +697,7 @@ $(document).ready(function() {
 			var la = latex_to_asciimath(c_latex);
 			la = la.replace(/\?/g,'');
 			la = la.replace(/\@/g,'');
-			array_calc.push('@?' + la + '?@');
+			array_calc.push('@?(' + la + ')?@');
 			$(C_INPUT).mathquill('revert').mathquill('editable');
 
 			$('<button id="s_btn_calc_'+c_count+'" class="btn btn-success btn_calc">'+c_var+'</button>').insertBefore('#s_btn_calc_delete');
