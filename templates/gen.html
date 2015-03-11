@@ -12,7 +12,7 @@
     	<form>
 		{% csrf_token %}
 		</form>
-		<!--NAVIGATION BAR-->
+		<!-- NAVIGATION BAR -->
 		<nav class="navbar navbar-inverse navbar-fixed-top navbar-left">
 			<div class="container">
 				<a href="/index" class="navbar-brand"> Spaghetti</a>
@@ -38,7 +38,7 @@
 				</div>
 			</div>
 		</nav>
-		<!--PANELS-->
+		<!-- PANELS -->
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-8">
@@ -342,13 +342,23 @@
                                 </tbody>
                                 <tbody style="border-top: 0">
                                 <tr>
-                                    <td class="col-sm-3" style="vertical-align: middle; text-align: right">Antall desimaler i svar:</td>
-                                    <td class="col-sm-3"><input id="opt_decimal" type="number" class="form-control input-sm" placeholder="Antall:"></td>
-                                    <td class="col-sm-3"></td><td></td>
+                                    <td style="vertical-align: middle; text-align: right">Antall desimaler i svar:</td>
+                                    <td><input id="opt_decimal" type="number" class="form-control input-sm" placeholder="Antall:"></td>
+                                    <td></td><td></td>
                                 </tr>
                                 <tr>
-                                    <td class="col-sm-3" style="vertical-align: middle; text-align: right; height: 41px">Tillat 0 som svar:</td>
-                                    <td class="col-sm-3" style="vertical-align: middle"><input id="opt_allow" type="checkbox"></td>
+                                    <td style="vertical-align: middle; text-align: right; height: 41px">Tillat 0 som svar:</td>
+                                    <td style="vertical-align: middle"><input id="opt_allow" type="checkbox"></td>
+                                    <td></td><td></td>
+                                </tr>
+                                <tr>
+                                    <td style="vertical-align: middle; text-align: right; height: 41px">Flervalgsoppgave:</td>
+                                    <td style="vertical-align: middle"><input id="opt_multiple_choice" type="checkbox"></td>
+                                    <td></td><td></td>
+                                </tr>
+                                <tr>
+                                    <td style="vertical-align: middle; text-align: right; height: 41px">Utfyllingsoppgave:</td>
+                                    <td style="vertical-align: middle"><input id="opt_fill_blanks" type="checkbox"></td>
                                     <td></td><td></td>
                                 </tr>
                                 </tbody>
@@ -356,7 +366,10 @@
 							<!--OPTION KEYBOARD-->
 							<div class="panel-footer">
 								<div class="row">
-									<div class="col-sm-12">
+                                    <div class="col-md-9">
+
+                                    </div>
+									<div class="col-md-3">
 										<div class="pull-right">
 											<button id="o_btn_save" class="btn btn-primary" type="submit">Lagre</button>
 										</div>
@@ -368,7 +381,7 @@
 				</div>
 			</div>
 		</div>
-		<!--POP-UP: CALCULATION-->
+		<!-- POP-UP: CALCULATION -->
 		<div id="calc_modal" class="modal fade" role="dialog">
 			<div class="modal-dialog modal-md">
 				<section class="panel panel-default">
@@ -418,7 +431,7 @@
 				</section>
 			</div>
 		</div>
-		<!--POP-UP: TEXT-INPUT-->
+		<!-- POP-UP: TEXT-INPUT -->
 		<div id="text_modal" class="modal fade" role="dialog">
 			<div class="modal-dialog modal-md">
 				<section class="panel panel-default">
@@ -439,7 +452,7 @@
 				</section>
 			</div>
 		</div>
-        <!--POP-UP: TEXT-SUBSTITUTION-->
+        <!-- POP-UP: TEXT-SUBSTITUTION -->
 		<div id="text_edit_modal" class="modal fade" role="dialog">
 			<div class="modal-dialog modal-md">
 				<section class="panel panel-default">
@@ -483,6 +496,66 @@
 				</section>
 			</div>
 		</div>
+        <!-- POP-UP: MULTIPLE-CHOICE -->
+        <div id="multiple_choice_modal" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-md">
+                <section class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Flervalgsoppgave<a class="glyphicon glyphicon-remove pull-right" data-dismiss="modal"></a></h3>
+                    </div>
+                    <div id="m_dyn_multi_input" class="panel-body">
+                        <p>Skriv inn formel for flervalg (Ikke skriv inn det riktige svaret).</p>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-8">
+
+                            </div>
+							<div class="col-md-4">
+								<div class="btn-group pull-right">
+									<button id="m_btn_clear" class="btn btn-default btn_clear">
+										<span class="glyphicon glyphicon-trash" style="horizontal-align:middle"></span>
+									</button>
+									<button id="m_btn_new" class="btn btn-default">
+										<span class="glyphicon glyphicon-plus" style="horizontal-align:middle"></span>
+									</button>
+									<button class="btn btn-primary" data-dismiss="modal" type="submit">OK</button>
+								</div>
+							</div>
+						</div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <!-- POP-UP: FILL-IN-THE-BLANKS -->
+        <div id="fill_blanks_modal" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-md">
+                <section class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Utfyllingsoppgave<a class="glyphicon glyphicon-remove pull-right" data-dismiss="modal"></a></h3>
+                    </div>
+                    <div id="f_dyn_fill_input" class="panel-body">
+                        <p>Her kommer utfyllingsoppgaven.</p>
+                        <span id="f_fill_content" style="display: inline"></span>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+							<div class="col-md-12">
+								<div class="btn-group pull-right">
+									<button id="f_btn_clear" class="btn btn-default btn_clear">
+										<span class="glyphicon glyphicon-trash" style="horizontal-align:middle"></span>
+									</button>
+									<button id="f_btn_new" class="btn btn-default">
+										<span class="glyphicon glyphicon-plus" style="horizontal-align:middle"></span>
+									</button>
+									<button class="btn btn-primary" data-dismiss="modal" type="submit">OK</button>
+								</div>
+							</div>
+						</div>
+                    </div>
+                </section>
+            </div>
+        </div>
 		<!-- Bootstrap core JavaScript
 		================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->

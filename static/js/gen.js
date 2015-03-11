@@ -4,10 +4,12 @@ var S_INPUT					= '#s_input_mathquill_1';
 var A_INPUT					= '#a_input_mathquill_1';
 var C_INPUT					= '#c_input_mathquill';
 var W_INPUT					= '#w_input_mathquill_0';
+var M_INPUT					= '#m_input_mathquill_1';
 var STEP					= 1;
 var ANSWER					= 1;
 var SUB						= 1;
 var TOPIC_SELECTED			= false;
+var MULTI_CHOICE			= 0;
 var c_count 				= 0;
 var array_calc				= [];
 
@@ -31,12 +33,17 @@ $(document).ready(function() {
 		}
 		else if(input_group == 's'){
 			S_INPUT = '#' + input_id;
+			$(S_INPUT).removeClass('select_error');
 		}
 		else if(input_group == 'a'){
 			A_INPUT = '#' + input_id;
+			$(A_INPUT).removeClass('select_error');
 		}
 		else if(input_group == 'w'){
 			W_INPUT = '#' + input_id;
+		}
+		else if(input_group == 'm'){
+			M_INPUT = '#' + input_id;
 		}
     });
 
@@ -290,8 +297,8 @@ $(document).ready(function() {
 		//$(get_input_field(this)).find('textarea').focus();
 	});
 	
-	// Add required ids/classes to manually typed variables
-	$('.input_mathquill').keyup(function(e){
+	// Keyboard-listener for input-fields
+	$(document).on('keyup', '.input_mathquill', function(e){
 		var id = $(this).attr('id');
 		var id_group = id[0];
 		if(e.keyCode == 88 || e.keyCode == 89 || e.keyCode == 90){
@@ -410,7 +417,7 @@ $(document).ready(function() {
 				}
 				else{
 					$(Q_INPUT).addClass('select_error');
-					error_message('q_input_field', 'Dette feltet kan ikke være tom.');
+					error_message('q_input_field', 'Dette feltet kan ikke være tomt.');
 				}
 			}
 			else{
@@ -419,16 +426,36 @@ $(document).ready(function() {
 			}
 		}
 		else if(btn_id == 's'){
-			$('.btn-group-s').prop('disabled', true);
-			var a_panel = $('#a_panel');
-			a_panel.fadeIn();
-			scrollTo(a_panel);
+			var solution_valid = true;
+			for(var step = 1; step <= STEP; step++){
+				if($('#s_input_mathquill_' + step).mathquill('latex') == ''){
+					solution_valid = false;
+					$('#s_input_mathquill_' + step).addClass('select_error');
+					error_message('step_' + step, 'Dette feltet kan ikke være tomt.');
+				}
+			}
+			if(solution_valid == true){
+				$('.btn-group-s').prop('disabled', true);
+				var a_panel = $('#a_panel');
+				a_panel.fadeIn();
+				scrollTo(a_panel);
+			}
 		}
 		else if(btn_id == 'a'){
-			$('.btn-group-a').prop('disabled', true);
-			var o_panel = $('#o_panel');
-			o_panel.fadeIn();
-			scrollTo(o_panel);
+			var answer_valid = true;
+			for(var ans = 1; ans <= ANSWER; ans++){
+				if($('#a_input_mathquill_' + ans).mathquill('latex') == ''){
+					answer_valid = false;
+					$('#a_input_mathquill_' + ans).addClass('select_error');
+					error_message('answer_' + ans, 'Dette feltet kan ikke være tomt.');
+				}
+			}
+			if(answer_valid == true){
+				$('.btn-group-a').prop('disabled', true);
+				var o_panel = $('#o_panel');
+				o_panel.fadeIn();
+				scrollTo(o_panel);
+			}
 		}
 	});
 	
@@ -542,7 +569,7 @@ $(document).ready(function() {
 			}
 			STEP = 1;
 			$(get_input_field(this)).mathquill('revert').mathquill('editable');
-			$(s_panel).fadeOut();
+			$('#s_panel').fadeOut();
 			$('.btn-group-q').prop('disabled', false);
 			scrollTo($('#q_panel'));
 		}
@@ -608,6 +635,51 @@ $(document).ready(function() {
 		$('.opt_domain_to').val(opt_domain_to.val());
 	});
 
+	// Open multiple-choice modal
+	var radio_multiple_choice = $('#opt_multiple_choice');
+	radio_multiple_choice.change(function(){
+		if ($(this).is(':checked')) {
+			if(MULTI_CHOICE == 0) {
+				MULTI_CHOICE++;
+				$('#m_dyn_multi_input').append('<div class="input_field"><span id="m_input_mathquill_1" class="mathquill-editable form-control input_mathquill"></span></div>');
+				$('#m_input_mathquill_1').mathquill('revert').mathquill('editable');
+			}
+			$('#multiple_choice_modal').modal('show');
+		}
+	});
+
+	// Add new multiple-choices
+	var btn_new_multi = $('#m_btn_new');
+	btn_new_multi.click(function(e){
+		e.preventDefault();
+		$('#m_btn_del_' + MULTI_CHOICE).hide();
+		MULTI_CHOICE++;
+		$('#m_dyn_multi_input').append('<div id="m_field_'+MULTI_CHOICE+'" class="input_field multi_field"><span id="m_input_mathquill_'+MULTI_CHOICE+'" class="mathquill-editable form-control input_mathquill"></span><a id="m_btn_del_'+MULTI_CHOICE+'" class="glyphicon glyphicon-remove pull-right del_multi"></a></div>');
+		$('#m_input_mathquill_' + MULTI_CHOICE).mathquill('revert').mathquill('editable');
+	});
+
+	// Delete last multiple-choice
+	$(document).on('click', '.del_multi', function(e){
+		e.preventDefault();
+		$('#m_field_' + MULTI_CHOICE).remove();
+		MULTI_CHOICE--;
+		$('#m_btn_del_' + MULTI_CHOICE).show();
+	});
+
+	// Open fill-in-the-blanks modal
+	var radio_fill_blanks = $('#opt_fill_blanks');
+	radio_fill_blanks.change(function(){
+		if($(this).is(':checked')){
+			$('#f_fill_content').removeClass('mathquill-embedded-latex').html("");
+			for(var f = 1; f <= STEP; f++){
+				var f_latex = $('#s_input_mathquill_' + f).mathquill('latex');
+				$('#f_fill_content').append(f_latex);
+			}
+			$('#f_fill_content').addClass('mathquill-embedded-latex').mathquill();
+			$('#fill_blanks_modal').modal('show');
+		}
+	});
+
 	// Retrieve and insert calculation to solution
 	var c_btn_ok = $('#c_btn_ok');
 	$(c_btn_ok).click(function(e){
@@ -625,7 +697,7 @@ $(document).ready(function() {
 			var la = latex_to_asciimath(c_latex);
 			la = la.replace(/\?/g,'');
 			la = la.replace(/\@/g,'');
-			array_calc.push('@?' + la + '?@');
+			array_calc.push('@?(' + la + ')?@');
 			$(C_INPUT).mathquill('revert').mathquill('editable');
 
 			$('<button id="s_btn_calc_'+c_count+'" class="btn btn-success btn_calc">'+c_var+'</button>').insertBefore('#s_btn_calc_delete');
@@ -733,10 +805,18 @@ $(document).ready(function() {
 		else{
 			array_submit['dictionary'] = array_dict.join('§');
 		}
+		if($('#opt_multiple_choice').is(':checked')){
+			array_submit['choices'] = get_multiple_choices();
+		}
+		else{
+			array_submit['choices'] = "";
+		}
 		array_submit["csrfmiddlewaretoken"] = getCookie('csrftoken');
 		array_submit['type'] = 'normal';
 
-		post(/submit/, array_submit);
+		if(submit_validation()){
+			post(/submit/, array_submit);
+		}
 	});
 });
 
@@ -760,6 +840,9 @@ function get_input_field(obj){
 	}
 	else if(btn_id == 'w'){
 		return W_INPUT;
+	}
+	else if(btn_id == 'm'){
+		return M_INPUT;
 	}
 }
 
@@ -883,11 +966,65 @@ function error_message(element_id, message){
 	});
 }
 
-//$('#q_input_mathquill').append('<span>x^2</span>').mathquill('editable');
-//$('#q_input_mathquill').mathquill('cmd', '\\sqrt');
-//$('<span>\sqrt{2}</span>').mathquill().appendTo('#q_input_mathquill').mathquill('editable');
-//$('<span/>').mathquill().appendTo('#q_input_mathquill').mathquill('latex','a_n x^n');
-//$('#q_input_mathquill').append('<span>$</span>').mathquill('editable');
+/**
+ * Validates required fields before submitting.
+ * @returns {boolean} returns true if the validation pass.
+ */
+function submit_validation(){
+	var valid = true;
+	if($(Q_INPUT).mathquill('latex') == ''){
+		valid = false;
+		$(Q_INPUT).addClass('select_error');
+		error_message('q_input_field', 'Dette feltet kan ikke være tomt.');
+	}
+	for(var step = 1; step <= STEP; step++){
+		if($('#s_input_mathquill_' + step).mathquill('latex') == ''){
+			valid = false;
+			$('#s_input_mathquill_' + step).addClass('select_error');
+			error_message('step_' + step, 'Dette feltet kan ikke være tomt.');
+		}
+	}
+	for(var ans = 1; ans <= ANSWER; ans++){
+		if($('#a_input_mathquill_' + ans).mathquill('latex') == ''){
+			valid = false;
+			$('#a_input_mathquill_' + ans).addClass('select_error');
+			error_message('answer_' + ans, 'Dette feltet kan ikke være tomt.');
+		}
+	}
+	for(var adv = 22; adv >= 0; adv--){
+		if($('#o_adv_from_' + adv).length){
+			if($('#o_adv_from_' + adv).val() == ''){
+				valid = false;
+				error_message('o_adv_from_' + adv, 'Fyll ut!');
+				$('#o_adv_domain').fadeIn();
+				$('#o_adv_caret').addClass('dropup');
+			}
+			else if($('#o_adv_to_' + adv).val() == ''){
+				valid = false;
+				error_message('o_adv_to_' + adv, 'Fyll ut!');
+				$('#o_adv_domain').fadeIn();
+				$('#o_adv_caret').addClass('dropup');
+			}
+		}
+	}
+	if($('#opt_decimal').val() == ''){
+		valid = false;
+		error_message('opt_decimal', 'Fyll ut!');
+	}
+	return valid;
+}
+
+/**
+ * Retrieve multiple choices
+ * @returns {string} returns all multiple choices as a string.
+ */
+function get_multiple_choices(){
+	var multiple_choices = [];
+	for(var m = 1; m <= MULTI_CHOICE; m++){
+		multiple_choices.push(latex_to_asciimath($('#m_input_mathquill_' + m).mathquill('latex')));
+	}
+	return multiple_choices.join('§');
+}
 
 function post(path, params, method) {
     method = method || "post"; // Set method to post by default if not specified.

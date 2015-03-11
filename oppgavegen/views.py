@@ -106,7 +106,6 @@ def submit(request):
             template.times_failed = 0
             template.times_solved = 0
             template.creation_date = datetime.now()
-            template.choices = ""
             template.save()
 
             message = 'success!'
@@ -134,9 +133,10 @@ def answers(request):
             answer = generation.parse_answer(answer)
             answer = answer.replace('`','')
 
-            solution = generation.replace_variables_from_array(variable_dictionary, q.solution)
+            solution = str((q.question_text).replace('\\n', '\n')) +"\n"+str(q.solution).replace('\\n', '\n')
+            solution = generation.replace_variables_from_array(variable_dictionary, solution)
             solution = generation.parse_solution(solution)
-            solution = str((q.question_text).replace('\\n', '\n')) +"\n"+str(solution).replace('\\n', '\n')
+
             print(solution)
             user_answer = user_answer.split('§') #if a string doesn't contain the split character it returns as a list with 1 element
             answer = answer.split('§')
@@ -153,4 +153,5 @@ def answers(request):
         else:
             print(form.errors)
     return  render_to_response('answers')
+
 

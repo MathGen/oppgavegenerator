@@ -21,21 +21,6 @@ def printer():
     string = "Oppgavegenerator"
     return string
 
-def arithmetics():
-    number1 = randint(0,10)
-    number2 = randint(0,10)
-    operators = ["+", "-", "*"]
-    opNumber = randint(0,2)
-    if opNumber == 0:
-        answer = number1 + number2
-    elif opNumber == 1:
-        answer = number1 - number2
-    else:
-        answer = number1 * number2
-    string = "Hva er " + str(number1) + " " + operators[opNumber] + " " + str(number2) + "?"
-    arr = [string, answer]
-    return arr
-
 def checkAnswer(user_answer, answer):
     if collections.Counter(user_answer) == collections.Counter(answer):
         string = "Du har svart riktig!"
@@ -43,112 +28,6 @@ def checkAnswer(user_answer, answer):
         string = "Du har svart feil. Svaret er: `" + '` og `'.join(answer) + '`'
     return string
 
-
-def algebra(): #Legacy function 
-    # ax + b = c
-    # ax + b = cx
-    # ax + bx = c
-    # a + bx = c
-    # a + b = cx
-    # a + bx = cx
-    # a + b = c + dx
-
-    v = randint(1, 2)                   # number of terms (left)
-    h = randint(1, 2)                   # number of terms (right)
-    vh = v+h                              # number of terms (total)
-    a = randint(1, 8)                   # term a
-    b = randint(1, 8)                   # term b
-    c = randint(1, 8)                   # term c
-    x = randint(2, 6)                  # given x
-    number_of_x = randint(1, vh-1)      # amount of x
-    operators = ["+", "-"]
-    op_number1 = randint(0, 1)          # first operator
-    op_number2 = randint(0, 1)          # second operator
-    x_string = [" ", " ", " ", " "]
-    x_placement = []
-    for i in range(0, vh):
-        x_placement += [1]
-    if number_of_x == 1:
-        i = randint(0, vh-2)
-        x_placement[i] = x
-        x_string[i] = "x "
-    elif number_of_x == 2:
-        pos = sample(range(0, vh-1), 2)
-        x_placement[pos[0]] = x
-        x_placement[pos[1]] = x
-        x_string[pos[0]] = "x "
-        x_string[pos[1]] = "x "
-    else:
-        pos = sample(range(0, vh-1), 3)
-        x_placement[pos[0]] = x
-        x_placement[pos[1]] = x
-        x_placement[pos[2]] = x
-        x_string[pos[0]] = "x "
-        x_string[pos[1]] = "x "
-        x_string[pos[2]] = "x "
-
-    ax = a * x_placement[0]
-    if vh == 4:
-        bx = b * x_placement[1]
-        cx = c * x_placement[2]
-        if op_number1 == 0 and op_number2 == 0:
-            d = (ax + bx - cx) * x_placement[3]
-        elif op_number1 == 0 and op_number2 == 1:
-            d = (-ax - bx + cx) * x_placement[3]
-        elif op_number1 == 1 and op_number2 == 0:
-            d = (ax - bx - cx) * x_placement[3]
-        else:
-            d = (-ax + bx + cx) * x_placement[3]
-        string = str(a) + "%s" + str(operators[op_number1]) + " " + str(b) + "%s" + "= " + str(c) + "%s" + str(operators[op_number2]) + " " + str(d) + "%s"
-        s = string % (x_string[0], x_string[1], x_string[2], x_string[3])
-
-    if vh == 3:
-        bx = b * x_placement[1]
-        m = randint(0, 1)
-        if m == 0:
-            if op_number1 == 0:
-                c = (ax + bx) * x_placement[2]
-            else:
-                c = (ax - bx) * x_placement[2]
-            string = str(a) + "%s" + str(operators[op_number1]) + " " + str(b) + "%s" + "= " + str(c) + "%s"
-            s = string % (x_string[0], x_string[1], x_string[2])
-        else:
-            if op_number1 == 0:
-                c = (ax - bx) * x_placement[2]
-            else:
-                c = (-ax + bx) * x_placement[2]
-            string = str(a) + "%s" + "= " + str(b) + "%s" + str(operators[op_number1]) + " " + str(c) + "%s"
-            s = string % (x_string[0], x_string[1], x_string[2])
-
-    if vh == 2:
-        b = ax * x_placement[1]
-        string = str(a) + "%s" + "= " + str(b)  + "%s"
-        s = string % (x_string[0], x_string[1])
-
-    arr = [s, x]
-    return arr
-
-def pypartest():
-    string = "4^2"
-    nsp = NumericStringParser()
-    x=nsp.eval(string)
-    s = "hva er " + string + "?"
-    arr = [s,int(x)]
-    return  arr
-
-def altArithmetics():
-    operators = [" + ", " - ", " * "]
-    ledd = randint(2,4)
-    string = str(randint(0,10)) + operators[randint(0,2)] + str(randint(0,10))
-    if ledd > 2:
-        for i in range(ledd - 2):
-            string+= operators[randint(0,2)] + str(randint(0,10))
-    nsp = NumericStringParser()
-
-    x= nsp.eval(string)
-    s = "hva er " + string + "?"
-    arr = [s,int(x)]
-    return arr
 
 def make_variables(amount): #this is not needed anymore
     variables = []
@@ -180,11 +59,12 @@ def task_with_solution():
 
     valid_solution = False
     while valid_solution == False: #loop until we get a form of the task that has a valid solution
-        random_replacement_array = replace_numbers(task, answer, solution, random_domain_list, template_type)
+        random_replacement_array = replace_numbers(task, answer, solution, random_domain_list, template_type, choices)
         new_task = random_replacement_array[0]
         new_answer = parse_answer(random_replacement_array[1])
         new_solution = random_replacement_array[2]
         variable_dictionary = random_replacement_array[3]
+        choices = random_replacement_array[4]
 
         if new_answer == 'error': #error handling at its finest.
             continue #maybe add a counter everytime this happens so that it doesn't loop infinitely for bad templates
@@ -213,7 +93,8 @@ def task_with_solution():
         new_answer = replace_words(new_answer, dictionary)
         choices = replace_words(choices,dictionary)
     number_of_answers = len(new_answer.split('§'))
-
+    if template_type == 'blanks':
+        new_task = new_solution
     #todo replace new_solution with new_task
     #todo also remove parsing of solution in this function as it is not needed before the answer page
     arr = [new_task, variable_dictionary, template_type, choices, primary_key, number_of_answers] #Use [1:] to remove unnecessary §
@@ -290,9 +171,9 @@ def sympyTest():
 
 def getQuestion(topic):
     #todo make this general so it doesn't just return a specified result
-    #q = Template.objects.get(pk=18)
     q = Template.objects.all()
     q = q.latest('id')
+    #q = Template.objects.get(pk=7)
 
 
     #q = Template.objects.filter(topic__iexact=topic) #Gets all Templates in that topic
@@ -301,10 +182,6 @@ def getQuestion(topic):
     #todo add logic for returning 1 random task at appropriate elo.
     #something like SELECT * FROM Template WHERE rating BETWEEN user_rating+- 20
     return q
-
-@register.filter(name='cut')
-def cut(value, arg):
-    return value.replace(arg, '<math>')
 
 def to_asciimath(s): #legacy function, we probably won't need this
     new_s = s
@@ -353,27 +230,83 @@ def parse_answer(answer):
         counter += 1
     return('§'.join(answer)) #join doesn't do anything if the list has 1 element, except converting it to str
 
-def replace_numbers(task, solution, answer, random_domain_list, template_type):
+def replace_numbers(task, solution, answer, random_domain_list, template_type,choices):
     hardcoded_variables = ['R22', 'R21','R20','R19','R18','R17','R16','R15','R14','R13','R12','R11','R10','R9','R8','R7','R6','R3','R2','R1','R0']
     variable_dictionary = ""
+    domain_dict = {}
+    value_dict = {}
 
     counter = 0
     for i in range(len(hardcoded_variables)):
-            if task.count(hardcoded_variables[i]) > 0:
-                try: #in case of index out of bounds it just uses the first element of the array
-                    random_domain = random_domain_list[counter].split()
-                except IndexError:
-                    print('Objection!')
-                    random_domain = random_domain_list[0].split()
+        if task.count(hardcoded_variables[i]) > 0:
+            try: #in case of index out of bounds it just uses the first element of the array
+                random_domain = random_domain_list[counter].split()
+            except IndexError:
+                #uses the first domain in case one was not provided.
+                random_domain = random_domain_list[0].split()
 
-                random_tall = str(randint(int(random_domain[0]),int(random_domain[1])))
-                task = task.replace(hardcoded_variables[i], random_tall)
-                solution = solution.replace(hardcoded_variables[i], random_tall)
-                answer = answer.replace(hardcoded_variables[i], random_tall)
-                variable_dictionary += '§' + hardcoded_variables[i]+ '§' + random_tall #Remove the § later using variable_dictionary[1:]
-                if template_type.lower() != 'normal': #incase template_type has been capitalized
-                    choices = choices.replace(hardcoded_variables[i], random_tall)
-                counter += 1
-    return_arr = [task,solution,answer,variable_dictionary[1:]] #Use [1:] to remove unnecessary § from variable_dictionary
+            random_number = str(randint(int(random_domain[0]),int(random_domain[1])))
+            task = task.replace(hardcoded_variables[i], random_number)
+            solution = solution.replace(hardcoded_variables[i], random_number)
+            answer = answer.replace(hardcoded_variables[i], random_number)
+            #todo create variable_dictionary after the conditions check out from value dict
+            variable_dictionary += '§' + hardcoded_variables[i]+ '§' + random_number #Remove the § later using variable_dictionary[1:]
+            if template_type.lower() != 'normal': #incase template_type has been capitalized
+                choices = choices.replace(hardcoded_variables[i], random_number)
+            domain_dict[hardcoded_variables[i]] = random_domain
+            value_dict[hardcoded_variables[i]]= random_number
+            counter += 1
 
+    #lesser_than('R0 < R1', domain_dict, value_dict)
+    return_arr = [task,solution,answer,variable_dictionary[1:],choices] #Use [1:] to remove unnecessary § from variable_dictionary
+    #todo add a dict where the variables in the task that are used gets added sp dict = {R22 : 5, R8 : 1}
     return return_arr
+
+### conditions ###
+def conditions(string):
+
+    return
+
+def lesser_than(string, domain_dict, variable_dict):
+    #string "r1 < r2"
+    #variables is maybe a dict with {R22 : 5, R21 : 2..}
+    arr_changed = string_replace(string, variable_dict).split('<')
+
+    arr_unchanged = string.split('<')
+    variables_left = get_variables_used(arr_unchanged[0], variable_dict)
+    variables_right = get_variables_used(arr_unchanged[1], variable_dict)
+    #todo Probably sympify
+    while sympify(arr_changed[0] + '>' + arr_changed[1]):
+        change = randint(0,1)
+        #I need to find variables in a string
+        if change == 0: #change in arr[0]
+            #todo add exception for the sympify
+            #todo add compatability with float numbers as well (random.uniform(1.2,1.9))
+            new_value = new_random_value(variables_left[randint[0,len(variables_left)-1]],domain_dict, int(sympify(variables_right)))
+            variable_dict[variables_left[randint[0,len(variables_left)-1]]] = new_value
+        else: #change in arr[1]
+            new_value = new_random_value(variables_right[randint[0,len(variables_right)-1]],domain_dict, int(sympify(variables_left)))
+            variable_dict[variables_right[randint[0,len(variables_right)-1]]] = new_value
+        arr_changed = string_replace(string, variable_dict).split('<')
+    print("Sucess: " + '<'.join(arr_changed))
+    return
+
+def string_replace(string, variable_dict):
+    for key in variable_dict:
+        string = string.replace(key, variable_dict[key])
+    return string
+
+def get_variables_used(string, variable_dict): #gets the variables used in a string and adds them to a array
+    used_variables = []
+    for key in variable_dict:
+        temp_string = string.replace(key, "")
+        if temp_string == string:
+            used_variables.append(key)
+            string = temp_string
+    return used_variables
+
+def new_random_value(value, domain_dict, bonus):
+    #value R2
+    #todo: Finish this function
+    #domain ['2 3', '3 4']
+    return

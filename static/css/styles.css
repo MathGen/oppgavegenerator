@@ -23,10 +23,16 @@ sub{							/* between bootstrap*/
 	display: table-cell;
 	vertical-align: middle;
 }
+.multi_field{
+	margin-top: 10px;
+}
 .btn{
 	margin-bottom: 5px;
 }
 .mathquill-editable{
+	font-size: 2em;
+}
+.mathquill-embedded-latex:not(.btn){
 	font-size: 2em;
 }
 .text{
