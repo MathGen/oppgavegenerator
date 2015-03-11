@@ -357,7 +357,7 @@
                                     <td></td><td></td>
                                 </tr>
                                 <tr>
-                                    <td style="vertical-align: middle; text-align: right; height: 41px">Fylle ut feltene:</td>
+                                    <td style="vertical-align: middle; text-align: right; height: 41px">Utfyllingsoppgave:</td>
                                     <td style="vertical-align: middle"><input id="opt_fill_blanks" type="checkbox"></td>
                                     <td></td><td></td>
                                 </tr>
@@ -508,7 +508,10 @@
                     </div>
                     <div class="panel-footer">
                         <div class="row">
-							<div class="col-md-12">
+                            <div class="col-md-8">
+
+                            </div>
+							<div class="col-md-4">
 								<div class="btn-group pull-right">
 									<button id="m_btn_clear" class="btn btn-default btn_clear">
 										<span class="glyphicon glyphicon-trash" style="horizontal-align:middle"></span>
@@ -529,10 +532,11 @@
             <div class="modal-dialog modal-md">
                 <section class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Fyll ut felt oppgave<a class="glyphicon glyphicon-remove pull-right" data-dismiss="modal"></a></h3>
+                        <h3 class="panel-title">Utfyllingsoppgave<a class="glyphicon glyphicon-remove pull-right" data-dismiss="modal"></a></h3>
                     </div>
                     <div id="f_dyn_fill_input" class="panel-body">
-                        <p>Skriv inn formel for flervalg (Ikke skriv inn det riktige svaret).</p>
+                        <p>Her kommer utfyllingsoppgaven.</p>
+                        <span id="f_fill_content" style="display: inline"></span>
                     </div>
                     <div class="panel-footer">
                         <div class="row">

@@ -29,9 +29,6 @@ def checkAnswer(user_answer, answer):
     return string
 
 
-
-
-
 def make_variables(amount): #this is not needed anymore
     variables = []
     for x in range(0, amount):
@@ -186,10 +183,6 @@ def getQuestion(topic):
     #something like SELECT * FROM Template WHERE rating BETWEEN user_rating+- 20
     return q
 
-@register.filter(name='cut')
-def cut(value, arg):
-    return value.replace(arg, '<math>')
-
 def to_asciimath(s): #legacy function, we probably won't need this
     new_s = s
     index = 0
@@ -240,24 +233,31 @@ def parse_answer(answer):
 def replace_numbers(task, solution, answer, random_domain_list, template_type,choices):
     hardcoded_variables = ['R22', 'R21','R20','R19','R18','R17','R16','R15','R14','R13','R12','R11','R10','R9','R8','R7','R6','R3','R2','R1','R0']
     variable_dictionary = ""
+    domain_dict = {}
+    value_dict = {}
 
     counter = 0
     for i in range(len(hardcoded_variables)):
-            if task.count(hardcoded_variables[i]) > 0:
-                try: #in case of index out of bounds it just uses the first element of the array
-                    random_domain = random_domain_list[counter].split()
-                except IndexError:
-                    print('Objection!')
-                    random_domain = random_domain_list[0].split()
+        if task.count(hardcoded_variables[i]) > 0:
+            try: #in case of index out of bounds it just uses the first element of the array
+                random_domain = random_domain_list[counter].split()
+            except IndexError:
+                #uses the first domain in case one was not provided.
+                random_domain = random_domain_list[0].split()
 
-                random_tall = str(randint(int(random_domain[0]),int(random_domain[1])))
-                task = task.replace(hardcoded_variables[i], random_tall)
-                solution = solution.replace(hardcoded_variables[i], random_tall)
-                answer = answer.replace(hardcoded_variables[i], random_tall)
-                variable_dictionary += '§' + hardcoded_variables[i]+ '§' + random_tall #Remove the § later using variable_dictionary[1:]
-                if template_type.lower() != 'normal': #incase template_type has been capitalized
-                    choices = choices.replace(hardcoded_variables[i], random_tall)
-                counter += 1
+            random_number = str(randint(int(random_domain[0]),int(random_domain[1])))
+            task = task.replace(hardcoded_variables[i], random_number)
+            solution = solution.replace(hardcoded_variables[i], random_number)
+            answer = answer.replace(hardcoded_variables[i], random_number)
+            #todo create variable_dictionary after the conditions check out from value dict
+            variable_dictionary += '§' + hardcoded_variables[i]+ '§' + random_number #Remove the § later using variable_dictionary[1:]
+            if template_type.lower() != 'normal': #incase template_type has been capitalized
+                choices = choices.replace(hardcoded_variables[i], random_number)
+            domain_dict[hardcoded_variables[i]] = random_domain
+            value_dict[hardcoded_variables[i]]= random_number
+            counter += 1
+
+    #lesser_than('R0 < R1', domain_dict, value_dict)
     return_arr = [task,solution,answer,variable_dictionary[1:],choices] #Use [1:] to remove unnecessary § from variable_dictionary
     #todo add a dict where the variables in the task that are used gets added sp dict = {R22 : 5, R8 : 1}
     return return_arr
@@ -267,43 +267,46 @@ def conditions(string):
 
     return
 
-def lesser_than(string, domain, variables):
+def lesser_than(string, domain_dict, variable_dict):
     #string "r1 < r2"
     #variables is maybe a dict with {R22 : 5, R21 : 2..}
-    arr_changed = string_replace(string, variables).split('<')
+    arr_changed = string_replace(string, variable_dict).split('<')
+
     arr_unchanged = string.split('<')
-    variables_left = get_variables_used(arr_unchanged, variables)
-    variables_right = get_variables_used(arr_unchanged, variables)
+    variables_left = get_variables_used(arr_unchanged[0], variable_dict)
+    variables_right = get_variables_used(arr_unchanged[1], variable_dict)
     #todo Probably sympify
-    while arr_changed[0] > arr_changed[1]:
+    while sympify(arr_changed[0] + '>' + arr_changed[1]):
         change = randint(0,1)
         #I need to find variables in a string
         if change == 0: #change in arr[0]
-            variables[variables_left[randint[0,len(variables_left)-1]]] = new_random_value()
-            pass
+            #todo add exception for the sympify
+            #todo add compatability with float numbers as well (random.uniform(1.2,1.9))
+            new_value = new_random_value(variables_left[randint[0,len(variables_left)-1]],domain_dict, int(sympify(variables_right)))
+            variable_dict[variables_left[randint[0,len(variables_left)-1]]] = new_value
         else: #change in arr[1]
-
-            pass
-        pass
+            new_value = new_random_value(variables_right[randint[0,len(variables_right)-1]],domain_dict, int(sympify(variables_left)))
+            variable_dict[variables_right[randint[0,len(variables_right)-1]]] = new_value
+        arr_changed = string_replace(string, variable_dict).split('<')
+    print("Sucess: " + '<'.join(arr_changed))
     return
 
-def string_replace(string, variables):
-    for key in variables:
-        string = string.replace(key, variables[key])
-    return
+def string_replace(string, variable_dict):
+    for key in variable_dict:
+        string = string.replace(key, variable_dict[key])
+    return string
 
-def get_variables_used(string, variables): #gets the variables used in a string and adds them to a array
+def get_variables_used(string, variable_dict): #gets the variables used in a string and adds them to a array
     used_variables = []
-    for key in variables:
+    for key in variable_dict:
         temp_string = string.replace(key, "")
         if temp_string == string:
             used_variables.append(key)
             string = temp_string
     return used_variables
 
-def new_random_value(value, domain, bonus):
+def new_random_value(value, domain_dict, bonus):
     #value R2
-    #todo: lage et dict med key variabel og value domain.
-    #todo Lage dict med key variabel (r2) og value tall begge disse gjøres i replace numbers
+    #todo: Finish this function
     #domain ['2 3', '3 4']
     return

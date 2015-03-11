@@ -106,7 +106,6 @@ def submit(request):
             template.times_failed = 0
             template.times_solved = 0
             template.creation_date = datetime.now()
-            template.choices = ""
             template.save()
 
             message = 'success!'
