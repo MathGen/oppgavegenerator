@@ -10,6 +10,8 @@ var ANSWER					= 1;
 var SUB						= 1;
 var TOPIC_SELECTED			= false;
 var MULTI_CHOICE			= 0;
+var FILL_IN					= false;
+var FILL_SELECTION 			= [];
 var c_count 				= 0;
 var array_calc				= [];
 
@@ -670,13 +672,41 @@ $(document).ready(function() {
 	var radio_fill_blanks = $('#opt_fill_blanks');
 	radio_fill_blanks.change(function(){
 		if($(this).is(':checked')){
-			$('#f_fill_content').removeClass('mathquill-embedded-latex').html("");
-			for(var f = 1; f <= STEP; f++){
-				var f_latex = $('#s_input_mathquill_' + f).mathquill('latex');
-				$('#f_fill_content').append(f_latex);
+			$('#fill_blanks_modal').modal('show').on('shown.bs.modal', function () {
+				if(FILL_IN == false){
+					refresh_fill_in_content();
+					FILL_IN = true;
+				}
+			});
+		}
+	});
+
+	// Refresh fill-in-the-blanks content
+	$('#f_btn_refresh').click(function(e){
+		e.preventDefault();
+		refresh_fill_in_content();
+	});
+
+	// Save fill-in-the-blanks selection
+	$('#f_dyn_fill_input').focusout(function(){
+		$(this).find('.selection').each(function(){
+			FILL_SELECTION = [];
+			$(this).children().each(function(){
+				FILL_SELECTION.push($(this).attr('mathquill-command-id'));
+			});
+		});
+	});
+
+	// Replace selected elements and replace it with blanks.
+	$('#f_btn_fill').click(function(e){
+		//alert($('#f_fill_content_1').find('*').length);
+		for(var f = 0; f < FILL_SELECTION.length; f++){
+			if(f == 0) {
+				$('[mathquill-command-id="' + FILL_SELECTION[f] + '"]').replaceWith('<span class="glyphicon glyphicon-edit"></span>');
 			}
-			$('#f_fill_content').addClass('mathquill-embedded-latex').mathquill();
-			$('#fill_blanks_modal').modal('show');
+			else{
+				$('[mathquill-command-id="' + FILL_SELECTION[f] + '"]').remove();
+			}
 		}
 	});
 
@@ -1024,6 +1054,22 @@ function get_multiple_choices(){
 		multiple_choices.push(latex_to_asciimath($('#m_input_mathquill_' + m).mathquill('latex')));
 	}
 	return multiple_choices.join('§');
+}
+
+/**
+ * Refreshing the contents of fill-in-the-blanks from the solutions.
+ */
+function refresh_fill_in_content(){
+	var f_dyn_fill = $('#f_dyn_fill_input');
+	$('.f_fill_content').remove();
+	for (var f = 1; f <= STEP; f++) {
+		if (f > 1) {
+			f_dyn_fill.append('<hr class="f_fill_content">');
+		}
+		var f_latex = $('#s_input_mathquill_' + f).mathquill('latex');
+		f_dyn_fill.append('<div id="f_fill_content_' + f + '" class="f_fill_content mathquill-embedded-latex" style="display: inline">' + f_latex + '</div>');
+		$('#f_fill_content_' + f).addClass('mathquill-embedded-latex').mathquill();
+	}
 }
 
 function post(path, params, method) {
