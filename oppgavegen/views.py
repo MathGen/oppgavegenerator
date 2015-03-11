@@ -14,9 +14,12 @@ from sympy import sympify
 from sympy.printing.mathml import mathml
 from sympy import Integral, latex
 from django.forms import ModelForm
+# models and tables
 from oppgavegen.models import Template
 from oppgavegen.models import Topic
 from oppgavegen.models import User
+from oppgavegen.tables import TemplateTable
+from django_tables2 import RequestConfig
 from datetime import datetime
 from oppgavegen.templatetags.app_filters import is_teacher
 
@@ -153,5 +156,11 @@ def answers(request):
         else:
             print(form.errors)
     return  render_to_response('answers')
+
+@login_required
+def templates(request):
+    table = TemplateTable(Template.objects.all())
+    RequestConfig(request).configure(table)
+    return render(request, "templates.html", {"table": table})
 
 

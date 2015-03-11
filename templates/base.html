@@ -1,10 +1,13 @@
 {% load i18n %}
+{% load staticfiles %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <link rel="stylesheet" href="{{ STATIC_URL }}style.css" />
-    <title>{% block title %}User test{% endblock %}</title>
+    <link rel="stylesheet" href="../static/django_tables2/themes/paleblue/css/screen.css" />
+    <title>{% block title %}MathGen{% endblock %}</title>
 </head>
 
 <body>
