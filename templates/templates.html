@@ -1,11 +1,6 @@
 {% extends "base.html" %}
 {% load render_table from django_tables2 %}
-<!doctype html>
-<html>
-    <head>
-        <link rel="stylesheet" href="{{ STATIC_ROOT }}django_tables2/themes/paleblue/css/screen.css" />
-    </head>
-    <body>
-        {% render_table templates %}
-    </body>
-</html>
+
+{% block content %}
+         {% render_table templates %}
+{% endblock %}
