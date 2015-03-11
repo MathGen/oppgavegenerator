@@ -7,4 +7,6 @@ from oppgavegen.models import Template
 class TemplateTable(tables.Table):
     class Meta:
         model = Template
-        attrs = {"class": "paleblue"} #add class="paleblue" (table theme) to <table> tag
+        attrs = {"class": "paleblue"} # add class="paleblue" (table theme) to <table> tag
+        # fields to include in table (displayed in this order)
+        fields = ("id","question_text", "creator", "topic", "type", "rating")
