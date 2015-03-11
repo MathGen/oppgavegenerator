@@ -155,4 +155,7 @@ def answers(request):
             print(form.errors)
     return  render_to_response('answers')
 
+def templates(request):
+    return render(request, "templates.html", {"templates": Template.objects.all()})
+
 

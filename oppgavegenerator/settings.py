@@ -38,14 +38,15 @@ INSTALLED_APPS = (
     'oppgavegen',
     'django.contrib.admin',
     'django.contrib.auth',          # needed for registration
-    'django.contrib.sites',         # needed for registration (?)
+    'django.contrib.sites',         # needed for registration
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages',      # I don't think we need this -Einar / do something about it - Eirik
+    'django.contrib.messages',      #todo:see if we need this for anything.
     'django.contrib.staticfiles',
     'bootstrap3',                   # django-bootstrap-3
     'registration',                 # django-registration-redux
-    'gunicorn',                      # gunicorn (for unix deployment)
+    'gunicorn',                     # gunicorn (for unix deployment)
+    'django_tables2',               # django-tables2
 )
 
 MIDDLEWARE_CLASSES = (
@@ -99,6 +100,8 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
 TEMPLATE_LOADERS = ['django.template.loaders.filesystem.Loader',
                     'django.template.loaders.app_directories.Loader']
+TEMPLATE_CONTEXT_PROCESSORS = ['django.core.context_processors.request',
+                               'django.contrib.auth.context_processors.auth',]
 
 #REGISTRATION SETTINGS
 REGISTRATION_OPEN = True
