@@ -38,8 +38,10 @@ def index(request):
         arr = generation.algebra()
     elif question_type == "aritmetikk":
         arr = generation.arithmetics()
+    elif question_type != "":
+        arr = generation.task_with_solution(question_type)
     else:
-        arr = generation.task_with_solution()
+        arr = generation.task_with_solution("")
 
     question = arr[0]
     primary_key = arr[4]

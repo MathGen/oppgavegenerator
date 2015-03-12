@@ -34,9 +34,12 @@ def make_variables(amount): #this is not needed anymore
     for x in range(0, amount):
         variables.append('R' + str(x))
     return variables
-def task_with_solution():
+def task_with_solution(template_id):
     error = 0
-    q = getQuestion('algebra')  #gets a question from the DB
+    if template_id == "":
+        q = getQuestion('algebra')  #gets a question from the DB
+    else:
+        q = getQuestion(template_id)
     #The list is written in reverse to get to the single digit numbers last, as R1 would replace R11-> R19.
     hardcoded_variables = ['R22', 'R21','R20','R19','R18','R17','R16','R15','R14','R13','R12','R11','R10','R9','R8','R7','R6','R3','R2','R1','R0']
     #I changed this to contain the amount of decimals allowed in the answer, so 0 = False basically.
@@ -171,8 +174,11 @@ def sympyTest():
 
 def getQuestion(topic):
     #todo make this general so it doesn't just return a specified result
-    q = Template.objects.all()
-    q = q.latest('id')
+    if topic == 'algebra':
+        q = Template.objects.all()
+        q = q.latest('id')
+    else:
+        q= Template.objects.get(pk=topic)
     #q = Template.objects.get(pk=7)
 
 
@@ -263,7 +269,24 @@ def replace_numbers(task, solution, answer, random_domain_list, template_type,ch
     return return_arr
 
 ### conditions ###
-def conditions(string):
+def conditions(conditions, variable_dict,domain_dict):
+    #A function that loops trough the conditions for a given template.
+    #In the conditions numbers get changed to match the condition. This means all
+    #Conditions will have to be tried again if one of the conditions fails and changes numbers around.
+    redo = True #keeps track of if the conditions have to be tried again
+    conditions_dict = {}
+
+    while redo:
+        counter = 0
+        for c in conditions:
+            if '<' in c:
+                conditions_dict = lesser_than(c, domain_dict, variable_dict)
+            variable_dict = conditions_dict['variable_dict']
+            something_changed = conditions_dict['something_changed'] #Tells if something has changed
+            if something_changed:
+                counter += 1
+        if counter == 0:
+            redo = False #if nothing has changed, don't try the conditions again
 
     return
 
@@ -274,7 +297,6 @@ def lesser_than(string, domain_dict, variable_dict):
     arr_unchanged = string.split('<')
     variables_left = get_variables_used(arr_unchanged[0], variable_dict)
     variables_right = get_variables_used(arr_unchanged[1], variable_dict)
-    #todo Probably sympify
     while sympify(arr_changed[0] + '<' + arr_changed[1]):
         something_changed = True
         change = randint(0,1)
