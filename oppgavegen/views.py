@@ -64,10 +64,6 @@ class QuestionForm(forms.Form):
         cd =  [self.cleaned_data['user_answer'], self.cleaned_data['primary_key'], self.cleaned_data['variable_dictionary']]
         return cd
 
-def playground(request):
-    context = RequestContext(request)
-    return render_to_response('playground', context)
-
 class TemplateForm(ModelForm):
     class Meta:
         model = Template
