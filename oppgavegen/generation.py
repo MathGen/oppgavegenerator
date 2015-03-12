@@ -268,28 +268,28 @@ def conditions(string):
     return
 
 def lesser_than(string, domain_dict, variable_dict):
-    #string "r1 < r2"
-    #variables is maybe a dict with {R22 : 5, R21 : 2..}
+    #todo i might not have to split arr_changed
+    something_changed = False #One of the returns values. Shows if something had to be changed.
     arr_changed = string_replace(string, variable_dict).split('<')
-
     arr_unchanged = string.split('<')
     variables_left = get_variables_used(arr_unchanged[0], variable_dict)
     variables_right = get_variables_used(arr_unchanged[1], variable_dict)
     #todo Probably sympify
-    while sympify(arr_changed[0] + '>' + arr_changed[1]):
+    while sympify(arr_changed[0] + '<' + arr_changed[1]):
+        something_changed = True
         change = randint(0,1)
-        #I need to find variables in a string
         if change == 0: #change in arr[0]
             #todo add exception for the sympify
             #todo add compatability with float numbers as well (random.uniform(1.2,1.9))
-            new_value = new_random_value(variables_left[randint[0,len(variables_left)-1]],domain_dict, int(sympify(variables_right)))
-            variable_dict[variables_left[randint[0,len(variables_left)-1]]] = new_value
+            new_value = new_random_value(variables_left[randint(0,len(variables_left)-1)],domain_dict, int(sympify(variables_right)),'left')
+            variable_dict[variables_left[randint(0,len(variables_left)-1)]] = new_value
         else: #change in arr[1]
-            new_value = new_random_value(variables_right[randint[0,len(variables_right)-1]],domain_dict, int(sympify(variables_left)))
-            variable_dict[variables_right[randint[0,len(variables_right)-1]]] = new_value
-        arr_changed = string_replace(string, variable_dict).split('<')
+            new_value = new_random_value(variables_right[randint(0,len(variables_right)-1)],domain_dict, int(sympify(variables_left)), 'right')
+            variable_dict[variables_right[randint(0,len(variables_right)-1)]] = new_value
+        arr_changed = string_replace(string, variable_dict).split('<') #change the values with the new one
     print("Sucess: " + '<'.join(arr_changed))
-    return
+    return_dict = {'variable_dict' : variable_dict, 'something_changed' : something_changed}
+    return return_dict
 
 def string_replace(string, variable_dict):
     for key in variable_dict:
@@ -305,8 +305,20 @@ def get_variables_used(string, variable_dict): #gets the variables used in a str
             string = temp_string
     return used_variables
 
-def new_random_value(value, domain_dict, bonus):
-    #value R2
+def new_random_value(value, domain_dict, bonus, arg):
     #todo: Finish this function
-    #domain ['2 3', '3 4']
-    return
+    domain = domain_dict[value]
+    #kinda interesting: if bonus isn't between the domain values, changing the value won't fix the condition.
+    #todo use this fact for good. #savetheworld
+    if arg == 'left':
+        if  domain[0] < bonus < domain[1]:
+            domain[1] = bonus
+        new_value = randint(domain[0], min(domain[1]))
+    if arg == 'right':
+        if  domain[0] < bonus < domain[1]:
+            domain[0] = bonus
+        new_value = randint(domain[0], min(domain[1]))
+    else:
+        new_value = randint(domain[0], min(domain[1]))
+
+    return new_value
