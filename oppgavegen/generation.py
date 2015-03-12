@@ -291,6 +291,10 @@ def conditions(conditions, variable_dict,domain_dict):
 
     return
 
+###lesser_than###
+#Checks if a lesser_than condition string is true or false.
+#If false the values in the string will be replaced and a variable notes that something has changed.
+#The function returns a updated dictionary of the variables that are used and also if something has changed
 def lesser_than(string, domain_dict, variable_dict):
     #todo i might not have to split arr_changed
     #will loop the full duration if string with no variable is passed. ie. 2 > 4
@@ -328,11 +332,17 @@ def lesser_than(string, domain_dict, variable_dict):
     return_dict = {'variable_dict' : variable_dict, 'something_changed' : something_changed}
     return return_dict
 
+###string_replace###
+#Replaces a string with variables (R0, R1..) with numbers from a dict.
+#the dictionary holds keys which are the variables, and values which are the numbers
+#A typical variable dict might look like this: {'R0' : 10, R2 : 5}
 def string_replace(string, variable_dict):
     for key in variable_dict:
         string = string.replace(key, str(variable_dict[key]))
     return string
 
+###get_variables_used###
+#Returns which variables are used in a given string
 def get_variables_used(string, variable_dict): #gets the variables used in a string and adds them to a array
     used_variables = []
     for key in variable_dict:
@@ -342,16 +352,20 @@ def get_variables_used(string, variable_dict): #gets the variables used in a str
             string = temp_string
     return used_variables
 
+###new_random_value###
+#Creates a new random value for a given variable using it's domain.
+#The function also suports a bonus variable which helps in limiting the domain for the variable further if needed.
+#It also takes a argument for different configurations of what aproach to use for the new variable
 def new_random_value(value, domain_dict, bonus, arg):
     domain = domain_dict[value]
     #kinda interesting: if bonus isn't between the domain values, changing the value won't fix the condition.
     #todo use this fact for good. #savetheworld
     bonus = bonus - 1 #this is because we use smaller than and not <=..
-    if arg == 'left':
-        if  int(domain[0]) <= bonus <= int(domain[1]):
+    if arg == 'left': #approach to use if on the left side of lesser than (<)
+        if int(domain[0]) <= bonus <= int(domain[1]):
             domain[1] = bonus
         new_value = randint(int(domain[0]), int(domain[1]))
-    if arg == 'right':
+    elif arg == 'right':#approach to use if on the right side of lesser than (<)
         if  int(domain[0]) <= bonus <= int(domain[1]):
             domain[0] = bonus
         new_value = randint(int(domain[0]), int(domain[1]))
