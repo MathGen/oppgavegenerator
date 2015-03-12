@@ -22,6 +22,7 @@
 		<link href="/static/css/bootstrap.min.css" rel = "stylesheet">
     	<link rel="stylesheet" type="text/css" href="/static/css/mathquill.css">
 		<link href="/static/css/styles.css" rel="stylesheet">
+        <link rel="stylesheet" href="../static/django_tables2/themes/paleblue/css/screen.css" />
     	<script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
     	<script src="/static/js/jquery-1.11.2.min.js"></script>
 	</head>
@@ -38,6 +39,11 @@
 				<div class="collapse navbar-collapse nav_header_collapse">
 					<ul class="nav navbar-nav navbar-right">
 						<!--MENU ITEMS-->
+
+
+
+
+
 						<li><a href="../gen">Generator</a></li>
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Kategori <b class="caret"></b></a>
@@ -47,7 +53,16 @@
 								<li><a href="/index?q=integrasjon">Integrasjon</a></li>
 							</ul>
 						</li>
-						<li><a href="#login" data-toggle="modal">Logg inn</a></li>
+						<!--USER AUTH ITEMS-->
+                        {% if user.is_authenticated %}
+                        <li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user">&nbsp;</span>{{ user.username }}<b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<li><a href="{% url 'auth_logout' %}">Logg ut</a></li>
+								<li><a href="{% url 'auth_password_change' %}">Bytt Passord</a></li>
+							</ul>
+						</li>
+                        {% endif %}
 					</ul>
 				</div>
 				

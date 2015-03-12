@@ -34,9 +34,12 @@ def make_variables(amount): #this is not needed anymore
     for x in range(0, amount):
         variables.append('R' + str(x))
     return variables
-def task_with_solution():
+def task_with_solution(template_id):
     error = 0
-    q = getQuestion('algebra')  #gets a question from the DB
+    if template_id == "":
+        q = getQuestion('algebra')  #gets a question from the DB
+    else:
+        q = getQuestion(template_id)
     #The list is written in reverse to get to the single digit numbers last, as R1 would replace R11-> R19.
     hardcoded_variables = ['R22', 'R21','R20','R19','R18','R17','R16','R15','R14','R13','R12','R11','R10','R9','R8','R7','R6','R3','R2','R1','R0']
     #I changed this to contain the amount of decimals allowed in the answer, so 0 = False basically.
@@ -50,6 +53,7 @@ def task_with_solution():
     task = str(q.question_text).replace('\\n', '\n')
     template_type = q.type
     choices = q.choices
+    conditions = q.conditions
     dictionary = q.dictionary
     answer = q.answer
     primary_key = q.pk
@@ -76,7 +80,7 @@ def task_with_solution():
                 print("answer is not a float") #todo find out if i need this anymore
                 new_answer = str(int(new_answer))
                 valid_solution = True
-        except:
+        except: #hardcore error handling
             pass
 
     new_solution = parse_solution(new_solution)
@@ -171,8 +175,11 @@ def sympyTest():
 
 def getQuestion(topic):
     #todo make this general so it doesn't just return a specified result
-    q = Template.objects.all()
-    q = q.latest('id')
+    if topic == 'algebra':
+        q = Template.objects.all()
+        q = q.latest('id')
+    else:
+        q= Template.objects.get(pk=topic)
     #q = Template.objects.get(pk=7)
 
 
@@ -257,68 +264,112 @@ def replace_numbers(task, solution, answer, random_domain_list, template_type,ch
             value_dict[hardcoded_variables[i]]= random_number
             counter += 1
 
-    #lesser_than('R0 < R1', domain_dict, value_dict)
+    lesser_than('R0 * 2 < 3', domain_dict, value_dict)
     return_arr = [task,solution,answer,variable_dictionary[1:],choices] #Use [1:] to remove unnecessary § from variable_dictionary
     #todo add a dict where the variables in the task that are used gets added sp dict = {R22 : 5, R8 : 1}
     return return_arr
 
 ### conditions ###
-def conditions(string):
+#A function that loops trough the conditions for a given template.
+#In the conditions numbers get changed to match the condition. This means all
+#Conditions will have to be tried again if one of the conditions fails and changes numbers around.
+def conditions(conditions, variable_dict,domain_dict):
+    redo = True #keeps track of if the conditions have to be tried again
+    conditions_dict = {}
+
+    while redo:
+        counter = 0
+        for c in conditions:
+            if '<' in c:
+                conditions_dict = lesser_than(c, domain_dict, variable_dict)
+            variable_dict = conditions_dict['variable_dict']
+            something_changed = conditions_dict['something_changed'] #Tells if something has changed
+            if something_changed:
+                counter += 1
+        if counter == 0:
+            redo = False #if nothing has changed, don't try the conditions again
 
     return
 
+###lesser_than###
+#Checks if a lesser_than condition string is true or false.
+#If false the values in the string will be replaced and a variable notes that something has changed.
+#The function returns a updated dictionary of the variables that are used and also if something has changed
 def lesser_than(string, domain_dict, variable_dict):
     #todo i might not have to split arr_changed
+    #will loop the full duration if string with no variable is passed. ie. 2 > 4
+    counter = 0 #To stop it from looping forever
     something_changed = False #One of the returns values. Shows if something had to be changed.
     arr_changed = string_replace(string, variable_dict).split('<')
     arr_unchanged = string.split('<')
     variables_left = get_variables_used(arr_unchanged[0], variable_dict)
     variables_right = get_variables_used(arr_unchanged[1], variable_dict)
-    #todo Probably sympify
-    while sympify(arr_changed[0] + '<' + arr_changed[1]):
+    while sympify(arr_changed[0] + '<' + arr_changed[1]) == False:
         something_changed = True
         change = randint(0,1)
-        if change == 0: #change in arr[0]
+        if (len(variables_right) < 1) and (len(variables_left) < 1):
+            print('no variables given') #this is a error where no variables were given ie. 2 > 4
+        elif(len(variables_right) < 1):
+            change = 0
+        elif(len(variables_left) < 1):
+            change = 1
+
+        if change == 0 and len(variables_left) > 0: #change the left side of <
             #todo add exception for the sympify
             #todo add compatability with float numbers as well (random.uniform(1.2,1.9))
-            new_value = new_random_value(variables_left[randint(0,len(variables_left)-1)],domain_dict, int(sympify(variables_right)),'left')
-            variable_dict[variables_left[randint(0,len(variables_left)-1)]] = new_value
-        else: #change in arr[1]
-            new_value = new_random_value(variables_right[randint(0,len(variables_right)-1)],domain_dict, int(sympify(variables_left)), 'right')
-            variable_dict[variables_right[randint(0,len(variables_right)-1)]] = new_value
+            variable_to_change = variables_left[randint(0,len(variables_left)-1)]
+            new_value = new_random_value(variable_to_change,domain_dict, ceil(sympify(arr_changed[1])),'left') #todo ceil is only really good for templates with integers.
+            variable_dict[variable_to_change] = new_value
+        elif change == 1 and len(variables_right) > 0: #change the right side of <
+            variable_to_change = variables_right[randint(0,len(variables_right)-1)]
+            new_value = new_random_value(variable_to_change,domain_dict, ceil(sympify(arr_changed[0])), 'right') #Can't just move over - elements as this would fuck over / and *
+            variable_dict[variable_to_change] = new_value
         arr_changed = string_replace(string, variable_dict).split('<') #change the values with the new one
-    print("Sucess: " + '<'.join(arr_changed))
+        counter += 1
+        if counter >= 100:
+            break
+    print("Sucess: " + '<'.join(arr_changed) + "  counter = " + str(counter))
     return_dict = {'variable_dict' : variable_dict, 'something_changed' : something_changed}
     return return_dict
 
+###string_replace###
+#Replaces a string with variables (R0, R1..) with numbers from a dict.
+#the dictionary holds keys which are the variables, and values which are the numbers
+#A typical variable dict might look like this: {'R0' : 10, R2 : 5}
 def string_replace(string, variable_dict):
     for key in variable_dict:
-        string = string.replace(key, variable_dict[key])
+        string = string.replace(key, str(variable_dict[key]))
     return string
 
+###get_variables_used###
+#Returns which variables are used in a given string
 def get_variables_used(string, variable_dict): #gets the variables used in a string and adds them to a array
     used_variables = []
     for key in variable_dict:
         temp_string = string.replace(key, "")
-        if temp_string == string:
+        if temp_string != string:
             used_variables.append(key)
             string = temp_string
     return used_variables
 
+###new_random_value###
+#Creates a new random value for a given variable using it's domain.
+#The function also suports a bonus variable which helps in limiting the domain for the variable further if needed.
+#It also takes a argument for different configurations of what aproach to use for the new variable
 def new_random_value(value, domain_dict, bonus, arg):
-    #todo: Finish this function
     domain = domain_dict[value]
     #kinda interesting: if bonus isn't between the domain values, changing the value won't fix the condition.
     #todo use this fact for good. #savetheworld
-    if arg == 'left':
-        if  domain[0] < bonus < domain[1]:
+    bonus = bonus - 1 #this is because we use smaller than and not <=..
+    if arg == 'left': #approach to use if on the left side of lesser than (<)
+        if int(domain[0]) <= bonus <= int(domain[1]):
             domain[1] = bonus
-        new_value = randint(domain[0], min(domain[1]))
-    if arg == 'right':
-        if  domain[0] < bonus < domain[1]:
+        new_value = randint(int(domain[0]), int(domain[1]))
+    elif arg == 'right':#approach to use if on the right side of lesser than (<)
+        if  int(domain[0]) <= bonus <= int(domain[1]):
             domain[0] = bonus
-        new_value = randint(domain[0], min(domain[1]))
+        new_value = randint(int(domain[0]), int(domain[1]))
     else:
-        new_value = randint(domain[0], min(domain[1]))
+        new_value = randint(int(domain[0]), int(domain[1]))
 
     return new_value

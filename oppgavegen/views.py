@@ -38,8 +38,10 @@ def index(request):
         arr = generation.algebra()
     elif question_type == "aritmetikk":
         arr = generation.arithmetics()
+    elif question_type != "":
+        arr = generation.task_with_solution(question_type)
     else:
-        arr = generation.task_with_solution()
+        arr = generation.task_with_solution("")
 
     question = arr[0]
     primary_key = arr[4]
@@ -61,10 +63,6 @@ class QuestionForm(forms.Form):
     def process(self):
         cd =  [self.cleaned_data['user_answer'], self.cleaned_data['primary_key'], self.cleaned_data['variable_dictionary']]
         return cd
-
-def playground(request):
-    context = RequestContext(request)
-    return render_to_response('playground', context)
 
 class TemplateForm(ModelForm):
     class Meta:
