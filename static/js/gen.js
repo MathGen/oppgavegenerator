@@ -703,13 +703,13 @@ $(document).ready(function() {
 		//alert($('#f_fill_content_1').find('*').length);
 		for(var f = 0; f < FILL_SELECTION.length; f++){
 			if(f == 0) {
-				alert('total: ' + $('#f_fill_content_1 [mathquill-command-id]').length);
+				//alert('total: ' + $('#f_fill_content_1 [mathquill-command-id]').length);
 				$('#f_fill_content_1 [mathquill-command-id]').each(function(i){
 					if($(this).attr('mathquill-command-id') == FILL_SELECTION[f]){
 						var f_start = i;
 						var f_end = f_start + (FILL_SELECTION.length - 1);
 						FILL_POS.push(f_start + ' ' + f_end);
-						alert(FILL_POS[0]);
+						//alert(FILL_POS[0]);
 						replace_latex_with_blanks($('#s_input_mathquill_1').mathquill('latex'));
 					}
 				});
@@ -1084,7 +1084,67 @@ function refresh_fill_in_content(){
 	FILL_POS = [];
 }
 
-function replace_latex_with_blanks(latex){
+function replace_latex_with_blanks(latex) {
+	var la_blank = latex;
+	var arr_la = [];
+	var relation = [];
+
+	var tracking = {};
+	var track_key = -1;
+	var tmp_track = {};
+
+	var brackets_counter = 0;
+
+	la_blank = la_blank.replace(/\\cdot/g,'*');
+	la_blank = la_blank.replace(/\\left/g,'');
+	la_blank = la_blank.replace(/\\right/g,'');
+
+	for(var l = 0; l < la_blank.length; l++){
+		if(la_blank[l] == '\\'){
+			var tmp_index = l;
+			var tmp_str = "";
+			while(true){
+				if(tmp_index > 1000){
+					alert('Error: Det oppstod en feil ved utfyllingsoppgaven!');
+					break;
+				}
+				if(la_blank[tmp_index] == " "){
+					l = tmp_index;
+					arr_la.push(tmp_str + " ");
+					break;
+				}
+				else if(la_blank[tmp_index] == '{'){
+					if(tracking[track_key] == true){
+						tmp_track[track_key] += String(":" + arr_la.length);
+					}
+					track_key++;
+					tmp_track[track_key] = String(arr_la.length);
+					arr_la.push(tmp_str + "{}");
+					l = tmp_index;
+					tracking[track_key] = true;
+					break;
+				}
+				tmp_str += la_blank[tmp_index];
+				tmp_index++;
+			}
+		}
+		else if(la_blank[l] == '}'){
+			tracking[track_key] = false;
+			relation.push(tmp_track[track_key]);
+			track_key--;
+		}
+		else{
+			if(tracking[track_key] == true){
+				tmp_track[track_key] += String(":" + arr_la.length);
+			}
+			arr_la.push(la_blank[l]);
+		}
+	}
+	//alert(arr_la.join(","));
+	//alert(relation.join(","));
+}
+
+function replace_latex_with_blanks_old(latex){
 	var la_blank = latex;
 	var la_fill = [];
 	var la_tmp_check = [];
