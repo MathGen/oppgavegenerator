@@ -229,7 +229,7 @@ def generate_valid_numbers(task, random_domain_list, conditions):
     #Adds the variables names and numbers to the 2 dictionaries and the string
     for i in range(len(hardcoded_variables)):
         if task.count(hardcoded_variables[i]) > 0:
-            #todo add support for domain beeing a list
+            #todo add support for domain being a list
             try: #in case of index out of bounds it just uses the first element of the array
                 random_domain = random_domain_list[counter].split()
             except IndexError:
@@ -361,3 +361,15 @@ def greater_to_lesser_than(string):
     string = string.split('>')
     string = string[1] + '<' + string[0]
     return string
+
+def solve_inequality(inequality, variable_dict, solve_for):
+    solve_for_this = symbols('solve_for_this')
+    variable_dict[solve_for] = solve_for_this
+    inequality = string_replace(inequality, variable_dict)
+    inequality_answer = solve(inequality, solve_for_this)
+    #remove unnecessary information from the answer ( for instance it might return 3 > solve_for_this
+    #we only need 3 so we remove the > and solve_for_this
+    inequality_answer = inequality_answer.replace('<', "")
+    inequality_answer = inequality_answer.replace('solve_for_this', "")
+
+    return inequality_answer
