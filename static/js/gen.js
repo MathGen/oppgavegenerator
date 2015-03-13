@@ -12,6 +12,7 @@ var TOPIC_SELECTED			= false;
 var MULTI_CHOICE			= 0;
 var FILL_IN					= false;
 var FILL_SELECTION 			= [];
+var FILL_POS				= [];
 var c_count 				= 0;
 var array_calc				= [];
 
@@ -697,11 +698,21 @@ $(document).ready(function() {
 		});
 	});
 
-	// Replace selected elements and replace it with blanks.
+	// Replace selected elements with blanks.
 	$('#f_btn_fill').click(function(e){
 		//alert($('#f_fill_content_1').find('*').length);
 		for(var f = 0; f < FILL_SELECTION.length; f++){
 			if(f == 0) {
+				alert('total: ' + $('#f_fill_content_1 [mathquill-command-id]').length);
+				$('#f_fill_content_1 [mathquill-command-id]').each(function(i){
+					if($(this).attr('mathquill-command-id') == FILL_SELECTION[f]){
+						var f_start = i;
+						var f_end = f_start + (FILL_SELECTION.length - 1);
+						FILL_POS.push(f_start + ' ' + f_end);
+						alert(FILL_POS[0]);
+						replace_latex_with_blanks($('#s_input_mathquill_1').mathquill('latex'));
+					}
+				});
 				$('[mathquill-command-id="' + FILL_SELECTION[f] + '"]').replaceWith('<span class="glyphicon glyphicon-edit"></span>');
 			}
 			else{
@@ -1070,6 +1081,102 @@ function refresh_fill_in_content(){
 		f_dyn_fill.append('<div id="f_fill_content_' + f + '" class="f_fill_content mathquill-embedded-latex" style="display: inline">' + f_latex + '</div>');
 		$('#f_fill_content_' + f).addClass('mathquill-embedded-latex').mathquill();
 	}
+	FILL_POS = [];
+}
+
+function replace_latex_with_blanks(latex){
+	var la_blank = latex;
+	var la_fill = [];
+	var la_tmp_check = [];
+	var la_check = [];
+	var recorder = false;
+	var count = 0;
+	la_blank = la_blank.replace(/\\cdot/g,'*');
+	la_blank = la_blank.replace(/\\left/g,'');
+	la_blank = la_blank.replace(/\\right/g,'');
+
+	for(var l = 0; l < la_blank.length; l++){
+		if(la_blank[l] == '\\') {
+			var la_i = l;
+			var tmp_la = "";
+			var counter = 0;
+			var counter2 = 0;
+			var lock = false;
+			if((la_blank[l] == '\\') && ((la_blank[l+1] == 'f' && la_blank[l+2] == 'r' && la_blank[l+3] == 'a' && la_blank[l+4] == 'c')||(la_blank[l+1] == 'b' && la_blank[l+2] == 'i' && la_blank[l+3] == 'n')))  {
+				counter2--; //this will make it so that the loop will do 2 {}
+			}
+			while(true){
+				if(la_i > 100){
+					alert('Error: Det oppstod en feil ved utfyllingsoppgaven!');
+					break;
+				}
+				if((la_blank[la_i] == ' ') || (la_blank[la_i] == '}' && counter == 0 && counter2 == 0)){
+					tmp_la += la_blank[la_i];
+					la_fill.push(tmp_la);
+					la_tmp_check.push(la_fill.length - 1);
+					recorder = true;
+					count++;
+					break;
+				}
+				else if((la_blank[la_i] == ' ') || (la_blank[la_i] == '}' && counter == 0)){
+					counter2++;
+				}
+				if(la_blank[la_i] == '{'){
+					if(counter == 0 && !lock) {
+						l = la_i + 1;
+						lock = true; //locks this if-statement from further use
+					}
+					counter++;
+				}
+				else if(la_blank[la_i+1] == '}'){
+					counter--;
+				}
+				tmp_la += la_blank[la_i];
+				la_i++;
+			}
+		}
+		else if(la_blank[l] == '}'){
+			count++;
+		}
+		else if(la_blank[l] == '}'){
+			count--;
+		}
+		else{
+			if(recorder){
+				la_tmp_check.push(la_fill.length - 1);
+			}
+			la_fill.push(la_blank[l]);
+		}
+		//TODO: Find a way to connect cells in array
+		if(recorder == true && count == 0){
+			la_check.push(la_tmp_check.join(" "));
+			recorder = false;
+		}
+	}
+	alert(la_check[0]);
+	alert(la_fill.join(','));
+	for(var fill = 0; fill < FILL_POS.length; fill++){
+		var fi = FILL_POS[fill].split(' ');
+		for(var i = parseInt(fi[0]); i <= parseInt(fi[1]); i++) {
+			if(parseInt(fi[0]) == parseInt[1]){
+				if(i == parseInt(fi[0])){
+					la_fill[i] = '@boxx@';
+				}
+			}
+			else{
+				if(i == parseInt(fi[0])){
+					la_fill[i] = '@boxx@';
+				}
+				else if(i <= parseInt(fi[1])){
+					la_fill[i] = "";
+				}
+			}
+		}
+
+	}
+	la_blank = la_fill.join("");
+	alert(la_blank);
+	return la_blank;
 }
 
 function post(path, params, method) {
