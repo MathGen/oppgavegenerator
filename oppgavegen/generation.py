@@ -299,11 +299,11 @@ def lesser_than(string, domain_dict, variable_dict):
             #todo add exception for the sympify
             #todo add compatability with float numbers as well (random.uniform(1.2,1.9))
             variable_to_change = variables_left[randint(0,len(variables_left)-1)]
-            new_value = new_random_value(variable_to_change,domain_dict, ceil(sympify(arr_changed[1])),'left') #todo ceil is only really good for templates with integers.
+            new_value = new_random_value(variable_to_change,domain_dict, ceil(solve_inequality(string,variable_dict, variable_to_change)),'left') #todo ceil is only really good for templates with integers.
             variable_dict[variable_to_change] = new_value
         elif change == 1 and len(variables_right) > 0: #change the right side of <
             variable_to_change = variables_right[randint(0,len(variables_right)-1)]
-            new_value = new_random_value(variable_to_change,domain_dict, ceil(sympify(arr_changed[0])), 'right') #Can't just move over - elements as this would fuck over / and *
+            new_value = new_random_value(variable_to_change,domain_dict, ceil(solve_inequality(string,variable_dict, variable_to_change)), 'right') #Can't just move over - elements as this would fuck over / and *
             variable_dict[variable_to_change] = new_value
         arr_changed = string_replace(string, variable_dict).split('<') #change the values with the new one
         counter += 1
@@ -371,10 +371,10 @@ def solve_inequality(inequality, variable_dict, solve_for):
     solve_for_this = symbols('solve_for_this')
     variable_dict[solve_for] = solve_for_this
     inequality = string_replace(inequality, variable_dict)
-    inequality_answer = solve(inequality, solve_for_this)
+    inequality_answer = str(solve(inequality, solve_for_this, rational=False))
     #remove unnecessary information from the answer ( for instance it might return 3 > solve_for_this
     #we only need 3 so we remove the > and solve_for_this
     inequality_answer = inequality_answer.replace('<', "")
     inequality_answer = inequality_answer.replace('solve_for_this', "")
 
-    return inequality_answer
+    return Float(inequality_answer)
