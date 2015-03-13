@@ -362,6 +362,11 @@ def greater_to_lesser_than(string):
     string = string[1] + '<' + string[0]
     return string
 
+###solve_inequality###
+#solves inequalities with for 1 unknown
+#example: R1 + R2 < R3, solve for R1 where R2 = 10 and R3 = 12
+#this gets turned into solve_for_this + 10 < 12 -> solve_for_this < 2
+#the function then returns 2
 def solve_inequality(inequality, variable_dict, solve_for):
     solve_for_this = symbols('solve_for_this')
     variable_dict[solve_for] = solve_for_this
