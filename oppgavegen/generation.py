@@ -223,8 +223,10 @@ def generate_valid_numbers(task, random_domain_list, conditions):
     hardcoded_variables = ['R22', 'R21','R20','R19','R18','R17','R16','R15','R14','R13','R12','R11','R10','R9','R8','R7','R6','R3','R2','R1','R0']
     variables_used = ""
     domain_dict = {}
-    value_dict = {}
+    variable_dict = {}
     counter = 0
+    #Loops through all possible variable names, and generate a random number for it.
+    #Adds the variables names and numbers to the 2 dictionaries and the string
     for i in range(len(hardcoded_variables)):
         if task.count(hardcoded_variables[i]) > 0:
             #todo add support for domain beeing a list
@@ -233,23 +235,25 @@ def generate_valid_numbers(task, random_domain_list, conditions):
             except IndexError:
                 #uses the first domain in case one was not provided.
                 random_domain = random_domain_list[0].split()
-
             random_number = str(randint(int(random_domain[0]),int(random_domain[1])))
             variables_used += '§' + hardcoded_variables[i]+ '§' + random_number #Remove the § later using variable_dictionary[1:]
             domain_dict[hardcoded_variables[i]] = random_domain
-            value_dict[hardcoded_variables[i]]= random_number
+            variable_dict[hardcoded_variables[i]]= random_number
             counter += 1 #counter to iterate through the random domains
 
-    lesser_than('R0 * 2 < 3', domain_dict, value_dict) #for testing purposes
-    return_arr = [variables_used[1:],value_dict] #Use [1:] to remove unnecessary § from variable_dictionary
+    variable_dict = check_conditions(conditions, variable_dict, domain_dict)
+
+    #lesser_than('R0 * 2 < 3', domain_dict, variable_dict) #for testing purposes
+    return_arr = [variables_used[1:],variable_dict] #Use [1:] to remove unnecessary § from variable_dictionary
     return return_arr
 
 ### conditions ###
 #A function that loops trough the conditions for a given template.
 #In the conditions numbers get changed to match the condition. This means all
 #Conditions will have to be tried again if one of the conditions fails and changes numbers around.
-def conditions(conditions, variable_dict,domain_dict):
+def check_conditions(conditions, variable_dict,domain_dict):
     redo = True #keeps track of if the conditions have to be tried again
+    conditions = conditions.split('§')
     conditions_dict = {}
 
     while redo:
@@ -257,14 +261,16 @@ def conditions(conditions, variable_dict,domain_dict):
         for c in conditions:
             if '<' in c:
                 conditions_dict = lesser_than(c, domain_dict, variable_dict)
-            variable_dict = conditions_dict['variable_dict']
+            elif '>' in c:
+                conditions_dict = lesser_than(greater_to_lesser_than(c), domain_dict, variable_dict)
+            variable_dict = conditions_dict['variable_dict'] #Updates the variable dictionary
             something_changed = conditions_dict['something_changed'] #Tells if something has changed
             if something_changed:
                 counter += 1
         if counter == 0:
             redo = False #if nothing has changed, don't try the conditions again
 
-    return
+    return variable_dict #maybe send a counter with how long it took to get trough conditions
 
 ###lesser_than###
 #Checks if a lesser_than condition string is true or false.
@@ -348,3 +354,10 @@ def new_random_value(value, domain_dict, bonus, arg):
         new_value = randint(int(domain[0]), int(domain[1]))
 
     return new_value
+
+###greater_to_lesser_than###
+# changes x > y into y < x
+def greater_to_lesser_than(string):
+    string = string.split('>')
+    string = string[1] + '<' + string[0]
+    return string
