@@ -64,7 +64,7 @@ def task_with_solution(template_id):
 
     valid_solution = False
     while valid_solution == False: #loop until we get a form of the task that has a valid solution
-        random_replacement_array = replace_numbers(task, random_domain_list, conditions)
+        random_replacement_array = generate_valid_numbers(task, random_domain_list, conditions)
         variables_used = random_replacement_array[0]
         variable_dict = random_replacement_array[1]
         new_task = string_replace(task,variable_dict)
@@ -216,8 +216,10 @@ def parse_answer(answer):
             continue
         counter += 1
     return('§'.join(answer)) #join doesn't do anything if the list has 1 element, except converting it to str
-
-def replace_numbers(task, random_domain_list, conditions):
+###generate_valid_numbers###
+#generates valid numbers using each variables random domain.
+#also makes sure all variables followes the given conditions.
+def generate_valid_numbers(task, random_domain_list, conditions):
     hardcoded_variables = ['R22', 'R21','R20','R19','R18','R17','R16','R15','R14','R13','R12','R11','R10','R9','R8','R7','R6','R3','R2','R1','R0']
     variables_used = ""
     domain_dict = {}
@@ -236,7 +238,7 @@ def replace_numbers(task, random_domain_list, conditions):
             variables_used += '§' + hardcoded_variables[i]+ '§' + random_number #Remove the § later using variable_dictionary[1:]
             domain_dict[hardcoded_variables[i]] = random_domain
             value_dict[hardcoded_variables[i]]= random_number
-            counter += 1
+            counter += 1 #counter to iterate through the random domains
 
     lesser_than('R0 * 2 < 3', domain_dict, value_dict) #for testing purposes
     return_arr = [variables_used[1:],value_dict] #Use [1:] to remove unnecessary § from variable_dictionary
