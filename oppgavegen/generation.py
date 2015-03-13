@@ -57,18 +57,21 @@ def task_with_solution(template_id):
     dictionary = q.dictionary
     answer = q.answer
     primary_key = q.pk
-    variable_dictionary = "" #sends a splitable string since dictionaries can't be passed between layers.
+    variables_used = "" #sends a splitable string since dictionaries can't be passed between layers.
     solution = str(task) +"\n"+str(q.solution).replace('\\n', '\n') #db automatically adds the escape character \ to strings, so we remove it from \n
     #solution = solution.replace('\&\#x222B\;', '&#x222B;')
+    #todo remove field for template types and just random one of the types for the task, depending on if choices != "" and fill in != ""
 
     valid_solution = False
     while valid_solution == False: #loop until we get a form of the task that has a valid solution
-        random_replacement_array = replace_numbers(task, answer, solution, random_domain_list, template_type, choices)
-        new_task = random_replacement_array[0]
-        new_answer = parse_answer(random_replacement_array[1])
-        new_solution = random_replacement_array[2]
-        variable_dictionary = random_replacement_array[3]
-        choices = random_replacement_array[4]
+        random_replacement_array = generate_valid_numbers(task, random_domain_list, conditions)
+        variables_used = random_replacement_array[0]
+        variable_dict = random_replacement_array[1]
+        new_task = string_replace(task,variable_dict)
+        new_answer = string_replace(answer,variable_dict)
+        new_solution = string_replace(solution,variable_dict)
+        new_choices = string_replace(choices,variable_dict)
+
 
         if new_answer == 'error': #error handling at its finest.
             continue #maybe add a counter everytime this happens so that it doesn't loop infinitely for bad templates
@@ -85,23 +88,23 @@ def task_with_solution(template_id):
 
     new_solution = parse_solution(new_solution)
     if template_type.lower() == 'multiple':
-        choices = parse_solution(choices)
-        choices = choices.split('§') #if only 1 choice is given it might bug out, we can just enforce 2 choices to be given though..
-        choices.append(new_answer)
-        shuffle(choices) #Shuffles the choices so that the answer is not always in the same place.
-        choices = '§'.join(choices)
+        new_choices = parse_solution(new_choices)
+        new_choices = new_choices.split('§') #if only 1 choice is given it might bug out, we can just enforce 2 choices to be given though..
+        new_choices.append(new_answer)
+        shuffle(new_choices) #Shuffles the choices so that the answer is not always in the same place.
+        new_choices = '§'.join(new_choices)
 
     if dictionary is not None:
         new_task = replace_words(new_task, dictionary)
         new_solution = replace_words(new_solution, dictionary)
         new_answer = replace_words(new_answer, dictionary)
-        choices = replace_words(choices,dictionary)
+        new_choices = replace_words(new_choices,dictionary)
     number_of_answers = len(new_answer.split('§'))
     if template_type == 'blanks':
         new_task = new_solution
     #todo replace new_solution with new_task
-    #todo also remove parsing of solution in this function as it is not needed before the answer page
-    arr = [new_task, variable_dictionary, template_type, choices, primary_key, number_of_answers] #Use [1:] to remove unnecessary §
+    #todo also remove parsing of solution in this function as it is not needed before the answer page (only true for normal actually)
+    arr = [new_task, variables_used, template_type, new_choices, primary_key, number_of_answers] #Use [1:] to remove unnecessary §
     return arr
 def validate_solution(answer, decimal_allowed, zero_allowed):
 
@@ -160,18 +163,6 @@ def parse_solution(solution):
         r = '@?' + arr[x] + '?@'
         new_solution = new_solution.replace(r, newArr[x])
     return new_solution
-def sympyTest():
-    t = standard_transformations + (implicit_multiplication,) #for sikkerhet, gjør om 2x til 2*x
-
-    x = symbols('x')
-    string = "2x + 4"
-    string2 = "8"
-    test = parse_expr(string, transformations = t)
-    test2 = parse_expr(string2,  transformations = t)
-    arr = solve(Eq(test, test2), x)
-    out = [string + " = " + string2, arr[0]]
-
-    return out
 
 def getQuestion(topic):
     #todo make this general so it doesn't just return a specified result
@@ -190,17 +181,6 @@ def getQuestion(topic):
     #something like SELECT * FROM Template WHERE rating BETWEEN user_rating+- 20
     return q
 
-def to_asciimath(s): #legacy function, we probably won't need this
-    new_s = s
-    index = 0
-    counter = 0
-    #todo: do this only between asciimath delimeters: ``
-    for c in s:
-        if c == '/' or c == '^':
-            new_s = new_s[:index] + c + new_s[index:]
-            counter += 1
-        index += 1
-    return new_s
 
 def replace_words(sentence, dictionary):
     dictionary = dictionary.split('§')
@@ -236,45 +216,44 @@ def parse_answer(answer):
             continue
         counter += 1
     return('§'.join(answer)) #join doesn't do anything if the list has 1 element, except converting it to str
-
-def replace_numbers(task, solution, answer, random_domain_list, template_type,choices):
+###generate_valid_numbers###
+#generates valid numbers using each variables random domain.
+#also makes sure all variables followes the given conditions.
+def generate_valid_numbers(task, random_domain_list, conditions):
     hardcoded_variables = ['R22', 'R21','R20','R19','R18','R17','R16','R15','R14','R13','R12','R11','R10','R9','R8','R7','R6','R3','R2','R1','R0']
-    variable_dictionary = ""
+    variables_used = ""
     domain_dict = {}
-    value_dict = {}
-
+    variable_dict = {}
     counter = 0
+    #Loops through all possible variable names, and generate a random number for it.
+    #Adds the variables names and numbers to the 2 dictionaries and the string
     for i in range(len(hardcoded_variables)):
         if task.count(hardcoded_variables[i]) > 0:
+            #todo add support for domain being a list
             try: #in case of index out of bounds it just uses the first element of the array
                 random_domain = random_domain_list[counter].split()
             except IndexError:
                 #uses the first domain in case one was not provided.
                 random_domain = random_domain_list[0].split()
-
             random_number = str(randint(int(random_domain[0]),int(random_domain[1])))
-            task = task.replace(hardcoded_variables[i], random_number)
-            solution = solution.replace(hardcoded_variables[i], random_number)
-            answer = answer.replace(hardcoded_variables[i], random_number)
-            #todo create variable_dictionary after the conditions check out from value dict
-            variable_dictionary += '§' + hardcoded_variables[i]+ '§' + random_number #Remove the § later using variable_dictionary[1:]
-            if template_type.lower() != 'normal': #incase template_type has been capitalized
-                choices = choices.replace(hardcoded_variables[i], random_number)
+            variables_used += '§' + hardcoded_variables[i]+ '§' + random_number #Remove the § later using variable_dictionary[1:]
             domain_dict[hardcoded_variables[i]] = random_domain
-            value_dict[hardcoded_variables[i]]= random_number
-            counter += 1
+            variable_dict[hardcoded_variables[i]]= random_number
+            counter += 1 #counter to iterate through the random domains
 
-    lesser_than('R0 * 2 < 3', domain_dict, value_dict)
-    return_arr = [task,solution,answer,variable_dictionary[1:],choices] #Use [1:] to remove unnecessary § from variable_dictionary
-    #todo add a dict where the variables in the task that are used gets added sp dict = {R22 : 5, R8 : 1}
+    variable_dict = check_conditions(conditions, variable_dict, domain_dict)
+
+    #lesser_than('R0 * 2 < 3', domain_dict, variable_dict) #for testing purposes
+    return_arr = [variables_used[1:],variable_dict] #Use [1:] to remove unnecessary § from variable_dictionary
     return return_arr
 
 ### conditions ###
 #A function that loops trough the conditions for a given template.
 #In the conditions numbers get changed to match the condition. This means all
 #Conditions will have to be tried again if one of the conditions fails and changes numbers around.
-def conditions(conditions, variable_dict,domain_dict):
+def check_conditions(conditions, variable_dict,domain_dict):
     redo = True #keeps track of if the conditions have to be tried again
+    conditions = conditions.split('§')
     conditions_dict = {}
 
     while redo:
@@ -282,14 +261,16 @@ def conditions(conditions, variable_dict,domain_dict):
         for c in conditions:
             if '<' in c:
                 conditions_dict = lesser_than(c, domain_dict, variable_dict)
-            variable_dict = conditions_dict['variable_dict']
+            elif '>' in c:
+                conditions_dict = lesser_than(greater_to_lesser_than(c), domain_dict, variable_dict)
+            variable_dict = conditions_dict['variable_dict'] #Updates the variable dictionary
             something_changed = conditions_dict['something_changed'] #Tells if something has changed
             if something_changed:
                 counter += 1
         if counter == 0:
             redo = False #if nothing has changed, don't try the conditions again
 
-    return
+    return variable_dict #maybe send a counter with how long it took to get trough conditions
 
 ###lesser_than###
 #Checks if a lesser_than condition string is true or false.
@@ -318,11 +299,11 @@ def lesser_than(string, domain_dict, variable_dict):
             #todo add exception for the sympify
             #todo add compatability with float numbers as well (random.uniform(1.2,1.9))
             variable_to_change = variables_left[randint(0,len(variables_left)-1)]
-            new_value = new_random_value(variable_to_change,domain_dict, ceil(sympify(arr_changed[1])),'left') #todo ceil is only really good for templates with integers.
+            new_value = new_random_value(variable_to_change,domain_dict, ceil(solve_inequality(string,variable_dict, variable_to_change)),'left') #todo ceil is only really good for templates with integers.
             variable_dict[variable_to_change] = new_value
         elif change == 1 and len(variables_right) > 0: #change the right side of <
             variable_to_change = variables_right[randint(0,len(variables_right)-1)]
-            new_value = new_random_value(variable_to_change,domain_dict, ceil(sympify(arr_changed[0])), 'right') #Can't just move over - elements as this would fuck over / and *
+            new_value = new_random_value(variable_to_change,domain_dict, ceil(solve_inequality(string,variable_dict, variable_to_change)), 'right') #Can't just move over - elements as this would fuck over / and *
             variable_dict[variable_to_change] = new_value
         arr_changed = string_replace(string, variable_dict).split('<') #change the values with the new one
         counter += 1
@@ -373,3 +354,27 @@ def new_random_value(value, domain_dict, bonus, arg):
         new_value = randint(int(domain[0]), int(domain[1]))
 
     return new_value
+
+###greater_to_lesser_than###
+# changes x > y into y < x
+def greater_to_lesser_than(string):
+    string = string.split('>')
+    string = string[1] + '<' + string[0]
+    return string
+
+###solve_inequality###
+#solves inequalities with for 1 unknown
+#example: R1 + R2 < R3, solve for R1 where R2 = 10 and R3 = 12
+#this gets turned into solve_for_this + 10 < 12 -> solve_for_this < 2
+#the function then returns 2
+def solve_inequality(inequality, variable_dict, solve_for):
+    solve_for_this = symbols('solve_for_this')
+    variable_dict[solve_for] = solve_for_this
+    inequality = string_replace(inequality, variable_dict)
+    inequality_answer = str(solve(inequality, solve_for_this, rational=False))
+    #remove unnecessary information from the answer ( for instance it might return 3 > solve_for_this
+    #we only need 3 so we remove the > and solve_for_this
+    inequality_answer = inequality_answer.replace('<', "")
+    inequality_answer = inequality_answer.replace('solve_for_this', "")
+
+    return Float(inequality_answer)

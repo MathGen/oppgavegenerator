@@ -3,5 +3,15 @@
 {% block title %}Templates{% endblock %}
 
 {% block panels %}
-         {% render_table table %}
+
+    <section id="table_panel" class="panel panel-default">
+        <div class="panel-heading"><h3 class="panel-title">Maler</h3></div>
+            <div class="panel-body">
+
+                                                    {% render_table table %}
+
+            </div>
+        </div>
+    </section>
+
 {% endblock %}

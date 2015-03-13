@@ -129,3 +129,28 @@ def altArithmetics():
     s = "hva er " + string + "?"
     arr = [s,int(x)]
     return arr
+
+def sympyTest():
+    t = standard_transformations + (implicit_multiplication,) #for sikkerhet, gjør om 2x til 2*x
+
+    x = symbols('x')
+    string = "2x + 4"
+    string2 = "8"
+    test = parse_expr(string, transformations = t)
+    test2 = parse_expr(string2,  transformations = t)
+    arr = solve(Eq(test, test2), x)
+    out = [string + " = " + string2, arr[0]]
+
+    return out
+
+def to_asciimath(s): #legacy function, we probably won't need this
+    new_s = s
+    index = 0
+    counter = 0
+    #todo: do this only between asciimath delimeters: ``
+    for c in s:
+        if c == '/' or c == '^':
+            new_s = new_s[:index] + c + new_s[index:]
+            counter += 1
+        index += 1
+    return new_s
