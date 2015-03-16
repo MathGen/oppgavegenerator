@@ -219,6 +219,7 @@ def parse_answer(answer):
 #generates valid numbers using each variables random domain.
 #also makes sure all variables followes the given conditions.
 def generate_valid_numbers(task, random_domain_list, conditions):
+    #todo change variables to R1R so that R1 won't replace R10, we solve this by doing things backward atm, but that is a bit obtuse.
     hardcoded_variables = ['R22', 'R21','R20','R19','R18','R17','R16','R15','R14','R13','R12','R11','R10','R9','R8','R7','R6','R3','R2','R1','R0']
     variables_used = ""
     domain_dict = {}
