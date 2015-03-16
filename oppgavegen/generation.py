@@ -110,7 +110,7 @@ def validate_solution(answer, decimal_allowed, zero_allowed):
 
     if  '/' not in str(answer) and 'cos' not in str(answer) and 'sin' not in str(answer) and 'tan' not in str(answer) and '§' not in str(answer):
         print('inside validate solution: ' + str(answer))
-        decimal_answer = check_for_decimal(answer)
+        decimal_answer = False #check_for_decimal(parse_answer(answer).replace('`', ''))
     elif '/' in str(answer): #checks if the answer contains /.
         decimal_answer = False #technically the answer doesn't contain decimal numbers if for instance it is given on the form 1/5
     else:
