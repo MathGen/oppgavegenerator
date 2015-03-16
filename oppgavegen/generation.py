@@ -240,8 +240,8 @@ def generate_valid_numbers(task, random_domain_list, conditions):
             domain_dict[hardcoded_variables[i]] = random_domain
             variable_dict[hardcoded_variables[i]]= random_number
             counter += 1 #counter to iterate through the random domains
-
-    variable_dict = check_conditions(conditions, variable_dict, domain_dict)
+    if len(conditions)>1:
+        variable_dict = check_conditions(conditions, variable_dict, domain_dict)
 
     #lesser_than('R0 * 2 < 3', domain_dict, variable_dict) #for testing purposes
     return_arr = [variables_used[1:],variable_dict] #Use [1:] to remove unnecessary § from variable_dictionary
