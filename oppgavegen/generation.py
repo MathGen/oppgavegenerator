@@ -250,7 +250,7 @@ def generate_valid_numbers(task, random_domain_list, conditions):
 def dict_to_string(variable_dict):
     variables_used = ""
     for key in variable_dict:
-        variables_used += '§' + key + '§' + variable_dict[key]
+        variables_used += '§' + str(key) + '§' + str(variable_dict[key])
     return variables_used[1:] #Use [1:] to remove unnecessary § from the start
 
 ### conditions ###
