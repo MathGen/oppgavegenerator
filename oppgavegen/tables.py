@@ -13,3 +13,13 @@ class TemplateTable(tables.Table):
         # fields to include in table (displayed in this order)
         fields = ("id","question_text", "creator", "topic", "type", "rating")
 
+class BootstrapTemplateTable(tables.Table):
+    View = tables.TemplateColumn('<a href="/?q={{record.id}}">View</a>')
+
+    class Meta:
+        model = Template
+        template = ("bstable.html")
+        #attrs = {"class": "paleblue"} # add class="paleblue" (table theme) to <table> tag
+        # fields to include in table (displayed in this order)
+        fields = ("id","question_text", "creator", "topic", "type", "rating")
+

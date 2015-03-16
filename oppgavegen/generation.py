@@ -64,9 +64,8 @@ def task_with_solution(template_id):
 
     valid_solution = False
     while valid_solution == False: #loop until we get a form of the task that has a valid solution
-        random_replacement_array = generate_valid_numbers(task, random_domain_list, conditions)
-        variables_used = random_replacement_array[0]
-        variable_dict = random_replacement_array[1]
+        variable_dict = generate_valid_numbers(task, random_domain_list, conditions)
+        variables_used = dict_to_string(variable_dict) #get a string with the variables used
         new_task = string_replace(task,variable_dict)
         new_answer = string_replace(answer,variable_dict)
         new_solution = string_replace(solution,variable_dict)
@@ -110,7 +109,7 @@ def validate_solution(answer, decimal_allowed, zero_allowed):
 
     if  '/' not in str(answer) and 'cos' not in str(answer) and 'sin' not in str(answer) and 'tan' not in str(answer) and '§' not in str(answer):
         print('inside validate solution: ' + str(answer))
-        decimal_answer = check_for_decimal(answer)
+        decimal_answer = False #check_for_decimal(parse_answer(answer).replace('`', ''))
     elif '/' in str(answer): #checks if the answer contains /.
         decimal_answer = False #technically the answer doesn't contain decimal numbers if for instance it is given on the form 1/5
     else:
@@ -220,6 +219,7 @@ def parse_answer(answer):
 #generates valid numbers using each variables random domain.
 #also makes sure all variables followes the given conditions.
 def generate_valid_numbers(task, random_domain_list, conditions):
+    #todo change variables to R1R so that R1 won't replace R10, we solve this by doing things backward atm, but that is a bit obtuse.
     hardcoded_variables = ['R22', 'R21','R20','R19','R18','R17','R16','R15','R14','R13','R12','R11','R10','R9','R8','R7','R6','R3','R2','R1','R0']
     variables_used = ""
     domain_dict = {}
@@ -240,12 +240,19 @@ def generate_valid_numbers(task, random_domain_list, conditions):
             domain_dict[hardcoded_variables[i]] = random_domain
             variable_dict[hardcoded_variables[i]]= random_number
             counter += 1 #counter to iterate through the random domains
-
-    variable_dict = check_conditions(conditions, variable_dict, domain_dict)
+    if len(conditions)>1:
+        variable_dict = check_conditions(conditions, variable_dict, domain_dict)
 
     #lesser_than('R0 * 2 < 3', domain_dict, variable_dict) #for testing purposes
-    return_arr = [variables_used[1:],variable_dict] #Use [1:] to remove unnecessary § from variable_dictionary
-    return return_arr
+    return variable_dict
+
+###dict to string###
+#Returns a seperated string of the key and value pairs of a dict
+def dict_to_string(variable_dict):
+    variables_used = ""
+    for key in variable_dict:
+        variables_used += '§' + str(key) + '§' + str(variable_dict[key])
+    return variables_used[1:] #Use [1:] to remove unnecessary § from the start
 
 ### conditions ###
 #A function that loops trough the conditions for a given template.
