@@ -5,14 +5,13 @@ var A_INPUT					= '#a_input_mathquill_1';
 var C_INPUT					= '#c_input_mathquill';
 var W_INPUT					= '#w_input_mathquill_0';
 var M_INPUT					= '#m_input_mathquill_1';
+var F_INPUT					= '#f_fill_content_1';
 var STEP					= 1;
 var ANSWER					= 1;
 var SUB						= 1;
 var TOPIC_SELECTED			= false;
 var MULTI_CHOICE			= 0;
 var FILL_IN					= false;
-var FILL_SELECTION 			= [];
-var FILL_POS				= [];
 var c_count 				= 0;
 var array_calc				= [];
 
@@ -27,7 +26,7 @@ $(document).ready(function() {
 	});
 
 	// Set which input-field is active
-	$(document).on('click', '.input_mathquill', function(e){
+	$(document).on('focus', '.input_mathquill', function(e){
 		e.preventDefault();
 		var input_id = $(this).attr('id');
 		var input_group = input_id[0];
@@ -47,6 +46,9 @@ $(document).ready(function() {
 		}
 		else if(input_group == 'm'){
 			M_INPUT = '#' + input_id;
+		}
+		else if(input_group == 'f'){
+			F_INPUT = '#' + input_id;
 		}
     });
 
@@ -306,17 +308,7 @@ $(document).ready(function() {
 		var id_group = id[0];
 		if(e.keyCode == 88 || e.keyCode == 89 || e.keyCode == 90){
 			if(id_group != 'c'){
-				$('#' + id).find('var').each(function(){
-					if($(this).hasClass('content_x') || $(this).hasClass('content_var') || $(this).hasClass('florin') || $(this).html() == 'e'){}
-					else{
-						if(isUpperCase($(this).html())){}
-						else{
-							if($(this).html() == 'x' || $(this).html() == 'y' || $(this).html() == 'z'){
-								$(this).addClass('content_x');
-							}
-						}
-					}
-				});
+				refresh_char_colors('#' + id);
 			}
 		}
 		else if(e.keyCode >= 65 && e.keyCode <= 87 && e.keyCode != 69 && e.keyCode != 70){
@@ -342,25 +334,7 @@ $(document).ready(function() {
 				});
 			}
 			else{
-				$('#' + id).find('var').each(function(){
-					if($(this).hasClass('content_x') || $(this).hasClass('content_var') || $(this).hasClass('florin') || $(this).html() == 'e'){}
-					else{
-						if(isUpperCase($(this).html())){
-							if($('#s_btn_calc_' + var_id).length){
-								if($(this).html() == $('#s_btn_calc_' + var_id).html()){
-									$(this).addClass('content_calc');
-								}
-							}
-						}
-						else{
-							if($('#q_btn_abc_' + var_id).length){
-								if($(this).html() == $('#q_btn_abc_' + var_id).html()){
-									$(this).attr('id', 'R' + var_id).addClass('content_var');
-								}
-							}
-						}
-					}
-				});
+				refresh_char_colors('#' + id);
 			}
 		}
 		// Delete unused variable-buttons
@@ -376,7 +350,7 @@ $(document).ready(function() {
 					}
 				}
 				for(var n = 0; n < check_char.length; n++){
-					found = false;
+					var found = false;
 					$('#' + id).find('var').each(function(){
 						if($(this).html() == check_char[n]){
 							found = true;
@@ -688,37 +662,10 @@ $(document).ready(function() {
 		refresh_fill_in_content();
 	});
 
-	// Save fill-in-the-blanks selection
-	$('#f_dyn_fill_input').focusout(function(){
-		$(this).find('.selection').each(function(){
-			FILL_SELECTION = [];
-			$(this).children().each(function(){
-				FILL_SELECTION.push($(this).attr('mathquill-command-id'));
-			});
-		});
-	});
-
-	// Replace selected elements with blanks.
+	// Replace selected elements with blanks
 	$('#f_btn_fill').click(function(e){
-		//alert($('#f_fill_content_1').find('*').length);
-		for(var f = 0; f < FILL_SELECTION.length; f++){
-			if(f == 0) {
-				//alert('total: ' + $('#f_fill_content_1 [mathquill-command-id]').length);
-				$('#f_fill_content_1 [mathquill-command-id]').each(function(i){
-					if($(this).attr('mathquill-command-id') == FILL_SELECTION[f]){
-						var f_start = i;
-						var f_end = f_start + (FILL_SELECTION.length - 1);
-						FILL_POS.push(f_start + ' ' + f_end);
-						//alert(FILL_POS[0]);
-						replace_latex_with_blanks($('#s_input_mathquill_1').mathquill('latex'));
-					}
-				});
-				$('[mathquill-command-id="' + FILL_SELECTION[f] + '"]').replaceWith('<span class="glyphicon glyphicon-edit"></span>');
-			}
-			else{
-				$('[mathquill-command-id="' + FILL_SELECTION[f] + '"]').remove();
-			}
-		}
+		e.preventDefault();
+		$(get_input_field(this)).mathquill('write', '■'); // Black square HEX: &#x25A0
 	});
 
 	// Retrieve and insert calculation to solution
@@ -884,6 +831,9 @@ function get_input_field(obj){
 	}
 	else if(btn_id == 'm'){
 		return M_INPUT;
+	}
+	else if(btn_id == 'f'){
+		return F_INPUT;
 	}
 }
 
@@ -1078,165 +1028,41 @@ function refresh_fill_in_content(){
 			f_dyn_fill.append('<hr class="f_fill_content">');
 		}
 		var f_latex = $('#s_input_mathquill_' + f).mathquill('latex');
-		f_dyn_fill.append('<div id="f_fill_content_' + f + '" class="f_fill_content mathquill-embedded-latex" style="display: inline">' + f_latex + '</div>');
-		$('#f_fill_content_' + f).addClass('mathquill-embedded-latex').mathquill();
+		f_dyn_fill.append('<div id="f_fill_content_' + f + '" class="form-control f_fill_content input_mathquill" style="border: 0; box-shadow: none">' + f_latex + '</div>');
+		$('#f_fill_content_' + f).mathquill('editable');
 	}
-	FILL_POS = [];
+	$('.f_fill_content').unbind('keypress');
+	refresh_char_colors('.f_fill_content');
 }
 
-function replace_latex_with_blanks(latex) {
-	var la_blank = latex;
-	var arr_la = [];
-	var relation = [];
-
-	var tracking = {};
-	var track_key = -1;
-	var tmp_track = {};
-
-	var brackets_counter = 0;
-
-	la_blank = la_blank.replace(/\\cdot/g,'*');
-	la_blank = la_blank.replace(/\\left/g,'');
-	la_blank = la_blank.replace(/\\right/g,'');
-
-	for(var l = 0; l < la_blank.length; l++){
-		if(la_blank[l] == '\\'){
-			var tmp_index = l;
-			var tmp_str = "";
-			while(true){
-				if(tmp_index > 1000){
-					alert('Error: Det oppstod en feil ved utfyllingsoppgaven!');
-					break;
-				}
-				if(la_blank[tmp_index] == " "){
-					l = tmp_index;
-					arr_la.push(tmp_str + " ");
-					break;
-				}
-				else if(la_blank[tmp_index] == '{'){
-					if(tracking[track_key] == true){
-						tmp_track[track_key] += String(":" + arr_la.length);
-					}
-					track_key++;
-					tmp_track[track_key] = String(arr_la.length);
-					arr_la.push(tmp_str + "{}");
-					l = tmp_index;
-					tracking[track_key] = true;
-					break;
-				}
-				tmp_str += la_blank[tmp_index];
-				tmp_index++;
-			}
-		}
-		else if(la_blank[l] == '}'){
-			tracking[track_key] = false;
-			relation.push(tmp_track[track_key]);
-			track_key--;
-		}
+/**
+ * Adding colors to used variables, unknown characters and calculated references.
+ * @param selector - Which input field to refresh.
+ */
+function refresh_char_colors(selector){
+	$(selector).find('var').each(function(){
+		var f_var = $(this);
+		if(f_var.hasClass('content_x') || $(this).hasClass('content_var') || $(this).hasClass('florin') || $(this).html() == 'e'){}
 		else{
-			if(tracking[track_key] == true){
-				tmp_track[track_key] += String(":" + arr_la.length);
+			if(f_var.html() == 'x' || f_var.html() == 'y' || f_var.html() == 'z'){
+				f_var.addClass('content_x');
 			}
-			arr_la.push(la_blank[l]);
-		}
-	}
-	//alert(arr_la.join(","));
-	//alert(relation.join(","));
-}
-
-function replace_latex_with_blanks_old(latex){
-	var la_blank = latex;
-	var la_fill = [];
-	var la_tmp_check = [];
-	var la_check = [];
-	var recorder = false;
-	var count = 0;
-	la_blank = la_blank.replace(/\\cdot/g,'*');
-	la_blank = la_blank.replace(/\\left/g,'');
-	la_blank = la_blank.replace(/\\right/g,'');
-
-	for(var l = 0; l < la_blank.length; l++){
-		if(la_blank[l] == '\\') {
-			var la_i = l;
-			var tmp_la = "";
-			var counter = 0;
-			var counter2 = 0;
-			var lock = false;
-			if((la_blank[l] == '\\') && ((la_blank[l+1] == 'f' && la_blank[l+2] == 'r' && la_blank[l+3] == 'a' && la_blank[l+4] == 'c')||(la_blank[l+1] == 'b' && la_blank[l+2] == 'i' && la_blank[l+3] == 'n')))  {
-				counter2--; //this will make it so that the loop will do 2 {}
-			}
-			while(true){
-				if(la_i > 100){
-					alert('Error: Det oppstod en feil ved utfyllingsoppgaven!');
-					break;
-				}
-				if((la_blank[la_i] == ' ') || (la_blank[la_i] == '}' && counter == 0 && counter2 == 0)){
-					tmp_la += la_blank[la_i];
-					la_fill.push(tmp_la);
-					la_tmp_check.push(la_fill.length - 1);
-					recorder = true;
-					count++;
-					break;
-				}
-				else if((la_blank[la_i] == ' ') || (la_blank[la_i] == '}' && counter == 0)){
-					counter2++;
-				}
-				if(la_blank[la_i] == '{'){
-					if(counter == 0 && !lock) {
-						l = la_i + 1;
-						lock = true; //locks this if-statement from further use
+			else if(f_var.html().match(/^[a-z]*$/)){
+				$('.btn_var_abc').each(function(){
+					if($(this).html() == f_var.html()){
+						f_var.addClass('content_var');
 					}
-					counter++;
-				}
-				else if(la_blank[la_i+1] == '}'){
-					counter--;
-				}
-				tmp_la += la_blank[la_i];
-				la_i++;
+				});
+			}
+			else if(f_var.html().match(/^[A-Z]*$/)){
+				$('.btn_calc').each(function(){
+					if($(this).html() == f_var.html()){
+						f_var.addClass('content_calc');
+					}
+				});
 			}
 		}
-		else if(la_blank[l] == '}'){
-			count++;
-		}
-		else if(la_blank[l] == '}'){
-			count--;
-		}
-		else{
-			if(recorder){
-				la_tmp_check.push(la_fill.length - 1);
-			}
-			la_fill.push(la_blank[l]);
-		}
-		//TODO: Find a way to connect cells in array
-		if(recorder == true && count == 0){
-			la_check.push(la_tmp_check.join(" "));
-			recorder = false;
-		}
-	}
-	alert(la_check[0]);
-	alert(la_fill.join(','));
-	for(var fill = 0; fill < FILL_POS.length; fill++){
-		var fi = FILL_POS[fill].split(' ');
-		for(var i = parseInt(fi[0]); i <= parseInt(fi[1]); i++) {
-			if(parseInt(fi[0]) == parseInt[1]){
-				if(i == parseInt(fi[0])){
-					la_fill[i] = '@boxx@';
-				}
-			}
-			else{
-				if(i == parseInt(fi[0])){
-					la_fill[i] = '@boxx@';
-				}
-				else if(i <= parseInt(fi[1])){
-					la_fill[i] = "";
-				}
-			}
-		}
-
-	}
-	la_blank = la_fill.join("");
-	alert(la_blank);
-	return la_blank;
+	});
 }
 
 function post(path, params, method) {
