@@ -64,9 +64,8 @@ def task_with_solution(template_id):
 
     valid_solution = False
     while valid_solution == False: #loop until we get a form of the task that has a valid solution
-        random_replacement_array = generate_valid_numbers(task, random_domain_list, conditions)
-        variables_used = random_replacement_array[0]
-        variable_dict = random_replacement_array[1]
+        variable_dict = generate_valid_numbers(task, random_domain_list, conditions)
+        variables_used = dict_to_string(variable_dict) #get a string with the variables used
         new_task = string_replace(task,variable_dict)
         new_answer = string_replace(answer,variable_dict)
         new_solution = string_replace(solution,variable_dict)
@@ -244,8 +243,15 @@ def generate_valid_numbers(task, random_domain_list, conditions):
         variable_dict = check_conditions(conditions, variable_dict, domain_dict)
 
     #lesser_than('R0 * 2 < 3', domain_dict, variable_dict) #for testing purposes
-    return_arr = [variables_used[1:],variable_dict] #Use [1:] to remove unnecessary § from variable_dictionary
-    return return_arr
+    return variable_dict
+
+###dict to string###
+#Returns a seperated string of the key and value pairs of a dict
+def dict_to_string(variable_dict):
+    variables_used = ""
+    for key in variable_dict:
+        variables_used += '§' + key + '§' + variable_dict[key]
+    return variables_used[1:] #Use [1:] to remove unnecessary § from the start
 
 ### conditions ###
 #A function that loops trough the conditions for a given template.
