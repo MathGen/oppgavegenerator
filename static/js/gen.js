@@ -12,6 +12,8 @@ var SUB						= 1;
 var TOPIC_SELECTED			= false;
 var MULTI_CHOICE			= 0;
 var FILL_IN					= false;
+var REPLACED_TEXT			= [];
+var f_tmp_selection			= "";
 var c_count 				= 0;
 var array_calc				= [];
 
@@ -666,6 +668,7 @@ $(document).ready(function() {
 	$('#f_btn_fill').click(function(e){
 		e.preventDefault();
 		$(get_input_field(this)).mathquill('write', '■'); // Black square HEX: &#x25A0
+		get_diff_latex();
 	});
 
 	// Retrieve and insert calculation to solution
@@ -799,6 +802,12 @@ $(document).ready(function() {
 		else{
 			array_submit['choices'] = "";
 		}
+		if($('#opt_fill_blanks').is(':checked')){
+			array_submit['fill_in'] = get_diff_latex();
+		}
+		else{
+			array_submit['fill_in'] = "";
+		}
 		array_submit["csrfmiddlewaretoken"] = getCookie('csrftoken');
 		array_submit['type'] = 'normal';
 
@@ -876,7 +885,7 @@ function latex_to_asciimath(latex){
 				}
 			}
 			else{
-				while(la[i] != '(' && la[i] != ' '){	
+				while(la[i] != '(' && la[i] != ' '){
 					la2 += la[i];
 					i++;
 				}
@@ -1033,6 +1042,7 @@ function refresh_fill_in_content(){
 	}
 	$('.f_fill_content').unbind('keypress');
 	refresh_char_colors('.f_fill_content');
+	$('#f_diff_latex').html("");
 }
 
 /**
@@ -1063,6 +1073,23 @@ function refresh_char_colors(selector){
 			}
 		}
 	});
+}
+
+function get_diff_latex(){
+	var dmp = new diff_match_patch();
+	dmp.Diff_Timeout = 1;
+	dmp.Diff_EditCost = 4;
+	var latex_before = [];
+	var latex_after = [];
+	for(var la = 1; la <= STEP; la++){
+		latex_before.push($('#s_input_mathquill_' + la).mathquill('latex'));
+		latex_after.push($('#f_fill_content_' + la).mathquill('latex'));
+	}
+	var d = dmp.diff_main(latex_before.join('`\\n`'), latex_after.join('`\\n`')); // Two strings to compare.
+	dmp.diff_cleanupSemantic(d);
+	var ds = dmp.diff_prettyHtml(d);
+	$('#f_diff_latex').html("").append(ds);
+	return $('#f_diff_latex').text();
 }
 
 function post(path, params, method) {
