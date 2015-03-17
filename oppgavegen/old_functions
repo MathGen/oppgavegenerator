@@ -154,3 +154,25 @@ def to_asciimath(s): #legacy function, we probably won't need this
             counter += 1
         index += 1
     return new_s
+
+###get_answer_from_solution###
+#returns the last calculation of a string, not used anymore.
+def get_answer_from_solution(s): #this function might not be usefull if we implement a answer for every question since we wouldn't have to find the answer then
+    answer = ''
+    record = False
+    b = ""
+    for c in s[::-1]:
+        if c == '?' and b == '@':
+            record = True
+        elif c == '@' and b == '?':
+            return calculate_answer(answer[1:])
+        elif record == True:
+            answer = c + answer
+        b = c
+    return s #Returns the original string if there are no calculations, this could be bad though since it would return the whole solution, and not just the answer
+
+def make_variables(amount): #this is not needed anymore
+    variables = []
+    for x in range(0, amount):
+        variables.append('R' + str(x))
+    return variables
