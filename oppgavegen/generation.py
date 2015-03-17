@@ -17,10 +17,15 @@ errorino = "ಠ_ಠ"
 errorino2 = "Q_Q"
 testerino = "☺☻"
 
+###printer###
+#Returns a string
 def printer():
     string = "Oppgavegenerator"
     return string
 
+###check_answer###
+#Takes both the user answer and answer and checks if they are equal.
+#Makes the answers into collections as some questions have multiple answers (ie. x^2 + x + 5).
 def checkAnswer(user_answer, answer):
     if collections.Counter(user_answer) == collections.Counter(answer):
         string = "Du har svart riktig!"
@@ -28,18 +33,14 @@ def checkAnswer(user_answer, answer):
         string = "Du har svart feil. Svaret er: `" + '` og `'.join(answer) + '`'
     return string
 
-
-def make_variables(amount): #this is not needed anymore
-    variables = []
-    for x in range(0, amount):
-        variables.append('R' + str(x))
-    return variables
+###task_with_solution###
+#Makes a valid task with solution from a template in the database.
 def task_with_solution(template_id):
     error = 0
     if template_id == "":
-        q = getQuestion('algebra')  #gets a question from the DB
+        q = get_question('algebra')  #gets a question from the DB
     else:
-        q = getQuestion(template_id)
+        q = get_question(template_id)
     #The list is written in reverse to get to the single digit numbers last, as R1 would replace R11-> R19.
     hardcoded_variables = ['R22', 'R21','R20','R19','R18','R17','R16','R15','R14','R13','R12','R11','R10','R9','R8','R7','R6','R3','R2','R1','R0']
     #I changed this to contain the amount of decimals allowed in the answer, so 0 = False basically.
@@ -105,6 +106,10 @@ def task_with_solution(template_id):
     #todo also remove parsing of solution in this function as it is not needed before the answer page (only true for normal actually)
     arr = [new_task, variables_used, template_type, new_choices, primary_key, number_of_answers] #Use [1:] to remove unnecessary §
     return arr
+
+###validate_solution###
+#Checks if the solution made is a valid one according to different tests
+#If it isn't a new solution will be made using different values
 def validate_solution(answer, decimal_allowed, zero_allowed):
 
     if  '/' not in str(answer) and 'cos' not in str(answer) and 'sin' not in str(answer) and 'tan' not in str(answer) and '§' not in str(answer):
@@ -121,26 +126,24 @@ def validate_solution(answer, decimal_allowed, zero_allowed):
     if contains_zero == True and zero_allowed == False:
         valid_solution = False
     return valid_solution
+
+###check_for_decimal###
+#Returns True/False depending on if the float has decimals.
+#Examples: 5.0000 returns True and 5.12312 returns False
 def check_for_decimal(f):
-    return float(f).is_integer() #Returns false if f doesn't have a decimal
-def get_answer_from_solution(s): #this function might not be usefull if we implement a answer for every question since we wouldn't have to find the answer then
-    answer = ''
-    record = False
-    b = ""
-    for c in s[::-1]:
-        if c == '?' and b == '@':
-            record = True
-        elif c == '@' and b == '?':
-            return calculate_answer(answer[1:])
-        elif record == True:
-            answer = c + answer
-        b = c
-    return s #Returns the original string if there are no calculations, this could be bad though since it would return the whole solution, and not just the answer
+    #todo this might not be necessary or even a good way of doing it
+    return float(f).is_integer() #Returns True if f doesn't have a decimal
+
+###calculate_answer###
+#Calculates a string using sympify
 def calculate_answer(s):
     s = sympify(s) #sometimes this returns the value 'zoo' | also could maybe use simplify instead of sympify
     #s = RR(s)
     #s = round(s, 3)
     return str(s)
+
+###parse_soltuion###
+#Parses a solution (or other string) and calculates using sympify where needed.
 def parse_solution(solution):
     arr = []
     newArr = []
@@ -163,7 +166,9 @@ def parse_solution(solution):
         new_solution = new_solution.replace(r, newArr[x])
     return new_solution
 
-def getQuestion(topic):
+###get_question###
+#Gets a question/template from the database and returns it.
+def get_question(topic):
     #todo make this general so it doesn't just return a specified result
     if topic == 'algebra':
         q = Template.objects.all()
@@ -180,7 +185,9 @@ def getQuestion(topic):
     #something like SELECT * FROM Template WHERE rating BETWEEN user_rating+- 20
     return q
 
-
+###replace_words####
+#Replaces variables in a string with the value of a key in the given dictionary.
+#Example: "example string: R1", example_dict{'R1', '5'} -> "example string: 5
 def replace_words(sentence, dictionary):
     dictionary = dictionary.split('§')
     for i in range(0,len(dictionary)-1,2):
@@ -188,23 +195,33 @@ def replace_words(sentence, dictionary):
         sentence = sentence.replace(dictionary[i], replace_strings[randint(0,len(replace_strings)-1)])
     return sentence
 
+###calculate_array###
+#calculates all the answers in a array
+#Example: ['2+2','3+3'] -> [4,6]
 def calculate_array(array):
     out_arr = []
     for s in array:
         out_arr.append(calculate_answer(s))
     return out_arr
 
-def after_equal_sign(s): #a function that returns everything after the last = sign of the string
+###after_equal_sign###
+#Returns everything after the last = sign of a string
+#Example: 'example = string = this' -> ' this'
+def after_equal_sign(s):
     if '=' in s:
         s = s.split("=")
         s = s[len(s)-1]
     return s
 
-def replace_variables_from_array(arr, s): #a function that replaces variables in a string from array
+###replace_variables_from_array###
+#Takes a string and replaces variables in the string with ones from the array
+#Example: (['R10', '5', 'R1', '7'], 'example string R1 and R10') -> 'example string 7 and 5'
+def replace_variables_from_array(arr, s):
     for x in range(0,len(arr)-1,2): #set increment size to 2.
         s = s.replace(arr[x], arr[x+1])
     return s
-
+###parse_answer###
+#parses the answer. works for arrays with multiple answers.
 def parse_answer(answer):
     answer = answer.split('§')
     counter = 0
