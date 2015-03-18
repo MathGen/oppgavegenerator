@@ -323,7 +323,7 @@
                     b[g] = '';//'<ins style="background:#e6ffe6;">' + j + "</ins>";
                     break;
                 case -1: 	// Old text
-                    b[g] = '<span>@boxx@' + j + "@boxx@</span>"; //'<del style="background:#ffe6e6;">@boxx@' + j + "@boxx@</del>";
+                    b[g] = '<span>@xxxx@' + j + "@xxxx@</span>"; //'<del style="background:#ffe6e6;">@boxx@' + j + "@boxx@</del>";
                     break;
                 case 0:		// Untouched text 
                     b[g] = "<span>" + j + "</span>"

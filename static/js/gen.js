@@ -803,7 +803,7 @@ $(document).ready(function() {
 			array_submit['choices'] = "";
 		}
 		if($('#opt_fill_blanks').is(':checked')){
-			array_submit['fill_in'] = get_diff_latex();
+			array_submit['fill_in'] = '`' + latex_to_asciimath(get_diff_latex()) + '`';
 		}
 		else{
 			array_submit['fill_in'] = "";
@@ -811,9 +811,16 @@ $(document).ready(function() {
 		array_submit["csrfmiddlewaretoken"] = getCookie('csrftoken');
 		array_submit['type'] = 'normal';
 
-		if(submit_validation()){
-			post(/submit/, array_submit);
+		// Testing output
+		var test_output = [];
+		for(var s in array_submit){
+			test_output.push(s + '\n' + array_submit[s]);
 		}
+		alert(test_output.join('\n'));
+
+		//if(submit_validation()){
+		//	post(/submit/, array_submit);
+		//}
 	});
 });
 
