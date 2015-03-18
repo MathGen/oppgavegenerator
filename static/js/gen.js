@@ -803,7 +803,7 @@ $(document).ready(function() {
 			array_submit['choices'] = "";
 		}
 		if($('#opt_fill_blanks').is(':checked')){
-			array_submit['fill_in'] = '`' + latex_to_asciimath(get_diff_latex()) + '`';
+			array_submit['fill_in'] = '`' + get_diff_latex() + '`';
 		}
 		else{
 			array_submit['fill_in'] = "";
@@ -1075,6 +1075,10 @@ function refresh_char_colors(selector){
 	});
 }
 
+/**
+ * Compare two latex strings, converting it to asciimath, and wrap parts of string that differs with a tag.
+ * @returns {*|jQuery} - The asciimath string with blank tags.
+ */
 function get_diff_latex(){
 	var dmp = new diff_match_patch();
 	dmp.Diff_Timeout = 1;
@@ -1082,8 +1086,8 @@ function get_diff_latex(){
 	var latex_before = [];
 	var latex_after = [];
 	for(var la = 1; la <= STEP; la++){
-		latex_before.push($('#s_input_mathquill_' + la).mathquill('latex'));
-		latex_after.push($('#f_fill_content_' + la).mathquill('latex'));
+		latex_before.push(latex_to_asciimath($('#s_input_mathquill_' + la).mathquill('latex')));
+		latex_after.push(latex_to_asciimath($('#f_fill_content_' + la).mathquill('latex')));
 	}
 	var d = dmp.diff_main(latex_before.join('`\\n`'), latex_after.join('`\\n`')); // Two strings to compare.
 	dmp.diff_cleanupSemantic(d);
