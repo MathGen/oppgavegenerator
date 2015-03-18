@@ -58,6 +58,8 @@ def task_with_solution(template_id):
     dictionary = q.dictionary
     answer = q.answer
     primary_key = q.pk
+    fill_in = q.fill_in
+    type_specific = "" #A type specific variable that holds the extra values for a given type. ie. choices for multiple.
     variables_used = "" #sends a splitable string since dictionaries can't be passed between layers.
     solution = str(task) +"\n"+str(q.solution).replace('\\n', '\n') #db automatically adds the escape character \ to strings, so we remove it from \n
     #solution = solution.replace('\&\#x222B\;', '&#x222B;')
@@ -89,22 +91,25 @@ def task_with_solution(template_id):
     new_solution = parse_solution(new_solution)
     if template_type.lower() == 'multiple':
         new_choices = parse_solution(new_choices)
-        new_choices = new_choices.split('§') #if only 1 choice is given it might bug out, we can just enforce 2 choices to be given though..
+        new_choices = new_choices.split('§')
         new_choices.append(new_answer)
         shuffle(new_choices) #Shuffles the choices so that the answer is not always in the same place.
         new_choices = '§'.join(new_choices)
-
+        type_sepcific = new_choices
+    elif template_type == 'blanks':
+        fill_in_dict = fill_in_the_blanks(fill_in)
+        new_task = fill_in_dict['fill_in']
+        type_specific = fill_in_dict['hole_positions']
     if dictionary is not None:
         new_task = replace_words(new_task, dictionary)
         new_solution = replace_words(new_solution, dictionary)
         new_answer = replace_words(new_answer, dictionary)
-        new_choices = replace_words(new_choices,dictionary)
+        type_specific = replace_words(new_choices,dictionary)
     number_of_answers = len(new_answer.split('§'))
-    if template_type == 'blanks':
-        new_task = new_solution
-    #todo replace new_solution with new_task
+
+
     #todo also remove parsing of solution in this function as it is not needed before the answer page (only true for normal actually)
-    arr = [new_task, variables_used, template_type, new_choices, primary_key, number_of_answers] #Use [1:] to remove unnecessary §
+    arr = [new_task, variables_used, template_type, type_specific, primary_key, number_of_answers]
     return arr
 
 ###validate_solution###
@@ -147,17 +152,17 @@ def calculate_answer(s):
 def parse_solution(solution):
     arr = []
     newArr = []
-    opptak = False
+    recorder = False
     new_solution = solution
     b = ''
     for c in solution:
         if b == '@' and c == '?':
-            opptak = True
+            recorder = True
             s = ''
         elif b == '?' and c == '@':
-            opptak = False
+            recorder = False
             arr.append(s[:-1])
-        elif opptak == True:
+        elif recorder == True:
             s += c
         b=c
     for x in range(len(arr)):
@@ -270,6 +275,14 @@ def dict_to_string(variable_dict):
     for key in variable_dict:
         variables_used += '§' + str(key) + '§' + str(variable_dict[key])
     return variables_used[1:] #Use [1:] to remove unnecessary § from the start
+
+###array_to_string###
+#turns a array into a string seperated by §
+def array_to_string(array):
+    string = ''
+    for s in array:
+        string += '§' + s
+    return string[1:] #Use [1:] to remove unnecessary § from the start
 
 ### conditions ###
 #A function that loops trough the conditions for a given template.
@@ -402,3 +415,72 @@ def solve_inequality(inequality, variable_dict, solve_for):
     inequality_answer = inequality_answer.replace('solve_for_this', "")
 
     return Float(inequality_answer)
+
+###fill_in_the_blanks###
+#Takes the solution and the modified fill_in solution and makes it into a fill in the blanks task.
+def fill_in_the_blanks(fill_in):
+    hole_dict = find_holes(fill_in)
+    max_holes = len(hole_dict)
+    number_of_holes = randint(1,max_holes)
+    make_holes_dict = make_holes(hole_dict, fill_in, number_of_holes)
+    holes_replaced = make_holes_dict['holes_replaced']
+
+    new_hole_dict = {} #make a dict with only the holes used.
+    for s in holes_replaced:
+        new_hole_dict[s] = hole_dict[s]
+    hole_positions = new_hole_dict.values()
+    hole_positions = array_to_string(hole_positions)
+    fill_in = make_holes_dict['fill_in']
+    return_dict = {'fill_in' : fill_in, 'hole_positions' : hole_positions}
+    return return_dict
+
+###find_holes###
+#Finds the avaiable holes in the task and their position.
+def find_holes(fill_in):
+    hole_dict = {} #keeps track of what is getting replaced and the position of that in the string.
+    recorder = False
+    counter = 0 #keeps track of how far in the string the loop is
+    start_point = end_point = 0 #start and end point of box
+    a = b = c = d = e = '' #Used to keep track of the last 5 variables iterated over.
+    #Note: it might be faster to use a the counter instead of storing previous characters in the for loop.
+    for f in fill_in:
+        if a == '@' and b == 'x' and c == 'x' and d == 'x' and e == 'x' and f == '@':
+            recorder = not(recorder) #flip recorder
+            if recorder:
+                counter -= 6 #sets the counter back 6 to compensate for @xxxx@ which is not in the original string
+                start_point = counter
+            elif not recorder:
+                end_point = counter
+                hole_dict[s[:-5]] = str(start_point) + ' ' + str(end_point-5)
+                counter -= 6 #sets the counter back 6 to compensate for @xxxx@ which is not in the original string
+            s = ''
+        elif recorder == True:
+            s += f
+        counter += 1
+        a = b
+        b = c
+        c = d
+        e = f
+
+    return hole_dict
+
+###make_holes###
+#Makes holes at random designated places in the solution.
+#Returns a dict with the task with holes and also a array of what holes were replaced.
+def make_holes(hole_dict, fill_in, number_of_holes):
+    possible_holes = hole_dict.keys()
+    shuffle(possible_holes)
+    holes_to_replace = []
+    for x in range(number_of_holes):
+        holes_to_replace.append(possible_holes[x])
+    for s in holes_to_replace:
+        fill_in = fill_in.replace('@xxxx@'+s, '@boxx@'+'@xxxx@')
+    fill_in = fill_in.replace('@xxxx@', '')
+    return_dict = {'fill_in' : fill_in, 'holes_replaced' : holes_to_replace}
+    return return_dict
+
+###get_values_from_position###
+#takes a array of positions and returns a array with the strings in between the positional coordinates.
+def get_values_from_position(position_array):
+
+    return
