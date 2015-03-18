@@ -12,8 +12,6 @@ var SUB						= 1;
 var TOPIC_SELECTED			= false;
 var MULTI_CHOICE			= 0;
 var FILL_IN					= false;
-var REPLACED_TEXT			= [];
-var f_tmp_selection			= "";
 var c_count 				= 0;
 var array_calc				= [];
 
@@ -885,7 +883,7 @@ function latex_to_asciimath(latex){
 				}
 			}
 			else{
-				while(la[i] != '(' && la[i] != ' '){
+				while(la[i] != '(' && la[i] != ' ' && la[i] != '_' && la[i] != '^'){
 					la2 += la[i];
 					i++;
 				}
