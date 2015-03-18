@@ -1094,6 +1094,15 @@ function get_diff_latex(){
 	return $('#f_diff_latex').text();
 }
 
+/**
+ * Before unload, ask user to confirm redirecting.
+ */
+$(window).bind('beforeunload', function(e){
+	if(TOPIC_SELECTED){
+		return 'Are you sure you want to leave?';
+	}
+});
+
 function post(path, params, method) {
     method = method || "post"; // Set method to post by default if not specified.
 
