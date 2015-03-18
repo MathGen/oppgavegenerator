@@ -12,6 +12,7 @@ var SUB						= 1;
 var TOPIC_SELECTED			= false;
 var MULTI_CHOICE			= 0;
 var FILL_IN					= false;
+var CON_IN					= false;
 var c_count 				= 0;
 var array_calc				= [];
 
@@ -612,6 +613,19 @@ $(document).ready(function() {
 		$('.opt_domain_to').val(opt_domain_to.val());
 	});
 
+	// Open variable conditions modal
+	var radio_conditions = $('#opt_conditions');
+	radio_conditions.click(function(){
+		if($(this).is(':checked')){
+			$('#conditions_modal').modal('show').on('shown.bs.modal', function () {
+				if(CON_IN == false){
+					refresh_conditions();
+					CON_IN = true;
+				}
+			});
+		}
+	});
+
 	// Open multiple-choice modal
 	var radio_multiple_choice = $('#opt_multiple_choice');
 	radio_multiple_choice.change(function(){
@@ -1022,6 +1036,13 @@ function get_multiple_choices(){
 		multiple_choices.push(latex_to_asciimath($('#m_input_mathquill_' + m).mathquill('latex')));
 	}
 	return multiple_choices.join('§');
+}
+
+function refresh_conditions(){
+	var con_input = $('#con_dyn_input');
+	$('#con_input_mathquill').remove();
+	con_input.append('<span id="con_input_mathquill" class="form-control input_mathquill"></span>');
+	$('#con_input_mathquill').mathquill('editable');
 }
 
 /**
