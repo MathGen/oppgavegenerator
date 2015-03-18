@@ -666,6 +666,7 @@ $(document).ready(function() {
 	$('#f_btn_fill').click(function(e){
 		e.preventDefault();
 		$(get_input_field(this)).mathquill('write', '■'); // Black square HEX: &#x25A0
+		get_diff_latex();
 	});
 
 	// Retrieve and insert calculation to solution
@@ -799,6 +800,12 @@ $(document).ready(function() {
 		else{
 			array_submit['choices'] = "";
 		}
+		if($('#opt_fill_blanks').is(':checked')){
+			array_submit['fill_in'] = '`' + get_diff_latex() + '`';
+		}
+		else{
+			array_submit['fill_in'] = "";
+		}
 		array_submit["csrfmiddlewaretoken"] = getCookie('csrftoken');
 		array_submit['type'] = 'normal';
 
@@ -876,7 +883,7 @@ function latex_to_asciimath(latex){
 				}
 			}
 			else{
-				while(la[i] != '(' && la[i] != ' '){	
+				while(la[i] != '(' && la[i] != ' ' && la[i] != '_' && la[i] != '^'){
 					la2 += la[i];
 					i++;
 				}
@@ -1033,6 +1040,7 @@ function refresh_fill_in_content(){
 	}
 	$('.f_fill_content').unbind('keypress');
 	refresh_char_colors('.f_fill_content');
+	$('#f_diff_latex').html("");
 }
 
 /**
@@ -1064,6 +1072,36 @@ function refresh_char_colors(selector){
 		}
 	});
 }
+
+/**
+ * Compare two latex strings, converting it to asciimath, and wrap parts of string that differs with a tag.
+ * @returns {*|jQuery} - The asciimath string with blank tags.
+ */
+function get_diff_latex(){
+	var dmp = new diff_match_patch();
+	dmp.Diff_Timeout = 1;
+	dmp.Diff_EditCost = 4;
+	var latex_before = [];
+	var latex_after = [];
+	for(var la = 1; la <= STEP; la++){
+		latex_before.push(latex_to_asciimath($('#s_input_mathquill_' + la).mathquill('latex')));
+		latex_after.push(latex_to_asciimath($('#f_fill_content_' + la).mathquill('latex')));
+	}
+	var d = dmp.diff_main(latex_before.join('`\\n`'), latex_after.join('`\\n`')); // Two strings to compare.
+	dmp.diff_cleanupSemantic(d);
+	var ds = dmp.diff_prettyHtml(d);
+	$('#f_diff_latex').html("").append(ds);
+	return $('#f_diff_latex').text();
+}
+
+/**
+ * Before unload, ask user to confirm redirecting.
+ */
+$(window).bind('beforeunload', function(e){
+	if(TOPIC_SELECTED){
+		return 'Are you sure you want to leave?';
+	}
+});
 
 function post(path, params, method) {
     method = method || "post"; // Set method to post by default if not specified.
