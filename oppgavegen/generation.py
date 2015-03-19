@@ -92,7 +92,7 @@ def task_with_solution(template_id):
     if template_type.lower() == 'multiple':
         new_choices = parse_solution(new_choices)
         new_choices = new_choices.split('§')
-        new_choices.append(new_answer)
+        new_choices.append(parse_solution(new_answer).replace('§', 'og'))
         shuffle(new_choices) #Shuffles the choices so that the answer is not always in the same place.
         new_choices = '§'.join(new_choices)
         template_specific = new_choices
