@@ -163,7 +163,7 @@ def templates(request):
 
 @login_required
 @user_passes_test(is_teacher, '/')
-def newtemplate(request):
+def new_template(request):
     context = RequestContext(request)
     #retrieves a list of topics and passes them to the view.
     topics = ""
