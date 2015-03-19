@@ -513,14 +513,32 @@
                     </div>
                     <div class="panel-footer">
                         <div class="row">
-                        	<div class="col-md-8">
+                        	<div class="col-md-9">
                                 <span id="n_btn_calc_dyn" class="btn-group"><!--DYNAMIC CALCULATION BTNs--></span>
 								<span id="n_btn_var_dyn" class="btn-group"><!--DYNAMIC VARIABLE BTNs--></span>
 								<button id="n_btn_equal" class="btn btn-default btn_equal btn-xs mathquill-embedded-latex">=</button>
-                                <button id="n_btn_par_l" class="btn btn-default btn_par_l btn-xs mathquill-embedded-latex">(</button>
-                                <button id="n_btn_par_r" class="btn btn-default btn_par_r btn-xs mathquill-embedded-latex">)</button>
+                                <span class="btn-group">
+                                    <button id="n_btn_par_l" class="btn btn-default btn_par_l btn-xs mathquill-embedded-latex">(</button>
+                                	<button id="n_btn_par_r" class="btn btn-default btn_par_r btn-xs mathquill-embedded-latex">)</button>
+                                </span>
+                                <button id="n_btn_addition" class="btn btn-default btn_addition btn-xs mathquill-embedded-latex">+</button>
+								<button id="n_btn_subtraction" class="btn btn-default btn_subtraction btn-xs mathquill-embedded-latex">-</button>
+								<button id="n_btn_multiplication" class="btn btn-default btn_multiplication btn-xs mathquill-embedded-latex">&#xd7;</button>
+								<button id="n_btn_division" class="btn btn-default btn_division btn-xs mathquill-embedded-latex">&#xf7;</button>
+                                <span class="btn-group">
+                                    <button id="n_btn_less" class="btn btn-default btn_less btn-xs mathquill-embedded-latex"><</button>
+                                	<button id="n_btn_greater" class="btn btn-default btn_greater btn-xs mathquill-embedded-latex">></button>
+                                </span>
+                                <span class="btn-group">
+                                    <button id="n_btn_and" class="btn btn-default btn_and btn-xs mathquill-embedded-latex">∧</button>
+                                    <button id="n_btn_and_alt" class="btn btn-default btn_and_alt btn-xs mathquill-embedded-latex">&</button>
+                                </span>
+                                <span class="btn-group">
+                                    <button id="n_btn_or" class="btn btn-default btn_or btn-xs mathquill-embedded-latex">∨</button>
+                                    <button id="n_btn_or_alt" class="btn btn-default btn_or_alt btn-xs mathquill-embedded-latex">|</button>
+                                </span>
                         	</div>
-                        	<div class="col-md-4">
+                        	<div class="col-md-3">
                             	<div class="btn-group pull-right">
                                 	<button id="n_btn_refresh" class="btn btn-default btn_clear">
 										<span class="glyphicon glyphicon-trash" style="horizontal-align:middle"></span>
