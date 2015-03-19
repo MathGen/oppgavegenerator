@@ -5,7 +5,7 @@ import django_tables2 as tables
 from oppgavegen.models import Template
 
 class TemplateTable(tables.Table):
-    View = tables.TemplateColumn('<a href="/?q={{record.id}}">View</a>')
+    View = tables.TemplateColumn('<a href="/?q={{record.id}}">View</a>', orderable=False)
 
     class Meta:
         model = Template
@@ -14,7 +14,7 @@ class TemplateTable(tables.Table):
         fields = ("id","question_text", "creator", "topic", "type", "rating")
 
 class BootstrapTemplateTable(tables.Table):
-    View = tables.TemplateColumn('<a href="/?q={{record.id}}">View</a>')
+    View = tables.TemplateColumn('<a href="/?q={{record.id}}">View</a>', orderable=False)
 
     class Meta:
         model = Template

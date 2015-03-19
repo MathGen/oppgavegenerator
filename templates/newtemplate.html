@@ -1,0 +1,591 @@
+{% extends "index.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% load app_filters %}
+
+{% block panels %}
+
+        <!-- Topics -->
+        <div hidden id="db_topics">{{topics}}</div>
+    	<form>
+		{% csrf_token %}
+		</form>
+
+
+				<!-- PANELS -->
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="list-group">
+						<!--QUESTION PANEL-->
+						<section id="q_panel" class="panel panel-default">
+							<div class="panel-heading"><h3 class="panel-title">Spørsmål</h3></div>
+							<div class="panel-body">
+								<form class="form-horizontal">
+									<div class="form-group">
+										<label for="category_selection" class="col-sm-2 control-label">Kategori:</label>
+										<div class="col-sm-10">
+											<select id="category_selection" class="form-control">
+												<option disabled selected>Velg en kategori...</option>
+
+											</select>
+										</div>
+									</div>
+									<!--QUESTION INPUT FIELD-->
+									<div id="q_input_field" class="input_field">
+										<span id="q_input_mathquill" class="mathquill-editable form-control input_mathquill">
+											<span class="textarea"><textarea></textarea></span>
+										</span>
+									</div>
+								</form>
+							</div>
+							<!--QUESTION KEYBOARD-->
+							<div class="panel-footer">
+								<div class="row">
+									<div class="col-md-9">
+										<div class="btn-group">
+											<button id="q_btn_text" class="btn btn-info btn_text" data-toggle="modal" data-target="#text_modal">Tekst</button>
+											<button id="q_btn_text_edit" class="btn btn-info" data-toggle="modal" data-target="#text_edit_modal"><span class="glyphicon glyphicon-pencil"></span></button>
+										</div>
+										<div id="q_btn_var_dyn" class="btn-group">
+											<button id="q_btn_var" class="btn btn-danger btn_var">Variabel</button>
+										</div>
+										<div class="btn-group">
+											<button id="q_btn_x_0" class="btn btn-warning btn_x mathquill-embedded-latex">x</button>
+											<button id="q_btn_x_1" class="btn btn-warning btn_x mathquill-embedded-latex">y</button>
+											<button id="q_btn_x_2" class="btn btn-warning btn_x mathquill-embedded-latex">z</button>
+										</div>
+										<button id="q_btn_equal" class="btn btn-default btn_equal btn-xs mathquill-embedded-latex">=</button>
+										<button id="q_btn_par" class="btn btn-default btn_par btn-xs mathquill-embedded-latex">()</button>
+										<button id="q_btn_addition" class="btn btn-default btn_addition btn-xs mathquill-embedded-latex">+</button>
+										<button id="q_btn_subtraction" class="btn btn-default btn_subtraction btn-xs mathquill-embedded-latex">-</button>
+										<button id="q_btn_multiplication" class="btn btn-default btn_multiplication btn-xs mathquill-embedded-latex">&#xd7;</button>
+										<button id="q_btn_division" class="btn btn-default btn_division btn-xs mathquill-embedded-latex">&#xf7;</button>
+                                        <button id="q_btn_pm" class="btn btn-default btn_pm btn-xs mathquill-embedded-latex">\pm</button>
+										<button id="q_btn_exponent" class="btn btn-default btn_exponent btn-xs mathquill-embedded-latex">a^n</button>
+										<button id="q_btn_subscript" class="btn btn-default btn_subscript btn-xs mathquill-embedded-latex">a_n</button>
+										<button id="q_btn_sqrt" class="btn btn-default btn_sqrt btn-xs mathquill-embedded-latex">&#x221a;</button>
+										<button id="q_btn_integral" class="btn btn-default btn_int btn-xs mathquill-embedded-latex">\int</button>
+										<button id="q_btn_integral_ab" class="btn btn-default btn_int_ab btn-xs mathquill-embedded-latex">\int_a^b</button>
+                                        <button id="q_btn_binom" class="btn btn-default btn_binom btn-xs mathquill-embedded-latex">\binom{n}{k}</button>
+									</div>
+									<div class="col-md-3">
+										<div class="btn-group pull-right">
+											<button id="q_btn_delete" class="btn btn-default btn_delete">
+												<span class="glyphicon glyphicon-chevron-left" style="horizontal-align:middle"></span>
+											</button>
+											<button id="q_btn_clear" class="btn btn-default btn_clear">
+												<span class="glyphicon glyphicon-trash" style="horizontal-align:middle"></span>
+											</button>
+											<button id="q_btn_proceed" class="btn btn-primary btn-group-q btn_proceed" type="submit">Fortsett</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+						<!--SOLUTION PANEL-->
+						<section id="s_panel" class="panel panel-default" style="display:none">
+							<div class="panel-heading">
+								<h3 class="panel-title">Løsning
+									<a id="s_btn_close" class="glyphicon glyphicon-remove pull-right btn_close"></a>
+								</h3>
+							</div>
+							<div class="panel-body">
+								<!--SOLUTION DYNAMIC INPUT FORM-->
+								<form id="s_form" class="form-horizontal">
+									<!--SOLUTION: STEP 1-->
+									<div id="step_1" class="step">
+										<h4>Steg 1</h4>
+										<input id="s_text_1" type="text" class="form-control" placeholder="Forklaring...">
+										<!--QUESTION INPUT FIELD-->
+										<div class="input_field s_input_field">
+											<span id="s_input_mathquill_1" class="mathquill-editable form-control input_mathquill">
+												<span class="textarea"><textarea></textarea></span>
+											</span>
+										</div>
+									</div>
+									<!--SOLUTION: STEP 2-->
+									<div id="step_2" class="step" style="display:none">
+										<hr>
+										<div>
+											<h4>Steg 2<a id="s_btn_del_2" class="glyphicon glyphicon-remove del_step" style="float:right"></a></h4>
+											<input id="s_text_2" type="text" class="form-control" placeholder="Forklaring...">
+										</div>
+										<!--QUESTION INPUT FIELD-->
+										<div class="input_field s_input_field">
+											<span id="s_input_mathquill_2" class="mathquill-editable form-control input_mathquill">
+												<span class="textarea"><textarea></textarea></span>
+											</span>
+										</div>
+									</div>
+									<!--SOLUTION: STEP 3-->
+									<div id="step_3" class="step" style="display:none">
+										<hr>
+										<div>
+											<h4>Steg 3<a id="s_btn_del_3" class="glyphicon glyphicon-remove del_step" style="float:right"></a></h4>
+											<input id="s_text_3" type="text" class="form-control" placeholder="Forklaring...">
+										</div>
+										<!--QUESTION INPUT FIELD-->
+										<div class="input_field s_input_field">
+											<span id="s_input_mathquill_3" class="mathquill-editable form-control input_mathquill">
+												<span class="textarea"><textarea></textarea></span>
+											</span>
+										</div>
+									</div>
+									<!--SOLUTION: STEP 4-->
+									<div id="step_4" class="step" style="display:none">
+										<hr>
+										<div>
+											<h4>Steg 4<a id="s_btn_del_4" class="glyphicon glyphicon-remove del_step" style="float:right"></a></h4>
+											<input id="s_text_4" type="text" class="form-control" placeholder="Forklaring...">
+										</div>
+										<!--QUESTION INPUT FIELD-->
+										<div class="input_field s_input_field">
+											<span id="s_input_mathquill_4" class="mathquill-editable form-control input_mathquill">
+												<span class="textarea"><textarea></textarea></span>
+											</span>
+										</div>
+									</div>
+									<!--SOLUTION: STEP 5-->
+									<div id="step_5" class="step" style="display:none">
+										<hr>
+										<div>
+											<h4>Steg 5<a id="s_btn_del_5" class="glyphicon glyphicon-remove del_step" style="float:right"></a></h4>
+											<input id="s_text_5" type="text" class="form-control" placeholder="Forklaring...">
+										</div>
+										<!--QUESTION INPUT FIELD-->
+										<div class="input_field s_input_field">
+											<span id="s_input_mathquill_5" class="mathquill-editable form-control input_mathquill">
+												<span class="textarea"><textarea></textarea></span>
+											</span>
+										</div>
+									</div>
+								</form>
+							</div>
+							<!--SOLUTION KEYBOARD-->
+							<div class="panel-footer">
+								<div class="row">
+									<div class="col-md-8">
+										<span id="s_btn_calc_dyn" class="btn-group">
+											<button id="s_btn_calc" class="btn btn-success" style="horizontal-align: middle" data-toggle="modal" data-target="#calc_modal">
+												<img src="/static/fonts/icon-calculator.png"/>
+											</button>
+										</span>
+										<span id="s_btn_var_dyn" class="btn-group"><!--SOLUTION DYN VAR BTN--></span>
+										<div class="btn-group">
+											<button id="s_btn_x_0" class="btn btn-warning btn_x mathquill-embedded-latex">x</button>
+											<button id="s_btn_x_1" class="btn btn-warning btn_x mathquill-embedded-latex">y</button>
+											<button id="s_btn_x_2" class="btn btn-warning btn_x mathquill-embedded-latex">z</button>
+										</div>
+										<button id="s_btn_equal" class="btn btn-default btn_equal btn-xs mathquill-embedded-latex">=</button>
+										<button id="s_btn_par" class="btn btn-default btn_par btn-xs mathquill-embedded-latex">()</button>
+										<button id="s_btn_addition" class="btn btn-default btn_addition btn-xs mathquill-embedded-latex">+</button>
+										<button id="s_btn_subtraction" class="btn btn-default btn_subtraction btn-xs mathquill-embedded-latex">-</button>
+										<button id="s_btn_multiplication" class="btn btn-default btn_multiplication btn-xs mathquill-embedded-latex">&#xd7;</button>
+										<button id="s_btn_division" class="btn btn-default btn_division btn-xs mathquill-embedded-latex">&#xf7;</button>
+                                        <button id="s_btn_pm" class="btn btn-default btn_pm btn-xs mathquill-embedded-latex">\pm</button>
+										<button id="s_btn_exponent" class="btn btn-default btn_exponent btn-xs mathquill-embedded-latex">a^n</button>
+										<button id="s_btn_subscript" class="btn btn-default btn_subscript btn-xs mathquill-embedded-latex">a_n</button>
+										<button id="s_btn_sqrt" class="btn btn-default btn_sqrt btn-xs mathquill-embedded-latex">&#x221a;</button>
+										<button id="s_btn_integral" class="btn btn-default btn_int btn-xs mathquill-embedded-latex">\int</button>
+										<button id="s_btn_integral_ab" class="btn btn-default btn_int_ab btn-xs mathquill-embedded-latex">\int_a^b</button>
+                                        <button id="s_btn_binom" class="btn btn-default btn_binom btn-xs mathquill-embedded-latex">\binom{n}{k}</button>
+									</div>
+									<div class="col-md-4">
+										<div class="btn-group pull-right">
+											<button id="s_btn_delete" class="btn btn-default btn_delete">
+												<span class="glyphicon glyphicon-chevron-left" style="horizontal-align:middle"></span>
+											</button>
+											<button id="s_btn_clear" class="btn btn-default btn_clear">
+												<span class="glyphicon glyphicon-trash" style="horizontal-align:middle"></span>
+											</button>
+											<button id="s_btn_next" class="btn btn-default">
+												<span class="glyphicon glyphicon-plus" style="horizontal-align:middle"></span>
+											</button>
+											<button id="s_btn_proceed" class="btn btn-primary btn-group-s btn_proceed" type="submit">Fortsett</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+						<!--ANSWER PANEL-->
+						<section id="a_panel" class="panel panel-default" style="display:none">
+							<div class="panel-heading">
+								<h3 class="panel-title">Svar
+									<a id="a_btn_close" class="glyphicon glyphicon-remove pull-right btn_close"></a>
+								</h3>
+							</div>
+							<div class="panel-body">
+								<form id="a_form" class="form-horizontal">
+									<!--ANSWER: 1-->
+									<div id="answer_1" class="answer">
+										<h4 id="ans_title_1" style="display:none">Svar 1</h4>
+										<div class="input_field a_input_field">
+											<span id="a_input_mathquill_1" class="mathquill-editable form-control input_mathquill">
+												<span class="textarea"><textarea></textarea></span>
+											</span>
+										</div>
+									</div>
+									<!--ANSWER: 2-->
+									<div id="answer_2" class="answer" style="display:none">
+										<hr>
+										<h4>Svar 2<a id="a_btn_del_2" class="glyphicon glyphicon-remove del_answer" style="float:right"></a></h4>
+										<div class="input_field a_input_field">
+											<span id="a_input_mathquill_2" class="mathquill-editable form-control input_mathquill">
+												<span class="textarea"><textarea></textarea></span>
+											</span>
+										</div>
+									</div>
+									<!--ANSWER: 3-->
+									<div id="answer_3" class="answer" style="display:none">
+										<hr>
+										<h4>Svar 3<a id="a_btn_del_3" class="glyphicon glyphicon-remove del_answer" style="float:right"></a></h4>
+										<div class="input_field a_input_field">
+											<span id="a_input_mathquill_3" class="mathquill-editable form-control input_mathquill">
+												<span class="textarea"><textarea></textarea></span>
+											</span>
+										</div>
+									</div>
+								</form>
+							</div>
+							<!--ANSWER KEYBOARD-->
+							<div class="panel-footer">
+								<div class="row">
+									<div class="col-md-8">
+										<span id="a_btn_calc_dyn" class="btn-group">
+											<button id="a_btn_calc" class="btn btn-success" style="horizontal-align: middle" data-toggle="modal" data-target="#calc_modal">
+												<img src="/static/fonts/icon-calculator.png"/>
+											</button>
+										</span>
+										<span id="a_btn_var_dyn" class="btn-group"><!--ANSWER DYN VAR BTN--></span>
+										<div class="btn-group">
+											<button id="a_btn_x_0" class="btn btn-warning btn_x mathquill-embedded-latex">x</button>
+											<button id="a_btn_x_1" class="btn btn-warning btn_x mathquill-embedded-latex">y</button>
+											<button id="a_btn_x_2" class="btn btn-warning btn_x mathquill-embedded-latex">z</button>
+										</div>
+										<button id="a_btn_equal" class="btn btn-default btn_equal btn-xs mathquill-embedded-latex">=</button>
+										<button id="a_btn_par" class="btn btn-default btn_par btn-xs mathquill-embedded-latex">()</button>
+										<button id="a_btn_addition" class="btn btn-default btn_addition btn-xs mathquill-embedded-latex">+</button>
+										<button id="a_btn_subtraction" class="btn btn-default btn_subtraction btn-xs mathquill-embedded-latex">-</button>
+										<button id="a_btn_multiplication" class="btn btn-default btn_multiplication btn-xs mathquill-embedded-latex">&#xd7;</button>
+										<button id="a_btn_division" class="btn btn-default btn_division btn-xs mathquill-embedded-latex">&#xf7;</button>
+                                        <button id="a_btn_pm" class="btn btn-default btn_pm btn-xs mathquill-embedded-latex">\pm</button>
+										<button id="a_btn_exponent" class="btn btn-default btn_exponent btn-xs mathquill-embedded-latex">a^n</button>
+										<button id="a_btn_subscript" class="btn btn-default btn_subscript btn-xs mathquill-embedded-latex">a_n</button>
+										<button id="a_btn_sqrt" class="btn btn-default btn_sqrt btn-xs mathquill-embedded-latex">&#x221a;</button>
+										<button id="a_btn_integral" class="btn btn-default btn_int btn-xs mathquill-embedded-latex">\int</button>
+										<button id="a_btn_integral_ab" class="btn btn-default btn_int_ab btn-xs mathquill-embedded-latex">\int_a^b</button>
+                                        <button id="a_btn_binom" class="btn btn-default btn_binom btn-xs mathquill-embedded-latex">\binom{n}{k}</button>
+									</div>
+									<div class="col-md-4">
+										<div class="btn-group pull-right">
+											<button id="a_btn_delete" class="btn btn-default btn_delete">
+												<span class="glyphicon glyphicon-chevron-left" style="horizontal-align:middle"></span>
+											</button>
+											<button id="a_btn_clear" class="btn btn-default btn_clear">
+												<span class="glyphicon glyphicon-trash" style="horizontal-align:middle"></span>
+											</button>
+											<button id="a_btn_next" class="btn btn-default">
+												<span class="glyphicon glyphicon-plus" style="horizontal-align:middle"></span>
+											</button>
+											<button id="a_btn_proceed" class="btn btn-primary btn-group-a btn_proceed" type="submit">Fortsett</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+						<!--OPTION PANEL-->
+						<section id="o_panel" class="panel panel-default" style="display:none">
+							<div class="panel-heading">
+								<h3 class="panel-title">Innstillinger
+									<a id="o_btn_close" class="glyphicon glyphicon-remove pull-right btn_close"></a>
+								</h3>
+							</div>
+                            <!--OPTION CONTENT-->
+                            <table class="table table-condensed">
+                                <tbody>
+                                <tr>
+                                    <td class="col-sm-3" style="vertical-align: middle; text-align: right">Utvalg:</td>
+                                    <td class="col-sm-3"><input id="opt_domain_from" type="number" class="form-control input-sm" placeholder="Fra:"></td>
+                                    <td class="col-sm-3"><input id="opt_domain_to" type="number" class="form-control input-sm" placeholder="Til:"></td>
+                                    <td style="vertical-align: middle"><a id="o_btn_adv_domain">Avansert<span id="o_adv_caret"><b class="caret"></b></span></a></td>
+                                </tr>
+                                </tbody>
+                                <tbody id="o_adv_domain" style="display:none; border-top: 0">
+                                	<!-- DYNAMIC TABLE ROWS -->
+                                </tbody>
+                                <tbody style="border-top: 0">
+                                <tr>
+                                    <td style="vertical-align: middle; text-align: right">Antall desimaler i svar:</td>
+                                    <td><input id="opt_decimal" type="number" class="form-control input-sm" placeholder="Antall:"></td>
+                                    <td></td><td></td>
+                                </tr>
+                                <tr>
+                                    <td style="vertical-align: middle; text-align: right; height: 41px;">Betingelser:</td>
+                                    <td style="vertical-align: middle"><input id="opt_conditions" type="checkbox"></td>
+                                    <td></td><td></td>
+                                </tr>
+                                <tr>
+                                    <td style="vertical-align: middle; text-align: right; height: 41px">Tillat 0 som svar:</td>
+                                    <td style="vertical-align: middle"><input id="opt_allow" type="checkbox"></td>
+                                    <td></td><td></td>
+                                </tr>
+                                <tr>
+                                    <td style="vertical-align: middle; text-align: right; height: 41px">Flervalgsoppgave:</td>
+                                    <td style="vertical-align: middle"><input id="opt_multiple_choice" type="checkbox"></td>
+                                    <td></td><td></td>
+                                </tr>
+                                <tr>
+                                    <td style="vertical-align: middle; text-align: right; height: 41px">Utfyllingsoppgave:</td>
+                                    <td style="vertical-align: middle"><input id="opt_fill_blanks" type="checkbox"></td>
+                                    <td></td><td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+							<!--OPTION KEYBOARD-->
+							<div class="panel-footer">
+								<div class="row">
+                                    <div class="col-md-9">
+
+                                    </div>
+									<div class="col-md-3">
+										<div class="pull-right">
+											<button id="o_btn_save" class="btn btn-primary" type="submit">Lagre</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- POP-UP: CALCULATION -->
+		<div id="calc_modal" class="modal fade" role="dialog">
+			<div class="modal-dialog modal-md">
+				<section class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Mellomregning<a id="c_btn_close" class="glyphicon glyphicon-remove pull-right btn_close" data-dismiss="modal"></a></h3>
+					</div>
+					<!--CALCULATION INPUT-->
+					<div class="panel-body">
+						<div id="c_input_field" class="input_field">
+							<span id="c_input_mathquill" class="mathquill-editable form-control input_mathquill">
+								<span class="textarea"><textarea></textarea></span>
+							</span>
+						</div>
+					</div>
+					<!--CALCULATION KEYBOARD-->
+					<div class="panel-footer">
+						<div class="row">
+							<div class="col-sm-8">
+								<span id="c_btn_calc_dyn" class="btn-group"><!--DYNAMIC CALCULATION BTNs--></span>
+								<span id="c_btn_var_dyn" class="btn-group"><!--DYNAMIC VARIABLE BTNs--></span>
+								<button id="c_btn_equal" class="btn btn-default btn_equal btn-xs mathquill-embedded-latex">=</button>
+								<button id="c_btn_par" class="btn btn-default btn_par btn-xs mathquill-embedded-latex">()</button>
+								<button id="c_btn_addition" class="btn btn-default btn_addition btn-xs mathquill-embedded-latex">+</button>
+								<button id="c_btn_subtraction" class="btn btn-default btn_subtraction btn-xs mathquill-embedded-latex">-</button>
+								<button id="c_btn_multiplication" class="btn btn-default btn_multiplication btn-xs mathquill-embedded-latex">&#xd7;</button>
+								<button id="c_btn_division" class="btn btn-default btn_division btn-xs mathquill-embedded-latex">&#xf7;</button>
+								<button id="c_btn_exponent" class="btn btn-default btn_exponent btn-xs mathquill-embedded-latex">a^n</button>
+								<button id="c_btn_subscript" class="btn btn-default btn_subscript btn-xs mathquill-embedded-latex">a_n</button>
+								<button id="c_btn_sqrt" class="btn btn-default btn_sqrt btn-xs mathquill-embedded-latex">&#x221a;</button>
+								<button id="c_btn_integral" class="btn btn-default btn_int btn-xs mathquill-embedded-latex">\int</button>
+								<button id="c_btn_integral_ab" class="btn btn-default btn_int_ab btn-xs mathquill-embedded-latex">\int_a^b</button>
+                                <button id="c_btn_binom" class="btn btn-default btn_binom btn-xs mathquill-embedded-latex">\binom{n}{k}</button>
+							</div>
+							<div class="col-sm-4">
+								<div class="btn-group pull-right">
+									<button id="c_btn_delete" class="btn btn-default btn_delete">
+										<span class="glyphicon glyphicon-chevron-left" style="horizontal-align:middle"></span>
+									</button>
+									<button id="c_btn_clear" class="btn btn-default btn_clear">
+										<span class="glyphicon glyphicon-trash" style="horizontal-align:middle"></span>
+									</button>
+									<button id="c_btn_ok" class="btn btn-primary" data-dismiss="modal" type="submit">OK</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+			</div>
+		</div>
+		<!-- POP-UP: TEXT-INPUT -->
+		<div id="text_modal" class="modal fade" role="dialog">
+			<div class="modal-dialog modal-md">
+				<section class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Sett inn tekst<a id="t_btn_close" class="glyphicon glyphicon-remove pull-right btn_close_text" data-dismiss="modal"></a></h3>
+					</div>
+					<div class="panel-body">
+						<div class="col-sm-9">
+							<input id="t_input" type="text" class="form-control input_mathquill" placeholder="Tekst..." autofocus>
+						</div>
+						<div class="col-sm-3">
+							<span class="btn-group pull-right">
+								<button class="btn btn-default btn_close_text" data-dismiss="modal">Avbryt</button>
+								<button id="t_btn_ok" class="btn btn-primary" data-dismiss="modal" type="submit">OK</button>
+							</span>
+						</div>
+					</div>
+				</section>
+			</div>
+		</div>
+        <!-- POP-UP: TEXT-SUBSTITUTION -->
+		<div id="text_edit_modal" class="modal fade" role="dialog">
+			<div class="modal-dialog modal-md">
+				<section class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Tekst-substitusjon<a class="glyphicon glyphicon-remove pull-right" data-dismiss="modal"></a></h3>
+					</div>
+					<div class="panel-body">
+						<form id="e_form" class="form-horizontal">
+							<!--TEXT-SUBSTITUTION: 1-->
+							<div id="e_sub_1">
+								<div class="form-group">
+									<label class="col-md-4 control-label">Bytt ut ord/setning:</label>
+									<div class="col-md-7">
+										<input id="e_from_1" type="text" class="form-control" placeholder="Epler">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label">Med ord/setning:</label>
+									<div class="col-md-7">
+										<textarea id="e_to_1" type="text" class="form-control" rows="2" placeholder="Bananer, Pærer, Appelsiner, Druer"></textarea>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="panel-footer">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="btn-group pull-right">
+									<button id="e_btn_clear" class="btn btn-default btn_clear">
+										<span class="glyphicon glyphicon-trash" style="horizontal-align:middle"></span>
+									</button>
+									<button id="e_btn_next" class="btn btn-default">
+										<span class="glyphicon glyphicon-plus" style="horizontal-align:middle"></span>
+									</button>
+									<button class="btn btn-primary" data-dismiss="modal" type="submit">OK</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+			</div>
+		</div>
+        <!-- POP-UP: CONDITIONS -->
+        <div id="conditions_modal" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-md">
+                <section class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Betingelser<a class="glyphicon glyphicon-remove pull-right" data-dismiss="modal"></a></h3>
+                    </div>
+                    <div id="con_dyn_input" class="panel-body">
+                        <p>Skriv inn betingelser.</p>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+                        	<div class="col-md-9">
+                                <span id="n_btn_calc_dyn" class="btn-group"><!--DYNAMIC CALCULATION BTNs--></span>
+								<span id="n_btn_var_dyn" class="btn-group"><!--DYNAMIC VARIABLE BTNs--></span>
+								<button id="n_btn_equal" class="btn btn-default btn_equal btn-xs mathquill-embedded-latex">=</button>
+                                <span class="btn-group">
+                                    <button id="n_btn_par_l" class="btn btn-default btn_par_l btn-xs mathquill-embedded-latex">(</button>
+                                	<button id="n_btn_par_r" class="btn btn-default btn_par_r btn-xs mathquill-embedded-latex">)</button>
+                                </span>
+                                <button id="n_btn_addition" class="btn btn-default btn_addition btn-xs mathquill-embedded-latex">+</button>
+								<button id="n_btn_subtraction" class="btn btn-default btn_subtraction btn-xs mathquill-embedded-latex">-</button>
+								<button id="n_btn_multiplication" class="btn btn-default btn_multiplication btn-xs mathquill-embedded-latex">&#xd7;</button>
+								<button id="n_btn_division" class="btn btn-default btn_division btn-xs mathquill-embedded-latex">&#xf7;</button>
+                                <span class="btn-group">
+                                    <button id="n_btn_less" class="btn btn-default btn_less btn-xs mathquill-embedded-latex"><</button>
+                                	<button id="n_btn_greater" class="btn btn-default btn_greater btn-xs mathquill-embedded-latex">></button>
+                                </span>
+                                <span class="btn-group">
+                                    <button id="n_btn_and" class="btn btn-default btn_and btn-xs mathquill-embedded-latex">∧</button>
+                                    <button id="n_btn_and_alt" class="btn btn-default btn_and_alt btn-xs mathquill-embedded-latex">&</button>
+                                </span>
+                                <span class="btn-group">
+                                    <button id="n_btn_or" class="btn btn-default btn_or btn-xs mathquill-embedded-latex">∨</button>
+                                    <button id="n_btn_or_alt" class="btn btn-default btn_or_alt btn-xs mathquill-embedded-latex">|</button>
+                                </span>
+                        	</div>
+                        	<div class="col-md-3">
+                            	<div class="btn-group pull-right">
+                                	<button id="n_btn_refresh" class="btn btn-default btn_clear">
+										<span class="glyphicon glyphicon-trash" style="horizontal-align:middle"></span>
+									</button>
+									<button class="btn btn-primary" data-dismiss="modal" type="submit">OK</button>
+                            	</div>
+                        	</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <!-- POP-UP: MULTIPLE-CHOICE -->
+        <div id="multiple_choice_modal" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-md">
+                <section class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Flervalgsoppgave<a class="glyphicon glyphicon-remove pull-right" data-dismiss="modal"></a></h3>
+                    </div>
+                    <div id="m_dyn_multi_input" class="panel-body">
+                        <p>Skriv inn formel for flervalg (Ikke skriv inn det riktige svaret).</p>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-md-8">
+
+                            </div>
+							<div class="col-md-4">
+								<div class="btn-group pull-right">
+									<button id="m_btn_clear" class="btn btn-default btn_clear">
+										<span class="glyphicon glyphicon-trash" style="horizontal-align:middle"></span>
+									</button>
+									<button id="m_btn_new" class="btn btn-default">
+										<span class="glyphicon glyphicon-plus" style="horizontal-align:middle"></span>
+									</button>
+									<button class="btn btn-primary" data-dismiss="modal" type="submit">OK</button>
+								</div>
+							</div>
+						</div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <!-- POP-UP: FILL-IN-THE-BLANKS -->
+        <div id="fill_blanks_modal" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-md">
+                <section class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Utfyllingsoppgave<a class="glyphicon glyphicon-remove pull-right" data-dismiss="modal"></a></h3>
+                    </div>
+                    <div id="f_dyn_fill_input" class="panel-body">
+                        <div id="f_diff_latex" class="hidden"></div>
+                        <p>Markér utrykkene som skal være utfyllingsruter og trykk på <span class="glyphicon glyphicon-erase"></span> knappen.</p>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+							<div class="col-md-12">
+								<div class="btn-group pull-right">
+									<span id="f_btn_fill" class="btn btn-default">
+										<span class="glyphicon glyphicon-erase" style="horizontal-align:middle"></span>
+									</span>
+									<button id="f_btn_refresh" class="btn btn-default">
+										<span class="glyphicon glyphicon-refresh" style="horizontal-align:middle"></span>
+									</button>
+									<button class="btn btn-primary" data-dismiss="modal" type="submit">OK</button>
+								</div>
+							</div>
+						</div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <script src="/static/js/diff_match_patch.js"></script>
+
+    	<script src="/static/js/make_dropdown.js"></script>
+{% endblock %}

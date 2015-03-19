@@ -14,6 +14,7 @@ var TOPIC_SELECTED			= false;
 var MULTI_CHOICE			= 0;
 var FILL_IN					= false;
 var CON_IN					= false;
+var SUBMITTING				= false;
 var c_count 				= 0;
 var array_calc				= [];
 
@@ -419,6 +420,7 @@ $(document).ready(function() {
 						$('#q_btn_abc_' + check_id[n]).remove();
 						$('#s_btn_abc_' + check_id[n]).remove();
 						$('#c_btn_abc_' + check_id[n]).remove();
+						$('#n_btn_abc_' + check_id[n]).remove();
 						$('#o_adv_' + check_id[n]).remove();
 					}
 				}
@@ -896,6 +898,7 @@ $(document).ready(function() {
 		array_submit['type'] = 'normal';
 
 		if(submit_validation()){
+			SUBMITTING = true;
 			post(/submit/, array_submit);
 		}
 	});
@@ -1199,7 +1202,7 @@ function get_diff_latex(){
  * Before unload, ask user to confirm redirecting.
  */
 $(window).bind('beforeunload', function(e){
-	if(TOPIC_SELECTED){
+	if(TOPIC_SELECTED && !SUBMITTING){
 		return 'Are you sure you want to leave?';
 	}
 });
