@@ -59,7 +59,7 @@ def task_with_solution(template_id):
     answer = q.answer
     primary_key = q.pk
     fill_in = q.fill_in
-    type_specific = "" #A type specific variable that holds the extra values for a given type. ie. choices for multiple.
+    template_specific = "" #A type specific variable that holds the extra values for a given type. ie. choices for multiple.
     variables_used = "" #sends a splitable string since dictionaries can't be passed between layers.
     solution = str(task) +"\n"+str(q.solution).replace('\\n', '\n') #db automatically adds the escape character \ to strings, so we remove it from \n
     #solution = solution.replace('\&\#x222B\;', '&#x222B;')
@@ -99,18 +99,19 @@ def task_with_solution(template_id):
     elif template_type == 'blanks':
         fill_in_dict = fill_in_the_blanks(fill_in)
         new_task = fill_in_dict['fill_in']
-        type_specific = fill_in_dict['hole_positions']
+        template_specific = fill_in_dict['hole_positions']
     if dictionary is not None:
         new_task = replace_words(new_task, dictionary)
         new_solution = replace_words(new_solution, dictionary)
         new_answer = replace_words(new_answer, dictionary)
-        type_specific = replace_words(new_choices,dictionary)
+        template_specific = replace_words(new_choices,dictionary)
     number_of_answers = len(new_answer.split('§'))
 
 
     #todo also remove parsing of solution in this function as it is not needed before the answer page (only true for normal actually)
-    arr = [new_task, variables_used, template_type, type_specific, primary_key, number_of_answers]
-    return arr
+    return_dict = {'question' : new_task, 'variables_used' : variables_used, 'template_type' : template_type,
+                   'template_specific' : template_specific, 'primary_key' : primary_key, 'number_of_answers' : number_of_answers}
+    return return_dict
 
 ###validate_solution###
 #Checks if the solution made is a valid one according to different tests
@@ -421,7 +422,9 @@ def solve_inequality(inequality, variable_dict, solve_for):
 def fill_in_the_blanks(fill_in):
     hole_dict = find_holes(fill_in)
     max_holes = len(hole_dict)
-    number_of_holes = randint(1,max_holes)
+    number_of_holes = 1
+    if max_holes > 1:
+        number_of_holes = randint(1,max_holes)
     make_holes_dict = make_holes(hole_dict, fill_in, number_of_holes)
     holes_replaced = make_holes_dict['holes_replaced']
 
@@ -450,6 +453,7 @@ def find_holes(fill_in):
                 counter -= 6 #sets the counter back 6 to compensate for @xxxx@ which is not in the original string
                 start_point = counter
             elif not recorder:
+                print('WTFFFFFFFFfff')
                 end_point = counter
                 hole_dict[s[:-5]] = str(start_point) + ' ' + str(end_point-5)
                 counter -= 6 #sets the counter back 6 to compensate for @xxxx@ which is not in the original string
@@ -483,9 +487,9 @@ def make_holes(hole_dict, fill_in, number_of_holes):
 #takes a array of positions and returns a array with the strings in between the positional coordinates.
 def get_values_from_position(position_string, solution):
     position_array = position_string.split('§')
-    values = []
+    values = ''
     for s in position_array:
         positions = s.split()
-        values.append(solution[int(positions[0]):int(positions[1])])
-    return values
+        values += '§' + (solution[int(positions[0]):int(positions[1])])
+    return values[1:]
 

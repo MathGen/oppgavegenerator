@@ -34,23 +34,18 @@ def index(request):
     #template = loader.get_template('index.html')
     context = RequestContext(request)
     question_type = request.GET.get('q', '')
-    if question_type == "algebra":
-        arr = generation.algebra()
-    elif question_type == "aritmetikk":
-        arr = generation.arithmetics()
-    elif question_type != "":
+    if question_type != "":
         arr = generation.task_with_solution(question_type)
     else:
         arr = generation.task_with_solution("")
 
-    question = arr[0]
-    primary_key = arr[4]
-    variable_dictionary = arr[1]
-    choices = str(arr[3])
-    number_of_answers = arr[5]
-    print(choices)
-    template_type = arr[2]
-    context_dict = {'title': generation.printer(), 'question' : question,  'choices' : choices, 'template_type' : template_type, 'primary_key' : primary_key,
+    question = arr['question']
+    primary_key = arr['primary_key']
+    variable_dictionary = arr['variables_used']
+    template_specific = arr['template_specific']
+    number_of_answers = arr['number_of_answers']
+    template_type = arr['template_type']
+    context_dict = {'title': generation.printer(), 'question' : question,  'template_specific' : template_specific, 'template_type' : template_type, 'primary_key' : primary_key,
                     'variable_dictionary' : variable_dictionary, 'number_of_answers' : number_of_answers}
     return render_to_response('index', context_dict, context)
 
@@ -59,9 +54,13 @@ class QuestionForm(forms.Form):
     user_answer = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400)
     primary_key = forms.IntegerField()
     variable_dictionary = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400)
+    template_specific = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400)
+    template_type = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=20)
 
     def process(self):
-        cd =  [self.cleaned_data['user_answer'], self.cleaned_data['primary_key'], self.cleaned_data['variable_dictionary']]
+        cd = {'variable_dictionary' : self.cleaned_data['variable_dictionary'],'primary_key' : self.cleaned_data['primary_key'],
+              'user_answer' : self.cleaned_data['user_answer'], 'template_type' : self.cleaned_data['template_type'],
+              'template_specific' : self.cleaned_data['template_specific']}
         return cd
 
 class TemplateForm(ModelForm):
@@ -123,16 +122,22 @@ def answers(request):
         counter = 0
         if form.is_valid():
             form_values = form.process()
-            user_answer = form_values[0]
-            print(form_values)
-            q = Template.objects.get(pk=form_values[1])
-            variable_dictionary = form_values[2].split('§')
+            user_answer = form_values['user_answer']
+            template_type = form_values['template_type']
+            template_specific = form_values['template_specific']
+            q = Template.objects.get(pk=form_values['primary_key'])
+            variable_dictionary = form_values['variable_dictionary'].split('§')
+
             print(variable_dictionary)
             print(q.answer)
-            answer = generation.replace_variables_from_array(variable_dictionary, q.answer)
-            print(answer)
+
+            if template_type != 'blanks':
+                answer = generation.replace_variables_from_array(variable_dictionary, q.answer)
+            else:
+                answer = generation.get_values_from_position(template_specific,q.solution)
             answer = generation.parse_answer(answer)
             answer = answer.replace('`','')
+            answer = answer.split('§')
 
             solution = str((q.question_text).replace('\\n', '\n')) +"\n"+str(q.solution).replace('\\n', '\n')
             solution = generation.replace_variables_from_array(variable_dictionary, solution)
@@ -140,7 +145,6 @@ def answers(request):
 
             print(solution)
             user_answer = user_answer.split('§') #if a string doesn't contain the split character it returns as a list with 1 element
-            answer = answer.split('§')
 
             #We format both the user answer and the answer the same way.
             user_answer = [ generation.after_equal_sign(x) for x in user_answer ]
@@ -172,5 +176,5 @@ def new_template(request):
         topics += e.topic
     topics = topics[1:]
     context_dict = {'topics':topics}
-    return render_to_response('gentemplate.html', context_dict, context)
+    return render_to_response('newtemplate.html', context_dict, context)
 

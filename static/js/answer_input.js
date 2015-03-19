@@ -1,12 +1,13 @@
 $(document).ready(function () {
     var text = 'some text';
     var template_type = $('#template_type').html();
-    var number_of_answers = $('#number_of_answers').html();;
+    var template_specific = $('#template_specific').html();
+    var number_of_answers = $('#number_of_answers').html();
     var primary_key = $('#primary_key').html();
     var variable_dictionary = $('#variable_dictionary').html();
     var w_target = $('#w_target');
     if (String(template_type) == 'multiple') {
-        choices = $('#choices').html();
+        choices = template_specific;
         choices = choices.split('§');
         for (i = 0; i < choices.length; i++) {
             text = '`' + choices[i] + '`' + '<br />';
@@ -57,7 +58,9 @@ $(document).ready(function () {
             "user_answer" : String(user_answer),
             "csrfmiddlewaretoken" : getCookie('csrftoken'),
             "primary_key" : primary_key,
-            "variable_dictionary" : variable_dictionary
+            "variable_dictionary" : variable_dictionary,
+            "template_type" : template_type,
+            "template_specific" : template_specific
         };
 
         post(/answers/, submit_dict);
