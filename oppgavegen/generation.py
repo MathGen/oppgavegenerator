@@ -481,6 +481,11 @@ def make_holes(hole_dict, fill_in, number_of_holes):
 
 ###get_values_from_position###
 #takes a array of positions and returns a array with the strings in between the positional coordinates.
-def get_values_from_position(position_array):
+def get_values_from_position(position_string, solution):
+    position_array = position_string.split('§')
+    values = []
+    for s in position_array:
+        positions = s.split()
+        values.append(solution[int(positions[0]):int(positions[1])])
+    return values
 
-    return
