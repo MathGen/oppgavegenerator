@@ -28,11 +28,11 @@ $(document).ready(function () {
     else if (template_type == 'blanks') {
         var str_boxx = $('#question').html();
         var num_boxx = (str_boxx.match(/@boxx@/g) || []).length;
-        for(var j = 0; j < num_boxx; j++){
-            $('#question').replace('@boxx@', '<span id="blanks_'+j+'" class="form-control"></span>');
-            $('#blanks_' + j).mathquill('revert').mathquill('editable');
-        }
-        //w_target.append(answer_box);
+        $('#question').html(str_boxx.replace(/@boxx@/g, '<span class="form-control blank_input input_mathquill" style="display: inline"></span>'));
+        $('#question').find('.blank_input').each(function(index){
+            $(this).attr('id', 'blank_' + index);
+            $(this).mathquill('revert').mathquill('editable');
+        });
     }
 
     $('#submit_answer').click(function (e) {
