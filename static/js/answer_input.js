@@ -8,9 +8,9 @@ $(document).ready(function () {
     var w_target = $('#w_target');
     if (String(template_type) == 'multiple') {
         alert(template_specific);
-        choices = template_specific;
+        var choices = template_specific;
         choices = choices.split('§');
-        for (i = 0; i < choices.length; i++) {
+        for (var i = 0; i < choices.length; i++) {
             text = '`' + choices[i] + '`' + '<br />';
             w_target.append('<input type="radio" name="answer_button" id="radio' + i + '" value="' + choices[i] + '"/>' + text);
         }
@@ -21,17 +21,18 @@ $(document).ready(function () {
             if(i > 0){
                 w_target.append('<div class="col-md-12"><h4>og</h4></div>');
             }
-            w_target.append('<div class="col-md-12 input_field"><span id="w_input_mathquill_'+i+'" class="mathquill-editable form-control input_mathquill"><span class="textarea"><textarea></textarea></span></span></div>');
+            w_target.append('<div class="col-md-12 input_field"><span id="w_input_mathquill_'+i+'" class="form-control input_mathquill"></span></div>');
             $('#w_input_mathquill_' + i).mathquill('revert').mathquill('editable');
         }
     }
     else if (template_type == 'blanks') {
-        for(j=0;j<number_of_answers;j++){
-            var replaced = $("body").html().replace('@boxx@','`<div class="col-md-12 input_field"><span id="w_input_mathquill_'+j+'" class="mathquill-editable form-control input_mathquill"><span class="textarea"><textarea></textarea></span></span></div>`');
-            $("body").html(replaced);
-            $('#w_input_mathquill_' + j).mathquill('revert').mathquill('editable');
+        var str_boxx = $('#question').html();
+        var num_boxx = (str_boxx.match(/@boxx@/g) || []).length;
+        for(var j = 0; j < num_boxx; j++){
+            $('#question').replace('@boxx@', '<span id="blanks_'+j+'" class="form-control"></span>');
+            $('#blanks_' + j).mathquill('revert').mathquill('editable');
         }
-        w_target.append(answer_box);
+        //w_target.append(answer_box);
     }
 
     $('#submit_answer').click(function (e) {
