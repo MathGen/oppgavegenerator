@@ -109,8 +109,9 @@ def task_with_solution(template_id):
 
 
     #todo also remove parsing of solution in this function as it is not needed before the answer page (only true for normal actually)
-    arr = [new_task, variables_used, template_type, type_specific, primary_key, number_of_answers]
-    return arr
+    return_dict = {'new_task' : new_task, 'variables_used' : variables_used, 'template_type' : template_type,
+                   'type_specific' : type_specific, 'primary_key' : primary_key, 'number_of_answers' : number_of_answers}
+    return return_dict
 
 ###validate_solution###
 #Checks if the solution made is a valid one according to different tests
@@ -483,9 +484,9 @@ def make_holes(hole_dict, fill_in, number_of_holes):
 #takes a array of positions and returns a array with the strings in between the positional coordinates.
 def get_values_from_position(position_string, solution):
     position_array = position_string.split('§')
-    values = []
+    values = ''
     for s in position_array:
         positions = s.split()
-        values.append(solution[int(positions[0]):int(positions[1])])
-    return values
+        values += '§' + (solution[int(positions[0]):int(positions[1])])
+    return values[1:]
 

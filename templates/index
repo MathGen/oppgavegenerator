@@ -18,8 +18,8 @@
         <form id="w_question_display" class="form-horizontal" style="display:none">
             <!-- this might seem a bit redundant, but for some reason using var choices = {{choices}} did not work -->
             <div hidden id="template_type">{{template_type}}</div>
-            <div hidden id="choices">{{choices}}</div>
             <div hidden id="primary_key">{{primary_key}}</div>
+            <div hidden id="primary_key">{{template_specific}}</div>
             <div hidden id="number_of_answers">{{number_of_answers}}</div>
             <div hidden id="variable_dictionary">{{variable_dictionary}}</div>
             <h5><div id="question">{{ question|linebreaks}}</div></h5>
