@@ -95,16 +95,17 @@ def task_with_solution(template_id):
         new_choices.append(new_answer)
         shuffle(new_choices) #Shuffles the choices so that the answer is not always in the same place.
         new_choices = '§'.join(new_choices)
-        type_sepcific = new_choices
+        template_specific = new_choices
     elif template_type == 'blanks':
         fill_in_dict = fill_in_the_blanks(fill_in)
-        new_task = fill_in_dict['fill_in']
+        new_task = new_task + '\n' + fill_in_dict['fill_in'].replace('\\n', '\n')
+        new_task = replace_variables_from_array(variables_used, new_task)
+        new_task = parse_solution(new_task)
         template_specific = fill_in_dict['hole_positions']
     if dictionary is not None:
         new_task = replace_words(new_task, dictionary)
-        new_solution = replace_words(new_solution, dictionary)
+        new_solution = replace_words(new_solution, dictionary) #todo this logic moved into the view. do that.
         new_answer = replace_words(new_answer, dictionary)
-        template_specific = replace_words(new_choices,dictionary)
     number_of_answers = len(new_answer.split('§'))
 
 
@@ -431,7 +432,7 @@ def fill_in_the_blanks(fill_in):
     new_hole_dict = {} #make a dict with only the holes used.
     for s in holes_replaced:
         new_hole_dict[s] = hole_dict[s]
-    hole_positions = new_hole_dict.values()
+    hole_positions = list(new_hole_dict.values())
     hole_positions = array_to_string(hole_positions)
     fill_in = make_holes_dict['fill_in']
     return_dict = {'fill_in' : fill_in, 'hole_positions' : hole_positions}
@@ -453,7 +454,6 @@ def find_holes(fill_in):
                 counter -= 6 #sets the counter back 6 to compensate for @xxxx@ which is not in the original string
                 start_point = counter
             elif not recorder:
-                print('WTFFFFFFFFfff')
                 end_point = counter
                 hole_dict[s[:-5]] = str(start_point) + ' ' + str(end_point-5)
                 counter -= 6 #sets the counter back 6 to compensate for @xxxx@ which is not in the original string
@@ -464,6 +464,7 @@ def find_holes(fill_in):
         a = b
         b = c
         c = d
+        d = e
         e = f
 
     return hole_dict
@@ -472,7 +473,7 @@ def find_holes(fill_in):
 #Makes holes at random designated places in the solution.
 #Returns a dict with the task with holes and also a array of what holes were replaced.
 def make_holes(hole_dict, fill_in, number_of_holes):
-    possible_holes = hole_dict.keys()
+    possible_holes = list(hole_dict.keys())
     shuffle(possible_holes)
     holes_to_replace = []
     for x in range(number_of_holes):

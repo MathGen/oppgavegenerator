@@ -7,6 +7,7 @@ $(document).ready(function () {
     var variable_dictionary = $('#variable_dictionary').html();
     var w_target = $('#w_target');
     if (String(template_type) == 'multiple') {
+        alert(template_specific);
         choices = template_specific;
         choices = choices.split('§');
         for (i = 0; i < choices.length; i++) {
@@ -30,9 +31,7 @@ $(document).ready(function () {
             $("body").html(replaced);
             $('#w_input_mathquill_' + j).mathquill('revert').mathquill('editable');
         }
-
-        w_target.append(answer_box); //todo: This needs to be inserted into text where needed.
-
+        w_target.append(answer_box);
     }
 
     $('#submit_answer').click(function (e) {
