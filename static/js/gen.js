@@ -419,6 +419,7 @@ $(document).ready(function() {
 						$('#q_btn_abc_' + check_id[n]).remove();
 						$('#s_btn_abc_' + check_id[n]).remove();
 						$('#c_btn_abc_' + check_id[n]).remove();
+						$('#n_btn_abc_' + check_id[n]).remove();
 						$('#o_adv_' + check_id[n]).remove();
 					}
 				}
