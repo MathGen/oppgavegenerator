@@ -109,8 +109,9 @@ $(document).ready(function() {
 		});
 		$(q_btn_var_dyn).append('<button id="q_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
 		$(s_btn_var_dyn).append('<button id="s_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
-		$(c_btn_var_dyn).append('<button id="c_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
-		$(a_btn_var_dyn).append('<button id="a_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
+		$('#c_btn_var_dyn').append('<button id="c_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
+		$('#a_btn_var_dyn').append('<button id="a_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
+		$('#n_btn_var_dyn').append('<button id="n_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
 		$('#o_adv_domain').append('<tr id="o_adv_'+q_var_id+'" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">'+q_var+':</td><td><input id="o_adv_from_'+q_var_id+'" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_'+q_var_id+'" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td></td></tr>');
 		q_var = String.fromCharCode(q_var.charCodeAt(0) + 1);
 		q_var_id++;
@@ -172,7 +173,45 @@ $(document).ready(function() {
 		e.preventDefault();
 		$(get_input_field(this)).mathquill('write', ')');
 	});
-	
+
+	// Insert less-than operator
+	var btn_less = $('.btn_less');
+	btn_less.click(function(e){
+		e.preventDefault();
+		$(get_input_field(this)).mathquill('write', '<');
+	});
+
+	// Insert 'and' operator
+	$('.btn_and').click(function(e){
+		e.preventDefault();
+		$(get_input_field(this)).mathquill('write', '∧');
+	});
+
+	// Insert 'and' alternative operator
+	$('.btn_and_alt').click(function(e){
+		e.preventDefault();
+		$(get_input_field(this)).mathquill('write', '&');
+	});
+
+	// Insert 'or' operator
+	$('.btn_or').click(function(e){
+		e.preventDefault();
+		$(get_input_field(this)).mathquill('write', '∨');
+	});
+
+	// Insert 'or' alternative operator
+	$('.btn_or_alt').click(function(e){
+		e.preventDefault();
+		$(get_input_field(this)).mathquill('write', '|');
+	});
+
+	// Insert greater-than operator
+	var btn_greater = $('.btn_greater');
+	btn_greater.click(function(e){
+		e.preventDefault();
+		$(get_input_field(this)).mathquill('write', '>');
+	});
+
 	// Insert addition operator
 	var q_btn_addition = $('.btn_addition');
 	$(q_btn_addition).click(function(e){
@@ -346,6 +385,7 @@ $(document).ready(function() {
 								$(q_btn_var_dyn).append('<button id="q_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc">'+tmp_var_typed+'</button>');
 								$(s_btn_var_dyn).append('<button id="s_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc">'+tmp_var_typed+'</button>');
 								$('#c_btn_var_dyn').append('<button id="c_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc">'+tmp_var_typed+'</button>');
+								$('#n_btn_var_dyn').append('<button id="n_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc">'+tmp_var_typed+'</button>');
 								$('#o_adv_domain').append('<tr id="o_adv_'+var_id+'" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">'+tmp_var_typed+':</td><td><input id="o_adv_from_'+var_id+'" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_'+var_id+'" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td></td></tr>');
 							}
 						}
@@ -745,6 +785,14 @@ $(document).ready(function() {
 				trigger: 'hover',
 				container: 'body'
 			});
+			$('#n_btn_calc_dyn').append('<button id="n_btn_calc_'+c_count+'" class="btn btn-success btn_calc">'+c_var+'</button>');
+			$('#n_btn_calc_' + c_count).popover({
+				html: true,
+				content: '<img src="http://latex.codecogs.com/svg.latex?'+c_latex+'" border="0"/>',
+				placement: 'top',
+				trigger: 'hover',
+				container: 'body'
+			});
 			c_count++;
 		}
 	});
@@ -895,6 +943,8 @@ function latex_to_asciimath(latex){
 	la = la.replace(/\\cdot/g,'*');
 	la = la.replace(/\\left/g,'');
 	la = la.replace(/\\right/g,'');
+	la = la.replace(/∧/g, '&');
+	la = la.replace(/∨/g, '|');
 	
 	var i = 0;
 	var counter = 0;
