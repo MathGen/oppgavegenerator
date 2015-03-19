@@ -63,6 +63,10 @@ $(document).ready(function () {
         post(/answers/, submit_dict);
 
     });
+
+    $(document).on('keyup', '.input_mathquill', function(e){
+        $('#submit_answer').click();
+    });
 });
 
 function post(path, params, method) {

@@ -347,6 +347,11 @@
                                     <td></td><td></td>
                                 </tr>
                                 <tr>
+                                    <td style="vertical-align: middle; text-align: right; height: 41px;">Betingelser:</td>
+                                    <td style="vertical-align: middle"><input id="opt_conditions" type="checkbox"></td>
+                                    <td></td><td></td>
+                                </tr>
+                                <tr>
                                     <td style="vertical-align: middle; text-align: right; height: 41px">Tillat 0 som svar:</td>
                                     <td style="vertical-align: middle"><input id="opt_allow" type="checkbox"></td>
                                     <td></td><td></td>
@@ -496,6 +501,38 @@
 				</section>
 			</div>
 		</div>
+        <!-- POP-UP: CONDITIONS -->
+        <div id="conditions_modal" class="modal fade" role="dialog">
+            <div class="modal-dialog modal-md">
+                <section class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Betingelser<a class="glyphicon glyphicon-remove pull-right" data-dismiss="modal"></a></h3>
+                    </div>
+                    <div id="con_dyn_input" class="panel-body">
+                        <p>Skriv inn betingelser.</p>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+                        	<div class="col-md-8">
+                                <span id="n_btn_calc_dyn" class="btn-group"><!--DYNAMIC CALCULATION BTNs--></span>
+								<span id="n_btn_var_dyn" class="btn-group"><!--DYNAMIC VARIABLE BTNs--></span>
+								<button id="n_btn_equal" class="btn btn-default btn_equal btn-xs mathquill-embedded-latex">=</button>
+                                <button id="n_btn_par_l" class="btn btn-default btn_par_l btn-xs mathquill-embedded-latex">(</button>
+                                <button id="n_btn_par_r" class="btn btn-default btn_par_r btn-xs mathquill-embedded-latex">)</button>
+                        	</div>
+                        	<div class="col-md-4">
+                            	<div class="btn-group pull-right">
+                                	<button id="n_btn_refresh" class="btn btn-default btn_clear">
+										<span class="glyphicon glyphicon-trash" style="horizontal-align:middle"></span>
+									</button>
+									<button class="btn btn-primary" data-dismiss="modal" type="submit">OK</button>
+                            	</div>
+                        	</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
         <!-- POP-UP: MULTIPLE-CHOICE -->
         <div id="multiple_choice_modal" class="modal fade" role="dialog">
             <div class="modal-dialog modal-md">
