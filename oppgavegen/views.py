@@ -41,7 +41,7 @@ def index(request):
 
     question = arr['question']
     primary_key = arr['primary_key']
-    variable_dictionary = arr['variable_dictionary']
+    variable_dictionary = arr['variables_used']
     template_specific = arr['template_specific']
     number_of_answers = arr['number_of_answers']
     template_type = arr['template_type']
@@ -145,7 +145,6 @@ def answers(request):
 
             print(solution)
             user_answer = user_answer.split('§') #if a string doesn't contain the split character it returns as a list with 1 element
-
 
             #We format both the user answer and the answer the same way.
             user_answer = [ generation.after_equal_sign(x) for x in user_answer ]
