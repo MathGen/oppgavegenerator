@@ -176,5 +176,5 @@ def new_template(request):
         topics += e.topic
     topics = topics[1:]
     context_dict = {'topics':topics}
-    return render_to_response('gentemplate.html', context_dict, context)
+    return render_to_response('newtemplate.html', context_dict, context)
 
