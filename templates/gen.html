@@ -514,11 +514,15 @@
                     <div class="panel-footer">
                         <div class="row">
                         	<div class="col-md-8">
-
+                                <span id="n_btn_calc_dyn" class="btn-group"><!--DYNAMIC CALCULATION BTNs--></span>
+								<span id="n_btn_var_dyn" class="btn-group"><!--DYNAMIC VARIABLE BTNs--></span>
+								<button id="n_btn_equal" class="btn btn-default btn_equal btn-xs mathquill-embedded-latex">=</button>
+                                <button id="n_btn_par_l" class="btn btn-default btn_par_l btn-xs mathquill-embedded-latex">(</button>
+                                <button id="n_btn_par_r" class="btn btn-default btn_par_r btn-xs mathquill-embedded-latex">)</button>
                         	</div>
                         	<div class="col-md-4">
                             	<div class="btn-group pull-right">
-                                	<button id="con_btn_refresh" class="btn btn-default">
+                                	<button id="n_btn_refresh" class="btn btn-default btn_clear">
 										<span class="glyphicon glyphicon-trash" style="horizontal-align:middle"></span>
 									</button>
 									<button class="btn btn-primary" data-dismiss="modal" type="submit">OK</button>
