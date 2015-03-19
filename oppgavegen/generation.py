@@ -100,12 +100,12 @@ def task_with_solution(template_id):
         fill_in_dict = fill_in_the_blanks(fill_in)
         new_task = new_task + '\n' + fill_in_dict['fill_in'].replace('\\n', '\n')
         new_task = replace_variables_from_array(variables_used.split('§'), new_task)
-        print(variables_used)
         new_task = parse_solution(new_task)
         template_specific = fill_in_dict['hole_positions']
     if dictionary is not None:
         new_task = replace_words(new_task, dictionary)
         new_solution = replace_words(new_solution, dictionary) #todo this logic moved into the view. do that.
+        #todo might have to send a list of what words were replaced as well (a bit like variables used)
         new_answer = replace_words(new_answer, dictionary)
     number_of_answers = len(new_answer.split('§'))
 

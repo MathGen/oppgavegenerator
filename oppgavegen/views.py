@@ -54,7 +54,7 @@ class QuestionForm(forms.Form):
     user_answer = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400)
     primary_key = forms.IntegerField()
     variable_dictionary = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400)
-    template_specific = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400)
+    template_specific = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400, required=False)
     template_type = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=20)
 
     def process(self):
@@ -122,6 +122,7 @@ def answers(request):
         counter = 0
         if form.is_valid():
             form_values = form.process()
+            print(form_values)
             user_answer = form_values['user_answer']
             template_type = form_values['template_type']
             template_specific = form_values['template_specific']
@@ -135,6 +136,7 @@ def answers(request):
                 answer = generation.replace_variables_from_array(variable_dictionary, q.answer)
             else:
                 answer = generation.get_values_from_position(template_specific,q.solution)
+                answer = generation.replace_variables_from_array(variable_dictionary, answer)
             answer = generation.parse_answer(answer)
             answer = answer.replace('`','')
             answer = answer.split('§')

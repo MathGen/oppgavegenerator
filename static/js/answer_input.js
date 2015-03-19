@@ -41,6 +41,15 @@ $(document).ready(function () {
         if (template_type == 'multiple') {
             user_answer = getRadioValue('answer_button');
         }
+        else if(template_type == 'blanks'){
+            $('#question').find('.blank_input').each(function(f){
+                if(f > 0) {
+                    user_answer += '$';
+                }
+                var f_input = $(this).mathquill('latex');
+                user_answer += latex_to_sympy(f_input);
+            });
+        }
         else {
             for (j = 0; j < number_of_answers; j++) {
                 if (j > 0) {
