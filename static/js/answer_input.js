@@ -68,7 +68,9 @@ $(document).ready(function () {
     });
 
     $(document).on('keyup', '.input_mathquill', function(e){
-        $('#submit_answer').click();
+        if(e.keyCode == 13){
+            $('#submit_answer').click();
+        }
     });
 });
 
