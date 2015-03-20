@@ -63,6 +63,10 @@ sub{							/* between bootstrap*/
 .select_error{
 	border: 2px solid #D9534F;
 }
+.error_content{
+	color: #D9534F;
+	display: inline;
+}
 .loading{
 	background-image: url('/static/img/loading.gif');
 	width: 31px;

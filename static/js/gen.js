@@ -1051,7 +1051,7 @@ function scrollTo(id){
 function error_message(element_id, message){
 	var element = $('#' + element_id);
 	$(document).ready(function(){
-		element.after('<p class="error_content" style="color: red; display: none">* '+message+'</p>');
+		element.after('<p class="error_content">* '+message+'</p>');
 		$('.error_content').show(100).delay(5000).hide(100).queue(function(){
 			$(this).remove();
 		});
