@@ -16,10 +16,11 @@ $(document).ready(function () {
         choices = choices.split('§');
         for (var i = 0; i < choices.length; i++) {
             text = '`' + choices[i] + '`' + '<br />';
-            w_target.append('<input type="radio" name="answer_button" id="radio' + i + '" value="' + choices[i] + '"/>' + text);
+            w_target.append('<div><input type="radio" name="answer_button" id="radio' + i + '" value="' + choices[i] + '"/>' + text + '</div>');
         }
     }
     else if (template_type == 'normal') {
+        $('#w_answer_head').show();
         for (i = 0; i < number_of_answers; i++) {
             //$('#a_target').append('<input class="form-control" type="textbox" name="answer_box" id="ans_box'+ i +'" />');
             if(i > 0){
