@@ -1,15 +1,28 @@
-{% extends "base.html" %}
+{% extends "../templates/registration/registration_base.html" %}
 {% load i18n %}
 
 {% block content %}
-<form method="post" action=".">
-  {% csrf_token %} 
-  {{ form.as_p }}
+<div class="col-lg-6 center">
+    <section id="table_panel" class="panel panel-default center">
+        <div class="panel-heading"><h3 class="panel-title">Logg inn</h3></div>
+        <div class="panel-body">
 
-  <input type="submit" value="{% trans 'Log in' %}" />
-  <input type="hidden" name="next" value="{{ next }}" />
-</form>
 
-<p>{% trans "Forgot password" %}? <a href="{% url 'auth_password_reset' %}">{% trans "Reset it" %}</a>!</p>
-<p>{% trans "Not a member" %}? <a href="{% url 'registration_register' %}">{% trans "Register" %}</a>!</p>
+            <form method="post" action=".">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <input type="submit" value="{% trans 'Logg inn' %}"/>
+                <input type="hidden" name="next" value="{{ next }}"/>
+
+
+            </form>
+
+            <p>{% trans "Glemt passord" %}? <a href="{% url 'auth_password_reset' %}">{% trans "Få nytt" %}</a>!</p>
+            <p>{% trans "Ikke registert" %}? <a href="{% url 'registration_register' %}">{% trans "Registrer" %}</a>!</p>
+
+        </div>
+    </section>
+</div>
+
 {% endblock %}
