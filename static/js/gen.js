@@ -501,29 +501,34 @@ $(document).ready(function() {
 	var s_btn_next = $('#s_btn_next');
 	$(s_btn_next).click(function(e){
 		e.preventDefault();
-		if(STEP < ($('.step').length)){
-			$('#s_btn_del_' + STEP).hide();
-			STEP++;
-			$('#step_' + STEP).fadeIn();
-			S_INPUT = '#s_input_mathquill_' + STEP;
-			scrollTo($('#step_' + STEP));
-		}
+		$('#s_btn_del_' + STEP).hide();
+		STEP++;
+		$('#s_form').append('<div id="step_' + STEP + '" class="step" style="display: none"><hr>' +
+			'<h4>Steg ' + STEP + '<a id="s_btn_del_'+STEP+'" class="glyphicon glyphicon-remove del_step" style="float:right"></a></h4>' +
+			'<input id="s_text_' + STEP + '" type="text" class="form-control" placeholder="Forklaring...">' +
+			'<div class="input_field s_input_field"><span id="s_input_mathquill_'+STEP+'" class="form-control input_mathquill"></span></div>');
+		$('#s_input_mathquill_' + STEP).mathquill('editable');
+		$('#step_' + STEP).fadeIn();
+		S_INPUT = '#s_input_mathquill_' + STEP;
+		scrollTo($('#step_' + STEP));
 	});
 	
 	// Add another answer
 	var a_btn_next = $('#a_btn_next');
 	$(a_btn_next).click(function(e){
 		e.preventDefault();
-		if(ANSWER < ($('.answer').length)){
-			if(ANSWER == 1){
-				$('#ans_title_1').show();
-			}
-			$('#a_btn_del_' + ANSWER).hide();
-			ANSWER++;
-			$('#answer_' + ANSWER).fadeIn();
-			A_INPUT = '#a_input_mathquill_' + ANSWER;
-			scrollTo($('#answer_' + ANSWER));
+		$('#a_btn_del_' + ANSWER).hide();
+		if(ANSWER == 1){
+			$('#ans_title_1').show();
 		}
+		ANSWER++;
+		$('#a_form').append('<div id="answer_'+ANSWER+'" class="answer" style="display: none"><hr>' +
+			'<h4>Svar '+ANSWER+'<a id="a_btn_del_'+ANSWER+'" class="glyphicon glyphicon-remove del_answer" style="float:right"></a></h4>' +
+			'<div class="input_field a_input_field"><span id="a_input_mathquill_'+ANSWER+'" class="form-control input_mathquill"></span></div>');
+		$('#a_input_mathquill_' + ANSWER).mathquill('editable');
+		$('#answer_' + ANSWER).fadeIn();
+		A_INPUT = '#a_input_mathquill_' + ANSWER;
+		scrollTo($('#answer_' + ANSWER));
 	});
 
 	// Add another text-substitution
@@ -546,12 +551,12 @@ $(document).ready(function() {
 	});
 
 	// Delete solution step
-	var s_btn_del_step = $('.del_step');
-	$(s_btn_del_step).click(function(e){
+	$(document).on('click', '.del_step', function(e){
 		e.preventDefault();
 		var btn_id = parseInt($(this).attr("id").match(/[\d]+$/));
-		$(get_input_field(this)).mathquill('revert').mathquill('editable');
-		$('#step_' + btn_id).fadeOut();
+		$('#step_' + btn_id).fadeOut(function(){
+			$(this).remove();
+		});
 		STEP--;
 		$('#s_btn_del_' + STEP).show();
 		S_INPUT = '#s_input_mathquill_' + STEP;
@@ -564,15 +569,15 @@ $(document).ready(function() {
 	});
 	
 	// Delete alternative answer
-	var a_btn_del_step = $('.del_answer');
-	$(a_btn_del_step).click(function(e){
+	$(document).on('click', '.del_answer', function(e){
 		e.preventDefault();
 		var btn_id = parseInt($(this).attr("id").match(/[\d]+$/));
 		if(ANSWER == 2){
 			$('#ans_title_1').hide();
 		}
-		$(get_input_field(this)).mathquill('revert').mathquill('editable');
-		$('#answer_' + btn_id).fadeOut();
+		$('#answer_' + btn_id).fadeOut(function(){
+			$(this).remove();
+		});
 		ANSWER--;
 		$('#a_btn_del_' + ANSWER).show();
 		A_INPUT = '#a_input_mathquill_' + ANSWER;
@@ -593,20 +598,22 @@ $(document).ready(function() {
 		if(btn_id == 's'){
 			$('#o_panel').fadeOut();
 			$('.btn-group-a').prop('disabled', false);
-			for(var i = ANSWER; i > 1; i--){
-				$(A_INPUT + ANSWER).mathquill('revert').mathquill('editable');
-				$('#answer_' + i).fadeOut();
+			if(ANSWER > 1){
+				for(var ans = 2; ans <= ANSWER; ans++){
+					$('#answer_' + ans).remove();
+				}
 			}
 			ANSWER = 1;
-			$(A_INPUT + ANSWER).mathquill('revert').mathquill('editable');
+			$('#a_input_mathquill_1').mathquill('revert').mathquill('editable');
 			$('#a_panel').fadeOut();
 			$('.btn-group-s').prop('disabled', false);
-			for(var i = STEP; i > 1; i--){
-				$(get_input_field(this)).mathquill('revert').mathquill('editable');
-				$('#step_' + i).fadeOut();
+			if(STEP > 1){
+				for(var step = 2; step <= STEP; step++){
+					$('#step_' + step).remove();
+				}
 			}
 			STEP = 1;
-			$(get_input_field(this)).mathquill('revert').mathquill('editable');
+			$('#s_input_mathquill_1').mathquill('revert').mathquill('editable');
 			$('#s_panel').fadeOut();
 			$('.btn-group-q').prop('disabled', false);
 			scrollTo($('#q_panel'));
@@ -617,12 +624,13 @@ $(document).ready(function() {
 		else if(btn_id == 'a'){
 			$('#o_panel').fadeOut();
 			$('.btn-group-a').prop('disabled', false);
-			for(var i = ANSWER; i > 1; i--){
-				$(get_input_field(this)).mathquill('revert').mathquill('editable');
-				$('#answer_' + i).fadeOut();
+			if(ANSWER > 1){
+				for(var ans = 2; ans <= ANSWER; ans++){
+					$('#answer_' + ans).remove();
+				}
 			}
 			ANSWER = 1;
-			$(get_input_field(this)).mathquill('revert').mathquill('editable');
+			$('#a_input_mathquill_1').mathquill('revert').mathquill('editable');
 			$('#a_panel').fadeOut();
 			$('#ans_title_1').hide();
 			$('.btn-group-s').prop('disabled', false);
