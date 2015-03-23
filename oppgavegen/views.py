@@ -72,10 +72,6 @@ class TemplateForm(ModelForm):
             cd =  [self.cleaned_data['question'], self.cleaned_data['answer']]
             return cd
 
-def test(request):
-    context = RequestContext(request)
-    return render_to_response('test.html', context)
-
 @login_required
 @user_passes_test(is_teacher, '/')
 def gen(request):
