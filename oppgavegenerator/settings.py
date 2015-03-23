@@ -107,6 +107,7 @@ TEMPLATE_CONTEXT_PROCESSORS = ['django.core.context_processors.request',
 REGISTRATION_OPEN = True
 ACCOUNT_ACTIVATION_DAYS = 7     # Amount of days a user has to activate their account
 REGISTRATION_AUTO_LOGIN = True  # Auto-login after activation. True/False
+REGISTRATION_TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), "templates/registration/")
 SITE_ID = 1                     # Temporary solution for local production-environment (contrib.sites)
 
 LOGIN_URL = '/user/login/'

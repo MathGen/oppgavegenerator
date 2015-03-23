@@ -6324,6 +6324,13 @@ button.close {
   margin-right: auto;
   margin-left: auto;
 }
+
+.center {
+  float: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .pull-right {
   float: right !important;
 }
