@@ -2,6 +2,7 @@
 from random import randint
 from random import sample
 from random import shuffle
+from random import choice
 import collections
 from math import ceil
 from oppgavegen.nsp import NumericStringParser
@@ -102,6 +103,15 @@ def task_with_solution(template_id):
         new_task = replace_variables_from_array(variables_used.split('§'), new_task)
         new_task = parse_solution(new_task)
         template_specific = fill_in_dict['hole_positions']
+    elif template_type == 'multifill':
+        new_choices = parse_solution(new_choices)
+        new_choices = new_choices.split('§')
+        new_choices.append(parse_solution(new_answer).replace('§', 'og'))
+        shuffle(new_choices) #Shuffles the choices so that the answer is not always in the same place.
+        new_choices = '§'.join(new_choices)
+        multifill_dict = multifill(new_choices, variable_dict)
+        template_specific = multifill_dict['question'] + '|||' + multifill_dict['replaced']
+        pass
     if dictionary is not None:
         new_task = replace_words(new_task, dictionary)
         new_solution = replace_words(new_solution, dictionary) #todo this logic moved into the view. do that.
@@ -293,23 +303,33 @@ def array_to_string(array):
 #Conditions will have to be tried again if one of the conditions fails and changes numbers around.
 def check_conditions(conditions, variable_dict,domain_dict):
     redo = True #keeps track of if the conditions have to be tried again
-    conditions = conditions.split('§')
     conditions_dict = {}
 
-    while redo:
-        counter = 0
-        for c in conditions:
-            if '<' in c:
-                conditions_dict = lesser_than(c, domain_dict, variable_dict)
-            elif '>' in c:
-                conditions_dict = lesser_than(greater_to_lesser_than(c), domain_dict, variable_dict)
-            variable_dict = conditions_dict['variable_dict'] #Updates the variable dictionary
-            something_changed = conditions_dict['something_changed'] #Tells if something has changed
-            if something_changed:
-                counter += 1
-        if counter == 0:
-            redo = False #if nothing has changed, don't try the conditions again
-
+    #Do it the fast way if | and = is not present in conditions
+    if (not '|' in conditions) and (not '=' in conditions):
+        conditions = conditions.replace(')', '') #todo: find out why ) bogs it up.
+        conditions = conditions.replace('(', '')
+        conditions = conditions.split('&')
+        while redo:
+            counter = 0
+            for c in conditions:
+                if '<' in c:
+                    conditions_dict = lesser_than(c, domain_dict, variable_dict)
+                elif '>' in c:
+                    conditions_dict = lesser_than(greater_to_lesser_than(c), domain_dict, variable_dict)
+                variable_dict = conditions_dict['variable_dict'] #Updates the variable dictionary
+                something_changed = conditions_dict['something_changed'] #Tells if something has changed
+                if something_changed:
+                    counter += 1
+            if counter == 0:
+                redo = False #if nothing has changed, don't try the conditions again
+    else: #The slow/random way. todo: find a smart/better way to do this
+        #Check conditions --> if false: change a variable -> check conditions
+        inserted_conditions = string_replace(conditions, variable_dict)
+        while not sympify(inserted_conditions):
+            variable_to_change = choice(list(variable_dict.keys())) #chose a random key from variable_dict
+            variable_dict[variable_to_change] = new_random_value(variable_to_change, domain_dict, 0, '')
+            inserted_conditions = string_replace(conditions, variable_dict)
     return variable_dict #maybe send a counter with how long it took to get trough conditions
 
 ###lesser_than###
@@ -495,3 +515,14 @@ def get_values_from_position(position_string, solution):
         values += '§' + (solution[int(positions[0]):int(positions[1])])
     return values[1:]
 
+###multifill###
+#Makes the template into a multiple fill in the blanks.
+def multifill(string, variable_dict):
+    possible_holes = list(variable_dict.keys())
+    shuffle(possible_holes)
+    string.replace(possible_holes[0], '@boxx@')
+    replaced = possible_holes[0]
+
+    return_dict = {'question' : string, 'replaced' : replaced}
+
+    return
