@@ -60,13 +60,16 @@ $(document).ready(function() {
 	$(t_btn_ok).click(function(e){
 		e.preventDefault();
 		var t_input = $('#t_input').val();
-		$(Q_INPUT).mathquill('cmd', '\\text').mathquill('cmd', t_input);
+		$(Q_INPUT).mathquill('cmd', '\\text').mathquill('cmd', ' ' + t_input + ' ');
 		$('#t_input').val("");
 		var custom_tab_event = $.Event('keydown');
 		custom_tab_event.bubbles = true;
 		custom_tab_event.cancelable = true;
 		custom_tab_event.keyCode = 9;
 		$(Q_INPUT).trigger(custom_tab_event);
+		$('#text_modal').on('hidden.bs.modal', function () {
+			$(Q_INPUT).find('textarea').focus();
+		});
 	});
 	
 	// Cancel text-input
@@ -74,6 +77,9 @@ $(document).ready(function() {
 	$(t_btn_cancel).click(function(e){
 		e.preventDefault();
 		$('#t_input').val("");
+		$('#text_modal').on('hidden.bs.modal', function () {
+			$(Q_INPUT).find('textarea').focus();
+		});
 	});
 	
 	// Open text-input with focus
@@ -116,6 +122,7 @@ $(document).ready(function() {
 		$('#o_adv_domain').append('<tr id="o_adv_'+q_var_id+'" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">'+q_var+':</td><td><input id="o_adv_from_'+q_var_id+'" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_'+q_var_id+'" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td></td></tr>');
 		q_var = String.fromCharCode(q_var.charCodeAt(0) + 1);
 		q_var_id++;
+		$(Q_INPUT).find('textarea').focus();
 	});
 	
 	// Insert variable a,b,c,..
@@ -130,6 +137,7 @@ $(document).ready(function() {
 			$(this).attr('id', 'R' + id).addClass('content_var');
 			}
 		});
+		$(get_input_field(this)).find('textarea').focus();
 	});
 	
 	// Insert unknown x,y,z
@@ -145,149 +153,157 @@ $(document).ready(function() {
 			$(this).addClass('content_x');
 			}
 		});
+		$(get_input_field(this)).find('textarea').focus();
 	});
 	
 	// Insert equal sign
 	var btn_equal = $('.btn_equal');
 	$(btn_equal).click(function(e){
 		e.preventDefault();
-		$(get_input_field(this)).mathquill('write', '=');
+		$(get_input_field(this)).mathquill('write', '=').find('textarea').focus();
 	});
 	
 	// Insert parentheses operator
 	var q_btn_par = $('.btn_par');
 	$(q_btn_par).click(function(e){
 		e.preventDefault();
-		$(get_input_field(this)).mathquill('write', '\\left(\\right)');
+		$(get_input_field(this)).mathquill('cmd', '(').find('textarea').focus();
 	});
 
 	// Insert left parentheses
 	var btn_par_l = $('.btn_par_l');
 	btn_par_l.click(function(e){
 		e.preventDefault();
-		$(get_input_field(this)).mathquill('write', '(');
+		$(get_input_field(this)).mathquill('write', '(').find('textarea').focus();
 	});
 
 	// Insert right parentheses
 	var btn_par_r = $('.btn_par_r');
 	btn_par_r.click(function(e){
 		e.preventDefault();
-		$(get_input_field(this)).mathquill('write', ')');
+		$(get_input_field(this)).mathquill('write', ')').find('textarea').focus();
 	});
 
 	// Insert less-than operator
 	var btn_less = $('.btn_less');
 	btn_less.click(function(e){
 		e.preventDefault();
-		$(get_input_field(this)).mathquill('write', '<');
+		$(get_input_field(this)).mathquill('write', '<').find('textarea').focus();
 	});
 
 	// Insert 'and' operator
 	$('.btn_and').click(function(e){
 		e.preventDefault();
-		$(get_input_field(this)).mathquill('write', '∧');
+		$(get_input_field(this)).mathquill('write', '∧').find('textarea').focus();
 	});
 
 	// Insert 'and' alternative operator
 	$('.btn_and_alt').click(function(e){
 		e.preventDefault();
-		$(get_input_field(this)).mathquill('write', '&');
+		$(get_input_field(this)).mathquill('write', '&').find('textarea').focus();
 	});
 
 	// Insert 'or' operator
 	$('.btn_or').click(function(e){
 		e.preventDefault();
-		$(get_input_field(this)).mathquill('write', '∨');
+		$(get_input_field(this)).mathquill('write', '∨').find('textarea').focus();
 	});
 
 	// Insert 'or' alternative operator
 	$('.btn_or_alt').click(function(e){
 		e.preventDefault();
-		$(get_input_field(this)).mathquill('write', '|');
+		$(get_input_field(this)).mathquill('write', '|').find('textarea').focus();
 	});
 
 	// Insert greater-than operator
 	var btn_greater = $('.btn_greater');
 	btn_greater.click(function(e){
 		e.preventDefault();
-		$(get_input_field(this)).mathquill('write', '>');
+		$(get_input_field(this)).mathquill('write', '>').find('textarea').focus();
 	});
 
 	// Insert addition operator
 	var q_btn_addition = $('.btn_addition');
 	$(q_btn_addition).click(function(e){
 		e.preventDefault();
-		$(get_input_field(this)).mathquill('write', '+');
+		$(get_input_field(this)).mathquill('write', '+').find('textarea').focus();
 	});
 	
 	// Insert subtraction operator
 	var q_btn_subtraction = $('.btn_subtraction');
 	$(q_btn_subtraction).click(function(e){
 		e.preventDefault();
-		$(get_input_field(this)).mathquill('write', '-');
+		$(get_input_field(this)).mathquill('write', '-').find('textarea').focus();
 	});
 	
 	// Insert multiplication operator
 	var q_btn_multiplication = $('.btn_multiplication');
 	$(q_btn_multiplication).click(function(e){
 		e.preventDefault();
-		$(get_input_field(this)).mathquill('write', '\\cdot');
+		$(get_input_field(this)).mathquill('write', '\\cdot').find('textarea').focus();
 	});
 	
 	// Insert division operator
 	var q_btn_division = $('.btn_division');
 	$(q_btn_division).click(function(e){
 		e.preventDefault();
-		$(get_input_field(this)).mathquill('write', '\\frac{}{}');
+		$(get_input_field(this)).mathquill('cmd', '\\frac').find('textarea').focus();
 	});
 
 	// Insert plus-minus
 	var btn_pm = $('.btn_pm');
 	btn_pm.click(function(e){
 		e.preventDefault();
-		$(get_input_field(this)).mathquill('write', '\\pm');
+		$(get_input_field(this)).mathquill('write', '\\pm').find('textarea').focus();
 	});
 
 	// Insert exponent
 	var q_btn_exponent = $('.btn_exponent');
 	$(q_btn_exponent).click(function(e){
 		e.preventDefault();
-		$(get_input_field(this)).mathquill('write', '^{}');
+		$(get_input_field(this)).mathquill('cmd', '^').find('textarea').focus();
 	});
 	
 	// Insert subscript
 	var q_btn_subscript = $('.btn_subscript');
 	$(q_btn_subscript).click(function(e){
 		e.preventDefault();
-		$(get_input_field(this)).mathquill('write', '_{}');
+		$(get_input_field(this)).mathquill('cmd', '_').find('textarea').focus();
 	});
 	
 	// Insert square root
 	var q_btn_sqrt = $('.btn_sqrt');
 	$(q_btn_sqrt).click(function(e){
 		e.preventDefault();
-		$(get_input_field(this)).mathquill('write', '\\sqrt{}');
+		$(get_input_field(this)).mathquill('cmd', '\\sqrt').find('textarea').focus();
 	});
 	
 	// Insert integral
 	var q_btn_integral = $('.btn_int');
 	$(q_btn_integral).click(function(e){
 		e.preventDefault();
-		$(get_input_field(this)).mathquill('write', '\\int\\left(\\right)');
+		//$(get_input_field(this)).mathquill('write', '\\int\\left(\\right)');
+		$(get_input_field(this)).mathquill('cmd', '\\int').find('textarea').focus();
 	});
 	
 	// Insert integral a^b
 	var q_btn_integral_ab = $('.btn_int_ab');
 	$(q_btn_integral_ab).click(function(e){
 		e.preventDefault();
-		$(get_input_field(this)).mathquill('write', '\\int_{}^{}\\left(\\right)');
+		//$(get_input_field(this)).mathquill('write', '\\int_{}^{}\\left(\\right)');
+		$(get_input_field(this)).mathquill('write', '\\int_{}').mathquill('cmd', '^').find('textarea').focus();
+		// A custom event to press the left arrow twice so the integral will focus on the subscript-limit.
+		var custom_left_event = $.Event('keydown');
+		custom_left_event.keyCode = 37;
+		$(get_input_field(this)).trigger(custom_left_event).trigger(custom_left_event);
+
 	});
 
 	// Insert binomial
 	var btn_binom = $('.btn_binom');
 	btn_binom.click(function(e){
 		e.preventDefault();
-		$(get_input_field(this)).mathquill('write', '\\binom{}{}');
+		$(get_input_field(this)).mathquill('cmd', '\\binom').find('textarea').focus();
 	});
 
 	// Insert calculated A,B,C,..
@@ -301,6 +317,7 @@ $(document).ready(function() {
 			$(this).addClass('content_calc');
 			}
 		});
+		$(get_input_field(this)).find('textarea').focus();
 	});
 	
 	// Erase last input
@@ -324,7 +341,7 @@ $(document).ready(function() {
 				}
 			}
 			for(var n = 0; n < check_char.length; n++){
-				found = false;
+				var found = false;
 				$(Q_INPUT).find('var').each(function(){
 					if($(this).html() == check_char[n]){
 						found = true;
@@ -338,7 +355,7 @@ $(document).ready(function() {
 				}
 			}
 		}
-		//$(get_input_field(this)).find('textarea').focus();
+		$('#q_input_mathquill').find('textarea').focus();
 	});
 	
 	// Clear input
@@ -358,7 +375,7 @@ $(document).ready(function() {
 		else{
 			$(get_input_field(this)).mathquill('revert').mathquill('editable');
 		}
-		//$(get_input_field(this)).find('textarea').focus();
+		$(get_input_field(this)).find('textarea').focus();
 	});
 	
 	// Keyboard-listener for input-fields
@@ -452,6 +469,7 @@ $(document).ready(function() {
 					var s_panel = $('#s_panel');
 					s_panel.fadeIn();
 					scrollTo(s_panel);
+					$(S_INPUT).find('textarea').focus();
 				}
 				else{
 					$(Q_INPUT).addClass('select_error');
@@ -477,6 +495,7 @@ $(document).ready(function() {
 				var a_panel = $('#a_panel');
 				a_panel.fadeIn();
 				scrollTo(a_panel);
+				$(A_INPUT).find('textarea').focus()
 			}
 		}
 		else if(btn_id == 'a'){
@@ -511,6 +530,7 @@ $(document).ready(function() {
 		$('#step_' + STEP).fadeIn();
 		S_INPUT = '#s_input_mathquill_' + STEP;
 		scrollTo($('#step_' + STEP));
+		$(S_INPUT).find('textarea').focus();
 	});
 	
 	// Add another answer
@@ -529,6 +549,7 @@ $(document).ready(function() {
 		$('#answer_' + ANSWER).fadeIn();
 		A_INPUT = '#a_input_mathquill_' + ANSWER;
 		scrollTo($('#answer_' + ANSWER));
+		$(A_INPUT).find('textarea').focus();
 	});
 
 	// Add another text-substitution
@@ -566,6 +587,7 @@ $(document).ready(function() {
 		else{
 			scrollTo($('#step_' + STEP));
 		}
+		$(S_INPUT).find('textarea').focus();
 	});
 	
 	// Delete alternative answer
@@ -587,6 +609,7 @@ $(document).ready(function() {
 		else{
 			scrollTo($('#answer_' + ANSWER));
 		}
+		$(A_INPUT).find('textarea').focus();
 	});
 	
 	// Close panel
@@ -604,6 +627,7 @@ $(document).ready(function() {
 				}
 			}
 			ANSWER = 1;
+			A_INPUT = '#a_input_mathquill_' + ANSWER;
 			$('#a_input_mathquill_1').mathquill('revert').mathquill('editable');
 			$('#a_panel').fadeOut();
 			$('.btn-group-s').prop('disabled', false);
@@ -613,10 +637,12 @@ $(document).ready(function() {
 				}
 			}
 			STEP = 1;
+			S_INPUT = '#s_input_mathquill_' + STEP;
 			$('#s_input_mathquill_1').mathquill('revert').mathquill('editable');
 			$('#s_panel').fadeOut();
 			$('.btn-group-q').prop('disabled', false);
 			scrollTo($('#q_panel'));
+			$(Q_INPUT).find('textarea').focus();
 		}
 		else if(btn_id == 'c'){
 			$(C_INPUT).mathquill('revert').mathquill('editable');
@@ -630,6 +656,7 @@ $(document).ready(function() {
 				}
 			}
 			ANSWER = 1;
+			A_INPUT = '#a_input_mathquill_' + ANSWER;
 			$('#a_input_mathquill_1').mathquill('revert').mathquill('editable');
 			$('#a_panel').fadeOut();
 			$('#ans_title_1').hide();
@@ -640,6 +667,7 @@ $(document).ready(function() {
 			else{
 				scrollTo($('#step_' + STEP));
 			}
+			$(S_INPUT).find('textarea').focus();
 		}
 		else if(btn_id == 'o'){
 			$('#o_panel').fadeOut();
@@ -650,6 +678,7 @@ $(document).ready(function() {
 			else{
 				scrollTo($('#answer_' + ANSWER));
 			}
+			$(A_INPUT).find('textarea').focus();
 		}
 	});
 	
@@ -1213,6 +1242,13 @@ $(window).bind('beforeunload', function(e){
 	if(TOPIC_SELECTED && !SUBMITTING){
 		return 'Are you sure you want to leave?';
 	}
+});
+
+/**
+ * Focus on calculation:input-field, when modal is shown.
+ */
+$('#calc_modal').on('shown.bs.modal', function () {
+	$(C_INPUT).find('textarea').focus();
 });
 
 function post(path, params, method) {
