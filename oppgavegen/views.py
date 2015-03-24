@@ -173,3 +173,4 @@ def new_template(request):
     context_dict = {'topics':topics}
     return render_to_response('newtemplate.html', context_dict, context)
 
+

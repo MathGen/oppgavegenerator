@@ -8,37 +8,27 @@
 
 
 {% block content %}
-<div class="col-md-4 col-md-offset-4">
-    <section id="table_panel" class="panel panel-default center center-block">
-        <div class="panel-heading"><h3 class="panel-title">Logg inn</h3></div>
-        <div class="panel-body">
+    <div class="col-md-4 col-md-offset-4">
+        <section id="table_panel" class="panel panel-default center center-block">
+            <div class="panel-heading"><h3 class="panel-title">Logg inn</h3></div>
+            <div class="panel-body">
 
+                <form action="." method="post" class="form">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    {% buttons %}
+                        <button type="submit" class="btn btn-primary pull-right">
+                            {% bootstrap_icon "ok" %} Logg Inn
+                        </button>
+                    {% endbuttons %}
+                </form>
 
-            <form method="post" action=".">
-                {% csrf_token %}
-                {{ form.as_p }}
+                <p><a href="{% url 'auth_password_reset' %}">{% trans "Glemt passord" %}?</a></p>
 
-                <input type="submit" value="{% trans 'Logg inn' %}"/>
-                <input type="hidden" name="next" value="{{ next }}"/>
+                <p><a href="{% url 'registration_register' %}">{% trans "Ikke registrert" %}?</a></p>
 
-
-            </form>
-
-            <p>{% trans "Glemt passord" %}? <a href="{% url 'auth_password_reset' %}">{% trans "Få nytt" %}</a>!</p>
-            <p>{% trans "Ikke registert" %}? <a href="{% url 'registration_register' %}">{% trans "Registrer" %}</a>!</p>
-<!-- BOOTSTRAP-FORM
-<form action="." method="post" class="form">
-  {% csrf_token %}
-  {% bootstrap_form form %}
-  {% buttons %}
-    <button type="submit" class="btn btn-primary">
-      {% bootstrap_icon "star" %} Logg Inn
-    </button>
-  {% endbuttons %}
-</form> -->
-
-        </div>
-    </section>
-</div>
+            </div>
+        </section>
+    </div>
 
 {% endblock %}
