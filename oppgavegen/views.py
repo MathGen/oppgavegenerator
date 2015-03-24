@@ -72,10 +72,6 @@ class TemplateForm(ModelForm):
             cd =  [self.cleaned_data['question'], self.cleaned_data['answer']]
             return cd
 
-def test(request):
-    context = RequestContext(request)
-    return render_to_response('test.html', context)
-
 @login_required
 @user_passes_test(is_teacher, '/')
 def gen(request):
@@ -129,9 +125,6 @@ def answers(request):
             q = Template.objects.get(pk=form_values['primary_key'])
             variable_dictionary = form_values['variable_dictionary'].split('§')
 
-            print(variable_dictionary)
-            print(q.answer)
-
             if template_type != 'blanks':
                 answer = generation.replace_variables_from_array(variable_dictionary, q.answer)
             else:
@@ -140,16 +133,15 @@ def answers(request):
             answer = generation.parse_answer(answer)
             answer = answer.replace('`','')
             answer = answer.split('§')
-
             solution = str((q.question_text).replace('\\n', '\n')) +"\n"+str(q.solution).replace('\\n', '\n')
             solution = generation.replace_variables_from_array(variable_dictionary, solution)
             solution = generation.parse_solution(solution)
 
-            print(solution)
+            #print(solution)
             user_answer = user_answer.split('§') #if a string doesn't contain the split character it returns as a list with 1 element
             print(user_answer)
             #We format both the user answer and the answer the same way.
-            user_answer = [ generation.after_equal_sign(x) for x in user_answer ]
+            user_answer = [generation.after_equal_sign(x) for x in user_answer]
             user_answer = generation.calculate_array(user_answer)
             answer = [ generation.after_equal_sign(x) for x in answer ]
             answer = generation.calculate_array(answer)
@@ -162,6 +154,7 @@ def answers(request):
     return  render_to_response('answers')
 
 @login_required
+@user_passes_test(is_teacher, '/')
 def templates(request):
     table = BootstrapTemplateTable(Template.objects.all())
     RequestConfig(request).configure(table)
@@ -179,4 +172,5 @@ def new_template(request):
     topics = topics[1:]
     context_dict = {'topics':topics}
     return render_to_response('newtemplate.html', context_dict, context)
+
 

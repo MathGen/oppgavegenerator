@@ -1,8 +1,12 @@
+var template_type = "";
+var number_of_answers = "";
+var num_boxx = 0;
+
 $(document).ready(function () {
     var text = 'some text';
-    var template_type = $('#template_type').html();
+    template_type = $('#template_type').html();
     var template_specific = $('#template_specific').html();
-    var number_of_answers = $('#number_of_answers').html();
+    number_of_answers = $('#number_of_answers').html();
     var primary_key = $('#primary_key').html();
     var variable_dictionary = $('#variable_dictionary').html();
     var w_target = $('#w_target');
@@ -12,22 +16,23 @@ $(document).ready(function () {
         choices = choices.split('§');
         for (var i = 0; i < choices.length; i++) {
             text = '`' + choices[i] + '`' + '<br />';
-            w_target.append('<input type="radio" name="answer_button" id="radio' + i + '" value="' + choices[i] + '"/>' + text);
+            w_target.append('<div><input type="radio" name="answer_button" id="radio' + i + '" value="' + choices[i] + '"/>' + text + '</div>');
         }
     }
     else if (template_type == 'normal') {
+        $('#w_answer_head').show();
         for (i = 0; i < number_of_answers; i++) {
             //$('#a_target').append('<input class="form-control" type="textbox" name="answer_box" id="ans_box'+ i +'" />');
             if(i > 0){
                 w_target.append('<div class="col-md-12"><h4>og</h4></div>');
             }
-            w_target.append('<div class="col-md-12 input_field"><span id="w_input_mathquill_'+i+'" class="form-control input_mathquill"></span></div>');
+            w_target.append('<div id="ans_'+i+'" class="col-md-12 input_field"><span id="w_input_mathquill_'+i+'" class="form-control input_mathquill"></span></div>');
             $('#w_input_mathquill_' + i).mathquill('revert').mathquill('editable');
         }
     }
     else if (template_type == 'blanks') {
         var str_boxx = $('#question').html();
-        var num_boxx = (str_boxx.match(/@boxx@/g) || []).length;
+        num_boxx = (str_boxx.match(/@boxx@/g) || []).length;
         $('#question').html(str_boxx.replace(/@boxx@/g, '<span class="form-control blank_input input_mathquill" style="display: inline"></span>'));
         $('#question').find('.blank_input').each(function(index){
             $(this).attr('id', 'blank_' + index);
@@ -71,8 +76,9 @@ $(document).ready(function () {
             "template_type" : template_type,
             "template_specific" : template_specific
         };
-
-        post(/answers/, submit_dict);
+        if(answer_validation()) {
+            post(/answers/, submit_dict);
+        }
 
     });
 
@@ -82,6 +88,29 @@ $(document).ready(function () {
         }
     });
 });
+
+function answer_validation(){
+    var valid = true;
+    if(template_type == 'normal'){
+        for(var ans = 0; ans < number_of_answers; ans++){
+            if($('#w_input_mathquill_' + ans).mathquill('latex') == ''){
+                valid = false;
+                $('#w_input_mathquill_' + ans).addClass('select_error');
+                error_message('ans_' + ans, 'Dette feltet kan ikke være tomt.');
+            }
+        }
+    }
+    if(template_type == 'blanks'){
+        for(var bla = 0; bla < num_boxx; bla++){
+            if($('#blank_' + bla).mathquill('latex') == ''){
+                valid = false;
+                $('#blank_' + bla).addClass('select_error');
+                error_message('blank_' + bla, 'Fyll ut!');
+            }
+        }
+    }
+    return valid;
+}
 
 function post(path, params, method) {
     method = method || "post"; // Set method to post by default if not specified.

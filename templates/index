@@ -23,8 +23,8 @@
             <div hidden id="number_of_answers">{{number_of_answers}}</div>
             <div hidden id="variable_dictionary">{{variable_dictionary}}</div>
             <h5><div id="question">{{ question|linebreaks}}</div></h5>
-            <hr>
-            <h4>Ditt svar</h4>
+
+            <h4 id="w_answer_head" style="display: none"><hr>Ditt svar</h4>
 
             <div id="w_target" class="row"></div>
             <form>{% csrf_token %} </form>
