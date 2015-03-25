@@ -42,6 +42,17 @@ class Template(models.Model):
     conditions = models.CharField(max_length=10000, blank=True, null=True, default="")
     fill_in = models.CharField(max_length=10000, blank=True, null=True, default="")
 
+    ##Also save the original latex for post-back:
+    question_text_latex = models.CharField(max_length=200, blank=True, null=True)
+    solution_latex =  models.CharField(max_length=10000, blank=True, null=True)
+    answer_latex = models.CharField(max_length=200, blank=True, null=True)
+    choices_latex = models.CharField(max_length=700, blank=True, null=True)
+    dictionary_latex = models.CharField(max_length=10000, blank=True, null=True, default="")
+    conditions_latex = models.CharField(max_length=10000, blank=True, null=True, default="")
+    fill_in_latex = models.CharField(max_length=10000, blank=True, null=True, default="")
+
+
+
     def __str__(self):                                        #Makes it so that self.question_text shows up instead of topic(object)
         return self.question_text
 
