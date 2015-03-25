@@ -307,15 +307,17 @@ def check_conditions(conditions, variable_dict,domain_dict):
 
     #Do it the fast way if | and = is not present in conditions
     if (not '|' in conditions) and (not '=' in conditions):
-        conditions = conditions.replace(')', '') #todo: find out why ) bogs it up.
-        conditions = conditions.replace('(', '')
         conditions = conditions.split('&')
         while redo:
             counter = 0
+            print('this is testa!!11')
+            print(conditions)
             for c in conditions:
+                print(c)
                 if '<' in c:
                     conditions_dict = lesser_than(c, domain_dict, variable_dict)
                 elif '>' in c:
+                    print(greater_to_lesser_than(c))
                     conditions_dict = lesser_than(greater_to_lesser_than(c), domain_dict, variable_dict)
                 variable_dict = conditions_dict['variable_dict'] #Updates the variable dictionary
                 something_changed = conditions_dict['something_changed'] #Tells if something has changed
@@ -418,8 +420,12 @@ def new_random_value(value, domain_dict, bonus, arg):
 ###greater_to_lesser_than###
 # changes x > y into y < x
 def greater_to_lesser_than(string):
+    if string[0] == '(' and string[len(string)-1] == ')':
+        string = string[1:len(string)-1]
     string = string.split('>')
+    print(string)
     string = string[1] + '<' + string[0]
+    print(string)
     return string
 
 ###solve_inequality###
