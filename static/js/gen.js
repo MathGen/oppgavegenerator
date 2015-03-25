@@ -934,17 +934,17 @@ $(document).ready(function() {
 		array_submit["csrfmiddlewaretoken"] = getCookie('csrftoken');
 		array_submit['type'] = 'normal';
 
-		//if(submit_validation()){
-		//	SUBMITTING = true;
-		//	post(/submit/, array_submit);
-		//}
-
-		// Testing output
-		var test_output = [];
-		for(var s in array_submit){
-			test_output.push(s + '\n' + array_submit[s]);
+		if(submit_validation()){
+			SUBMITTING = true;
+			post(/submit/, array_submit);
 		}
-		alert(test_output.join('\n'));
+
+		//// Testing output
+		//var test_output = [];
+		//for(var s in array_submit){
+		//	test_output.push(s + '\n' + array_submit[s]);
+		//}
+		//alert(test_output.join('\n'));
 	});
 });
 
