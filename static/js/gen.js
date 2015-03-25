@@ -851,102 +851,149 @@ $(document).ready(function() {
 		v_panel.fadeOut();
 	});
 
-	// Retrieve all values and save to database
+	// Submit template to database event
 	var o_btn_save = $('#o_btn_save');
 	$(o_btn_save).click(function(e){
 		e.preventDefault();
-		var array_submit = {};
-		array_submit['topic']				= $('#category_selection').find(':selected').attr('id');
-		array_submit['question_text']		= '`' + latex_to_asciimath($(Q_INPUT).mathquill('latex')) + '`';
-		var tmp_solution = [];
-		for(var i = 1; i <= STEP; i++){
-			if($('#s_text_' + i).val() != ''){
-				tmp_solution.push(latex_to_asciimath('\\text{' + $('#s_text_' + i).val() + '}') + '`\\n`' + latex_to_asciimath($('#s_input_mathquill_' + i).mathquill('latex')));
-			}
-			else{
-				tmp_solution.push(latex_to_asciimath($('#s_input_mathquill_' + i).mathquill('latex')));
-			}
-		}
-		array_submit['solution']			= '`' + tmp_solution.join('`\\n`') + '`';
-		var tmp_answer = [];
-		for(var i = 1; i <=ANSWER; i++){
-			tmp_answer.push(latex_to_asciimath($('#a_input_mathquill_' + i).mathquill('latex')));
-		}
-		array_submit['answer']				= tmp_answer.join('`§`');
-
-		// retrieves the list from latest letter in alphabet (w) to earliest (a) as that is the formatting used server side.
-		var tmp_r_domain = [];
-		for(var i = 22; i >= 0; i--){
-			if($('#o_adv_' + i).length){
-				tmp_r_domain.push($('#o_adv_from_' + i).val() + " " + $('#o_adv_to_' + i).val());
-			}
-		}
-		array_submit['random_domain']		= tmp_r_domain.join('§');
-
-		array_submit['number_of_decimals']	= $('#opt_decimal').val();
-		var tmp_allow_zero = "";
-		if($('#opt_allow').is(':checked')){
-			tmp_allow_zero = 'true';
-		}
-		else{
-			tmp_allow_zero = 'false';
-		}
-		array_submit['answer_can_be_zero']	= tmp_allow_zero;
-		var array_dict = [];
-		var e_empty = true;
-		for(var i = 1; i <= SUB; i++){
-			var e_from = $('#e_from_' + i).val();
-			var e_to = $('#e_to_' + i).val();
-			if(e_from != '' && e_to != ''){
-				array_dict.push(e_from + '§' + e_to);
-				e_empty = false;
-			}
-		}
-		array_dict.sort(function(a,b){
-			var s_a = a.split('§');
-			var s_b = b.split('§');
-			return s_b[0].length - s_a[0].length; // ASC -> a - b; DESC -> b - a
-		});
-		if(e_empty){
-			array_submit['dictionary'] = "";
-		}
-		else{
-			array_submit['dictionary'] = array_dict.join('§');
-		}
-		if($('#opt_conditions').is(':checked')){
-			array_submit['conditions'] = latex_to_asciimath($('#con_input_mathquill').mathquill('latex'));
-		}
-		else{
-			array_submit['conditions'] = "";
-		}
-		if($('#opt_multiple_choice').is(':checked')){
-			array_submit['choices'] = get_multiple_choices();
-		}
-		else{
-			array_submit['choices'] = "";
-		}
-		if($('#opt_fill_blanks').is(':checked')){
-			array_submit['fill_in'] = '`' + get_diff_latex() + '`';
-		}
-		else{
-			array_submit['fill_in'] = "";
-		}
-		array_submit["csrfmiddlewaretoken"] = getCookie('csrftoken');
-		array_submit['type'] = 'normal';
-
-		if(submit_validation()){
-			SUBMITTING = true;
-			post(/submit/, array_submit);
-		}
-
-		//// Testing output
-		//var test_output = [];
-		//for(var s in array_submit){
-		//	test_output.push(s + '\n' + array_submit[s]);
-		//}
-		//alert(test_output.join('\n'));
+		submit_template();
 	});
 });
+
+/**
+ * Submit template to database
+ */
+function submit_template(){
+	var form_submit = {};
+	// TOPIC
+	form_submit['topic'] = $('#category_selection').find(':selected').attr('id');
+
+	// QUESTION_TEXT
+	form_submit['question_text'] = '`' + latex_to_asciimath($(Q_INPUT).mathquill('latex')) + '`';
+	form_submit['question_text_latex'] = $(Q_INPUT).mathquill('latex');
+
+	// SOLUTION
+	var tmp_solution = [];
+	var tmp_solution_latex = [];
+	for (var i = 1; i <= STEP; i++) {
+		if ($('#s_text_' + i).val() != '') {
+			tmp_solution.push(latex_to_asciimath('\\text{' + $('#s_text_' + i).val() + '}') + '`\\n`' + latex_to_asciimath($('#s_input_mathquill_' + i).mathquill('latex')));
+			tmp_solution_latex.push($('#s_text_' + i).val() + '§' + $('#s_input_mathquill_' + i).mathquill('latex'));
+		}
+		else {
+			tmp_solution.push(latex_to_asciimath($('#s_input_mathquill_' + i).mathquill('latex')));
+			tmp_solution_latex.push('§' + $('#s_input_mathquill_' + i).mathquill('latex'));
+		}
+	}
+	form_submit['solution'] = '`' + tmp_solution.join('`\\n`') + '`';
+	form_submit['solution_latex'] = tmp_solution_latex.join('§');
+
+	// ANSWER
+	var tmp_answer = [];
+	var tmp_answer_latex = [];
+	for (var i = 1; i <= ANSWER; i++) {
+		tmp_answer.push(latex_to_asciimath($('#a_input_mathquill_' + i).mathquill('latex')));
+		tmp_answer_latex.push($('#a_input_mathquill_' + i).mathquill('latex'));
+	}
+	form_submit['answer'] = tmp_answer.join('`§`');
+	form_submit['answer_latex'] = tmp_answer_latex.join('§');
+
+	// RANDOM_DOMAIN
+	// retrieves the list from latest letter in alphabet (w) to earliest (a) as that is the formatting used server side.
+	var tmp_r_domain = [];
+	for (var i = 22; i >= 0; i--) {
+		if ($('#o_adv_' + i).length) {
+			tmp_r_domain.push($('#o_adv_from_' + i).val() + " " + $('#o_adv_to_' + i).val());
+		}
+	}
+	form_submit['random_domain'] = tmp_r_domain.join('§');
+
+	// NUMBER_OF_DECIMALS
+	form_submit['number_of_decimals'] = $('#opt_decimal').val();
+
+	// ANSWER_CAN_BE_ZERO
+	var tmp_allow_zero = "";
+	if ($('#opt_allow').is(':checked')) {
+		tmp_allow_zero = 'true';
+	}
+	else {
+		tmp_allow_zero = 'false';
+	}
+	form_submit['answer_can_be_zero'] = tmp_allow_zero;
+
+	// DICTIONARY
+	var array_dict = [];
+	var e_empty = true;
+	for (var i = 1; i <= SUB; i++) {
+		var e_from = $('#e_from_' + i).val();
+		var e_to = $('#e_to_' + i).val();
+		if (e_from != '' && e_to != '') {
+			array_dict.push(e_from + '§' + e_to);
+			e_empty = false;
+		}
+	}
+	array_dict.sort(function (a, b) {
+		var s_a = a.split('§');
+		var s_b = b.split('§');
+		return s_b[0].length - s_a[0].length; // ASC -> a - b; DESC -> b - a
+	});
+	if (e_empty) {
+		form_submit['dictionary'] = "";
+	}
+	else {
+		form_submit['dictionary'] = array_dict.join('§');
+	}
+
+	// CONDITIONS
+	if ($('#opt_conditions').is(':checked')) {
+		form_submit['conditions'] = latex_to_asciimath($('#con_input_mathquill').mathquill('latex'));
+		form_submit['conditions_latex'] = $('#con_input_mathquill').mathquill('latex');
+	}
+	else {
+		form_submit['conditions'] = "";
+		form_submit['conditions_latex'] = "";
+	}
+
+	// CHOICES
+	if ($('#opt_multiple_choice').is(':checked')) {
+		form_submit['choices'] = get_multiple_choices(false);
+		form_submit['choices_latex'] = get_multiple_choices(true);
+	}
+	else {
+		form_submit['choices'] = "";
+		form_submit['choices_latex'] = "";
+	}
+
+	// FILL_IN
+	if ($('#opt_fill_blanks').is(':checked')) {
+		form_submit['fill_in'] = '`' + get_diff_latex(false) + '`';
+		form_submit['fill_in_latex'] = get_diff_latex(true);
+	}
+	else {
+		form_submit['fill_in'] = "";
+		form_submit['fill_in_latex'] = "";
+	}
+
+	// CALCULATION REFERENCE
+	form_submit['calculation_ref'] = array_calc.join('§');
+
+	// CSRF_TOKEN
+	form_submit["csrfmiddlewaretoken"] = getCookie('csrftoken');
+
+	// TYPE
+	form_submit['type'] = 'normal';
+
+	if (submit_validation()) {
+		SUBMITTING = true;
+		post(/submit/, form_submit);
+	}
+
+	//// Testing output
+	//var test_output = [];
+	//for(var s in form_submit){
+	//	test_output.push(s + '\n' + form_submit[s]);
+	//}
+	//alert(test_output.join('\n'));
+}
 
 /**
 * Checks which input field to type in
@@ -1154,10 +1201,17 @@ function submit_validation(){
  * Retrieve multiple choices
  * @returns {string} returns all multiple choices as a string.
  */
-function get_multiple_choices(){
+function get_multiple_choices(latex_bool){
 	var multiple_choices = [];
-	for(var m = 1; m <= MULTI_CHOICE; m++){
-		multiple_choices.push(latex_to_asciimath($('#m_input_mathquill_' + m).mathquill('latex')));
+	if(!latex_bool){
+		for(var m = 1; m <= MULTI_CHOICE; m++){
+			multiple_choices.push(latex_to_asciimath($('#m_input_mathquill_' + m).mathquill('latex')));
+		}
+	}
+	else{
+		for(var ml = 1; ml <= MULTI_CHOICE; ml++){
+			multiple_choices.push($('#m_input_mathquill_' + ml).mathquill('latex'))
+		}
 	}
 	return multiple_choices.join('§');
 }
@@ -1225,17 +1279,26 @@ function refresh_char_colors(selector){
  * Compare two latex strings, converting it to asciimath, and wrap parts of string that differs with a tag.
  * @returns {*|jQuery} - The asciimath string with blank tags.
  */
-function get_diff_latex(){
+function get_diff_latex(latex_bool){
 	var dmp = new diff_match_patch();
 	dmp.Diff_Timeout = 1;
 	dmp.Diff_EditCost = 4;
 	var latex_before = [];
 	var latex_after = [];
-	for(var la_orig = 1; la_orig <= STEP; la_orig++){
-		latex_before.push(latex_to_asciimath($('#s_input_mathquill_' + la_orig).mathquill('latex')));
-		latex_after.push(latex_to_asciimath($('#f_fill_content_' + la_orig).mathquill('latex')));
+	if(!latex_bool) {
+		for (var la_orig = 1; la_orig <= STEP; la_orig++) {
+			latex_before.push(latex_to_asciimath($('#s_input_mathquill_' + la_orig).mathquill('latex')));
+			latex_after.push(latex_to_asciimath($('#f_fill_content_' + la_orig).mathquill('latex')));
+		}
+		var d = dmp.diff_main(latex_before.join('`\\n`'), latex_after.join('`\\n`')); // Two strings to compare.
 	}
-	var d = dmp.diff_main(latex_before.join('`\\n`'), latex_after.join('`\\n`')); // Two strings to compare.
+	else{
+		for (var la_edit = 1; la_edit <= STEP; la_edit++) {
+			latex_before.push($('#s_input_mathquill_' + la_edit).mathquill('latex'));
+			latex_after.push($('#f_fill_content_' + la_edit).mathquill('latex'));
+		}
+		var d = dmp.diff_main(latex_before.join('§'), latex_after.join('§')); // Two strings to compare.
+	}
 	//dmp.diff_cleanupSemantic(d);
 	var ds = dmp.diff_prettyHtml(d);
 	$('#f_diff_latex').html("").append(ds);
