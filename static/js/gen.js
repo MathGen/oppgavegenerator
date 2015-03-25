@@ -938,6 +938,13 @@ $(document).ready(function() {
 			SUBMITTING = true;
 			post(/submit/, array_submit);
 		}
+
+		//// Testing output
+		//var test_output = [];
+		//for(var s in array_submit){
+		//	test_output.push(s + '\n' + array_submit[s]);
+		//}
+		//alert(test_output.join('\n'));
 	});
 });
 
@@ -1224,12 +1231,12 @@ function get_diff_latex(){
 	dmp.Diff_EditCost = 4;
 	var latex_before = [];
 	var latex_after = [];
-	for(var la = 1; la <= STEP; la++){
-		latex_before.push(latex_to_asciimath($('#s_input_mathquill_' + la).mathquill('latex')));
-		latex_after.push(latex_to_asciimath($('#f_fill_content_' + la).mathquill('latex')));
+	for(var la_orig = 1; la_orig <= STEP; la_orig++){
+		latex_before.push(latex_to_asciimath($('#s_input_mathquill_' + la_orig).mathquill('latex')));
+		latex_after.push(latex_to_asciimath($('#f_fill_content_' + la_orig).mathquill('latex')));
 	}
 	var d = dmp.diff_main(latex_before.join('`\\n`'), latex_after.join('`\\n`')); // Two strings to compare.
-	dmp.diff_cleanupSemantic(d);
+	//dmp.diff_cleanupSemantic(d);
 	var ds = dmp.diff_prettyHtml(d);
 	$('#f_diff_latex').html("").append(ds);
 	return $('#f_diff_latex').text();
