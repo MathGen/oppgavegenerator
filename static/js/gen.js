@@ -1043,9 +1043,9 @@ function latex_to_asciimath(latex){
 	var i = 0;
 	var counter = 0;
 	var recorder = true;
-	var dict_letters = {'a' : 'R0', 'b' : 'R1', 'c' : 'R2', 'd' : 'R3', 'g' : 'R6', 'h' : 'R7', 'i' : 'R8', 'j' : 'R9', 'k' : 'R10', 
-						'l' : 'R11', 'm' : 'R12', 'n' : 'R13', 'o' : 'R14', 'p' : 'R15', 'q' : 'R16', 'r' : 'R17', 's' : 'R18', 't' : 'R19',
-						'u' : 'R20', 'v' : 'R21', 'w' : 'R22', 'A' : array_calc[0] , 'B' : array_calc[1],'C' : array_calc[2],'D' : array_calc[3],
+	var dict_letters = {'a' : 'R0R', 'b' : 'R1R', 'c' : 'R2R', 'd' : 'R3R', 'g' : 'R6R', 'h' : 'R7R', 'i' : 'R8R', 'j' : 'R9R', 'k' : 'R10R',
+						'l' : 'R11R', 'm' : 'R12R', 'n' : 'R13R', 'o' : 'R14R', 'p' : 'R15R', 'q' : 'R16R', 'r' : 'R17R', 's' : 'R18R', 't' : 'R19R',
+						'u' : 'R20R', 'v' : 'R21R', 'w' : 'R22R', 'A' : array_calc[0] , 'B' : array_calc[1],'C' : array_calc[2],'D' : array_calc[3],
 						'E' : array_calc[4],'F' : array_calc[5],'G' : array_calc[6],'H' : array_calc[7],'I' : array_calc[8], 'J' : array_calc[9],
 						'K' : array_calc[10],'L' : array_calc[11],'M' : array_calc[12],'N' : array_calc[13],'O' : array_calc[14], 'P' : array_calc[15],
 						'Q' : array_calc[16],'R' : array_calc[17],'S' : array_calc[18],'T' : array_calc[19],'U' : array_calc[20], 'V' : array_calc[21]};
