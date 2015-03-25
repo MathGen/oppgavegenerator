@@ -11,7 +11,6 @@ $(document).ready(function () {
     var variable_dictionary = $('#variable_dictionary').html();
     var w_target = $('#w_target');
     if (String(template_type) == 'multiple') {
-        alert(template_specific);
         var choices = template_specific;
         choices = choices.split('§');
         for (var i = 0; i < choices.length; i++) {
@@ -39,6 +38,15 @@ $(document).ready(function () {
             $(this).mathquill('revert').mathquill('editable');
         });
     }
+    else if (template_type == 'multifill'){
+        var choices = template_specific;
+        choices = choices.split('§');
+        for (var i = 0; i < choices.length; i++) {
+            text = '`' + choices[i].replace(/@boxx@/g, '`<span class="form-control blank_input input_mathquill" style="display: inline" id="multifill_'+ i + '"></span>`') + '`' + '<br />';
+            w_target.append('<div><input type="radio" name="answer_button" id="radio' + i + '" value="' + i + '§' + choices[i] + '"/>' + text + '</div>');
+            $('#multifill_' + i).mathquill('revert').mathquill('editable');
+        }
+    }
 
     $('#submit_answer').click(function (e) {
         e.preventDefault();
@@ -54,6 +62,15 @@ $(document).ready(function () {
                 var f_input = $(this).mathquill('latex');
                 user_answer += latex_to_sympy(f_input);
             });
+        }
+        else if(template_type == 'multifill'){
+            alert("what is this i don't even");
+            radio_values = getRadioValue('answer_button');
+            radio_values = radio_values.split('§');
+            user_answer = radio_values[1];
+            boxx_content = latex_to_sympy($('#multifill_' + radio_values[0]).mathquill('latex'));
+            user_answer = user_answer.replace(/@boxx@/g, boxx_content);
+            alert(user_answer);
         }
         else {
             for (j = 0; j < number_of_answers; j++) {
@@ -88,6 +105,7 @@ $(document).ready(function () {
         }
     });
 });
+
 
 function answer_validation(){
     var valid = true;

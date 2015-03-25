@@ -42,8 +42,6 @@ def task_with_solution(template_id):
         q = get_question('algebra')  #gets a question from the DB
     else:
         q = get_question(template_id)
-    #The list is written in reverse to get to the single digit numbers last, as R1 would replace R11-> R19.
-    hardcoded_variables = ['R22', 'R21','R20','R19','R18','R17','R16','R15','R14','R13','R12','R11','R10','R9','R8','R7','R6','R3','R2','R1','R0']
     #I changed this to contain the amount of decimals allowed in the answer, so 0 = False basically.
     #todo make a rounding function using decimals_allowed
     decimals_allowed = int(q.number_of_decimals)
@@ -104,13 +102,15 @@ def task_with_solution(template_id):
         new_task = parse_solution(new_task)
         template_specific = fill_in_dict['hole_positions']
     elif template_type == 'multifill':
-        new_choices = parse_solution(new_choices)
+        new_choices = choices + '§' + answer.replace('§', 'og')
+        new_choices = new_choices.replace('@?', '')
+        new_choices = new_choices.replace('?@', '')
+        new_choices = multifill(new_choices, variable_dict)
+        new_choices = string_replace(new_choices, variable_dict)
         new_choices = new_choices.split('§')
-        new_choices.append(parse_solution(new_answer).replace('§', 'og'))
         shuffle(new_choices) #Shuffles the choices so that the answer is not always in the same place.
         new_choices = '§'.join(new_choices)
-        multifill_dict = multifill(new_choices, variable_dict)
-        template_specific = multifill_dict['question'] + '|||' + multifill_dict['replaced']
+        template_specific = new_choices
         pass
     if dictionary is not None:
         new_task = replace_words(new_task, dictionary)
@@ -255,7 +255,7 @@ def parse_answer(answer):
 #also makes sure all variables followes the given conditions.
 def generate_valid_numbers(task, random_domain_list, conditions):
     #todo change variables to R1R so that R1 won't replace R10, we solve this by doing things backward atm, but that is a bit obtuse.
-    hardcoded_variables = ['R22', 'R21','R20','R19','R18','R17','R16','R15','R14','R13','R12','R11','R10','R9','R8','R7','R6','R3','R2','R1','R0']
+    hardcoded_variables = ['R22R', 'R21R','R20R','R19R','R18R','R17R','R16R','R15R','R14R','R13R','R12R','R11R','R10R','R9R','R8R','R7R','R6R','R3R','R2R','R1R','R0R']
     variables_used = ""
     domain_dict = {}
     variable_dict = {}
@@ -526,9 +526,6 @@ def get_values_from_position(position_string, solution):
 def multifill(string, variable_dict):
     possible_holes = list(variable_dict.keys())
     shuffle(possible_holes)
-    string.replace(possible_holes[0], '@boxx@')
-    replaced = possible_holes[0]
-
-    return_dict = {'question' : string, 'replaced' : replaced}
-
-    return
+    string = string.replace(possible_holes[0], '@boxx@')
+    replaced = possible_holes[0] #not needed
+    return string
