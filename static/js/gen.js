@@ -879,7 +879,7 @@ function submit_template(){
 	for (var i = 1; i <= STEP; i++) {
 		if ($('#s_text_' + i).val() != '') {
 			//tmp_solution.push(latex_to_asciimath('\\text{' + $('#s_text_' + i).val() + '}') + '`\\n`' + latex_to_asciimath($('#s_input_mathquill_' + i).mathquill('latex')));
-			tmp_solution.push('\\text{' + $('#s_text_' + i).val() + '}' + '`\\n`' + convert_variables($('#s_input_mathquill_' + i).mathquill('latex')));
+			tmp_solution.push('\\text{' + $('#s_text_' + i).val() + '}' + '\\n' + convert_variables($('#s_input_mathquill_' + i).mathquill('latex')));
 			tmp_solution_latex.push($('#s_text_' + i).val() + '§' + $('#s_input_mathquill_' + i).mathquill('latex'));
 		}
 		else {
@@ -1369,10 +1369,10 @@ function get_diff_latex(latex_bool){
 		for (var la_orig = 1; la_orig <= STEP; la_orig++) {
 			//latex_before.push(latex_to_asciimath($('#s_input_mathquill_' + la_orig).mathquill('latex')));
 			//latex_after.push(latex_to_asciimath($('#f_fill_content_' + la_orig).mathquill('latex')));
-			latex_before.push(convert_variables($('#s_input_mathquill_' + la_orig).mathquill('latex')));
-			latex_after.push(convert_variables($('#f_fill_content_' + la_orig).mathquill('latex')));
+			latex_before.push('\\text{' + $('#s_text_' + la_orig).val() + '}' + '\\n' + convert_variables($('#s_input_mathquill_' + la_orig).mathquill('latex')));
+			latex_after.push('\\text{' + $('#s_text_' + la_orig).val() + '}' + '\\n' + convert_variables($('#f_fill_content_' + la_orig).mathquill('latex')));
 		}
-		var d = dmp.diff_main(latex_before.join('`\\n`'), latex_after.join('`\\n`')); // Two strings to compare.
+		var d = dmp.diff_main(latex_before.join('\\n'), latex_after.join('\\n')); // Two strings to compare.
 	}
 	else{
 		for (var la_edit = 1; la_edit <= STEP; la_edit++) {

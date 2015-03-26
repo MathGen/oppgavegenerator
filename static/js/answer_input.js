@@ -73,7 +73,6 @@ $(document).ready(function () {
                 }
                 var f_input = $(this).mathquill('latex');
                 user_answer += latex_to_sympy(f_input);
-                alert(user_answer);
             });
         }
         else if(template_type == 'multifill'){
@@ -83,7 +82,6 @@ $(document).ready(function () {
             user_answer = radio_values[1];
             var boxx_content = latex_to_sympy($('#multifill_' + radio_values[0]).mathquill('latex'));
             user_answer = user_answer.replace(/@boxx@/g, boxx_content);
-            alert(user_answer);
         }
         else {
             for (j = 0; j < number_of_answers; j++) {
