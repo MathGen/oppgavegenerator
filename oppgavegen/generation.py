@@ -103,15 +103,8 @@ def task_with_solution(template_id):
         template_specific = fill_in_dict['hole_positions']
     elif template_type == 'multifill':
         new_choices = choices + '§' + answer.replace('§', 'og')
-        new_choices = new_choices.replace('@?', '')
-        new_choices = new_choices.replace('?@', '')
-        new_choices = multifill(new_choices, variable_dict)
-        new_choices = string_replace(new_choices, variable_dict)
-        new_choices = new_choices.split('§')
-        shuffle(new_choices) #Shuffles the choices so that the answer is not always in the same place.
-        new_choices = '§'.join(new_choices)
-        template_specific = new_choices
-        pass
+        template_specific = multifill(new_choices,variable_dict)
+
     if dictionary is not None:
         new_task = replace_words(new_task, dictionary)
         new_solution = replace_words(new_solution, dictionary) #todo this logic moved into the view. do that.
@@ -155,6 +148,7 @@ def check_for_decimal(f):
 ###calculate_answer###
 #Calculates a string using sympify
 def calculate_answer(s):
+    #todo convert from latex here using latex_to_sympy and use latex(sympify(s))
     s = sympify(s) #sometimes this returns the value 'zoo' | also could maybe use simplify instead of sympify
     #s = RR(s)
     #s = round(s, 3)
@@ -523,9 +517,91 @@ def get_values_from_position(position_string, solution):
 
 ###multifill###
 #Makes the template into a multiple fill in the blanks.
-def multifill(string, variable_dict):
+def multifill(choices, variable_dict):
+    choices = choices.replace('@?', '')
+    choices = choices.replace('?@', '')
     possible_holes = list(variable_dict.keys())
     shuffle(possible_holes)
-    string = string.replace(possible_holes[0], '@boxx@')
-    replaced = possible_holes[0] #not needed
-    return string
+    choices = choices.replace(possible_holes[0], '@boxx@')
+
+    choices = string_replace(choices, variable_dict)
+    choices = choices.split('§')
+    shuffle(choices) #Shuffles the choices so that the choices won't always appear in the same place.
+    choices = '§'.join(choices)
+    return choices
+
+###template_validation###
+#tests a template to see if it makes solvable tasks in a reasonable amount of tries.
+def template_validation(template_id):
+    valid = False
+    success_string = ""
+    counter = 0
+    for x in range(0,1000):
+        counter += test_template(template_id)
+        if counter > 99:
+            valid = True
+            break
+    if valid:
+        #template.flag = True
+        #db.save
+        success_string = "Template got through validation!"
+    else:
+        success_string = "Template failed to be validated."
+    return success_string
+
+###Tests_template###
+#Tests if the creation of a template ends up with a valid template
+def test_template(template_id):
+
+    return
+
+###latex_to_sympy###
+#Turns a string of latex into a string sympy can use.
+def latex_to_sympy(expression):
+    expression = expression
+    expression = expression.replace('{','(')
+    expression = expression.replace('}',')')
+    expression = expression.replace('\\cdot','*')
+    expression = expression.replace('\\left','')
+    expression = expression.replace('\\right','')
+    tempt_expression = ""
+    i = 0
+    while(i < expression.length):
+        if(expression[i] == '\\'):
+            if(expression[i + 1] == 't' and expression[i + 2] == 'e' and expression[i + 3] == 'x' and expression[i + 4] == 't'):
+                while(true):
+                    if(expression[i] == ')' and counter == 0):
+                        break
+                    if(expression[i] == '('):
+                        counter += 1
+                    elif(expression[i+1] == ')'):
+                        counter -= 1
+                    tempt_expression += expression[i]
+                    i += 1
+            else:
+                while(expression[i] != '(' and expression[i] != ' '):
+                    tempt_expression += expression[i]
+                    i += 1
+        tempt_expression += expression[i]
+        i += 1
+    expression = tempt_expression
+
+    i = 0
+    counter = 0
+    recorder = false
+    while(i < expression.length): #logic for insering a / in fractals
+        if(expression.charAt(i) == 'c' and expression.charAt(i-1) == 'a' and expression.charAt(i-2) == 'r' and expression.charAt(i-3) == 'f' and expression.charAt(i-4) == '\\'):
+             recorder = true
+        if(recorder):
+            if(expression.charAt(i) == '('):
+                counter += 1
+            elif(expression.charAt(i) == ')'):
+                counter -= 1
+            if(expression.charAt(i) == ')' and counter == 0):
+                expression = expression.substring(0, i+1) + "/" + expression.substring(i+1,expression.length)
+                recorder = false
+        i+=1
+    expression = expression.replace('\\','')
+    expression = expression.replace('cdot','*')
+    expression = expression.replace('frac','')
+    return expression

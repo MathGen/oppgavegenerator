@@ -1041,6 +1041,9 @@ function get_input_field(obj){
  */
 function convert_variables(latex){
 	var la = latex;
+	la = la.replace(/\\cdot/g,'\\cdot ');
+	la = la.replace(/\\left/g,'');
+	la = la.replace(/\\right/g,'');
 	var counter = 0;
 	var dict_letters = {'a' : 'R0R', 'b' : 'R1R', 'c' : 'R2R', 'd' : 'R3R', 'g' : 'R6R', 'h' : 'R7R', 'i' : 'R8R', 'j' : 'R9R', 'k' : 'R10R',
 						'l' : 'R11R', 'm' : 'R12R', 'n' : 'R13R', 'o' : 'R14R', 'p' : 'R15R', 'q' : 'R16R', 'r' : 'R17R', 's' : 'R18R', 't' : 'R19R',
@@ -1066,10 +1069,21 @@ function convert_variables(latex){
 					i++;
 				}
 			}
+			//else if(la[i+1] == 'l' && la[i+2] == 'e' && la[i+3] == 'f' && la[i+4] == 't'){
+			//	la2 += '\\left(';
+			//	i = i + 6;
+			//}
+			//else if(la[i+1] == 'r' && la[i+2] == 'i' && la[i+3] == 'g' && la[i+4] == 'h') {
+			//	la2 += '\\right';
+			//	i = i + 6;
+			//}
 			else{
 				while(la[i] != '{' && la[i] != ' ' && la[i] != '_' && la[i] != '^'){
 					la2 += la[i];
 					i++;
+					if(la[i] == '\\'){
+						break
+					}
 				}
 			}
 		}
