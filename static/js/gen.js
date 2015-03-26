@@ -1092,7 +1092,7 @@ function convert_variables(latex){
 		}
 		else if(la[i] == 'x' || la[i] == 'y' || la[i] == 'z'){
 			if(la[i-1] in dict_letters){
-				la2 += '*' + la[i];
+				la2 += '\\cdot ' + la[i];
 			}
 			else{
 				la2 += la[i];

@@ -1,0 +1,26 @@
+.text{
+	color: #708090;
+}
+.content_var{
+	color: #000000;
+}
+.content_x{
+	color: #000000;
+}
+.mathquill-rendered-math{
+    font-size: 2em;
+}
+.mathquill-editable{
+    font-size: 1em;
+}
+.btn{
+    font-size: 1.2em;
+}
+.form-control{
+    display: inline-block;
+    width: auto;
+    height: auto;
+    vertical-align: middle;
+    padding: 3px 3px;
+    border-radius: 4px;
+}

@@ -19,6 +19,9 @@ $(document).ready(function () {
         }
     }
     else if (template_type == 'normal') {
+        var output = $('#get_question').text();
+        $('#mathquill_field').append('<div id="mathquill_output" class="input_mathquill"></div>');
+        $('#mathquill_output').mathquill().mathquill('latex', output);
         $('#w_answer_head').show();
         for (i = 0; i < number_of_answers; i++) {
             //$('#a_target').append('<input class="form-control" type="textbox" name="answer_box" id="ans_box'+ i +'" />');
@@ -30,7 +33,14 @@ $(document).ready(function () {
         }
     }
     else if (template_type == 'blanks') {
-        var str_boxx = $('#question').html();
+        var output = $('#get_question').text();
+        var arr_output = output.split('\n');
+        for(var i = 0; i < arr_output.length; i++){
+            $('#mathquill_field').append('<div class="input_field"><span id="mathquill_output_'+i+'" class="input_mathquill"></span></div><br/>');
+            $('#mathquill_output_' + i).mathquill().mathquill('latex', arr_output[i]);
+            $('.mathquill-editable').addClass('form-control');
+        }
+        //var str_boxx = $('#question').html();
         //num_boxx = (str_boxx.match(/@boxx@/g) || []).length;
         //$('#question').html(str_boxx.replace(/@boxx@/g, '<span class="form-control blank_input input_mathquill" style="display: inline"></span>'));
         //$('#question').find('.blank_input').each(function(index){

@@ -6,6 +6,7 @@
 {% block panels %}
 <!-- QUESTION PANEL -->
 <script src="/static/js/answer_input.js"></script>
+<link href="/static/css/stud_style.css" rel="stylesheet">
 <script>
     MathJax.Hub.Register.StartupHook("End",function () {
   		$('#w_question_loading').remove();
@@ -22,7 +23,11 @@
             <div hidden id="template_specific">{{template_specific}}</div>
             <div hidden id="number_of_answers">{{number_of_answers}}</div>
             <div hidden id="variable_dictionary">{{variable_dictionary}}</div>
-            <h5><div id="question" class="mathquill-embedded-latex">{{ question|linebreaks}}</div></h5>
+            <div hidden id="get_question">{{ question }}</div>
+
+            <div id="mathquill_field"></div>
+
+            <!--<h5 hidden class="input_field"><div id="question" class="mathquill-embedded-latex input_mathquill">{{ question|linebreaks}}</div></h5>-->
 
             <h4 id="w_answer_head" style="display: none"><hr>Ditt svar</h4>
 
