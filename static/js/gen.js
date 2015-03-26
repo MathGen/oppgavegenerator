@@ -794,7 +794,8 @@ $(document).ready(function() {
 			c_var = String.fromCharCode(c_var.charCodeAt(0) + c_count);
 			
 			var c_latex = $(C_INPUT).mathquill('latex');
-			var la = latex_to_asciimath(c_latex);
+			//var la = latex_to_asciimath(c_latex);
+			var la = convert_variables(c_latex);
 			la = la.replace(/\?/g,'');
 			la = la.replace(/\@/g,'');
 			array_calc.push('@?(' + la + ')?@');
@@ -868,7 +869,8 @@ function submit_template(){
 	form_submit['topic'] = $('#category_selection').find(':selected').attr('id');
 
 	// QUESTION_TEXT
-	form_submit['question_text'] = '`' + latex_to_asciimath($(Q_INPUT).mathquill('latex')) + '`';
+	//form_submit['question_text'] = '`' + latex_to_asciimath($(Q_INPUT).mathquill('latex')) + '`';
+	form_submit['question_text'] = convert_variables($(Q_INPUT).mathquill('latex'));
 	form_submit['question_text_latex'] = $(Q_INPUT).mathquill('latex');
 
 	// SOLUTION
@@ -876,22 +878,26 @@ function submit_template(){
 	var tmp_solution_latex = [];
 	for (var i = 1; i <= STEP; i++) {
 		if ($('#s_text_' + i).val() != '') {
-			tmp_solution.push(latex_to_asciimath('\\text{' + $('#s_text_' + i).val() + '}') + '`\\n`' + latex_to_asciimath($('#s_input_mathquill_' + i).mathquill('latex')));
+			//tmp_solution.push(latex_to_asciimath('\\text{' + $('#s_text_' + i).val() + '}') + '`\\n`' + latex_to_asciimath($('#s_input_mathquill_' + i).mathquill('latex')));
+			tmp_solution.push('\\text{' + $('#s_text_' + i).val() + '}' + '`\\n`' + convert_variables($('#s_input_mathquill_' + i).mathquill('latex')));
 			tmp_solution_latex.push($('#s_text_' + i).val() + '§' + $('#s_input_mathquill_' + i).mathquill('latex'));
 		}
 		else {
-			tmp_solution.push(latex_to_asciimath($('#s_input_mathquill_' + i).mathquill('latex')));
+			//tmp_solution.push(latex_to_asciimath($('#s_input_mathquill_' + i).mathquill('latex')));
+			tmp_solution.push(convert_variables($('#s_input_mathquill_' + i).mathquill('latex')));
 			tmp_solution_latex.push('§' + $('#s_input_mathquill_' + i).mathquill('latex'));
 		}
 	}
-	form_submit['solution'] = '`' + tmp_solution.join('`\\n`') + '`';
+	//form_submit['solution'] = '`' + tmp_solution.join('`\\n`') + '`';
+	form_submit['solution'] = tmp_solution.join('`\\n`');
 	form_submit['solution_latex'] = tmp_solution_latex.join('§');
 
 	// ANSWER
 	var tmp_answer = [];
 	var tmp_answer_latex = [];
 	for (var i = 1; i <= ANSWER; i++) {
-		tmp_answer.push(latex_to_asciimath($('#a_input_mathquill_' + i).mathquill('latex')));
+		//tmp_answer.push(latex_to_asciimath($('#a_input_mathquill_' + i).mathquill('latex')));
+		tmp_answer.push(convert_variables($('#a_input_mathquill_' + i).mathquill('latex')));
 		tmp_answer_latex.push($('#a_input_mathquill_' + i).mathquill('latex'));
 	}
 	form_submit['answer'] = tmp_answer.join('`§`');
@@ -945,7 +951,8 @@ function submit_template(){
 
 	// CONDITIONS
 	if ($('#opt_conditions').is(':checked')) {
-		form_submit['conditions'] = latex_to_asciimath($('#con_input_mathquill').mathquill('latex'));
+		//form_submit['conditions'] = latex_to_asciimath($('#con_input_mathquill').mathquill('latex'));
+		form_submit['conditions'] = convert_variables($('#con_input_mathquill').mathquill('latex'));
 		form_submit['conditions_latex'] = $('#con_input_mathquill').mathquill('latex');
 	}
 	else {
@@ -965,7 +972,8 @@ function submit_template(){
 
 	// FILL_IN
 	if ($('#opt_fill_blanks').is(':checked')) {
-		form_submit['fill_in'] = '`' + get_diff_latex(false) + '`';
+		//form_submit['fill_in'] = '`' + get_diff_latex(false) + '`';
+		form_submit['fill_in'] = get_diff_latex(false);
 		form_submit['fill_in_latex'] = get_diff_latex(true);
 	}
 	else {
@@ -1025,6 +1033,63 @@ function get_input_field(obj){
 	else if(btn_id == 'n'){
 		return N_INPUT;
 	}
+}
+
+/**
+ * Converting variables (a,b,c,.. etc) to computable ids (R0R,R1R,R2R,.. etc),
+ * and calculated references (A,B,C, etc) with its content.
+ */
+function convert_variables(latex){
+	var la = latex;
+	var counter = 0;
+	var dict_letters = {'a' : 'R0R', 'b' : 'R1R', 'c' : 'R2R', 'd' : 'R3R', 'g' : 'R6R', 'h' : 'R7R', 'i' : 'R8R', 'j' : 'R9R', 'k' : 'R10R',
+						'l' : 'R11R', 'm' : 'R12R', 'n' : 'R13R', 'o' : 'R14R', 'p' : 'R15R', 'q' : 'R16R', 'r' : 'R17R', 's' : 'R18R', 't' : 'R19R',
+						'u' : 'R20R', 'v' : 'R21R', 'w' : 'R22R', 'A' : array_calc[0] , 'B' : array_calc[1],'C' : array_calc[2],'D' : array_calc[3],
+						'E' : array_calc[4],'F' : array_calc[5],'G' : array_calc[6],'H' : array_calc[7],'I' : array_calc[8], 'J' : array_calc[9],
+						'K' : array_calc[10],'L' : array_calc[11],'M' : array_calc[12],'N' : array_calc[13],'O' : array_calc[14], 'P' : array_calc[15],
+						'Q' : array_calc[16],'R' : array_calc[17],'S' : array_calc[18],'T' : array_calc[19],'U' : array_calc[20], 'V' : array_calc[21]};
+	var la2 = "";
+	for(var i = 0; i < la.length; i++){
+		if(la[i] == '\\'){
+			if(la[i + 1] == 't' && la[i + 2] == 'e' && la[i + 3] == 'x' && la[i + 4] == 't'){
+				while(true){
+					if(la[i] == '}' && counter == 0){
+						break
+					}
+					if(la[i] == '{'){
+						counter++;
+					}
+					else if(la[i+1] == '}'){
+						counter--;
+					}
+					la2 += la[i];
+					i++;
+				}
+			}
+			else{
+				while(la[i] != '{' && la[i] != ' ' && la[i] != '_' && la[i] != '^'){
+					la2 += la[i];
+					i++;
+				}
+			}
+		}
+		if(la[i] in dict_letters){
+			la2 += dict_letters[la[i]];
+		}
+		else if(la[i] == 'x' || la[i] == 'y' || la[i] == 'z'){
+			if(la[i-1] in dict_letters){
+				la2 += '*' + la[i];
+			}
+			else{
+				la2 += la[i];
+			}
+		}
+		else{
+			la2 += la[i];
+		}
+	}
+	la = la2;
+	return la;
 }
 
 /**
@@ -1205,7 +1270,8 @@ function get_multiple_choices(latex_bool){
 	var multiple_choices = [];
 	if(!latex_bool){
 		for(var m = 1; m <= MULTI_CHOICE; m++){
-			multiple_choices.push(latex_to_asciimath($('#m_input_mathquill_' + m).mathquill('latex')));
+			//multiple_choices.push(latex_to_asciimath($('#m_input_mathquill_' + m).mathquill('latex')));
+			multiple_choices.push(convert_variables($('#m_input_mathquill_' + m).mathquill('latex')));
 		}
 	}
 	else{
@@ -1287,8 +1353,10 @@ function get_diff_latex(latex_bool){
 	var latex_after = [];
 	if(!latex_bool) {
 		for (var la_orig = 1; la_orig <= STEP; la_orig++) {
-			latex_before.push(latex_to_asciimath($('#s_input_mathquill_' + la_orig).mathquill('latex')));
-			latex_after.push(latex_to_asciimath($('#f_fill_content_' + la_orig).mathquill('latex')));
+			//latex_before.push(latex_to_asciimath($('#s_input_mathquill_' + la_orig).mathquill('latex')));
+			//latex_after.push(latex_to_asciimath($('#f_fill_content_' + la_orig).mathquill('latex')));
+			latex_before.push(convert_variables($('#s_input_mathquill_' + la_orig).mathquill('latex')));
+			latex_after.push(convert_variables($('#f_fill_content_' + la_orig).mathquill('latex')));
 		}
 		var d = dmp.diff_main(latex_before.join('`\\n`'), latex_after.join('`\\n`')); // Two strings to compare.
 	}
