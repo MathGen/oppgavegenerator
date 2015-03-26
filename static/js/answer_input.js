@@ -31,21 +31,21 @@ $(document).ready(function () {
     }
     else if (template_type == 'blanks') {
         var str_boxx = $('#question').html();
-        num_boxx = (str_boxx.match(/@boxx@/g) || []).length;
-        $('#question').html(str_boxx.replace(/@boxx@/g, '<span class="form-control blank_input input_mathquill" style="display: inline"></span>'));
-        $('#question').find('.blank_input').each(function(index){
-            $(this).attr('id', 'blank_' + index);
-            $(this).mathquill('revert').mathquill('editable');
-        });
+        //num_boxx = (str_boxx.match(/@boxx@/g) || []).length;
+        //$('#question').html(str_boxx.replace(/@boxx@/g, '<span class="form-control blank_input input_mathquill" style="display: inline"></span>'));
+        //$('#question').find('.blank_input').each(function(index){
+        //    $(this).attr('id', 'blank_' + index);
+        //    $(this).mathquill('revert').mathquill('editable');
+        //});
     }
     else if (template_type == 'multifill'){
-        var choices = template_specific;
-        choices = choices.split('§');
-        for (var i = 0; i < choices.length; i++) {
-            text = '`' + choices[i].replace(/@boxx@/g, '`<span class="form-control blank_input input_mathquill" style="display: inline" id="multifill_'+ i + '"></span>`') + '`' + '<br />';
-            w_target.append('<div><input type="radio" name="answer_button" id="radio' + i + '" value="' + i + '§' + choices[i] + '"/>' + text + '</div>');
-            $('#multifill_' + i).mathquill('revert').mathquill('editable');
-        }
+        //var choices = template_specific;
+        //choices = choices.split('§');
+        //for (var i = 0; i < choices.length; i++) {
+        //    text = '`' + choices[i].replace(/@boxx@/g, '`<span class="form-control blank_input input_mathquill" style="display: inline" id="multifill_'+ i + '"></span>`') + '`' + '<br />';
+        //    w_target.append('<div><input type="radio" name="answer_button" id="radio' + i + '" value="' + i + '§' + choices[i] + '"/>' + text + '</div>');
+        //    $('#multifill_' + i).mathquill('revert').mathquill('editable');
+        //}
     }
 
     $('#submit_answer').click(function (e) {
