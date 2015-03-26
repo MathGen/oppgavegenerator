@@ -50,17 +50,17 @@ def task_with_solution(template_id):
     random_domain_list = (q.random_domain).split('§')
     print(random_domain_list)
     zero_allowed = q.answer_can_be_zero#False #Boolean for 0 being a valid answer or not.
-    task = str(q.question_text).replace('\\n', '\n')
+    task = str(q.question_text).replace('\\\\', '\\')
     template_type = q.type
-    choices = q.choices
-    conditions = q.conditions
+    choices = q.choices.replace('\\\\', '\\')
+    conditions = q.conditions.replace('\\\\', '\\')
     dictionary = q.dictionary
-    answer = q.answer
+    answer = q.answer.replace('\\\\', '\\')
     primary_key = q.pk
-    fill_in = q.fill_in
+    fill_in = q.fill_in.replace('\\\\', '\\')
     template_specific = "" #A type specific variable that holds the extra values for a given type. ie. choices for multiple.
     variables_used = "" #sends a splitable string since dictionaries can't be passed between layers.
-    solution = str(task) +"\n"+str(q.solution).replace('\\n', '\n') #db automatically adds the escape character \ to strings, so we remove it from \n
+    solution = str(task) + "\n"+str(q.solution).replace('\\\\', '\\') #db automatically adds a extra \ to \ --> \\
     #solution = solution.replace('\&\#x222B\;', '&#x222B;')
     #todo remove field for template types and just random one of the types for the task, depending on if choices != "" and fill in != ""
 
@@ -560,8 +560,8 @@ def test_template(template_id):
 #Turns a string of latex into a string sympy can use.
 def latex_to_sympy(expression):
     expression = expression
-    expression = expression.replace('{','(')
-    expression = expression.replace('}',')')
+    expression = expression.replace('{', '(')
+    expression = expression.replace('}', ')')
     expression = expression.replace('\\cdot','*')
     expression = expression.replace('\\left','')
     expression = expression.replace('\\right','')

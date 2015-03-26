@@ -22,7 +22,7 @@
             <div hidden id="template_specific">{{template_specific}}</div>
             <div hidden id="number_of_answers">{{number_of_answers}}</div>
             <div hidden id="variable_dictionary">{{variable_dictionary}}</div>
-            <h5><div id="question">{{ question|linebreaks}}</div></h5>
+            <h5><div id="question" class="mathquill-embedded-latex">{{ question|linebreaks}}</div></h5>
 
             <h4 id="w_answer_head" style="display: none"><hr>Ditt svar</h4>
 
