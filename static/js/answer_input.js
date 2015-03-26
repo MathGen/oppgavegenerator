@@ -11,6 +11,9 @@ $(document).ready(function () {
     var variable_dictionary = $('#variable_dictionary').html();
     var w_target = $('#w_target');
     if (String(template_type) == 'multiple') {
+        var output = $('#get_question').text();
+        $('#mathquill_field').append('<div id="mathquill_output" class="input_mathquill"></div>');
+        $('#mathquill_output').mathquill().mathquill('latex', output);
         var choices = template_specific;
         choices = choices.split('§');
         for (var i = 0; i < choices.length; i++) {

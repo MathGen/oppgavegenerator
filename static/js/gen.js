@@ -900,7 +900,7 @@ function submit_template(){
 		tmp_answer.push(convert_variables($('#a_input_mathquill_' + i).mathquill('latex')));
 		tmp_answer_latex.push($('#a_input_mathquill_' + i).mathquill('latex'));
 	}
-	form_submit['answer'] = tmp_answer.join('`§`');
+	form_submit['answer'] = tmp_answer.join('§');
 	form_submit['answer_latex'] = tmp_answer_latex.join('§');
 
 	// RANDOM_DOMAIN
