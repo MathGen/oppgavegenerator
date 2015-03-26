@@ -889,7 +889,7 @@ function submit_template(){
 		}
 	}
 	//form_submit['solution'] = '`' + tmp_solution.join('`\\n`') + '`';
-	form_submit['solution'] = tmp_solution.join('`\\n`');
+	form_submit['solution'] = tmp_solution.join('\\n');
 	form_submit['solution_latex'] = tmp_solution_latex.join('§');
 
 	// ANSWER
