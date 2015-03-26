@@ -24,7 +24,6 @@ $(document).ready(function () {
         $('#mathquill_output').mathquill().mathquill('latex', output);
         $('#w_answer_head').show();
         for (i = 0; i < number_of_answers; i++) {
-            //$('#a_target').append('<input class="form-control" type="textbox" name="answer_box" id="ans_box'+ i +'" />');
             if(i > 0){
                 w_target.append('<div class="col-md-12"><h4>og</h4></div>');
             }
@@ -38,7 +37,7 @@ $(document).ready(function () {
         for(var i = 0; i < arr_output.length; i++){
             $('#mathquill_field').append('<div class="input_field"><span id="mathquill_output_'+i+'" class="input_mathquill"></span></div><br/>');
             $('#mathquill_output_' + i).mathquill().mathquill('latex', arr_output[i]);
-            $('.mathquill-editable').addClass('form-control');
+            $('.mathquill-editable').addClass('form-control blank_input');
         }
         //var str_boxx = $('#question').html();
         //num_boxx = (str_boxx.match(/@boxx@/g) || []).length;
@@ -65,20 +64,21 @@ $(document).ready(function () {
             user_answer = getRadioValue('answer_button');
         }
         else if(template_type == 'blanks'){
-            $('#question').find('.blank_input').each(function(f){
+            $('#mathquill_field').find('.blank_input').each(function(f){
                 if(f > 0) {
                     user_answer += '§';
                 }
                 var f_input = $(this).mathquill('latex');
                 user_answer += latex_to_sympy(f_input);
+                alert(user_answer);
             });
         }
         else if(template_type == 'multifill'){
             alert("what is this i don't even");
-            radio_values = getRadioValue('answer_button');
+            var radio_values = getRadioValue('answer_button');
             radio_values = radio_values.split('§');
             user_answer = radio_values[1];
-            boxx_content = latex_to_sympy($('#multifill_' + radio_values[0]).mathquill('latex'));
+            var boxx_content = latex_to_sympy($('#multifill_' + radio_values[0]).mathquill('latex'));
             user_answer = user_answer.replace(/@boxx@/g, boxx_content);
             alert(user_answer);
         }

@@ -10,13 +10,13 @@
 .mathquill-rendered-math{
     font-size: 2em;
 }
-.mathquill-editable{
+.mathquill-editable:not(.input_mathquill){
     font-size: 1em;
 }
 .btn{
     font-size: 1.2em;
 }
-.form-control{
+.form-control:not(.input_mathquill){
     display: inline-block;
     width: auto;
     height: auto;
