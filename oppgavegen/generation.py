@@ -50,7 +50,10 @@ def task_with_solution(template_id):
     random_domain_list = (q.random_domain).split('§')
     print(random_domain_list)
     zero_allowed = q.answer_can_be_zero#False #Boolean for 0 being a valid answer or not.
-    task = str(q.question_text).replace('\\\\', '\\')
+    task = str(q.question_text)
+    print(task)
+    task = task.replace('\\\\', '\\')
+    print(task)
     template_type = q.type
     choices = q.choices.replace('\\\\', '\\')
     conditions = q.conditions.replace('\\\\', '\\')
@@ -61,6 +64,7 @@ def task_with_solution(template_id):
     template_specific = "" #A type specific variable that holds the extra values for a given type. ie. choices for multiple.
     variables_used = "" #sends a splitable string since dictionaries can't be passed between layers.
     solution = str(task) + "\n"+str(q.solution).replace('\\\\', '\\') #db automatically adds a extra \ to \ --> \\
+    print(solution)
     #solution = solution.replace('\&\#x222B\;', '&#x222B;')
     #todo remove field for template types and just random one of the types for the task, depending on if choices != "" and fill in != ""
 
@@ -567,7 +571,7 @@ def latex_to_sympy(expression):
     expression = expression.replace('\\right','')
     tempt_expression = ""
     i = 0
-    while(i < expression.length):
+    while(i < len(expression)):
         if(expression[i] == '\\'):
             if(expression[i + 1] == 't' and expression[i + 2] == 'e' and expression[i + 3] == 'x' and expression[i + 4] == 't'):
                 while(true):
@@ -590,16 +594,16 @@ def latex_to_sympy(expression):
     i = 0
     counter = 0
     recorder = false
-    while(i < expression.length): #logic for insering a / in fractals
-        if(expression.charAt(i) == 'c' and expression.charAt(i-1) == 'a' and expression.charAt(i-2) == 'r' and expression.charAt(i-3) == 'f' and expression.charAt(i-4) == '\\'):
+    while(i < len(expression)): #logic for insering a / in fractals
+        if(expression[i] == 'c' and expression[i-1] == 'a' and expression[i-2] == 'r' and expression[i-3] == 'f' and expression[i-4] == '\\'):
              recorder = true
         if(recorder):
-            if(expression.charAt(i) == '('):
+            if(expression[i] == '('):
                 counter += 1
-            elif(expression.charAt(i) == ')'):
+            elif(expression[i] == ')'):
                 counter -= 1
-            if(expression.charAt(i) == ')' and counter == 0):
-                expression = expression.substring(0, i+1) + "/" + expression.substring(i+1,expression.length)
+            if(expression[i] == ')' and counter == 0):
+                expression = expression[0:i+1] + "/" + expression[i+1:len(expression)]
                 recorder = false
         i+=1
     expression = expression.replace('\\','')
