@@ -51,13 +51,22 @@ $(document).ready(function () {
         //});
     }
     else if (template_type == 'multifill'){
-        //var choices = template_specific;
-        //choices = choices.split('§');
-        //for (var i = 0; i < choices.length; i++) {
-        //    text = '`' + choices[i].replace(/@boxx@/g, '`<span class="form-control blank_input input_mathquill" style="display: inline" id="multifill_'+ i + '"></span>`') + '`' + '<br />';
-        //    w_target.append('<div><input type="radio" name="answer_button" id="radio' + i + '" value="' + i + '§' + choices[i] + '"/>' + text + '</div>');
-        //    $('#multifill_' + i).mathquill('revert').mathquill('editable');
-        //}
+        var output = $('#get_question').text();
+        $('#mathquill_field').append('<div id="mathquill_output" class="input_mathquill"></div>');
+        $('#mathquill_output').mathquill().mathquill('latex', output);
+        var choices = template_specific;
+        choices = choices.split('§');
+        for (var i = 0; i < choices.length; i++) {
+            $('#mathquill_field').append('<div class="input_field multifill_field"><input id="radio'+i+'" type="radio" name="answer_button" value="' + i + '§' + choices[i] + '"><span id="mathquill_output_'+i+'" class="input_mathquill multifill_input"></span></div><br/>');
+            $('#mathquill_output_' + i).mathquill().mathquill('latex', choices[i]);
+            $('.mathquill-editable').addClass('form-control blank_input');
+            //text = '`' + choices[i].replace(/@boxx@/g, '`<span class="form-control blank_input input_mathquill" style="display: inline" id="multifill_'+ i + '"></span>`') + '`' + '<br />';
+            //w_target.append('<div><input type="radio" name="answer_button" id="radio' + i + '" value="' + i + '§' + choices[i] + '"/>' + text + '</div>');
+            //$('#multifill_' + i).mathquill('revert').mathquill('editable');
+        }
+        $('.blank_input').each(function(index){
+            $(this).attr('id', 'multifill_' + index);
+        });
     }
 
     $('#submit_answer').click(function (e) {
@@ -76,12 +85,12 @@ $(document).ready(function () {
             });
         }
         else if(template_type == 'multifill'){
-            alert("what is this i don't even");
             var radio_values = getRadioValue('answer_button');
             radio_values = radio_values.split('§');
             user_answer = radio_values[1];
-            var boxx_content = latex_to_sympy($('#multifill_' + radio_values[0]).mathquill('latex'));
-            user_answer = user_answer.replace(/@boxx@/g, boxx_content);
+            var boxx_content = $('#multifill_' + radio_values[0]).mathquill('latex');
+            alert(radio_values[0]);
+            user_answer = user_answer.replace(/\\editable\{}/g, boxx_content);
         }
         else {
             for (j = 0; j < number_of_answers; j++) {
