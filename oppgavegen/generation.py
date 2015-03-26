@@ -505,7 +505,7 @@ def make_holes(hole_dict, fill_in, number_of_holes):
     for x in range(number_of_holes):
         holes_to_replace.append(possible_holes[x])
     for s in holes_to_replace:
-        fill_in = fill_in.replace('@xxxx@'+s, '`@boxx@`'+'@xxxx@')
+        fill_in = fill_in.replace('@xxxx@'+s, '`\\editable{}`'+'@xxxx@')
     fill_in = fill_in.replace('@xxxx@', '')
     return_dict = {'fill_in' : fill_in, 'holes_replaced' : holes_to_replace}
     return return_dict
@@ -527,7 +527,7 @@ def multifill(choices, variable_dict):
     choices = choices.replace('?@', '')
     possible_holes = list(variable_dict.keys())
     shuffle(possible_holes)
-    choices = choices.replace(possible_holes[0], '@boxx@')
+    choices = choices.replace(possible_holes[0], '\editable{}')
 
     choices = string_replace(choices, variable_dict)
     choices = choices.split('§')
