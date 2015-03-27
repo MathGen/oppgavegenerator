@@ -313,7 +313,6 @@ def check_conditions(conditions, variable_dict,domain_dict):
         conditions = conditions.split('&')
         while redo:
             counter = 0
-            print('this is testa!!11')
             print(conditions)
             for c in conditions:
                 print(c)
@@ -466,6 +465,8 @@ def fill_in_the_blanks(fill_in):
     hole_positions = array_to_string(hole_positions)
     fill_in = make_holes_dict['fill_in']
     return_dict = {'fill_in' : fill_in, 'hole_positions' : hole_positions}
+    print('hole people hole people..')
+    print(hole_positions)
     return return_dict
 
 ###find_holes###
