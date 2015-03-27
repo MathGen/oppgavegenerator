@@ -93,8 +93,9 @@ def task_with_solution(template_id):
 
     new_solution = parse_solution(new_solution)
     if template_type.lower() == 'multiple':
-        new_choices = parse_solution(new_choices)
         new_choices = new_choices.split('§')
+        for x in range(len(new_choices)):
+            new_choices[x] = calculate_answer(new_choices[x])
         new_choices.append(parse_solution(new_answer).replace('§', 'og'))
         shuffle(new_choices) #Shuffles the choices so that the answer is not always in the same place.
         new_choices = '§'.join(new_choices)
@@ -160,8 +161,10 @@ def calculate_answer(s):
     return str(s)
 
 ###parse_soltuion###
-#Parses a solution (or other string) and calculates using sympify where needed.
+#Parses a solution (or other string) and calculates using sympify where needed. (between @? ?@)
 def parse_solution(solution):
+    print('in parse_solution')
+    print(solution)
     arr = []
     newArr = []
     recorder = False
@@ -181,6 +184,7 @@ def parse_solution(solution):
         newArr.append(calculate_answer(str((arr[x]))))
         r = '@?' + arr[x] + '?@'
         new_solution = new_solution.replace(r, newArr[x])
+    print(new_solution)
     return new_solution
 
 ###get_question###
@@ -327,7 +331,7 @@ def check_conditions(conditions, variable_dict,domain_dict):
     else: #The slow/random way. todo: find a smart/better way to do this
         #Check conditions --> if false: change a variable -> check conditions
         inserted_conditions = string_replace(conditions, variable_dict)
-        while not sympify(inserted_conditions):
+        while not sympify(latex_to_sympy(inserted_conditions)):
             variable_to_change = choice(list(variable_dict.keys())) #chose a random key from variable_dict
             variable_dict[variable_to_change] = new_random_value(variable_to_change, domain_dict, 0, '')
             inserted_conditions = string_replace(conditions, variable_dict)
@@ -346,7 +350,7 @@ def lesser_than(string, domain_dict, variable_dict):
     arr_unchanged = string.split('<')
     variables_left = get_variables_used(arr_unchanged[0], variable_dict)
     variables_right = get_variables_used(arr_unchanged[1], variable_dict)
-    while sympify(arr_changed[0] + '<' + arr_changed[1]) == False:
+    while sympify(latex_to_sympy(arr_changed[0] + '<' + arr_changed[1])) == False:
         something_changed = True
         change = randint(0,1)
         if (len(variables_right) < 1) and (len(variables_left) < 1):
@@ -478,7 +482,7 @@ def find_holes(fill_in):
             recorder = not(recorder) #flip recorder
             if recorder:
                 counter -= 6 #sets the counter back 6 to compensate for @xxxx@ which is not in the original string
-                start_point = counter
+                start_point = counter+1
             elif not recorder:
                 end_point = counter
                 hole_dict[s[:-5]] = str(start_point) + ' ' + str(end_point-5)
@@ -527,12 +531,20 @@ def multifill(choices, variable_dict):
     choices = choices.replace('?@', '')
     possible_holes = list(variable_dict.keys())
     shuffle(possible_holes)
-    choices = choices.replace(possible_holes[0], '\editable{}')
-
-    choices = string_replace(choices, variable_dict)
     choices = choices.split('§')
-    shuffle(choices) #Shuffles the choices so that the choices won't always appear in the same place.
+    shuffle(choices)
+    for x in range(len(choices)):
+        if choices[x].count(possible_holes[0])>0:
+            choices[x]= choices[x].replace(possible_holes[0], '\editable{}')
+        else:
+            for z in range(1, len(possible_holes)):
+                if choices[x].count(possible_holes[z])>0:
+                    choices[x]= choices[x].replace(possible_holes[z], '\editable{}')
+                    break
     choices = '§'.join(choices)
+    choices = string_replace(choices, variable_dict)
+
+     #Shuffles the choices so that the choices won't always appear in the same place.
     return choices
 
 ###template_validation###
