@@ -1029,7 +1029,6 @@ function convert_variables(latex){
 	la = la.replace(/\\cdot/g,'\\cdot ');
 	la = la.replace(/\\left/g,'');
 	la = la.replace(/\\right/g,'');
-	la = la.replace(/\^\^/g, '^');
 	var counter = 0;
 	var dict_letters = {'a' : 'R0R', 'b' : 'R1R', 'c' : 'R2R', 'd' : 'R3R', 'g' : 'R6R', 'h' : 'R7R', 'i' : 'R8R', 'j' : 'R9R', 'k' : 'R10R',
 						'l' : 'R11R', 'm' : 'R12R', 'n' : 'R13R', 'o' : 'R14R', 'p' : 'R15R', 'q' : 'R16R', 'r' : 'R17R', 's' : 'R18R', 't' : 'R19R',
