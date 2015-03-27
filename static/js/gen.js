@@ -985,7 +985,7 @@ function submit_template(){
 	for(var s in form_submit){
 		test_output.push(s + '\n' + form_submit[s]);
 	}
-	alert(test_output.join('\n'));
+	//(test_output.join('\n'));
 }
 
 /**

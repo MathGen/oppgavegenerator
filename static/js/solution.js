@@ -16,7 +16,7 @@ $(document).ready(function () {
     });
 
     var solution = $('#get_solution').text();
-    solution = solution.split('\n');
+    solution = solution.split('\\n');
     for(var s = 0; s < solution.length; s++){
         $('#mathquill_field').append('<div class="input_field"><div id="mathquill_solution_'+s+'" class="input_mathquill"></div></div><br/>');
         $('#mathquill_solution_' + s).mathquill().mathquill('latex', solution[s]);
