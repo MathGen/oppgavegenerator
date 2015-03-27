@@ -837,21 +837,6 @@ $(document).ready(function() {
 		}
 	});
 
-	// ANSWER: See step-by-step solution
-	var v_solution = $('#v_solution');
-	var v_panel = $('#v_panel');
-	v_solution.click(function(e){
-		e.preventDefault();
-		v_panel.fadeIn();
-	});
-
-	// ANSWER: Close step-by-step solution
-	var v_ok = $('#v_ok');
-	v_ok.click(function(e){
-		e.preventDefault();
-		v_panel.fadeOut();
-	});
-
 	// Submit template to database event
 	var o_btn_save = $('#o_btn_save');
 	$(o_btn_save).click(function(e){

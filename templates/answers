@@ -4,6 +4,8 @@
 
 {% block panels %}
 <!-- ANSWER PANEL -->
+<script src="/static/js/solution.js"></script>
+<link href="/static/css/stud_style.css" rel="stylesheet">
 <section class="panel panel-default">
     <div class="panel-heading"><h3 class="panel-title">Svar</h3></div>
     <div class="panel-body">
@@ -28,7 +30,11 @@
     <div class="panel-heading"><h3 class="panel-title">Løsningsforslag</h3></div>
     <div class="panel-body">
         <form class="form-horizontal">
-            <div>{{ solution|linebreaks }}</div>
+
+            <!-- SOLUTION -->
+            <div hidden id="get_solution">{{ solution }}</div>
+            <div id="mathquill_field"></div>
+
         </form>
     </div>
     <div class="panel-footer">
