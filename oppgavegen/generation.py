@@ -309,7 +309,7 @@ def check_conditions(conditions, variable_dict,domain_dict):
     conditions_dict = {}
 
     #Do it the fast way if | and = is not present in conditions
-    if (not '|' in conditions) and (not '=' in conditions):
+    if (not '|' in conditions) and (not '=' in conditions) and False: #Disabled this for now
         conditions = conditions.split('&')
         while redo:
             counter = 0
@@ -400,7 +400,7 @@ def get_variables_used(string, variable_dict): #gets the variables used in a str
 
 ###new_random_value###
 #Creates a new random value for a given variable using it's domain.
-#The function also suports a bonus variable which helps in limiting the domain for the variable further if needed.
+#The function also supports a bonus variable which helps in limiting the domain for the variable further if needed.
 #It also takes a argument for different configurations of what aproach to use for the new variable
 def new_random_value(value, domain_dict, bonus, arg):
     domain = domain_dict[value]
@@ -496,7 +496,7 @@ def find_holes(fill_in):
         c = d
         d = e
         e = f
-
+    print(hole_dict)
     return hole_dict
 
 ###make_holes###
