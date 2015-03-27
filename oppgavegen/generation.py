@@ -543,8 +543,6 @@ def multifill(choices, variable_dict):
                     break
     choices = '§'.join(choices)
     choices = string_replace(choices, variable_dict)
-
-     #Shuffles the choices so that the choices won't always appear in the same place.
     return choices
 
 ###template_validation###
