@@ -5,7 +5,7 @@
 
 {% block panels %}
 <!-- QUESTION PANEL -->
-<script src="/static/js/answer_input.js"></script>
+<script src="/static/js/answer_input.js?12"></script>
 <link href="/static/css/stud_style.css" rel="stylesheet">
 <script>
     MathJax.Hub.Register.StartupHook("End",function () {
