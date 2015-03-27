@@ -12,7 +12,7 @@ from .models import Template
 from django.template.defaultfilters import *
 import html
 
-#new Error message "(╯°□°）╯︵ ┻━┻"
+#Error message "(╯°□°）╯︵ ┻━┻"
 asciimath_sympy_dict = {'int(' : 'integrate('} #for use in converting between sympy and asciimath, might not need this
 errorino = "ಠ_ಠ"
 errorino2 = "Q_Q"
