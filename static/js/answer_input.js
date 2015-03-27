@@ -89,7 +89,6 @@ $(document).ready(function () {
             radio_values = radio_values.split('§');
             user_answer = radio_values[1];
             var boxx_content = $('#multifill_' + radio_values[0]).mathquill('latex');
-            alert(radio_values[0]);
             user_answer = user_answer.replace(/\\editable\{}/g, boxx_content);
         }
         else {

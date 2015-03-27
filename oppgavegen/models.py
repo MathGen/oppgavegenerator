@@ -35,7 +35,7 @@ class Template(models.Model):
     topic = models.ForeignKey(Topic)                          #ID of the topic this problem belongs to ex. 2 (where 2 means algebra.)
     number_of_decimals = models.PositiveSmallIntegerField()   #The number of decimals allowed in the answer.
     answer_can_be_zero = models.BooleanField(default=False)   #True/False for if the answer to a question can be Zero.
-    random_domain = models.CharField(max_length=15)           #Space separated string with 2 numbers denoting which values the random numbers can be.
+    random_domain = models.CharField(max_length=200)           #Space separated string with 2 numbers denoting which values the random numbers can be.
     type = models.CharField(max_length=200) #this will be redundant
     choices = models.CharField(max_length=700, blank=True, null=True) #Different choices for multiple choice, empty for normal templates
     dictionary = models.CharField(max_length=10000, blank=True, null=True, default="")
