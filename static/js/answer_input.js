@@ -82,6 +82,7 @@ $(document).ready(function () {
                 }
                 var f_input = $(this).mathquill('latex');
                 user_answer += latex_to_sympy(f_input);
+                alert(user_answer);
             });
         }
         else if(template_type == 'multifill'){
