@@ -24,3 +24,10 @@
     padding: 3px 3px;
     border-radius: 4px;
 }
+.multifill_field{
+    display: table;
+    width: auto;
+}
+.multifill_input{
+    padding-left: 12px;
+}
