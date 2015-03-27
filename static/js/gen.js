@@ -975,17 +975,17 @@ function submit_template(){
 	// TYPE
 	form_submit['type'] = 'normal';
 
-	if (submit_validation()) {
-		SUBMITTING = true;
-		post(/submit/, form_submit);
-	}
-
-	//// Testing output
-	//var test_output = [];
-	//for(var s in form_submit){
-	//	test_output.push(s + '\n' + form_submit[s]);
+	//if (submit_validation()) {
+	//	SUBMITTING = true;
+	//	post(/submit/, form_submit);
 	//}
-	//alert(test_output.join('\n'));
+
+	// Testing output
+	var test_output = [];
+	for(var s in form_submit){
+		test_output.push(s + '\n' + form_submit[s]);
+	}
+	alert(test_output.join('\n'));
 }
 
 /**
@@ -1029,7 +1029,7 @@ function convert_variables(latex){
 	la = la.replace(/\\cdot/g,'\\cdot ');
 	la = la.replace(/\\left/g,'');
 	la = la.replace(/\\right/g,'');
-	la = la.replace(/^^/g, '^');
+	la = la.replace(/\^\^/g, '^');
 	var counter = 0;
 	var dict_letters = {'a' : 'R0R', 'b' : 'R1R', 'c' : 'R2R', 'd' : 'R3R', 'g' : 'R6R', 'h' : 'R7R', 'i' : 'R8R', 'j' : 'R9R', 'k' : 'R10R',
 						'l' : 'R11R', 'm' : 'R12R', 'n' : 'R13R', 'o' : 'R14R', 'p' : 'R15R', 'q' : 'R16R', 'r' : 'R17R', 's' : 'R18R', 't' : 'R19R',
