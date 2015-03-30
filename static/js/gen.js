@@ -980,7 +980,6 @@ function submit_template(){
 		post(/submit/, form_submit);
 	}
 
-
 	//// Testing output
 	//var test_output = [];
 	//for(var s in form_submit){
@@ -1067,7 +1066,7 @@ function convert_variables(latex){
 			}
 		}
 		if(la[i] in dict_letters){
-			if((la[i-1] in dict_letters || la[i-1] == ')') && la[i-2] != '\^'){
+			if((la[i-1] in dict_letters || la[i-1] == ')' || !isNaN(la[i-1])) && la[i-2] != '\^'){
 				la2 += '\\cdot ' + dict_letters[la[i]];
 			}
 			else{
@@ -1078,7 +1077,7 @@ function convert_variables(latex){
 			}
 		}
 		else if(la[i] == 'x' || la[i] == 'y' || la[i] == 'z'){
-			if((la[i-1] in dict_letters || la[i-1] == ')') && la[i-2] != '\^'){
+			if((la[i-1] in dict_letters || la[i-1] == ')' || !isNaN(la[i-1])) && la[i-2] != '\^'){
 				la2 += '\\cdot ' + la[i];
 			}
 			else{
@@ -1382,7 +1381,7 @@ function get_diff_latex(latex_bool){
  */
 $(window).bind('beforeunload', function(e){
 	if(TOPIC_SELECTED && !SUBMITTING){
-		return 'Are you sure you want to leave?';
+		return 'Warning!';
 	}
 });
 
