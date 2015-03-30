@@ -49,6 +49,38 @@ def index(request):
                     'variable_dictionary' : variable_dictionary, 'number_of_answers' : number_of_answers}
     return render_to_response('index', context_dict, context)
 
+@login_required
+def task_by_id_and_type(request, template_id, desired_type='normal'):
+    context = RequestContext(request)
+
+    arr = generation.task_with_solution(template_id, desired_type)
+
+    question = arr['question']
+    primary_key = arr['primary_key']
+    variable_dictionary = arr['variables_used']
+    template_specific = arr['template_specific']
+    number_of_answers = arr['number_of_answers']
+    template_type = arr['template_type']
+    context_dict = {'title': generation.printer(), 'question' : question,  'template_specific' : template_specific, 'template_type' : template_type, 'primary_key' : primary_key,
+                    'variable_dictionary' : variable_dictionary, 'number_of_answers' : number_of_answers}
+    return render_to_response('index', context_dict, context)
+
+@login_required
+def task_by_id(request, template_id):
+    context = RequestContext(request)
+
+    arr = generation.task_with_solution(template_id)
+
+    question = arr['question']
+    primary_key = arr['primary_key']
+    variable_dictionary = arr['variables_used']
+    template_specific = arr['template_specific']
+    number_of_answers = arr['number_of_answers']
+    template_type = arr['template_type']
+    context_dict = {'title': generation.printer(), 'question' : question,  'template_specific' : template_specific, 'template_type' : template_type, 'primary_key' : primary_key,
+                    'variable_dictionary' : variable_dictionary, 'number_of_answers' : number_of_answers}
+    return render_to_response('index', context_dict, context)
+
 
 class QuestionForm(forms.Form):
     user_answer = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400)

@@ -12,7 +12,12 @@ urlpatterns = patterns('',
     url(r'^gen/', 'oppgavegen.views.gen', name='gen'),
     url(r'^submit/', 'oppgavegen.views.submit', name='submit'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^user/', include('registration.backends.default.urls'))
+    url(r'^user/', include('registration.backends.default.urls')),
+    url(r'^task/$', 'oppgavegen.views.index'),
+    url(r"^task/(\d+)/$", 'oppgavegen.views.task_by_id'),
+    url(r"^task/(\d+)/(\w+)/$", 'oppgavegen.views.task_by_id_and_type'),
+    #url(r'^task/(?P<template_id>\d+)/(?P<desired_type>\d)/$', 'oppgavegen.views.task')
+
 
 
 )

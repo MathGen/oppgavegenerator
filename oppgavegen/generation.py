@@ -36,7 +36,7 @@ def checkAnswer(user_answer, answer):
 
 ###task_with_solution###
 #Makes a valid task with solution from a template in the database.
-def task_with_solution(template_id):
+def task_with_solution(template_id, desired_type='none'):
     error = 0
     if template_id == "":
         q = get_question('algebra')  #gets a question from the DB
@@ -54,7 +54,10 @@ def task_with_solution(template_id):
     print(task)
     task = task.replace('\\\\', '\\')
     print(task)
-    template_type = q.type
+    if desired_type == 'none': # if no type is desired (default), use the type stored in template
+        template_type = q.type
+    else:
+        template_type = desired_type
     choices = q.choices.replace('\\\\', '\\')
     conditions = q.conditions.replace('\\\\', '\\')
     dictionary = q.dictionary
