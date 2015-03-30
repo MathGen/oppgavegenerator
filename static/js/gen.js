@@ -489,6 +489,10 @@ $(document).ready(function() {
 					$('#s_input_mathquill_' + step).addClass('select_error');
 					error_message('step_' + step, 'Dette feltet kan ikke være tomt.');
 				}
+				if($('#s_text_' + step).val() == ""){
+					solution_valid = false;
+					error_message('s_text_' + step, 'Skriv forklaring.');
+				}
 			}
 			if(solution_valid == true){
 				$('.btn-group-s').prop('disabled', true);
@@ -958,7 +962,7 @@ function submit_template(){
 	// FILL_IN
 	if ($('#opt_fill_blanks').is(':checked')) {
 		//form_submit['fill_in'] = '`' + get_diff_latex(false) + '`';
-		form_submit['fill_in'] = get_diff_latex(false);
+		form_submit['fill_in'] = convert_variables(get_diff_latex(false));
 		form_submit['fill_in_latex'] = get_diff_latex(true);
 	}
 	else {
@@ -1055,6 +1059,10 @@ function convert_variables(latex){
 					i++;
 				}
 			}
+			else if(la[i+1] == 'n'){
+				la2 += '\\n';
+				i += 2;
+			}
 			else{
 				while(la[i] != '{' && la[i] != ' ' && la[i] != '_' && la[i] != '^'){
 					la2 += la[i];
@@ -1066,7 +1074,7 @@ function convert_variables(latex){
 			}
 		}
 		if(la[i] in dict_letters){
-			if((la[i-1] in dict_letters || la[i-1] == ')' || !isNaN(la[i-1])) && la[i-2] != '\^'){
+			if((la[i-1] in dict_letters || la[i-1] == ')' || !isNaN(la[i-1]) || (la[i-1] == '\@' && la[i-2] == 'x' && la[i-3] == 'x' && la[i-4] == 'x')) && la[i-2] != '\^'){
 				la2 += '\\cdot ' + dict_letters[la[i]];
 			}
 			else{
@@ -1077,7 +1085,7 @@ function convert_variables(latex){
 			}
 		}
 		else if(la[i] == 'x' || la[i] == 'y' || la[i] == 'z'){
-			if((la[i-1] in dict_letters || la[i-1] == ')' || !isNaN(la[i-1])) && la[i-2] != '\^'){
+			if((la[i-1] in dict_letters || la[i-1] == ')' || !isNaN(la[i-1]) || (la[i-1] == '\@' && la[i-2] == 'x' && la[i-3] == 'x' && la[i-4] == 'x')) && la[i-2] != '\^'){
 				la2 += '\\cdot ' + la[i];
 			}
 			else{
@@ -1234,6 +1242,10 @@ function submit_validation(){
 			$('#s_input_mathquill_' + step).addClass('select_error');
 			error_message('step_' + step, 'Dette feltet kan ikke være tomt.');
 		}
+		if($('#s_text_' + step).val() == ""){
+			valid = false;
+			error_message('s_text_' + step, 'Skriv forklaring.');
+		}
 	}
 	for(var ans = 1; ans <= ANSWER; ans++){
 		if($('#a_input_mathquill_' + ans).mathquill('latex') == ''){
@@ -1358,8 +1370,8 @@ function get_diff_latex(latex_bool){
 		for (var la_orig = 1; la_orig <= STEP; la_orig++) {
 			//latex_before.push(latex_to_asciimath($('#s_input_mathquill_' + la_orig).mathquill('latex')));
 			//latex_after.push(latex_to_asciimath($('#f_fill_content_' + la_orig).mathquill('latex')));
-			latex_before.push('\\text{' + $('#s_text_' + la_orig).val() + '}' + '\\n' + convert_variables($('#s_input_mathquill_' + la_orig).mathquill('latex')));
-			latex_after.push('\\text{' + $('#s_text_' + la_orig).val() + '}' + '\\n' + convert_variables($('#f_fill_content_' + la_orig).mathquill('latex')));
+			latex_before.push('\\text{' + $('#s_text_' + la_orig).val() + '}' + '\\n' + $('#s_input_mathquill_' + la_orig).mathquill('latex'));
+			latex_after.push('\\text{' + $('#s_text_' + la_orig).val() + '}' + '\\n' + $('#f_fill_content_' + la_orig).mathquill('latex'));
 		}
 		var d = dmp.diff_main(latex_before.join('\\n'), latex_after.join('\\n')); // Two strings to compare.
 	}
