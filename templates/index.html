@@ -42,7 +42,7 @@
 					<ul class="nav navbar-nav navbar-right">
 						<!--MENU ITEMS-->
                     	{% if user|is_teacher   %}
-						<li><a href="../newtemplate">Ny Mal</a></li>
+						<li><a href="{% url 'newtemplate' %}">Ny Mal</a></li>
                         {%endif%}
                     	<li><a href="{% url 'templates' %}">Maler</a></li>
 						<li class="dropdown">
