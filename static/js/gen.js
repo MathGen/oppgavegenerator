@@ -985,7 +985,7 @@ function submit_template(){
 	//for(var s in form_submit){
 	//	test_output.push(s + '\n' + form_submit[s]);
 	//}
-	//(test_output.join('\n'));
+	//alert(test_output.join('\n'));
 }
 
 /**
@@ -1055,14 +1055,6 @@ function convert_variables(latex){
 					i++;
 				}
 			}
-			//else if(la[i+1] == 'l' && la[i+2] == 'e' && la[i+3] == 'f' && la[i+4] == 't'){
-			//	la2 += '\\left(';
-			//	i = i + 6;
-			//}
-			//else if(la[i+1] == 'r' && la[i+2] == 'i' && la[i+3] == 'g' && la[i+4] == 'h') {
-			//	la2 += '\\right';
-			//	i = i + 6;
-			//}
 			else{
 				while(la[i] != '{' && la[i] != ' ' && la[i] != '_' && la[i] != '^'){
 					la2 += la[i];
@@ -1074,14 +1066,25 @@ function convert_variables(latex){
 			}
 		}
 		if(la[i] in dict_letters){
-			la2 += dict_letters[la[i]];
+			if((la[i-1] in dict_letters || la[i-1] == ')') && la[i-2] != '\^'){
+				la2 += '\\cdot ' + dict_letters[la[i]];
+			}
+			else{
+				la2 += dict_letters[la[i]];
+			}
+			if(la[i+1] == '('){
+				la2 += '\\cdot ';
+			}
 		}
 		else if(la[i] == 'x' || la[i] == 'y' || la[i] == 'z'){
-			if(la[i-1] in dict_letters){
+			if((la[i-1] in dict_letters || la[i-1] == ')') && la[i-2] != '\^'){
 				la2 += '\\cdot ' + la[i];
 			}
 			else{
 				la2 += la[i];
+			}
+			if(la[i+1] == '('){
+				la2 += '\\cdot ';
 			}
 		}
 		else{
