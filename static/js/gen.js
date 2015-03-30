@@ -975,16 +975,16 @@ function submit_template(){
 	// TYPE
 	form_submit['type'] = 'normal';
 
-	//if (submit_validation()) {
-	//	SUBMITTING = true;
-	//	post(/submit/, form_submit);
-	//}
-
-	// Testing output
-	var test_output = [];
-	for(var s in form_submit){
-		test_output.push(s + '\n' + form_submit[s]);
+	if (submit_validation()) {
+		SUBMITTING = true;
+		post(/submit/, form_submit);
 	}
+
+	//// Testing output
+	//var test_output = [];
+	//for(var s in form_submit){
+	//	test_output.push(s + '\n' + form_submit[s]);
+	//}
 	//(test_output.join('\n'));
 }
 
