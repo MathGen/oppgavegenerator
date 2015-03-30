@@ -980,6 +980,7 @@ function submit_template(){
 		post(/submit/, form_submit);
 	}
 
+
 	//// Testing output
 	//var test_output = [];
 	//for(var s in form_submit){
