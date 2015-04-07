@@ -31,7 +31,7 @@ $(document).ready(function () {
                 w_target.append('<div class="col-md-12"><h4>og</h4></div>');
             }
             w_target.append('<div id="ans_'+i+'" class="col-md-12 input_field"><span id="w_input_mathquill_'+i+'" class="form-control input_mathquill"></span></div>');
-            $('#w_input_mathquill_' + i).mathquill('revert').mathquill('editable');
+            $('#w_input_mathquill_' + i).mathquill('editable');
         }
     }
     else if (template_type == 'blanks') {
@@ -126,6 +126,9 @@ $(document).ready(function () {
     });
 });
 
+$(window).load(function(){
+   $('.mathquill-rendered-math').mathquill('redraw');
+});
 
 function answer_validation(){
     var valid = true;
