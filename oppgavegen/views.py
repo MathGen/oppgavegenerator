@@ -126,7 +126,6 @@ def answers(request):
         counter = 0
         if form.is_valid():
             form_values = form.process()
-            #print(form_values)
             context_dict = view_logic.make_answer_context_dict(form_values)
             return render_to_response('answers', context_dict, context)
         else:
