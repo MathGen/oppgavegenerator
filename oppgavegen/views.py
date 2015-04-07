@@ -216,8 +216,10 @@ def edit_template(request, template_id):
     choices = q.choices_latex
     conditions = q.conditions_latex
     fill_in = q.fill_in_latex
+    topic = q.topic
 
     context_dict = {'template_id': template_id , 'answer' : answer, 'solution' : solution,
                     'question_text' : question_text, 'calculation_references' : calculation_references,
-                    'choices' : choices, 'conditions' : conditions, 'fill_in' : fill_in}
+                    'choices' : choices, 'conditions' : conditions, 'fill_in' : fill_in,
+                    'topic' : topic}
     return render_to_response('edit.html', context_dict, context)
