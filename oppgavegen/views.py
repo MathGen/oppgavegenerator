@@ -18,7 +18,7 @@ from django.forms import ModelForm
 from oppgavegen.models import Template
 from oppgavegen.models import Topic
 from oppgavegen.models import User
-from oppgavegen.tables import BootstrapTemplateTable
+from oppgavegen.tables import *
 from django_tables2 import RequestConfig
 from datetime import datetime
 from oppgavegen.templatetags.app_filters import is_teacher
@@ -139,6 +139,16 @@ def templates(request):
     table = BootstrapTemplateTable(Template.objects.all())
     RequestConfig(request).configure(table)
     return render(request, "templates.html", {"table": table})
+
+@login_required
+@user_passes_test(is_teacher, '/')
+def template_table_by_user(request):
+    user = request.user
+    table = UserTemplates(Template.objects.filter(creator=user))
+    RequestConfig(request).configure(table)
+    return render(request, "templates.html", {"table": table})
+
+
 
 @login_required
 @user_passes_test(is_teacher, '/')

@@ -147,7 +147,7 @@ def to_asciimath(s): #legacy function, we probably won't need this
     new_s = s
     index = 0
     counter = 0
-    #todo: do this only between asciimath delimeters: ``
+    # do this only between asciimath delimeters: ``
     for c in s:
         if c == '/' or c == '^':
             new_s = new_s[:index] + c + new_s[index:]
