@@ -122,7 +122,7 @@ def task_with_solution(template_id, desired_type='none'):
 
 
     #todo also remove parsing of solution in this function as it is not needed before the answer page (only true for normal actually)
-    return_dict = {'question' : new_task, 'variable_dict' : variables_used, 'template_type' : template_type,
+    return_dict = {'question' : new_task, 'variable_dictionary' : variables_used, 'template_type' : template_type,
                    'template_specific' : template_specific, 'primary_key' : primary_key, 'number_of_answers' : number_of_answers}
     return return_dict
 
