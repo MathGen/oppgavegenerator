@@ -29,10 +29,8 @@ def is_member(user): #Checks if a user is a member of a group
         return True
     return user.groups.filter(name='Teacher').exists()
 
-
 @login_required
 def task(request):
-    #template = loader.get_template('index.html')
     context = RequestContext(request)
     question_type = request.GET.get('q', '')
     if question_type != "":
@@ -116,7 +114,7 @@ def submit(request):
         else:
             print(form.errors)
     context = RequestContext(request)
-    return render_to_response('submit',{'message': message}, context)
+    return render_to_response('submit.html',{'message': message}, context)
 
 @login_required
 def answers(request):
@@ -127,10 +125,10 @@ def answers(request):
         if form.is_valid():
             form_values = form.process()
             context_dict = view_logic.make_answer_context_dict(form_values)
-            return render_to_response('answers', context_dict, context)
+            return render_to_response('answers.html', context_dict, context)
         else:
             print(form.errors)
-    return  render_to_response('answers')
+    return  render_to_response('answers.html')
 
 @login_required
 @user_passes_test(is_teacher, '/')
