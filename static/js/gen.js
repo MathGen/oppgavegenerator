@@ -467,7 +467,9 @@ $(document).ready(function() {
 				if($(Q_INPUT).mathquill('latex') != ''){
 					$('.btn-group-q').prop('disabled', true);
 					var s_panel = $('#s_panel');
-					s_panel.fadeIn();
+					s_panel.fadeIn(function(){
+						$('.mathquill-embedded-latex').mathquill('redraw');
+					});
 					scrollTo(s_panel);
 					$(S_INPUT).find('textarea').focus();
 				}
@@ -497,7 +499,9 @@ $(document).ready(function() {
 			if(solution_valid == true){
 				$('.btn-group-s').prop('disabled', true);
 				var a_panel = $('#a_panel');
-				a_panel.fadeIn();
+				a_panel.fadeIn(function(){
+					$('.mathquill-embedded-latex').mathquill('redraw');
+				});
 				scrollTo(a_panel);
 				$(A_INPUT).find('textarea').focus()
 			}
@@ -514,7 +518,9 @@ $(document).ready(function() {
 			if(answer_valid == true){
 				$('.btn-group-a').prop('disabled', true);
 				var o_panel = $('#o_panel');
-				o_panel.fadeIn();
+				o_panel.fadeIn(function(){
+					$('.mathquill-embedded-latex').mathquill('redraw');
+				});
 				scrollTo(o_panel);
 			}
 		}
