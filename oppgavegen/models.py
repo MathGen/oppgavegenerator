@@ -44,7 +44,7 @@ class Template(models.Model):
     valid_flag = models.BooleanField(default=False)
 
     ##Also save the original latex for post-back:
-    ##no longer needed, only calculation references are..
+    ##no longer needed, only calculation references are.. todo: remove unnecessary fields.
     question_text_latex = models.CharField(max_length=200, blank=True, null=True)
     solution_latex =  models.CharField(max_length=10000, blank=True, null=True)
     answer_latex = models.CharField(max_length=200, blank=True, null=True)

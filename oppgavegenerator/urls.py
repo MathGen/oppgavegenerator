@@ -16,6 +16,7 @@ urlpatterns = patterns('',
     url(r'^task/$', 'oppgavegen.views.index'),
     url(r"^task/(\d+)/$", 'oppgavegen.views.task_by_id'),
     url(r"^task/(\d+)/(\w+)/$", 'oppgavegen.views.task_by_id_and_type'),
+    url(r"^edit/(\d+)/$", 'oppgavegen.views.edit_template'),
     #url(r'^task/(?P<template_id>\d+)/(?P<desired_type>\d)/$', 'oppgavegen.views.task')
 
 

@@ -206,3 +206,18 @@ def new_template(request):
     return render_to_response('newtemplate.html', context_dict, context)
 
 
+def edit_template(request, template_id):
+    context = RequestContext(request)
+    q = Template.objects.get(pk=template_id)
+    calculation_references = q.calculation_ref
+    question_text = q.question_text_latex
+    solution = q.solution_latex
+    answer = q.answer_latex
+    choices = q.choices_latex
+    conditions = q.conditions_latex
+    fill_in = q.fill_in_latex
+
+    context_dict = {'template_id': template_id , 'answer' : answer, 'solution' : solution,
+                    'question_text' : question_text, 'calculation_references' : calculation_references,
+                    'choices' : choices, 'conditions' : conditions, 'fill_in' : fill_in}
+    return render_to_response('edit.html', context_dict, context)
