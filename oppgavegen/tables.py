@@ -1,5 +1,4 @@
 # predefined tables to be rendered with django-tables
-__author__ = 'eirikk'
 
 import django_tables2 as tables
 from oppgavegen.models import Template
