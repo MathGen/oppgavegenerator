@@ -13,10 +13,11 @@ urlpatterns = patterns('',
     url(r'^submit/', 'oppgavegen.views.submit', name='submit'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^user/', include('registration.backends.default.urls')),
+    url(r'^user/templates/', 'oppgavegen.views.template_table_by_user', name='user_templates'),
     url(r'^task/$', 'oppgavegen.views.index'),
     url(r"^task/(\d+)/$", 'oppgavegen.views.task_by_id'),
     url(r"^task/(\d+)/(\w+)/$", 'oppgavegen.views.task_by_id_and_type'),
-    url(r"^edit/(\d+)/$", 'oppgavegen.views.edit_template'),
+    url(r"^edit/(\d+)/$", 'oppgavegen.views.edit_template', name='edit_template'),
     #url(r'^task/(?P<template_id>\d+)/(?P<desired_type>\d)/$', 'oppgavegen.views.task')
 
 
