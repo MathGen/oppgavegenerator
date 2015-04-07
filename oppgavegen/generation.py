@@ -157,6 +157,8 @@ def check_for_decimal(f):
 #Calculates a string using sympify
 def calculate_answer(s):
     #todo convert from latex here using latex_to_sympy and use latex(sympify(s))
+    s = s.replace('@?','')
+    s = s.replace('?@','')
     s = latex_to_sympy(s)
     s = latex(sympify(s)) #sometimes this returns the value 'zoo' | also could maybe use simplify instead of sympify
     #s = RR(s)
