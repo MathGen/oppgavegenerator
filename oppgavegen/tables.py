@@ -26,11 +26,11 @@ class BootstrapTemplateTable(tables.Table):
         fields = ("id","question_text", "creator", "topic", "type", "rating")
 
 class UserTemplates(tables.Table):
-    Edit = tables.TemplateColumn("<a href={% url 'edit_template' record.id %}>Edit</a>", orderable=False)
     Normal = tables.TemplateColumn('<a href="../task/{{record.id}}/">View</a>', orderable=False)
     Blanks = tables.TemplateColumn('<a href="../task/{{record.id}}/blanks">View</a>', orderable=False)
     Multiple = tables.TemplateColumn('<a href="../task/{{record.id}}/multiple">View</a>', orderable=False)
     Multifill = tables.TemplateColumn('<a href="../task/{{record.id}}/multifill">View</a>', orderable=False)
+    Edit = tables.TemplateColumn("<a href={% url 'edit_template' record.id %}>Edit</a>", orderable=False)
 
     class Meta:
         model = Template
