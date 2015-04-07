@@ -42,13 +42,6 @@ $(document).ready(function () {
             $('#mathquill_output_' + i).mathquill().mathquill('latex', arr_output[i]);
             $('.mathquill-editable').addClass('form-control blank_input');
         }
-        //var str_boxx = $('#question').html();
-        //num_boxx = (str_boxx.match(/@boxx@/g) || []).length;
-        //$('#question').html(str_boxx.replace(/@boxx@/g, '<span class="form-control blank_input input_mathquill" style="display: inline"></span>'));
-        //$('#question').find('.blank_input').each(function(index){
-        //    $(this).attr('id', 'blank_' + index);
-        //    $(this).mathquill('revert').mathquill('editable');
-        //});
     }
     else if (template_type == 'multifill'){
         var output = $('#get_question').text();
@@ -60,9 +53,6 @@ $(document).ready(function () {
             $('#mathquill_field').append('<div class="input_field multifill_field"><input id="radio'+i+'" type="radio" name="answer_button" value="' + i + '§' + choices[i] + '"><span id="mathquill_output_'+i+'" class="input_mathquill multifill_input"></span></div><br/>');
             $('#mathquill_output_' + i).mathquill().mathquill('latex', choices[i]);
             $('.mathquill-editable').addClass('form-control blank_input');
-            //text = '`' + choices[i].replace(/@boxx@/g, '`<span class="form-control blank_input input_mathquill" style="display: inline" id="multifill_'+ i + '"></span>`') + '`' + '<br />';
-            //w_target.append('<div><input type="radio" name="answer_button" id="radio' + i + '" value="' + i + '§' + choices[i] + '"/>' + text + '</div>');
-            //$('#multifill_' + i).mathquill('revert').mathquill('editable');
         }
         $('.blank_input').each(function(index){
             $(this).attr('id', 'multifill_' + index);
@@ -82,7 +72,6 @@ $(document).ready(function () {
                 }
                 var f_input = $(this).mathquill('latex');
                 user_answer += latex_to_sympy(f_input);
-                alert(user_answer);
             });
         }
         else if(template_type == 'multifill'){
@@ -97,7 +86,6 @@ $(document).ready(function () {
                 if (j > 0) {
                     user_answer += '§';
                 }
-                //user_answer += document.getElementById('ans_box' + i).value;
                 var w_input = ($('#w_input_mathquill_' + j).mathquill('latex'));
                 user_answer += latex_to_sympy(w_input);
             }
