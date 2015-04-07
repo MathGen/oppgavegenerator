@@ -165,7 +165,7 @@ def answers(request):
             answer = generation.parse_answer(answer)
             answer = answer.replace('`','')
             answer = answer.split('§')
-            solution = str((q.question_text).replace('\\\\', '\\')) +"\n"+str(q.solution.replace('\\\\', '\\'))
+            solution = str((q.question_text).replace('\\\\', '\\')) +"\\n"+ str(q.solution.replace('\\\\', '\\'))
             solution = generation.replace_variables_from_array(variable_dictionary, solution)
             solution = generation.parse_solution(solution)
 
@@ -223,3 +223,10 @@ def edit_template(request, template_id):
                     'choices' : choices, 'conditions' : conditions, 'fill_in' : fill_in,
                     'topic' : topic}
     return render_to_response('edit.html', context_dict, context)
+
+def update_template(request):
+    context = RequestContext(request)
+    context_dict = {'msg','success'}
+
+
+    return render_to_response('update.html', context_dict, context)
