@@ -28,6 +28,12 @@ $(document).ready(function() {
 		}
 	});
 
+	// Check if template is inserted from db to be modified.
+	if($('#edit_template').text() == 'true'){
+		TOPIC_SELECTED = true;
+		insert_editable_data();
+	}
+
 	// Set which input-field is active
 	$(document).on('focus', '.input_mathquill', function(e){
 		e.preventDefault();
@@ -1443,6 +1449,54 @@ $(window).bind('beforeunload', function(e){
 $('#calc_modal').on('shown.bs.modal', function () {
 	$(C_INPUT).find('textarea').focus();
 });
+
+function insert_editable_data(){
+	// Insert solution
+	var edit_solution = $('#solution').text();
+	edit_solution = edit_solution.split('§');
+	var edit_step = edit_solution.length / 2;
+	$('#s_input_mathquill_1').mathquill('write', edit_solution[1]);
+	if(edit_step > 1){
+		var i_la = 3;
+		for(var index_s = 2; index_s <= edit_step; index_s++){
+			$('#s_btn_del_' + STEP).hide();
+			STEP = index_s;
+			$('#s_form').append('<div id="step_' + STEP + '" class="step" style="display: none"><hr>' +
+				'<h4>Steg ' + STEP + '<a id="s_btn_del_'+STEP+'" class="glyphicon glyphicon-remove del_step" style="float:right"></a></h4>' +
+				'<input id="s_text_' + STEP + '" type="text" class="form-control" placeholder="Forklaring...">' +
+				'<div class="input_field s_input_field"><span id="s_input_mathquill_'+STEP+'" class="form-control input_mathquill">'+ edit_solution[i_la] +'</span></div>');
+			$('#s_input_mathquill_' + STEP).mathquill('editable');
+			$('#step_' + STEP).show();
+			i_la += 2;
+		}
+	}
+	var i_s = 0;
+	for(var index_s_text = 1; index_s_text <= edit_solution.length; index_s_text++){
+		$('#s_text_' + index_s_text).val(edit_solution[i_s]);
+		i_s += 2;
+	}
+
+	// Insert answer
+	var edit_answer = $('#answer').text();
+	edit_answer = edit_answer.split('§');
+	$('#a_input_mathquill_1').mathquill('write', edit_answer[0]);
+	if(edit_answer.length > 1){
+		for(var index_a = 2; index_a <= edit_answer.length; index_a++){
+			$('#a_btn_del_' + ANSWER).hide();
+			ANSWER = index_a;
+			$('#ans_title_1').show();
+			$('#a_form').append('<div id="answer_'+ANSWER+'" class="answer" style="display: none"><hr>' +
+				'<h4>Svar '+ANSWER+'<a id="a_btn_del_'+ANSWER+'" class="glyphicon glyphicon-remove del_answer" style="float:right"></a></h4>' +
+				'<div class="input_field a_input_field"><span id="a_input_mathquill_'+ANSWER+'" class="form-control input_mathquill">'+ edit_answer[index_a] +'</span></div>');
+			$('#a_input_mathquill_' + ANSWER).mathquill('editable');
+			$('#answer_' + ANSWER).show();
+		}
+	}
+
+	// Insert random-domain
+	var edit_random_domain = $('#random_domain').text();
+	edit_random_domain = edit_random_domain.split('§');
+}
 
 function post(path, params, method) {
     method = method || "post"; // Set method to post by default if not specified.

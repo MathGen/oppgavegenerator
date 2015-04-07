@@ -31,7 +31,7 @@ def is_member(user): #Checks if a user is a member of a group
 
 
 @login_required
-def index(request):
+def task(request):
     #template = loader.get_template('index.html')
     context = RequestContext(request)
     question_type = request.GET.get('q', '')
@@ -40,7 +40,7 @@ def index(request):
     else:
         context_dict = generation.task_with_solution("")
     context_dict['title'] = generation.printer()
-    return render_to_response('index', context_dict, context)
+    return render_to_response('taskview.html', context_dict, context)
 
 @login_required
 def task_by_id_and_type(request, template_id, desired_type='normal'):
@@ -48,14 +48,14 @@ def task_by_id_and_type(request, template_id, desired_type='normal'):
     context_dict = generation.task_with_solution(template_id, desired_type)
     context_dict['title'] = generation.printer()
 
-    return render_to_response('index', context_dict, context)
+    return render_to_response('taskview.html', context_dict, context)
 
 @login_required
 def task_by_id(request, template_id):
     context = RequestContext(request)
     context_dict = generation.task_with_solution(template_id)
     context_dict['title'] = generation.printer()
-    return render_to_response('index', context_dict, context)
+    return render_to_response('taskview.html', context_dict, context)
 
 
 class QuestionForm(forms.Form):
