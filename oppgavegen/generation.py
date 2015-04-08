@@ -157,8 +157,7 @@ def check_for_decimal(f):
 #Calculates a string using sympify
 def calculate_answer(s):
     #todo convert from latex here using latex_to_sympy and use latex(sympify(s))
-    s = s.replace('@?','')
-    s = s.replace('?@','')
+    s = remove_unnecessary(s)
     s = latex_to_sympy(s)
     s = latex(sympify(s)) #sometimes this returns the value 'zoo' | also could maybe use simplify instead of sympify
     #s = RR(s)
@@ -305,6 +304,13 @@ def array_to_string(array):
         string += '§' + s
     return string[1:] #Use [1:] to remove unnecessary § from the start
 
+###remove_unnecessary###
+#removes unnecessary symbols from a string
+def remove_unnecessary(string):
+    string = string.replace('@?', '')
+    string = string.replace('?@', '')
+    return string
+
 ### conditions ###
 #A function that loops trough the conditions for a given template.
 #In the conditions numbers get changed to match the condition. This means all
@@ -312,6 +318,7 @@ def array_to_string(array):
 def check_conditions(conditions, variable_dict,domain_dict):
     redo = True #keeps track of if the conditions have to be tried again
     conditions_dict = {}
+    conditions = remove_unnecessary(conditions)
 
     #Do it the fast way if | and = is not present in conditions
     if (not '|' in conditions) and (not '=' in conditions) and False: #Disabled this for now
@@ -335,6 +342,7 @@ def check_conditions(conditions, variable_dict,domain_dict):
     else: #The slow/random way. todo: find a smart/better way to do this
         #Check conditions --> if false: change a variable -> check conditions
         inserted_conditions = string_replace(conditions, variable_dict)
+
         while not sympify(latex_to_sympy(inserted_conditions)):
             variable_to_change = choice(list(variable_dict.keys())) #chose a random key from variable_dict
             variable_dict[variable_to_change] = new_random_value(variable_to_change, domain_dict, 0, '')

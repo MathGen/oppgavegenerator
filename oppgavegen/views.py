@@ -175,16 +175,7 @@ def update_template(request):
         form = TemplateForm(request.POST)
         if form.is_valid():
             template = form.save(commit=False)
-
-            template.creator = request.user
-            #could get creator from username=einar as well
-            template.rating = 1200
-            template.times_failed = 0
-            template.times_solved = 0
-            template.creation_date = datetime.now()
             template.save()
-
-            message = 'Your template has been updated successfully!'
         else:
             print(form.errors)
     context = RequestContext(request)

@@ -53,3 +53,9 @@ def make_answer_context_dict(form_values):
     answer_text = generation.checkAnswer(user_answer, answer)
     context_dict = {'title': "Oppgavegen", 'answer': str(answer_text), 'user_answer': user_answer, 'solution': solution}
     return context_dict
+
+
+
+def submit_template(template, user):
+
+    return
