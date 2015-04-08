@@ -17,6 +17,9 @@ var CON_IN					= false;
 var SUBMITTING				= false;
 var c_count 				= 0;
 var array_calc				= [];
+var array_calc_unchanged	= [];
+var MODIFY					= false;
+var mod_count				= 0;
 
 $(document).ready(function() {
 	// Topic selection validation
@@ -30,6 +33,7 @@ $(document).ready(function() {
 
 	// Check if template is inserted from db to be modified.
 	if($('#edit_template').text() == 'true'){
+		MODIFY = true;
 		TOPIC_SELECTED = true;
 		insert_editable_data();
 	}
@@ -741,14 +745,40 @@ $(document).ready(function() {
 
 	// Open multiple-choice modal
 	var radio_multiple_choice = $('#opt_multiple_choice');
+	var mod = false;
 	radio_multiple_choice.change(function(){
 		if ($(this).is(':checked')) {
-			if(MULTI_CHOICE == 0) {
+			if(MULTI_CHOICE == 0 && MODIFY == false) {
 				MULTI_CHOICE++;
 				$('#m_dyn_multi_input').append('<div class="input_field"><span id="m_input_mathquill_1" class="mathquill-editable form-control input_mathquill"></span></div>');
 				$('#m_input_mathquill_1').mathquill('revert').mathquill('editable');
 			}
+			else if(MULTI_CHOICE == 0 && MODIFY == true){
+				var m_choice = $('#choices').text();
+				m_choice = m_choice.split('§');
+				$('#m_dyn_multi_input').append('<div class="input_field"><span id="m_input_mathquill_1" class="mathquill-editable form-control input_mathquill"></span></div>');
+				$('#m_input_mathquill_1').mathquill('revert').mathquill('editable');
+				MULTI_CHOICE = m_choice.length;
+				if(MULTI_CHOICE > 1){
+					for(var m = 2; m <= MULTI_CHOICE; m++){
+						$('#m_btn_del_' + (m-1)).hide();
+						$('#m_dyn_multi_input').append('<div id="m_field_'+m+'" class="input_field multi_field"><span id="m_input_mathquill_'+m+'" class="mathquill-editable form-control input_mathquill"></span><a id="m_btn_del_'+m+'" class="glyphicon glyphicon-remove pull-right del_multi"></a></div>');
+						$('#m_input_mathquill_' + m).mathquill('revert').mathquill('editable');
+					}
+				}
+			}
 			$('#multiple_choice_modal').modal('show');
+			$('#multiple_choice_modal').on('shown.bs.modal', function () {
+				if(MODIFY == true && mod == false){
+					mod = true;
+					var m_choice = $('#choices').text();
+					m_choice = m_choice.split('§');
+					for(var m = 1; m <= MULTI_CHOICE; m++){
+						$('#m_input_mathquill_' + m).mathquill('write', m_choice[(m-1)]);
+						refresh_char_colors('#m_input_mathquill_' + m);
+					}
+				}
+			});
 		}
 	});
 
@@ -810,11 +840,11 @@ $(document).ready(function() {
 			c_var = String.fromCharCode(c_var.charCodeAt(0) + c_count);
 			
 			var c_latex = $(C_INPUT).mathquill('latex');
-			//var la = latex_to_asciimath(c_latex);
 			var la = convert_variables(c_latex);
 			la = la.replace(/\?/g,'');
-			la = la.replace(/\@/g,'');
+			la = la.replace(/@/g,'');
 			array_calc.push('@?(' + la + ')?@');
+			array_calc_unchanged.push(c_latex);
 			$(C_INPUT).mathquill('revert').mathquill('editable');
 
 			$('<button id="s_btn_calc_'+c_count+'" class="btn btn-success btn_calc">'+c_var+'</button>').insertBefore('#s_btn_calc_delete');
@@ -870,7 +900,6 @@ function submit_template(){
 	form_submit['topic'] = $('#category_selection').find(':selected').attr('id');
 
 	// QUESTION_TEXT
-	//form_submit['question_text'] = '`' + latex_to_asciimath($(Q_INPUT).mathquill('latex')) + '`';
 	form_submit['question_text'] = convert_variables($(Q_INPUT).mathquill('latex'));
 	form_submit['question_text_latex'] = $(Q_INPUT).mathquill('latex');
 
@@ -879,17 +908,14 @@ function submit_template(){
 	var tmp_solution_latex = [];
 	for (var i = 1; i <= STEP; i++) {
 		if ($('#s_text_' + i).val() != '') {
-			//tmp_solution.push(latex_to_asciimath('\\text{' + $('#s_text_' + i).val() + '}') + '`\\n`' + latex_to_asciimath($('#s_input_mathquill_' + i).mathquill('latex')));
 			tmp_solution.push('\\text{' + $('#s_text_' + i).val() + '}' + '\\n' + convert_variables($('#s_input_mathquill_' + i).mathquill('latex')));
 			tmp_solution_latex.push($('#s_text_' + i).val() + '§' + $('#s_input_mathquill_' + i).mathquill('latex'));
 		}
 		else {
-			//tmp_solution.push(latex_to_asciimath($('#s_input_mathquill_' + i).mathquill('latex')));
 			tmp_solution.push(convert_variables($('#s_input_mathquill_' + i).mathquill('latex')));
 			tmp_solution_latex.push('§' + $('#s_input_mathquill_' + i).mathquill('latex'));
 		}
 	}
-	//form_submit['solution'] = '`' + tmp_solution.join('`\\n`') + '`';
 	form_submit['solution'] = tmp_solution.join('\\n');
 	form_submit['solution_latex'] = tmp_solution_latex.join('§');
 
@@ -897,7 +923,6 @@ function submit_template(){
 	var tmp_answer = [];
 	var tmp_answer_latex = [];
 	for (var i = 1; i <= ANSWER; i++) {
-		//tmp_answer.push(latex_to_asciimath($('#a_input_mathquill_' + i).mathquill('latex')));
 		tmp_answer.push(convert_variables($('#a_input_mathquill_' + i).mathquill('latex')));
 		tmp_answer_latex.push($('#a_input_mathquill_' + i).mathquill('latex'));
 	}
@@ -952,7 +977,6 @@ function submit_template(){
 
 	// CONDITIONS
 	if ($('#opt_conditions').is(':checked')) {
-		//form_submit['conditions'] = latex_to_asciimath($('#con_input_mathquill').mathquill('latex'));
 		form_submit['conditions'] = convert_variables($('#con_input_mathquill').mathquill('latex'));
 		form_submit['conditions_latex'] = $('#con_input_mathquill').mathquill('latex');
 	}
@@ -973,9 +997,12 @@ function submit_template(){
 
 	// FILL_IN
 	if ($('#opt_fill_blanks').is(':checked')) {
-		//form_submit['fill_in'] = '`' + get_diff_latex(false) + '`';
 		form_submit['fill_in'] = convert_variables(get_diff_latex(false));
-		form_submit['fill_in_latex'] = get_diff_latex(true);
+		var f_content = [];
+		for(var f = 1; f <= STEP; f++){
+			f_content.push($('#f_fill_content_' + f).mathquill('latex'));
+		}
+		form_submit['fill_in_latex'] = f_content.join('§');
 	}
 	else {
 		form_submit['fill_in'] = "";
@@ -984,6 +1011,7 @@ function submit_template(){
 
 	// CALCULATION REFERENCE
 	form_submit['calculation_ref'] = array_calc.join('§');
+	form_submit['unchanged_ref'] = array_calc_unchanged.join('§');
 
 	// CSRF_TOKEN
 	form_submit["csrfmiddlewaretoken"] = getCookie('csrftoken');
@@ -991,6 +1019,13 @@ function submit_template(){
 	// TYPE
 	form_submit['type'] = 'normal';
 
+	// PRIMARY-KEY
+	if(MODIFY){
+		form_submit['pk'] = $('#template_id').text();
+	}
+	form_submit['pk'] = "";
+
+	// SUBMIT
 	if (submit_validation()) {
 		SUBMITTING = true;
 		post(/submit/, form_submit);
@@ -1331,7 +1366,6 @@ function get_multiple_choices(latex_bool){
 	var multiple_choices = [];
 	if(!latex_bool){
 		for(var m = 1; m <= MULTI_CHOICE; m++){
-			//multiple_choices.push(latex_to_asciimath($('#m_input_mathquill_' + m).mathquill('latex')));
 			multiple_choices.push(convert_variables($('#m_input_mathquill_' + m).mathquill('latex')));
 		}
 	}
@@ -1351,6 +1385,13 @@ function refresh_conditions(){
 	$('#con_input_field').remove();
 	con_input.append('<div id="con_input_field" class="input_field"><span id="con_input_mathquill" class="form-control input_mathquill"></span></div>');
 	$('#con_input_mathquill').mathquill('editable');
+	var mod = false;
+	if(MODIFY == true && mod == false){
+		mod = true;
+		var condition = $('#conditions').text();
+		$('#con_input_mathquill').mathquill('write', condition);
+		refresh_char_colors('#con_input_mathquill');
+	}
 }
 
 /**
@@ -1359,15 +1400,30 @@ function refresh_conditions(){
 function refresh_fill_in_content(){
 	var f_dyn_fill = $('#f_dyn_fill_input');
 	$('.f_fill_content').remove();
-	for (var f = 1; f <= STEP; f++) {
-		if (f > 1) {
-			f_dyn_fill.append('<hr class="f_fill_content">');
+	if(MODIFY && mod_count == 0){
+		mod_count++;
+		var f_latex = $('#fill_in').text();
+		f_latex = f_latex.split('§');
+		for(var f = 1; f <= f_latex.length; f++){
+			if(f > 1){
+				f_dyn_fill.append('<hr class="f_fill_content">');
+			}
+			f_dyn_fill.append('<div id="f_fill_content_' + f + '" class="form-control f_fill_content input_mathquill" style="border: 0; box-shadow: none">' + f_latex[f-1] + '</div>');
+			$('#f_fill_content_' + f).mathquill('editable');
 		}
-		var f_latex = $('#s_input_mathquill_' + f).mathquill('latex');
-		f_dyn_fill.append('<div id="f_fill_content_' + f + '" class="form-control f_fill_content input_mathquill" style="border: 0; box-shadow: none">' + f_latex + '</div>');
-		$('#f_fill_content_' + f).mathquill('editable');
+	}
+	else{
+		for (var f = 1; f <= STEP; f++) {
+			if (f > 1) {
+				f_dyn_fill.append('<hr class="f_fill_content">');
+			}
+			var f_latex = $('#s_input_mathquill_' + f).mathquill('latex');
+			f_dyn_fill.append('<div id="f_fill_content_' + f + '" class="form-control f_fill_content input_mathquill" style="border: 0; box-shadow: none">' + f_latex + '</div>');
+			$('#f_fill_content_' + f).mathquill('editable');
+		}
 	}
 	$('.f_fill_content').unbind('keypress');
+	$('.f_fill_content').unbind('keydown');
 	refresh_char_colors('.f_fill_content');
 	$('#f_diff_latex').html("");
 }
@@ -1377,6 +1433,8 @@ function refresh_fill_in_content(){
  * @param selector - Which input field to refresh.
  */
 function refresh_char_colors(selector){
+	var input_id = $(selector).attr('id');
+	input_id = input_id[0];
 	$(selector).find('var').each(function(){
 		var f_var = $(this);
 		if(f_var.hasClass('content_x') || $(this).hasClass('content_var') || $(this).hasClass('florin') || $(this).html() == 'e'){}
@@ -1390,6 +1448,17 @@ function refresh_char_colors(selector){
 						f_var.addClass('content_var');
 					}
 				});
+				if(input_id == 'q'){
+					var var_id = f_var.html().charCodeAt(0) - 97; // Getting the button id (a:0, b:1, c:2)
+					if($('#q_btn_abc_' + var_id).length){}
+					else {
+						$('#q_btn_var_dyn').append('<button id="q_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc">' + f_var.html() + '</button>');
+						$('#s_btn_var_dyn').append('<button id="s_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc">' + f_var.html() + '</button>');
+						$('#c_btn_var_dyn').append('<button id="c_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc">' + f_var.html() + '</button>');
+						$('#n_btn_var_dyn').append('<button id="n_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc">' + f_var.html() + '</button>');
+						$('#o_adv_domain').append('<tr id="o_adv_' + var_id + '" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">' + f_var.html() + ':</td><td><input id="o_adv_from_' + var_id + '" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_' + var_id + '" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td></td></tr>');
+					}
+				}
 			}
 			else if(f_var.html().match(/^[A-Z]*$/)){
 				$('.btn_calc').each(function(){
@@ -1451,6 +1520,61 @@ $('#calc_modal').on('shown.bs.modal', function () {
 });
 
 function insert_editable_data(){
+	// Inserting calculated references.
+	var calc_str = $('#calculation_references').text();
+	var calc_str = calc_str.split('§');
+	for(var a = 0; a < calc_str.length; a++){
+		array_calc.push(calc_str[a]);
+	}
+	var calc_pop = $('#unchanged_ref').text();
+	var calc_pop = calc_pop.split('§');
+	array_calc_unchanged.push(calc_pop);
+	c_count = calc_pop.length;
+	if(c_count > 0){
+		$('#s_btn_calc_dyn').append('<button id="s_btn_calc_delete" class="btn btn-success btn-xs btn_calc_del"><span class="glyphicon glyphicon-remove"></span></button>');
+		$('#a_btn_calc_dyn').append('<button id="a_btn_calc_delete" class="btn btn-success btn-xs btn_calc_del"><span class="glyphicon glyphicon-remove"></span></button>');
+		// Logic for adding the calculated-reference buttons with popovers.
+		for(var c_index = 0; c_index < c_count; c_index++){
+			var c_var = "A";
+			c_var = String.fromCharCode(c_var.charCodeAt(0) + c_index);
+			$('<button id="s_btn_calc_'+c_index+'" class="btn btn-success btn_calc">'+c_var+'</button>').insertBefore('#s_btn_calc_delete');
+			$('#s_btn_calc_' + c_index).popover({
+				html: true,
+				content: '<img src="http://latex.codecogs.com/svg.latex?'+calc_pop[c_index]+'" border="0"/>',
+				placement: 'top',
+				trigger: 'hover',
+				container: 'body'
+			});
+			$('<button id="a_btn_calc_'+c_index+'" class="btn btn-success btn_calc">'+c_var+'</button>').insertBefore('#a_btn_calc_delete');
+			$('#a_btn_calc_' + c_index).popover({
+				html: true,
+				content: '<img src="http://latex.codecogs.com/svg.latex?'+calc_pop[c_index]+'" border="0"/>',
+				placement: 'top',
+				trigger: 'hover',
+				container: 'body'
+			});
+			$('#c_btn_calc_dyn').append('<button id="c_btn_calc_'+c_index+'" class="btn btn-success btn_calc">'+c_var+'</button>');
+			$('#c_btn_calc_' + c_index).popover({
+				html: true,
+				content: '<img src="http://latex.codecogs.com/svg.latex?'+calc_pop[c_index]+'" border="0"/>',
+				placement: 'top',
+				trigger: 'hover',
+				container: 'body'
+			});
+			$('#n_btn_calc_dyn').append('<button id="n_btn_calc_'+c_index+'" class="btn btn-success btn_calc">'+c_var+'</button>');
+			$('#n_btn_calc_' + c_index).popover({
+				html: true,
+				content: '<img src="http://latex.codecogs.com/svg.latex?'+calc_pop[c_index]+'" border="0"/>',
+				placement: 'top',
+				trigger: 'hover',
+				container: 'body'
+			});
+		}
+	}
+
+	// Refreshing colors and adding required variable-buttons to the question.
+	refresh_char_colors('#q_input_mathquill');
+
 	// Insert solution
 	var edit_solution = $('#solution').text();
 	edit_solution = edit_solution.split('§');
@@ -1493,9 +1617,20 @@ function insert_editable_data(){
 		}
 	}
 
+	refresh_char_colors('.input_mathquill');
+
 	// Insert random-domain
 	var edit_random_domain = $('#random_domain').text();
 	edit_random_domain = edit_random_domain.split('§');
+	for(var rd = 0; rd < edit_random_domain.length; rd++){
+		var edit_r = edit_random_domain[rd].split(" ");
+		if(rd == 0){
+			$('#opt_domain_from').val(edit_r[0]);
+			$('#opt_domain_to').val(edit_r[1]);
+		}
+		$('#o_adv_from_' + rd).val(edit_r[0]);
+		$('#o_adv_to_' + rd).val(edit_r[1]);
+	}
 }
 
 function post(path, params, method) {

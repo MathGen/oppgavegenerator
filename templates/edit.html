@@ -5,16 +5,21 @@
 {% block panels %}
 
         <!-- Topics -->
-        <div hidden id="db_topics">{{topics}}</div>
+        <div hidden id="db_topics">{{topic}}</div>
     	<form>
 		{% csrf_token %}
 		</form>
 
-        <div hidden id="edit_template">true</div>
-        <div hidden id="template_id">{{ template_id }}</div>
-        <div hidden id="solution">{{ solution }}</div>
-        <div hidden id="answer">{{ answer }}</div>
-        <div hidden id="random_domain">{{ random_domain }}</div>
+    <div hidden id="edit_template">true</div>
+    <div hidden id="template_id">{{ template_id }}</div>
+    <div hidden id="solution">{{ solution }}</div>
+    <div hidden id="answer">{{ answer }}</div>
+   	<div hidden id="calculation_references">{{ calculation_references }}</div>
+    <div hidden id="unchanged_ref">{{ unchanged_ref }}</div>
+    <div hidden id="random_domain">{{ random_domain }}</div>
+    <div hidden id="conditions">{{ conditions }}</div>
+    <div hidden id="choices">{{ choices }}</div>
+    <div hidden id="fill_in">{{ fill_in }}</div>
 
 				<!-- PANELS -->
 		<div class="container">
