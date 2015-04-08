@@ -1,4 +1,5 @@
 from oppgavegen.models import Template
+from oppgavegen.models import Topic
 from oppgavegen import generation
 from datetime import datetime
 
@@ -14,11 +15,16 @@ def make_edit_context_dict(template_id):
     topic = q.topic
     random_domain = q.random_domain
     unchanged_ref = q.unchaned_ref
-
+    topics = ""
+    for e in Topic.objects.all():
+        topics += '§' + str(e.pk) + '§'
+        topics += e.topic
+    topics = topics[1:]
     context_dict = {'template_id': template_id , 'answer' : answer, 'solution' : solution,
                     'question_text' : question_text, 'calculation_references' : calculation_references,
                     'choices' : choices, 'conditions' : conditions, 'fill_in' : fill_in,
-                    'topic' : topic, 'random_domain' : random_domain, 'unchanged_ref' : unchanged_ref}
+                    'topic' : topic, 'random_domain' : random_domain, 'unchanged_ref' : unchanged_ref,
+                    'topics' : topics}
     return context_dict
 
 
