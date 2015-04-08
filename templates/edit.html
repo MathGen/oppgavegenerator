@@ -5,13 +5,14 @@
 {% block panels %}
 
         <!-- Topics -->
-        <div hidden id="db_topics">{{topic}}</div>
+        <div hidden id="db_topics">{{topics}}</div>
     	<form>
 		{% csrf_token %}
 		</form>
 
     <div hidden id="edit_template">true</div>
     <div hidden id="template_id">{{ template_id }}</div>
+    <div hidden id="topic">{{ topic }}</div>
     <div hidden id="solution">{{ solution }}</div>
     <div hidden id="answer">{{ answer }}</div>
    	<div hidden id="calculation_references">{{ calculation_references }}</div>
@@ -36,7 +37,6 @@
 										<div class="col-sm-10">
 											<select id="category_selection" class="form-control">
                                                 <option disabled>Velg en kategori...</option>
-												<option selected>{{ topic }}</option>
 
 											</select>
 										</div>

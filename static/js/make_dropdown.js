@@ -8,4 +8,9 @@ $(document).ready(function(){
 		formated_db_topics = db_topics[i+1].charAt(0).toUpperCase() + db_topics[i+1].slice(1);
 		category_selection.append('<option id="'+db_topics[i] + '">'+ formated_db_topics +'</option>');
 	}
+	if($('#edit_template').text() == 'true'){
+		var topic = $('#topic').text();
+		topic = topic.charAt(0).toUpperCase() + topic.slice(1);
+		category_selection.val(topic).attr('selected', true);
+	}
 });
