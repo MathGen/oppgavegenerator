@@ -2,7 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
 urlpatterns = patterns('',
-    url(r'^$', 'oppgavegen.views.task', name='index'),
+    url(r'^$', 'oppgavegen.views.task', name='home'),
     url(r'^answers/', 'oppgavegen.views.answers', name='answers'),
     url(r'^templates/', 'oppgavegen.views.templates', name='templates'),
     url(r'^newtemplate/', 'oppgavegen.views.new_template', name='newtemplate'),

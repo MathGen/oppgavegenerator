@@ -33,7 +33,7 @@
 		<!-- NAVIGATION BAR -->
 		<nav class="navbar navbar-inverse navbar-fixed-top navbar-left">
 			<div class="container">
-				<a href="../" class="navbar-brand">MathGen</a>
+				<a href="{% url 'home' %}" class="navbar-brand">MathGen</a>
 				<div class="navbar-toggle" data-toggle="collapse" data-target=".nav_header_collapse">
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
@@ -46,14 +46,6 @@
 						<li><a href="{% url 'newtemplate' %}">Ny Mal</a></li>
                         {%endif%}
                     	<li><a href="{% url 'templates' %}">Maler</a></li>
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Kategori <b class="caret"></b></a>
-							<ul class="dropdown-menu">
-								<li><a href="/index?q=aritmetikk">Aritmetikk</a></li>
-								<li><a href="/index?q=algebra">Algebra</a></li>
-								<li><a href="/index?q=integrasjon">Integrasjon</a></li>
-							</ul>
-						</li>
 						<!--USER AUTH ITEMS-->
                         {% if user.is_authenticated %}
                         <li class="dropdown">
