@@ -1,5 +1,6 @@
 from oppgavegen.models import Template
 from oppgavegen import generation
+from datetime import datetime
 
 def make_edit_context_dict(template_id):
     q = Template.objects.get(pk=template_id)
@@ -57,5 +58,10 @@ def make_answer_context_dict(form_values):
 
 
 def submit_template(template, user):
-
+    template.rating = 1200
+    template.times_failed = 0
+    template.times_solved = 0
+    template.creation_date = datetime.now()
+    template.creator = user
+    template.save()
     return

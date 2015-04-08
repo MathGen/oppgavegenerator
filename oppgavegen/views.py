@@ -20,7 +20,6 @@ from oppgavegen.models import Topic
 from oppgavegen.models import User
 from oppgavegen.tables import *
 from django_tables2 import RequestConfig
-from datetime import datetime
 from oppgavegen.templatetags.app_filters import is_teacher
 from oppgavegen import view_logic
 
@@ -101,14 +100,8 @@ def submit(request):
         form = TemplateForm(request.POST)
         if form.is_valid():
             template = form.save(commit=False)
+            view_logic.submit_template(template, request.user)
 
-            template.creator = request.user
-            #could get creator from username=einar as well
-            template.rating = 1200
-            template.times_failed = 0
-            template.times_solved = 0
-            template.creation_date = datetime.now()
-            template.save()
 
             message = 'success!'
         else:
@@ -167,7 +160,6 @@ def edit_template(request, template_id):
     return render_to_response('edit.html', context_dict, context)
 
 def update_template(request):
-    context_dict = {'msg','success'}
     message = 'don\'t come here'
     if request.method == 'POST':
         message = 'failure!'
@@ -176,8 +168,10 @@ def update_template(request):
         if form.is_valid():
             template = form.save(commit=False)
             template.save()
+            message = 'Success!'
         else:
+            message = 'form is invalid'
             print(form.errors)
     context = RequestContext(request)
-    context_dict['message'] = message
-    return render_to_response('update.html', context_dict, context)
+    context_dict = {'message' : message}
+    return render_to_response('submit.html', context_dict, context)
