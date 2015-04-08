@@ -52,7 +52,7 @@ class Template(models.Model):
     conditions_latex = models.CharField(max_length=10000, blank=True, null=True, default="")
     fill_in_latex = models.CharField(max_length=10000, blank=True, null=True, default="")
     calculation_ref = models.CharField(max_length=1000, blank=True, null=True)
-
+    unchanged_ref = models.CharField(max_length=1000, blank=True, null=True)
 
 
     def __str__(self):                                        #Makes it so that self.question_text shows up instead of topic(object)

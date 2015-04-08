@@ -12,11 +12,12 @@ def make_edit_context_dict(template_id):
     fill_in = q.fill_in_latex
     topic = q.topic
     random_domain = q.random_domain
+    unchanged_ref = q.unchaned_ref
 
     context_dict = {'template_id': template_id , 'answer' : answer, 'solution' : solution,
                     'question_text' : question_text, 'calculation_references' : calculation_references,
                     'choices' : choices, 'conditions' : conditions, 'fill_in' : fill_in,
-                    'topic' : topic, 'random_domain' : random_domain}
+                    'topic' : topic, 'random_domain' : random_domain, 'unchanged_ref' : unchanged_ref}
     return context_dict
 
 
