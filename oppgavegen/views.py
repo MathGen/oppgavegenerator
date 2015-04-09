@@ -100,7 +100,10 @@ def submit(request):
             template = form.save(commit=False)
             if request.REQUEST['pk'] != '':
                 template.pk = request.REQUEST['pk'] #workaround, for some reason template doesn't automatically get template.pk
-            view_logic.submit_template(template, request.user)
+                update = True
+            else:
+                update = False
+            view_logic.submit_template(template, request.user, update)
             message = 'success!'
         else:
             print(form.errors)
