@@ -1527,6 +1527,9 @@ $('#calc_modal').on('shown.bs.modal', function () {
 	$(C_INPUT).find('textarea').focus();
 });
 
+/**
+ * Retrieving data from selected task to be modified. Inserting data to all required fields, and prepares for editing.
+ */
 function insert_editable_data(){
 	// Inserting calculated references.
 	var calc_str = $('#calculation_references').text();
@@ -1535,7 +1538,7 @@ function insert_editable_data(){
 		array_calc.push(calc_str[a]);
 	}
 	var calc_pop = $('#unchanged_ref').text();
-	var calc_pop = calc_pop.split(',');
+	var calc_pop = calc_pop.split('§');
 	for(var b = 0; b < calc_pop.length; b++){
 		array_calc_unchanged.push(calc_pop[b]);
 	}
