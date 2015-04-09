@@ -19,7 +19,9 @@ var c_count 				= 0;
 var array_calc				= [];
 var array_calc_unchanged	= [];
 var MODIFY					= false;
-var mod_count				= 0;
+var mod_blanks				= 0;
+var mod_condition 			= 0;
+var mod_multiple			= 0;
 
 $(document).ready(function() {
 	// Topic selection validation
@@ -745,38 +747,14 @@ $(document).ready(function() {
 
 	// Open multiple-choice modal
 	var radio_multiple_choice = $('#opt_multiple_choice');
-	var mod = false;
 	radio_multiple_choice.change(function(){
 		if ($(this).is(':checked')) {
-			if(MULTI_CHOICE == 0 && MODIFY == false) {
-				MULTI_CHOICE++;
-				$('#m_dyn_multi_input').append('<div class="input_field"><span id="m_input_mathquill_1" class="mathquill-editable form-control input_mathquill"></span></div>');
-				$('#m_input_mathquill_1').mathquill('revert').mathquill('editable');
-			}
-			else if(MULTI_CHOICE == 0 && MODIFY == true){
-				var m_choice = $('#choices').text();
-				m_choice = m_choice.split('§');
-				$('#m_dyn_multi_input').append('<div class="input_field"><span id="m_input_mathquill_1" class="mathquill-editable form-control input_mathquill"></span></div>');
-				$('#m_input_mathquill_1').mathquill('revert').mathquill('editable');
-				MULTI_CHOICE = m_choice.length;
-				if(MULTI_CHOICE > 1){
-					for(var m = 2; m <= MULTI_CHOICE; m++){
-						$('#m_btn_del_' + (m-1)).hide();
-						$('#m_dyn_multi_input').append('<div id="m_field_'+m+'" class="input_field multi_field"><span id="m_input_mathquill_'+m+'" class="mathquill-editable form-control input_mathquill"></span><a id="m_btn_del_'+m+'" class="glyphicon glyphicon-remove pull-right del_multi"></a></div>');
-						$('#m_input_mathquill_' + m).mathquill('revert').mathquill('editable');
-					}
-				}
-			}
+			refresh_multiple_choice();
 			$('#multiple_choice_modal').modal('show');
 			$('#multiple_choice_modal').on('shown.bs.modal', function () {
-				if(MODIFY == true && mod == false){
-					mod = true;
-					var m_choice = $('#choices').text();
-					m_choice = m_choice.split('§');
-					for(var m = 1; m <= MULTI_CHOICE; m++){
-						$('#m_input_mathquill_' + m).mathquill('write', m_choice[(m-1)]);
-						refresh_char_colors('#m_input_mathquill_' + m);
-					}
+				for(var m = 1; m <= MULTI_CHOICE; m++){
+					$('#m_input_mathquill_' + m).mathquill('redraw');
+					refresh_char_colors('#m_input_mathquill_' + m);
 				}
 			});
 		}
@@ -1387,9 +1365,8 @@ function refresh_conditions(){
 	$('#con_input_field').remove();
 	con_input.append('<div id="con_input_field" class="input_field"><span id="con_input_mathquill" class="form-control input_mathquill"></span></div>');
 	$('#con_input_mathquill').mathquill('editable');
-	var mod = false;
-	if(MODIFY == true && mod == false){
-		mod = true;
+	if(MODIFY == true && mod_condition < 2){
+		mod_condition++;
 		var condition = $('#conditions').text();
 		$('#con_input_mathquill').mathquill('write', condition);
 		refresh_char_colors('#con_input_mathquill');
@@ -1402,8 +1379,8 @@ function refresh_conditions(){
 function refresh_fill_in_content(){
 	var f_dyn_fill = $('#f_dyn_fill_input');
 	$('.f_fill_content').remove();
-	if(MODIFY && mod_count == 0){
-		mod_count++;
+	if(MODIFY && mod_blanks < 2){
+		mod_blanks++;
 		var f_latex = $('#fill_in').text();
 		f_latex = f_latex.split('§');
 		for(var f = 1; f <= f_latex.length; f++){
@@ -1428,6 +1405,35 @@ function refresh_fill_in_content(){
 	$('.f_fill_content').unbind('keydown');
 	refresh_char_colors('.f_fill_content');
 	$('#f_diff_latex').html("");
+}
+
+/**
+ * Refreshing multiple-choice contents. If in modify get previous content.
+ */
+function refresh_multiple_choice(){
+	if(MULTI_CHOICE == 0 && MODIFY == false) {
+		MULTI_CHOICE++;
+		$('#m_dyn_multi_input').append('<div class="input_field"><span id="m_input_mathquill_1" class="mathquill-editable form-control input_mathquill"></span></div>');
+		$('#m_input_mathquill_1').mathquill('revert').mathquill('editable');
+	}
+	else if(MULTI_CHOICE == 0 && MODIFY == true && mod_multiple < 2){
+		mod_multiple++;
+		var m_choice = $('#choices').text();
+		m_choice = m_choice.split('§');
+		$('#m_dyn_multi_input').append('<div class="input_field"><span id="m_input_mathquill_1" class="mathquill-editable form-control input_mathquill"></span></div>');
+		$('#m_input_mathquill_1').mathquill('revert').mathquill('editable');
+		MULTI_CHOICE = m_choice.length;
+		if(MULTI_CHOICE > 1){
+			for(var m = 2; m <= MULTI_CHOICE; m++){
+				$('#m_btn_del_' + (m-1)).hide();
+				$('#m_dyn_multi_input').append('<div id="m_field_'+m+'" class="input_field multi_field"><span id="m_input_mathquill_'+m+'" class="mathquill-editable form-control input_mathquill"></span><a id="m_btn_del_'+m+'" class="glyphicon glyphicon-remove pull-right del_multi"></a></div>');
+				$('#m_input_mathquill_' + m).mathquill('revert').mathquill('editable');
+			}
+		}
+		for(var m = 1; m <= MULTI_CHOICE; m++){
+			$('#m_input_mathquill_' + m).mathquill('write', m_choice[(m-1)]);
+		}
+	}
 }
 
 /**
@@ -1632,6 +1638,20 @@ function insert_editable_data(){
 		}
 		$('#o_adv_from_' + rd).val(edit_r[0]);
 		$('#o_adv_to_' + rd).val(edit_r[1]);
+	}
+
+	// Set checked on required alt.tasks.
+	if($('#conditions').text() != ""){
+		$('#opt_conditions').prop('checked', true);
+		refresh_conditions();
+	}
+	if($('#choices').text() != ""){
+		$('#opt_multiple_choice').prop('checked', true);
+		refresh_multiple_choice();
+	}
+	if($('#fill_in').text() != ""){
+		$('#opt_fill_blanks').prop('checked', true);
+		refresh_fill_in_content();
 	}
 }
 
