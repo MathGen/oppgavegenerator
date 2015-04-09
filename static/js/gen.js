@@ -1023,7 +1023,9 @@ function submit_template(){
 	if(MODIFY){
 		form_submit['pk'] = $('#template_id').text();
 	}
-	form_submit['pk'] = "";
+	else{
+		form_submit['pk'] = "";
+	}
 
 	// SUBMIT
 	if (submit_validation()) {
