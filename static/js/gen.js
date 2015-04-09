@@ -1645,6 +1645,9 @@ function insert_editable_data(){
 		$('#o_adv_to_' + rd).val(edit_r[1]);
 	}
 
+	// Insert number of decimals
+	$('#opt_decimal').val(0);
+
 	// Set checked on required alt.tasks.
 	if($('#conditions').text() != ""){
 		$('#opt_conditions').prop('checked', true);
