@@ -98,8 +98,7 @@ def submit(request):
         form = TemplateForm(request.POST)
         if form.is_valid():
             template = form.save(commit=False)
-            #template.pk = 28
-            print(template.pk)
+            template.pk = request.REQUEST['pk']
             view_logic.submit_template(template, request.user)
             message = 'success!'
         else:
