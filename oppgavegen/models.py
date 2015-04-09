@@ -14,7 +14,6 @@ class Topic(models.Model):
     def clean(self):                                          #Removes trailing whitespace from topic
         if self.topic:
             self.topic = self.topic.strip()
-
 class TemplateType(models.Model):
     type = models.CharField(max_length=200)
     def __str__(self):
@@ -25,7 +24,7 @@ class TemplateType(models.Model):
 
 class Template(models.Model):
     question_text = models.CharField(max_length=200)          #The template. Math expression or text question ex. "Solve: ax = b + cx"
-    solution =  models.CharField(max_length=10000)            #Step by step solution to the answer
+    solution = models.CharField(max_length=10000)            #Step by step solution to the answer
     answer = models.CharField(max_length=200)                 #A simple math operation to calculate the problem template. Should be the last step in the solution.
     creator = models.ForeignKey(User, blank=True, null=True)             #User ID of creator of template
     creation_date = models.DateTimeField('date created', blank=True, null=True)      #Date and time of creation

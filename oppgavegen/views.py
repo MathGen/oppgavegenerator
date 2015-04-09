@@ -70,9 +70,10 @@ class QuestionForm(forms.Form):
 class TemplateForm(ModelForm):
     class Meta:
         model = Template
-        fields = '__all__' #['question_text', 'solution', 'answer', 'variables','number_of_decimals','answer_can_be_zero','random_domain'] #todo add creator..
+        fields = '__all__' #['question_text', 'solution', 'answer', 'variables','number_of_decimals','answer_can_be_zero','random_domain']
+
         def process(self):
-            cd =  [self.cleaned_data['question'], self.cleaned_data['answer']]
+            cd = [self.cleaned_data['question'], self.cleaned_data['answer']]
             return cd
 
 @login_required
@@ -97,6 +98,8 @@ def submit(request):
         form = TemplateForm(request.POST)
         if form.is_valid():
             template = form.save(commit=False)
+            #template.pk = 28
+            print(template.pk)
             view_logic.submit_template(template, request.user)
             message = 'success!'
         else:
