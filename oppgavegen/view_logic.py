@@ -65,7 +65,7 @@ def make_answer_context_dict(form_values):
 
 def submit_template(template, user):
     if template.pk != '':
-        q = Template.object.get(pk=template.pk)
+        q = Template.objects.get(pk=template.pk)
         template.rating = q.rating
         template.times_failed = q.times_failed
         template.times_solved = q.times_solved

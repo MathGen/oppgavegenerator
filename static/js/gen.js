@@ -1535,9 +1535,11 @@ function insert_editable_data(){
 		array_calc.push(calc_str[a]);
 	}
 	var calc_pop = $('#unchanged_ref').text();
-	var calc_pop = calc_pop.split('§');
-	array_calc_unchanged.push(calc_pop);
-	c_count = calc_pop.length;
+	var calc_pop = calc_pop.split(',');
+	for(var b = 0; b < calc_pop.length; b++){
+		array_calc_unchanged.push(calc_pop[b]);
+	}
+	c_count = array_calc_unchanged.length;
 	if(c_count > 0){
 		$('#s_btn_calc_dyn').append('<button id="s_btn_calc_delete" class="btn btn-success btn-xs btn_calc_del"><span class="glyphicon glyphicon-remove"></span></button>');
 		$('#a_btn_calc_dyn').append('<button id="a_btn_calc_delete" class="btn btn-success btn-xs btn_calc_del"><span class="glyphicon glyphicon-remove"></span></button>');
