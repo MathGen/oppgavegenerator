@@ -563,6 +563,7 @@ def multifill(choices, variable_dict):
 #tests a template to see if it makes solvable tasks in a reasonable amount of tries.
 def template_validation(template_id):
     valid = False
+    template = Template.objects.get(pk=template_id)
     success_string = ""
     counter = 0
     for x in range(0,1000):
@@ -571,8 +572,8 @@ def template_validation(template_id):
             valid = True
             break
     if valid:
-        #template.flag = True
-        #db.save
+        template.flag = True
+        template.save()
         success_string = "Template got through validation!"
     else:
         success_string = "Template failed to be validated."
@@ -581,8 +582,10 @@ def template_validation(template_id):
 ###Tests_template###
 #Tests if the creation of a template ends up with a valid template
 def test_template(template_id):
+    got_trough_test = 0 #1 if template got through test, and 0 if not.
 
-    return
+
+    return got_trough_test
 
 ###latex_to_sympy###
 #Turns a string of latex into a string sympy can use.

@@ -54,7 +54,6 @@ def task_by_id(request, template_id):
     context_dict['title'] = generation.printer()
     return render_to_response('taskview.html', context_dict, context)
 
-
 class QuestionForm(forms.Form):
     user_answer = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400)
     primary_key = forms.IntegerField()
@@ -72,7 +71,6 @@ class TemplateForm(ModelForm):
     class Meta:
         model = Template
         fields = '__all__' #['question_text', 'solution', 'answer', 'variables','number_of_decimals','answer_can_be_zero','random_domain'] #todo add creator..
-
         def process(self):
             cd =  [self.cleaned_data['question'], self.cleaned_data['answer']]
             return cd
@@ -81,9 +79,8 @@ class TemplateForm(ModelForm):
 @user_passes_test(is_teacher, '/')
 def gen(request):
     context = RequestContext(request)
-    #retrieves a list of topics and passes them to the view.
     topics = ""
-    for e in Topic.objects.all():
+    for e in Topic.objects.all(): #retrieves a list of topics and passes them to the view.
         topics += '§' + str(e.pk) + '§'
         topics += e.topic
     topics = topics[1:]
@@ -101,8 +98,6 @@ def submit(request):
         if form.is_valid():
             template = form.save(commit=False)
             view_logic.submit_template(template, request.user)
-
-
             message = 'success!'
         else:
             print(form.errors)
@@ -159,19 +154,3 @@ def edit_template(request, template_id):
     context_dict = view_logic.make_edit_context_dict(template_id)
     return render_to_response('edit.html', context_dict, context)
 
-def update_template(request):
-    message = 'don\'t come here'
-    if request.method == 'POST':
-        message = 'failure!'
-        #todo check input for errors
-        form = TemplateForm(request.POST)
-        if form.is_valid():
-            template = form.save(commit=False)
-            template.save()
-            message = 'Success!'
-        else:
-            message = 'form is invalid'
-            print(form.errors)
-    context = RequestContext(request)
-    context_dict = {'message' : message}
-    return render_to_response('submit.html', context_dict, context)
