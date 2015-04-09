@@ -12,13 +12,13 @@ $(document).ready(function () {
     var w_target = $('#w_target');
     if (String(template_type) == 'multiple') {
         var output = $('#get_question').text();
-        $('#mathquill_field').append('<div id="mathquill_output" class="input_mathquill"></div>');
+        $('#mathquill_field').append('<div id="mathquill_output" class="input_mathquill"></div><hr>');
         $('#mathquill_output').mathquill().mathquill('latex', output);
         var choices = template_specific;
         choices = choices.split('§');
         for (var i = 0; i < choices.length; i++) {
-            text = '`' + choices[i] + '`' + '<br />';
-            w_target.append('<div><input type="radio" name="answer_button" id="radio' + i + '" value="' + choices[i] + '"/>' + text + '</div>');
+            text = choices[i];
+            w_target.append('<div class="col-md-12"><input type="radio" name="answer_button" id="radio' + i + '" value="' + choices[i] + '"/><span class="mathquill-embedded-latex">' + text + '</span></div>');
         }
     }
     else if (template_type == 'normal') {
@@ -38,14 +38,19 @@ $(document).ready(function () {
         var output = $('#get_question').text();
         var arr_output = output.split('\n');
         for(var i = 0; i < arr_output.length; i++){
-            $('#mathquill_field').append('<div class="input_field"><span id="mathquill_output_'+i+'" class="input_mathquill"></span></div><br/>');
+            if(i < 1){
+                $('#mathquill_field').append('<div class="input_field"><span id="mathquill_output_'+i+'" class="input_mathquill"></span></div><hr/>');
+            }
+            else{
+                $('#mathquill_field').append('<div class="input_field"><span id="mathquill_output_'+i+'" class="input_mathquill"></span></div><br/>');
+            }
             $('#mathquill_output_' + i).mathquill().mathquill('latex', arr_output[i]);
             $('.mathquill-editable').addClass('form-control blank_input');
         }
     }
     else if (template_type == 'multifill'){
         var output = $('#get_question').text();
-        $('#mathquill_field').append('<div id="mathquill_output" class="input_mathquill"></div>');
+        $('#mathquill_field').append('<div id="mathquill_output" class="input_mathquill"></div><hr>');
         $('#mathquill_output').mathquill().mathquill('latex', output);
         var choices = template_specific;
         choices = choices.split('§');
@@ -115,7 +120,8 @@ $(document).ready(function () {
 });
 
 $(window).load(function(){
-   $('.mathquill-rendered-math').mathquill('redraw');
+    $('.mathquill-rendered-math').mathquill('redraw');
+    $('.mathquill-embedded-latex').mathquill('redraw');
 });
 
 function answer_validation(){

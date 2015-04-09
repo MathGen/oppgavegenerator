@@ -34,6 +34,8 @@ sub{							/* between bootstrap*/
 }
 .mathquill-embedded-latex:not(.btn){
 	font-size: 2em;
+	margin-left: 6px;
+	margin-bottom: 16px;
 }
 .text{
 	color: #5BC0DE;
