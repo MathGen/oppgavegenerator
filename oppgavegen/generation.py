@@ -29,9 +29,9 @@ def printer():
 #Makes the answers into collections as some questions have multiple answers (ie. x^2 + x + 5).
 def checkAnswer(user_answer, answer):
     if collections.Counter(user_answer) == collections.Counter(answer):
-        string = "Du har svart riktig!"
+        string = "\\text{Du har svart riktig!}"
     else:
-        string = "Du har svart feil. Svaret er: " + ' og '.join(answer)
+        string = "\\text{Du har svart feil. Svaret er: }" + ' og '.join(answer)
     return string
 
 ###task_with_solution###
