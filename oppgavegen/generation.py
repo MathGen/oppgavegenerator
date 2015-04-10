@@ -158,7 +158,7 @@ def check_for_decimal(f):
 def calculate_answer(s):
     #todo convert from latex here using latex_to_sympy and use latex(sympify(s))
     s = remove_unnecessary(s)
-    s = latex_to_sympy(s)
+    s = str(latex_to_sympy(s))
     transformations = standard_transformations + (implicit_multiplication,)
     s = parse_expr(s, transformations=transformations)
     transformations = standard_transformations + (implicit_application,)
