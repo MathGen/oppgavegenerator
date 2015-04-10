@@ -164,10 +164,6 @@ def calculate_answer(s):
         s = str(latex_to_sympy(s))
         b = s
         s = s.replace('^', '**')
-        if(s[0] == '(') and (s[-1] == ')'):
-            s = s[1:-1]
-            e = s
-            s = s[:-1]
         c = s
         s = parse_expr(s, transformations=(convert_xor,standard_transformations, implicit_multiplication_application,),global_dict=None, evaluate=False)
         d = s
@@ -319,6 +315,8 @@ def array_to_string(array):
 def remove_unnecessary(string):
     string = string.replace('@?', '')
     string = string.replace('?@', '')
+    if(string[0] == '(') and (string[-1] == ')'):
+        string = string[1:-1]
     return string
 
 ### conditions ###
