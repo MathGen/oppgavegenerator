@@ -7,7 +7,7 @@ import collections
 from math import ceil
 from oppgavegen.nsp import NumericStringParser
 from sympy import *
-from sympy.parsing.sympy_parser import (parse_expr, standard_transformations, implicit_multiplication)
+from sympy.parsing.sympy_parser import (parse_expr, standard_transformations, implicit_multiplication, implicit_application)
 from .models import Template
 from django.template.defaultfilters import *
 import html
@@ -159,6 +159,10 @@ def calculate_answer(s):
     #todo convert from latex here using latex_to_sympy and use latex(sympify(s))
     s = remove_unnecessary(s)
     s = latex_to_sympy(s)
+    transformations = standard_transformations + (implicit_multiplication,)
+    s = parse_expr(s, transformations=transformations)
+    transformations = standard_transformations + (implicit_application,)
+    s = parse_expr(s, transformations=transformations)
     s = latex(sympify(s)) #sometimes this returns the value 'zoo' | also could maybe use simplify instead of sympify
     #s = RR(s)
     #s = round(s, 3)
