@@ -41,7 +41,8 @@ class Template(models.Model):
     conditions = models.CharField(max_length=10000, blank=True, null=True, default="")
     fill_in = models.CharField(max_length=10000, blank=True, null=True, default="")
     valid_flag = models.BooleanField(default=False)
-
+    #todo: remove answer can be zero as that can be implemented in conditions using ans != 0.
+    #todo: also remove number of decimals
     ##Also save the original latex for post-back:
     ##no longer needed, only calculation references are.. todo: remove unnecessary fields.
     question_text_latex = models.CharField(max_length=200, blank=True, null=True)
