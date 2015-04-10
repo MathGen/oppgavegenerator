@@ -160,7 +160,7 @@ def calculate_answer(s):
     s = remove_unnecessary(s)
     s = str(latex_to_sympy(s))
     transformations = standard_transformations + (implicit_multiplication,)
-    s = parse_expr(s, transformations=transformations)
+    s = str(parse_expr(s, transformations=transformations))
     transformations = standard_transformations + (implicit_application,)
     s = parse_expr(s, transformations=transformations)
     s = latex(sympify(s)) #sometimes this returns the value 'zoo' | also could maybe use simplify instead of sympify
