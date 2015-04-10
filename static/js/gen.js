@@ -1052,7 +1052,7 @@ function get_input_field(obj){
 }
 
 /**
- * Converting variables (a,b,c,.. etc) to computable ids (R0R,R1R,R2R,.. etc),
+ * Converting variables (a,b,c,d.. etc) to computable ids (R0R,R1R,R2R,.. etc),
  * and calculated references (A,B,C, etc) with its content.
  */
 function convert_variables(latex){
