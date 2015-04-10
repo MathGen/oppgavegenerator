@@ -1099,6 +1099,10 @@ function convert_variables(latex){
 					i++;
 				}
 			}
+			else if(la[i + 1] == 'c' && la[i + 2] == 'd' && la[i + 3] == 'o' && la[i + 4] == 't'){
+				la2 += '\\cdot ';
+				i += 5;
+			}
 			else if(la[i+1] == 'n'){
 				la2 += '\\n';
 				i++;
@@ -1134,34 +1138,6 @@ function convert_variables(latex){
 				else{
 					if(la[i-1] != '\\'){
 						la2 += dict_letters[la[i]];
-					}
-				}
-			}
-			if(la[i+1] == '('){
-				la2 += '\\cdot ';
-			}
-		}
-		else if(la[i] == 'x' || la[i] == 'y' || la[i] == 'z'){
-			if((la[i-1] in dict_letters || la[i-1] == ')' || !isNaN(la[i-1])) && la[i-2] != '\^' && la[i-2] != '\\'){
-				if(la[i-1] != ' ' && la[i-2] != 't' && la[i-3] != 'o' && la[i-4] != 'd' && la[i-5] != 'c') {
-					la2 += '\\cdot ' + la[i];
-				}
-				else{
-					la2 += la[i];
-				}
-			}
-			else{
-				if(la[i-1] == '\@' && la[i-2] == 'x' && la[i-3] == 'x' && la[i-4] == 'x' && la[i-5] == 'x' && la[i-6] == '\@'){
-					if((la[i-7] in dict_letters || la[i-7] == ')' || !isNaN(la[i-7])) && la[i-8] != '\^' && la[i-8] != '\\'){
-						la2 += '\\cdot ' + la[i];
-					}
-					else{
-						la2 += la[i];
-					}
-				}
-				else{
-					if(la[i-1] != '\\'){
-						la2 += la[i];
 					}
 				}
 			}
