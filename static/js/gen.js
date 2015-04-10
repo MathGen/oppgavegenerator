@@ -1057,6 +1057,7 @@ function get_input_field(obj){
  */
 function convert_variables(latex){
 	var la = latex;
+	la = la.replace(/\\cdots/g, '\\cdot ');
 	la = la.replace(/\\cdot/g,'\\cdot ');
 	la = la.replace(/\\left/g,'');
 	la = la.replace(/\\right/g,'');
