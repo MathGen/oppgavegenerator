@@ -7,7 +7,8 @@ import collections
 from math import ceil
 from oppgavegen.nsp import NumericStringParser
 from sympy import *
-from sympy.parsing.sympy_parser import (parse_expr, standard_transformations, implicit_multiplication, implicit_application, implicit_multiplication_application, factorial_notation)
+from sympy.parsing.sympy_parser import (parse_expr, standard_transformations, implicit_multiplication, implicit_application,
+                                        auto_symbol, implicit_multiplication_application, factorial_notation)
 from .models import Template
 from django.template.defaultfilters import *
 import html
@@ -159,10 +160,9 @@ def check_for_decimal(f):
 #Calculates a string using sympify
 def calculate_answer(s):
     if not is_number(s):
-        x,y,z = symbols('x y z')
         s = remove_unnecessary(s)
         s = str(latex_to_sympy(s))
-        s = parse_expr(s, transformations=(factorial_notation, implicit_multiplication_application,),global_dict=None, evaluate=False)
+        s = parse_expr(s, transformations=(auto_symbol,factorial_notation, implicit_multiplication_application,),global_dict=None, evaluate=False)
         s = latex(sympify(str(s))) #sometimes this returns the value 'zoo' | also could maybe use simplify instead of sympify
     return str(s)
 
