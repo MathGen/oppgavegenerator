@@ -163,7 +163,7 @@ def calculate_answer(s):
         s = remove_unnecessary(s)
         s = str(latex_to_sympy(s))
         b = s
-        c = s
+        c = b
         s = s.replace('^', '**')
         s = parse_expr(s, transformations=(convert_xor,standard_transformations, implicit_multiplication_application,),global_dict=None, evaluate=False)
         d = s
