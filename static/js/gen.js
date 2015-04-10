@@ -1070,6 +1070,16 @@ function convert_variables(latex){
 						'K' : array_calc[10],'L' : array_calc[11],'M' : array_calc[12],'N' : array_calc[13],'O' : array_calc[14], 'P' : array_calc[15],
 						'Q' : array_calc[16],'R' : array_calc[17],'S' : array_calc[18],'T' : array_calc[19],'U' : array_calc[20], 'V' : array_calc[21]};
 	var la2 = "";
+	// Iteration for adding required {} to single exponents and subscripts.
+	for(var j = 0; j < la.length; j++){
+		if(la[j] == '^' || la[j] == '_'){
+			if(la[j+1] != '{'){
+				la = la.substring(0, j+1) + '{' + la[j+1] + '}' + la.substring(j+2, la.length);
+			}
+		}
+	}
+	alert(la);
+	// Iteration for converting variables to computable values, and fixing conflicts with latex-commands.
 	for(var i = 0; i < la.length; i++){
 		if(la[i] == '\\'){
 			if(la[i + 1] == 't' && la[i + 2] == 'e' && la[i + 3] == 'x' && la[i + 4] == 't'){
