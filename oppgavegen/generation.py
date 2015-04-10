@@ -156,12 +156,10 @@ def check_for_decimal(f):
 ###calculate_answer###
 #Calculates a string using sympify
 def calculate_answer(s):
-    #todo convert from latex here using latex_to_sympy and use latex(sympify(s))
     s = remove_unnecessary(s)
     s = str(latex_to_sympy(s))
-    transformations = standard_transformations + (implicit_multiplication,)
-    s = str(parse_expr(s, transformations=standard_transformations + (implicit_multiplication_application,),global_dict=None, evaluate=False))
-    s = latex(sympify(str(s))) #sometimes this returns the value 'zoo' | also could maybe use simplify instead of sympify
+    s = latex(parse_expr(s, transformations=standard_transformations + (implicit_multiplication_application,),global_dict=None, evaluate=True))
+    #s = latex(sympify(str(s))) #sometimes this returns the value 'zoo' | also could maybe use simplify instead of sympify
     #s = RR(s)
     #s = round(s, 3)
     return str(s)
