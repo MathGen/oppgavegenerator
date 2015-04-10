@@ -315,8 +315,8 @@ def array_to_string(array):
 def remove_unnecessary(string):
     string = string.replace('@?', '')
     string = string.replace('?@', '')
-    if(string[0] == '\(') and (string[-1] == '\)'):
-        string = string[1:-1]
+    # if(string[0] == '\(') and (string[-1] == '\)'):
+    #     string = string[1:-1]
     return string
 
 ### conditions ###
