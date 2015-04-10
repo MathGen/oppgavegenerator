@@ -161,7 +161,7 @@ def calculate_answer(s):
     s = str(latex_to_sympy(s))
     transformations = standard_transformations + (implicit_multiplication,)
     s = str(parse_expr(s, transformations=transformations))
-    transformations = standard_transformations + (implicit_application,)
+    transformations = (implicit_application,)
     s = parse_expr(s, transformations=transformations)
     s = latex(sympify(s)) #sometimes this returns the value 'zoo' | also could maybe use simplify instead of sympify
     #s = RR(s)
