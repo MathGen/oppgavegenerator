@@ -1078,7 +1078,6 @@ function convert_variables(latex){
 			}
 		}
 	}
-	alert(la);
 	// Iteration for converting variables to computable values, and fixing conflicts with latex-commands.
 	for(var i = 0; i < la.length; i++){
 		if(la[i] == '\\'){
