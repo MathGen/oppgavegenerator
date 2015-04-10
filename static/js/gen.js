@@ -1646,14 +1646,20 @@ function insert_editable_data(){
 	// Insert random-domain
 	var edit_random_domain = $('#random_domain').text();
 	edit_random_domain = edit_random_domain.split('§');
+	var rd_exist = [];
+	for(var r = 22; r >= 0; r++){
+		if($('#o_adv_from_' + r).val() != ''){
+			rd_exist.push(r);
+		}
+	}
 	for(var rd = 0; rd < edit_random_domain.length; rd++){
 		var edit_r = edit_random_domain[rd].split(" ");
 		if(rd == 0){
 			$('#opt_domain_from').val(edit_r[0]);
 			$('#opt_domain_to').val(edit_r[1]);
 		}
-		$('#o_adv_from_' + rd).val(edit_r[0]);
-		$('#o_adv_to_' + rd).val(edit_r[1]);
+		$('#o_adv_from_' + rd_exist[rd]).val(edit_r[0]);
+		$('#o_adv_to_' + rd_exist[rd]).val(edit_r[1]);
 	}
 
 	// Insert number of decimals
