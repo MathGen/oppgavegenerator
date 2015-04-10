@@ -11,6 +11,8 @@ from sympy.parsing.sympy_parser import (parse_expr, standard_transformations, im
 from .models import Template
 from django.template.defaultfilters import *
 import html
+#s = RR(s)
+#s = round(s, 3)
 
 #Error message "(╯°□°）╯︵ ┻━┻"
 asciimath_sympy_dict = {'int(' : 'integrate('} #for use in converting between sympy and asciimath, might not need this
@@ -161,8 +163,6 @@ def calculate_answer(s):
         s = str(latex_to_sympy(s))
         s = parse_expr(s, transformations=standard_transformations + (implicit_multiplication_application,),global_dict=None, evaluate=False)
         s = latex(sympify(str(s))) #sometimes this returns the value 'zoo' | also could maybe use simplify instead of sympify
-    #s = RR(s)
-    #s = round(s, 3)
     return str(s)
 
 ###parse_soltuion###
