@@ -161,7 +161,7 @@ def calculate_answer(s):
     if not is_number(s):
         s = remove_unnecessary(s)
         s = str(latex_to_sympy(s))
-        s = parse_expr(s, transformations=factorial_notation + (implicit_multiplication_application,),global_dict=None, evaluate=False)
+        s = parse_expr(s, transformations=(factorial_notation, implicit_multiplication_application,),global_dict=None, evaluate=False)
         s = latex(sympify(str(s))) #sometimes this returns the value 'zoo' | also could maybe use simplify instead of sympify
     return str(s)
 
