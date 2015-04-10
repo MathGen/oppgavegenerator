@@ -162,8 +162,11 @@ def calculate_answer(s):
     if not is_number(s):
         s = remove_unnecessary(s)
         s = str(latex_to_sympy(s))
+        b = s
         s = s.replace('^', '**')
+        c = s
         s = parse_expr(s, transformations=(convert_xor,standard_transformations, implicit_multiplication_application,),global_dict=None, evaluate=False)
+        d = s
         s = latex(sympify(str(s))) #sometimes this returns the value 'zoo' | also could maybe use simplify instead of sympify
     return str(s)
 
