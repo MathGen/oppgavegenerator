@@ -156,10 +156,11 @@ def check_for_decimal(f):
 ###calculate_answer###
 #Calculates a string using sympify
 def calculate_answer(s):
-    s = remove_unnecessary(s)
-    s = str(latex_to_sympy(s))
-    s = latex(parse_expr(s, transformations=standard_transformations + (implicit_multiplication_application,),global_dict=None, evaluate=True))
-    #s = latex(sympify(str(s))) #sometimes this returns the value 'zoo' | also could maybe use simplify instead of sympify
+    if not is_number(s):
+        s = remove_unnecessary(s)
+        s = str(latex_to_sympy(s))
+        s = parse_expr(s, transformations=standard_transformations + (implicit_multiplication_application,),global_dict=None, evaluate=False)
+        s = latex(sympify(str(s))) #sometimes this returns the value 'zoo' | also could maybe use simplify instead of sympify
     #s = RR(s)
     #s = round(s, 3)
     return str(s)
@@ -637,3 +638,12 @@ def latex_to_sympy(expression):
     expression = expression.replace('cdot','*')
     expression = expression.replace('frac','')
     return expression
+
+###is_number###
+#Returns wether a string is a number or not.
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
