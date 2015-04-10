@@ -164,6 +164,8 @@ def calculate_answer(s):
         s = str(latex_to_sympy(s))
         b = s
         s = s.replace('^', '**')
+        if(s[0] == '(') and (s[-1] == ')'):
+            s = s[1:len(s)]
         c = s
         s = parse_expr(s, transformations=(convert_xor,standard_transformations, implicit_multiplication_application,),global_dict=None, evaluate=False)
         d = s
