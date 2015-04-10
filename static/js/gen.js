@@ -1647,7 +1647,7 @@ function insert_editable_data(){
 	var edit_random_domain = $('#random_domain').text();
 	edit_random_domain = edit_random_domain.split('§');
 	var rd_exist = [];
-	for(var r = 22; r >= 0; r++){
+	for(var r = 22; r >= 0; r--){
 		if($('#o_adv_from_' + r).val() != ''){
 			rd_exist.push(r);
 		}
