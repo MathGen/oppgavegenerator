@@ -76,7 +76,7 @@ $(document).ready(function () {
                     user_answer += '§';
                 }
                 var f_input = $(this).mathquill('latex');
-                user_answer += latex_to_sympy(f_input);
+                user_answer += f_input;
             });
         }
         else if(template_type == 'multifill'){
@@ -92,7 +92,7 @@ $(document).ready(function () {
                     user_answer += '§';
                 }
                 var w_input = ($('#w_input_mathquill_' + j).mathquill('latex'));
-                user_answer += latex_to_sympy(w_input);
+                user_answer += w_input;
             }
 
         }
