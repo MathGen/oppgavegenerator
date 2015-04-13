@@ -39,10 +39,10 @@ def checkAnswer(user_answer, answer):
 
 ###task_with_solution###
 #Makes a valid task with solution from a template in the database.
-def task_with_solution(template_id, desired_type='none'):
+def task_with_solution(template_id, desired_type='normal'):
     error = 0
     if template_id == "":
-        q = get_question('algebra')  #gets a question from the DB
+        q = get_question('')  #gets a question from the DB
     else:
         q = get_question(template_id)
     #I changed this to contain the amount of decimals allowed in the answer, so 0 = False basically.
@@ -57,10 +57,8 @@ def task_with_solution(template_id, desired_type='none'):
     print(task)
     task = task.replace('\\\\', '\\')
     print(task)
-    if desired_type == 'none': # if no type is desired (default), use the type stored in template
-        template_type = 'normal'
-    else:
-        template_type = desired_type
+    template_type = desired_type
+
     choices = q.choices.replace('\\\\', '\\')
     conditions = q.conditions.replace('\\\\', '\\')
     dictionary = q.dictionary
@@ -197,7 +195,7 @@ def parse_solution(solution):
 #Gets a question/template from the database and returns it.
 def get_question(topic):
     #todo make this general so it doesn't just return a specified result
-    if topic == 'algebra':
+    if topic == '':
         q = Template.objects.all()
         q = q.latest('id')
     else:
@@ -630,8 +628,9 @@ def latex_to_sympy(expression):
     expression = expression.replace('\\cdot','*')
     expression = expression.replace('\\left','')
     expression = expression.replace('\\right','')
-    tempt_expression = ""
+    temp_expression = ""
     i = 0
+    counter = 0
     while(i < len(expression)):
         if(expression[i] == '\\'):
             if(expression[i + 1] == 't' and expression[i + 2] == 'e' and expression[i + 3] == 'x' and expression[i + 4] == 't'):
@@ -642,16 +641,15 @@ def latex_to_sympy(expression):
                         counter += 1
                     elif(expression[i+1] == ')'):
                         counter -= 1
-                    tempt_expression += expression[i]
+                    temp_expression += expression[i]
                     i += 1
             else:
                 while(expression[i] != '(' and expression[i] != ' '):
-                    tempt_expression += expression[i]
+                    temp_expression += expression[i]
                     i += 1
-        tempt_expression += expression[i]
+        temp_expression += expression[i]
         i += 1
-    expression = tempt_expression
-
+    expression = temp_expression
     i = 0
     counter = 0
     recorder = false
@@ -667,9 +665,24 @@ def latex_to_sympy(expression):
                 expression = expression[0:i+1] + "/" + expression[i+1:len(expression)]
                 recorder = false
         i+=1
+    i = 0
+    counter = 0
+    while(i < len(expression)): #logic for making \binom(a/b) -> binomial(a,b)
+        if(expression[i] == 'o' and expression[i-1] == 'n' and expression[i-2] == 'i' and expression[i-3] == 'b' and expression[i-4] == '\\'):
+             recorder = true
+        if(recorder):
+            if(expression[i] == '('):
+                counter += 1
+            elif(expression[i] == ')'):
+                counter -= 1
+            if(expression[i] == ')' and counter == 0):
+                expression = expression[0:i] + "," + expression[i+2:len(expression)]
+                recorder = false
+        i+=1
     expression = expression.replace('\\','')
     expression = expression.replace('cdot','*')
     expression = expression.replace('frac','')
+    expression = expression.replace('binom', 'binomial')
     return expression
 
 ###is_number###

@@ -210,6 +210,7 @@ function latex_to_sympy(latex){
 	la = la.replace(/\\right/g,'');
     var la2 = "";
     i = 0;
+    var counter = 0;
 	while(i < la.length){
 		if(la[i] == '\\'){
 			if(la[i + 1] == 't' && la[i + 2] == 'e' && la[i + 3] == 'x' && la[i + 4] == 't'){
