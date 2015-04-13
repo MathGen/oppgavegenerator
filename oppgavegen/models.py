@@ -22,7 +22,7 @@ class TemplateType(models.Model):
         if self.type:
             self.type = self.type.strip()
 
-BYADMIN_CHOICES = (
+valid_choices = (
     (True, 'Valid'),
     (False, 'Invalid')
 )
@@ -45,7 +45,7 @@ class Template(models.Model):
     dictionary = models.CharField(max_length=10000, blank=True, null=True, default="")
     conditions = models.CharField(max_length=10000, blank=True, null=True, default="")
     fill_in = models.CharField(max_length=10000, blank=True, null=True, default="")
-    valid_flag = models.BooleanField(default=False, choices=BYADMIN_CHOICES)
+    valid_flag = models.BooleanField(default=False, choices=valid_choices)
     #todo: remove answer can be zero as that can be implemented in conditions using ans != 0.
     #todo: also remove number of decimals
     ##Also save the original latex for post-back:
