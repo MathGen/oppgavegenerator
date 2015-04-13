@@ -22,6 +22,11 @@ class TemplateType(models.Model):
         if self.type:
             self.type = self.type.strip()
 
+BYADMIN_CHOICES = (
+    (True, 'Valid'),
+    (False, 'Invalid')
+)
+
 class Template(models.Model):
     question_text = models.CharField(max_length=200)          #The template. Math expression or text question ex. "Solve: ax = b + cx"
     solution = models.CharField(max_length=10000)            #Step by step solution to the answer
@@ -40,7 +45,7 @@ class Template(models.Model):
     dictionary = models.CharField(max_length=10000, blank=True, null=True, default="")
     conditions = models.CharField(max_length=10000, blank=True, null=True, default="")
     fill_in = models.CharField(max_length=10000, blank=True, null=True, default="")
-    valid_flag = models.BooleanField(default=False)
+    valid_flag = models.BooleanField(default=False, choices=BYADMIN_CHOICES)
     #todo: remove answer can be zero as that can be implemented in conditions using ans != 0.
     #todo: also remove number of decimals
     ##Also save the original latex for post-back:
