@@ -19,6 +19,7 @@ var c_count 				= 0;
 var array_calc				= [];
 var array_calc_unchanged	= [];
 var MODIFY					= false;
+var SUBMIT_AS_NEW				= false;
 var mod_blanks				= 0;
 var mod_condition 			= 0;
 var mod_multiple			= 0;
@@ -861,11 +862,21 @@ $(document).ready(function() {
 		}
 	});
 
-	// Submit template to database event
+	// Submit template to database / Update
 	var o_btn_save = $('#o_btn_save');
 	$(o_btn_save).click(function(e){
 		e.preventDefault();
 		if(submit_validation()){
+			SUBMITTING = true;
+			submit_template();
+		}
+	});
+
+	// Submit template as a new template / Modified
+	$('#o_btn_save_new').click(function(e){
+		e.preventDefault();
+		if(submit_validation()){
+			SUBMIT_AS_NEW = true;
 			SUBMITTING = true;
 			submit_template();
 		}
@@ -1001,7 +1012,7 @@ function submit_template(){
 	form_submit['type'] = 'normal';
 
 	// PRIMARY-KEY
-	if(MODIFY){
+	if(MODIFY && !SUBMIT_AS_NEW){
 		form_submit['pk'] = $('#template_id').text();
 	}
 	else{
