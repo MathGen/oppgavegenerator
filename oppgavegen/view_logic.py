@@ -79,6 +79,10 @@ def submit_template(template, user, update):
         template.times_solved = 0
         template.creation_date = datetime.now()
         template.creator = user
+    if len(template.fill_in) > 1:
+        template.fill_in_support = True
+    if len(template.choices) > 1:
+        template.multiple_support = True
     template.save()
     message = generation.template_validation(template.pk)
     return message
