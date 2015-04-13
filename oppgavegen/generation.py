@@ -599,8 +599,8 @@ def test_template(template):
     solution = template.solution
     conditions = template.conditions
 
-    variable_dict = generate_valid_numbers("", random_domain, question, False) #pass no conditions to to just get back the first numbers made.
-    domain_dict = generate_valid_numbers("", random_domain, question, True) #pass test = True to get domain_dict instead of variable_dict
+    variable_dict = generate_valid_numbers(question, random_domain, "", False) #pass no conditions to to just get back the first numbers made.
+    domain_dict = generate_valid_numbers(question, random_domain, "", True) #pass test = True to get domain_dict instead of variable_dict
     inserted_conditions = string_replace(conditions, variable_dict)
     conditions_pass = sympify(latex_to_sympy(inserted_conditions))
     if conditions_pass:
