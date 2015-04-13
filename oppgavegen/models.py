@@ -59,6 +59,11 @@ class Template(models.Model):
     calculation_ref = models.CharField(max_length=1000, blank=True, null=True)
     unchanged_ref = models.CharField(max_length=1000, blank=True, null=True)
 
+    multiple_support = models.BooleanField(default=False) #Denotes whether the template supports multiple choice
+    fill_in_support = multiple = models.BooleanField(default=False) #Denotes whether the template supports fill in the blanks
+
+
+
 
     def __str__(self):                                        #Makes it so that self.question_text shows up instead of topic(object)
         return self.question_text

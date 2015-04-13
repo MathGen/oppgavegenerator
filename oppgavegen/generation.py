@@ -58,7 +58,7 @@ def task_with_solution(template_id, desired_type='none'):
     task = task.replace('\\\\', '\\')
     print(task)
     if desired_type == 'none': # if no type is desired (default), use the type stored in template
-        template_type = q.type
+        template_type = 'normal'
     else:
         template_type = desired_type
     choices = q.choices.replace('\\\\', '\\')
@@ -258,7 +258,7 @@ def parse_answer(answer):
             answer = ['error'] #This is an array so that join doesn't return e§r§r§o§r
             continue
         counter += 1
-    return('§'.join(answer)) #join doesn't do anything if the list has 1 element, except converting it to str
+    return '§'.join(answer) #join doesn't do anything if the list has 1 element, except converting it to str
 ###generate_valid_numbers###
 #generates valid numbers using each variables random domain.
 #also makes sure all variables followes the given conditions.
