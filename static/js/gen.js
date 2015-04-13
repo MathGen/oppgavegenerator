@@ -865,7 +865,10 @@ $(document).ready(function() {
 	var o_btn_save = $('#o_btn_save');
 	$(o_btn_save).click(function(e){
 		e.preventDefault();
-		submit_template();
+		if(submit_validation()){
+			SUBMITTING = true;
+			submit_template();
+		}
 	});
 });
 
@@ -1006,10 +1009,7 @@ function submit_template(){
 	}
 
 	// SUBMIT
-	if (submit_validation()) {
-		SUBMITTING = true;
-		post(/submit/, form_submit);
-	}
+	post(/submit/, form_submit);
 
 	//// Testing output
 	//var test_output = [];
@@ -1063,6 +1063,8 @@ function convert_variables(latex){
 	la = la.replace(/\\right/g,'');
 	la = la.replace(/\\&/g, '&');
 	la = la.replace(/\\ln/g, '\\ln ');
+	la = la.replace(/\\sin/g, '\\sin ');
+	la = la.replace(/\\cos/g, '\\cos ');
 	var counter = 0;
 	var dict_letters = {'a' : 'R0R', 'b' : 'R1R', 'c' : 'R2R', 'd' : 'R3R', 'g' : 'R6R', 'h' : 'R7R', 'i' : 'R8R', 'j' : 'R9R', 'k' : 'R10R',
 						'l' : 'R11R', 'm' : 'R12R', 'n' : 'R13R', 'o' : 'R14R', 'p' : 'R15R', 'q' : 'R16R', 'r' : 'R17R', 's' : 'R18R', 't' : 'R19R',
@@ -1096,6 +1098,10 @@ function convert_variables(latex){
 					la2 += la[i];
 					i++;
 				}
+			}
+			else if(la[i + 1] == 'c' && la[i + 2] == 'd' && la[i + 3] == 'o' && la[i + 4] == 't'){
+				la2 += '\\cdot ';
+				i += 5;
 			}
 			else if(la[i+1] == 'n'){
 				la2 += '\\n';
@@ -1139,131 +1145,11 @@ function convert_variables(latex){
 				la2 += '\\cdot ';
 			}
 		}
-		else if(la[i] == 'x' || la[i] == 'y' || la[i] == 'z'){
-			if((la[i-1] in dict_letters || la[i-1] == ')' || !isNaN(la[i-1])) && la[i-2] != '\^' && la[i-2] != '\\'){
-				if(la[i-1] != ' ' && la[i-2] != 't' && la[i-3] != 'o' && la[i-4] != 'd' && la[i-5] != 'c') {
-					la2 += '\\cdot ' + la[i];
-				}
-				else{
-					la2 += la[i];
-				}
-			}
-			else{
-				if(la[i-1] == '\@' && la[i-2] == 'x' && la[i-3] == 'x' && la[i-4] == 'x' && la[i-5] == 'x' && la[i-6] == '\@'){
-					if((la[i-7] in dict_letters || la[i-7] == ')' || !isNaN(la[i-7])) && la[i-8] != '\^' && la[i-8] != '\\'){
-						la2 += '\\cdot ' + la[i];
-					}
-					else{
-						la2 += la[i];
-					}
-				}
-				else{
-					if(la[i-1] != '\\'){
-						la2 += la[i];
-					}
-				}
-			}
-			if(la[i+1] == '('){
-				la2 += '\\cdot ';
-			}
-		}
 		else{
 			la2 += la[i];
 		}
 	}
 	la = la2;
-	return la;
-}
-
-/**
-* Convert latex to asciimath
-*/
-function latex_to_asciimath(latex){
-	var la = latex;
-	la = la.replace(/{/g,'(');
-	la = la.replace(/}/g,')');
-	la = la.replace(/\\cdot/g,'*');
-	la = la.replace(/\\left/g,'');
-	la = la.replace(/\\right/g,'');
-	la = la.replace(/∧/g, '&');
-	la = la.replace(/∨/g, '|');
-	
-	var i = 0;
-	var counter = 0;
-	var recorder = true;
-	var dict_letters = {'a' : 'R0R', 'b' : 'R1R', 'c' : 'R2R', 'd' : 'R3R', 'g' : 'R6R', 'h' : 'R7R', 'i' : 'R8R', 'j' : 'R9R', 'k' : 'R10R',
-						'l' : 'R11R', 'm' : 'R12R', 'n' : 'R13R', 'o' : 'R14R', 'p' : 'R15R', 'q' : 'R16R', 'r' : 'R17R', 's' : 'R18R', 't' : 'R19R',
-						'u' : 'R20R', 'v' : 'R21R', 'w' : 'R22R', 'A' : array_calc[0] , 'B' : array_calc[1],'C' : array_calc[2],'D' : array_calc[3],
-						'E' : array_calc[4],'F' : array_calc[5],'G' : array_calc[6],'H' : array_calc[7],'I' : array_calc[8], 'J' : array_calc[9],
-						'K' : array_calc[10],'L' : array_calc[11],'M' : array_calc[12],'N' : array_calc[13],'O' : array_calc[14], 'P' : array_calc[15],
-						'Q' : array_calc[16],'R' : array_calc[17],'S' : array_calc[18],'T' : array_calc[19],'U' : array_calc[20], 'V' : array_calc[21]};
-	var la2 = "";
-	while(i < la.length){
-		if(la[i] == '\\'){
-			if(la[i + 1] == 't' && la[i + 2] == 'e' && la[i + 3] == 'x' && la[i + 4] == 't'){
-				while(true){
-					if(la[i] == ')' && counter == 0){
-						break
-					}
-					if(la[i] == '('){
-						counter++;
-					}
-					else if(la[i+1] == ')'){
-						counter--;
-					}
-					la2 += la[i];
-					i++;
-				}
-			}
-			else{
-				while(la[i] != '(' && la[i] != ' ' && la[i] != '_' && la[i] != '^'){
-					la2 += la[i];
-					i++;
-				}
-			}
-		}
-		if(la[i] in dict_letters){
-			la2 += dict_letters[la[i]];
-		}
-		else if(la[i] == 'x' || la[i] == 'y' || la[i] == 'z'){
-			if(la[i-1] in dict_letters){
-				la2 += '*' + la[i];
-			}
-			else{
-				la2 += la[i];
-			}
-		}
-		else{
-			la2 += la[i];
-		}		
-		i++;
-	}
-	la = la2;
-	
-	i = 0;
-	counter = 0;
-	recorder = false;
-	while(i < la.length){ //logic for insering a / in fractals
-		if(la.charAt(i) == 'c' && la.charAt(i-1) == 'a' && la.charAt(i-2) == 'r' && la.charAt(i-3) == 'f' && la.charAt(i-4) == '\\'){
-			recorder = true;
-		}
-		if(recorder){
-			if(la.charAt(i) == '('){
-				counter++;
-			}
-			else if(la.charAt(i) == ')'){
-				counter--;
-			}
-			if(la.charAt(i) == ')' && counter == 0){
-				la = la.substring(0, i+1) + "/" + la.substring(i+1,la.length);
-				recorder = false;
-			}
-		}
-		i++;
-	}
-	la = la.replace(/\\/g,'');
-	la = la.replace(/cdot/g,'*');	
-	la = la.replace(/frac/g,'');
 	return la;
 }
 
@@ -1647,8 +1533,8 @@ function insert_editable_data(){
 	var edit_random_domain = $('#random_domain').text();
 	edit_random_domain = edit_random_domain.split('§');
 	var rd_exist = [];
-	for(var r = 22; r >= 0; r++){
-		if($('#o_adv_from_' + r).val() != ''){
+	for(var r = 22; r >= 0; r--){
+		if($('#o_adv_from_' + r).val() == ''){
 			rd_exist.push(r);
 		}
 	}
