@@ -1059,8 +1059,8 @@ function convert_variables(latex){
 	var la = latex;
 	la = la.replace(/\\cdots/g, '\\cdot ');
 	la = la.replace(/\\cdot/g,'\\cdot ');
-	la = la.replace(/\\left/g,'');
-	la = la.replace(/\\right/g,'');
+	//la = la.replace(/\\left/g,'');
+	//la = la.replace(/\\right/g,'');
 	la = la.replace(/\\&/g, '&');
 	la = la.replace(/\\ln/g, '\\ln ');
 	la = la.replace(/\\sin/g, '\\sin ');
@@ -1098,6 +1098,14 @@ function convert_variables(latex){
 					la2 += la[i];
 					i++;
 				}
+			}
+			else if(la[i + 1] == 'l' && la[i + 2] == 'e' && la[i + 3] == 'f' && la[i + 4] == 't'){
+				la2 += '\\left';
+				i += 5;
+			}
+			else if(la[i + 1] == 'r' && la[i + 2] == 'i' && la[i + 3] == 'g' && la[i + 4] == 'h' && la[i + 5] == 't'){
+				la2 += '\\right';
+				i += 6;
 			}
 			else if(la[i + 1] == 'c' && la[i + 2] == 'd' && la[i + 3] == 'o' && la[i + 4] == 't'){
 				la2 += '\\cdot ';
