@@ -60,7 +60,7 @@ class Template(models.Model):
     unchanged_ref = models.CharField(max_length=1000, blank=True, null=True)
 
     multiple_support = models.BooleanField(default=False) #Denotes whether the template supports multiple choice
-    fill_in_support = multiple = models.BooleanField(default=False) #Denotes whether the template supports fill in the blanks
+    fill_in_support = models.BooleanField(default=False) #Denotes whether the template supports fill in the blanks
 
 
 
