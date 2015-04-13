@@ -372,8 +372,7 @@ $(document).ready(function() {
 	});
 	
 	// Clear input
-	var btn_clear = $('.btn_clear');
-	$(btn_clear).click(function(e){
+	$(document).on('click', '.btn_clear', function(e){
 		e.preventDefault();
 		var btn_id = $(this).attr('id');
 		btn_id = btn_id[0];
@@ -384,6 +383,14 @@ $(document).ready(function() {
 		}
 		else if(btn_id == 'n'){
 			refresh_conditions();
+		}
+		else if(btn_id == 's'){
+			var sol_input = $(this).attr('id').replace(/s_btn_clear_/g, '');
+			$('#s_input_mathquill_' + sol_input).mathquill('revert').mathquill('editable');
+		}
+		else if(btn_id == 'a'){
+			var ans_input = $(this).attr('id').replace(/a_btn_clear_/g, '');
+			$('#a_input_mathquill_' + ans_input).mathquill('revert').mathquill('editable');
 		}
 		else{
 			$(get_input_field(this)).mathquill('revert').mathquill('editable');
@@ -548,7 +555,9 @@ $(document).ready(function() {
 		$('#s_form').append('<div id="step_' + STEP + '" class="step" style="display: none"><hr>' +
 			'<h4>Steg ' + STEP + '<a id="s_btn_del_'+STEP+'" class="glyphicon glyphicon-remove del_step" style="float:right"></a></h4>' +
 			'<input id="s_text_' + STEP + '" type="text" class="form-control" placeholder="Forklaring...">' +
-			'<div class="input_field s_input_field"><span id="s_input_mathquill_'+STEP+'" class="form-control input_mathquill"></span></div>');
+			'<div class="input_field s_input_field"><span id="s_input_mathquill_'+STEP+'" class="form-control input_mathquill"></span>' +
+			'<button id="s_btn_clear_'+STEP+'" class="btn btn-default btn_clear" style="margin-left: 3px; border: none">' +
+			'<span class="glyphicon glyphicon-trash" style="horizontal-align:middle; resize: vertical"></span></button></div>');
 		$('#s_input_mathquill_' + STEP).mathquill('editable');
 		$('#step_' + STEP).fadeIn();
 		S_INPUT = '#s_input_mathquill_' + STEP;
@@ -567,7 +576,9 @@ $(document).ready(function() {
 		ANSWER++;
 		$('#a_form').append('<div id="answer_'+ANSWER+'" class="answer" style="display: none"><hr>' +
 			'<h4>Svar '+ANSWER+'<a id="a_btn_del_'+ANSWER+'" class="glyphicon glyphicon-remove del_answer" style="float:right"></a></h4>' +
-			'<div class="input_field a_input_field"><span id="a_input_mathquill_'+ANSWER+'" class="form-control input_mathquill"></span></div>');
+			'<div class="input_field a_input_field"><span id="a_input_mathquill_'+ANSWER+'" class="form-control input_mathquill"></span>' +
+			'<button id="a_btn_clear_'+ANSWER+'" class="btn btn-default btn_clear" style="margin-left: 3px; border: none">' +
+			'<span class="glyphicon glyphicon-trash" style="horizontal-align:middle; resize: vertical"></span></button></div>');
 		$('#a_input_mathquill_' + ANSWER).mathquill('editable');
 		$('#answer_' + ANSWER).fadeIn();
 		A_INPUT = '#a_input_mathquill_' + ANSWER;
