@@ -80,7 +80,8 @@ def submit_template(template, user, update):
         template.creation_date = datetime.now()
         template.creator = user
     template.save()
-    return
+    message = generation.template_validation(template.pk)
+    return message
 
 def change_elo(template_id, user, winner, type):
     if winner == user: #todo make this class properly.

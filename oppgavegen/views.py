@@ -103,8 +103,8 @@ def submit(request):
                 update = True
             else:
                 update = False
-            view_logic.submit_template(template, request.user, update)
-            message = 'success!'
+            message = view_logic.submit_template(template, request.user, update)
+
         else:
             print(form.errors)
     context = RequestContext(request)

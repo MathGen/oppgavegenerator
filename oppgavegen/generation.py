@@ -76,7 +76,7 @@ def task_with_solution(template_id, desired_type='none'):
 
     valid_solution = False
     while valid_solution == False: #loop until we get a form of the task that has a valid solution
-        variable_dict = generate_valid_numbers(task, random_domain_list, conditions)
+        variable_dict = generate_valid_numbers(task, random_domain_list, conditions, False)
         variables_used = dict_to_string(variable_dict) #get a string with the variables used
         new_task = string_replace(task,variable_dict)
         new_answer = string_replace(answer,variable_dict)
@@ -201,7 +201,7 @@ def get_question(topic):
         q = Template.objects.all()
         q = q.latest('id')
     else:
-        q= Template.objects.get(pk=topic)
+        q = Template.objects.get(pk=topic)
     #q = Template.objects.get(pk=7)
 
 
@@ -262,8 +262,7 @@ def parse_answer(answer):
 ###generate_valid_numbers###
 #generates valid numbers using each variables random domain.
 #also makes sure all variables followes the given conditions.
-def generate_valid_numbers(task, random_domain_list, conditions):
-    #todo change variables to R1R so that R1 won't replace R10, we solve this by doing things backward atm, but that is a bit obtuse.
+def generate_valid_numbers(task, random_domain_list, conditions, test):
     hardcoded_variables = ['R22R', 'R21R','R20R','R19R','R18R','R17R','R16R','R15R','R14R','R13R','R12R','R11R','R10R','R9R','R8R','R7R','R6R','R3R','R2R','R1R','R0R']
     variables_used = ""
     domain_dict = {}
@@ -279,8 +278,8 @@ def generate_valid_numbers(task, random_domain_list, conditions):
             except IndexError:
                 #uses the first domain in case one was not provided.
                 random_domain = random_domain_list[0].split()
-            random_number = str(randint(int(random_domain[0]),int(random_domain[1])))
-            variables_used += '§' + hardcoded_variables[i]+ '§' + random_number #Remove the § later using variable_dictionary[1:]
+            random_number = str(randint(int(random_domain[0]),int(random_domain[1]))) #Todo change for floats
+            variables_used += '§' + hardcoded_variables[i] + '§' + random_number #todo remove?
             domain_dict[hardcoded_variables[i]] = random_domain
             variable_dict[hardcoded_variables[i]]= random_number
             counter += 1 #counter to iterate through the random domains
@@ -288,6 +287,8 @@ def generate_valid_numbers(task, random_domain_list, conditions):
         variable_dict = check_conditions(conditions, variable_dict, domain_dict)
 
     #lesser_than('R0 * 2 < 3', domain_dict, variable_dict) #for testing purposes
+    if test:
+        return domain_dict
     return variable_dict
 
 ###dict to string###
@@ -346,11 +347,14 @@ def check_conditions(conditions, variable_dict,domain_dict):
     else: #The slow/random way. todo: find a smart/better way to do this
         #Check conditions --> if false: change a variable -> check conditions
         inserted_conditions = string_replace(conditions, variable_dict)
-
+        test_counter = 0
         while not sympify(latex_to_sympy(inserted_conditions)):
             variable_to_change = choice(list(variable_dict.keys())) #chose a random key from variable_dict
             variable_dict[variable_to_change] = new_random_value(variable_to_change, domain_dict, 0, '')
             inserted_conditions = string_replace(conditions, variable_dict)
+            test_counter += 1
+            if test_counter > 999:
+                break #todo: choose another task when this happens for the main program, or invalidate the task.
     return variable_dict #maybe send a counter with how long it took to get trough conditions
 
 ###lesser_than###
@@ -570,24 +574,47 @@ def template_validation(template_id):
     template = Template.objects.get(pk=template_id)
     success_string = ""
     counter = 0
+    q = Template.objects.get(pk=template_id)
     for x in range(0,1000):
-        counter += test_template(template_id)
+        counter += test_template(q)
         if counter > 99:
             valid = True
             break
     if valid:
         template.flag = True
         template.save()
-        success_string = "Template got through validation!"
+        success_string = "Mal lagret og validert!"
     else:
-        success_string = "Template failed to be validated."
+        success_string = "Mal lagret, men kunne ikke valideres. Rediger malen din å prøv på nytt."
     return success_string
 
 ###Tests_template###
 #Tests if the creation of a template ends up with a valid template
-def test_template(template_id):
+def test_template(template):
     got_trough_test = 0 #1 if template got through test, and 0 if not.
+    #make numbers, check condition, check calculations
+    random_domain = template.random_domain.split('§') #efficiency note: might be faster to pass these, instead of getting them from template every time.
+    answer = template.answer
+    question = template.question_text
+    solution = template.solution
+    conditions = template.conditions
 
+    variable_dict = generate_valid_numbers("", random_domain, question, False) #pass no conditions to to just get back the first numbers made.
+    domain_dict = generate_valid_numbers("", random_domain, question, True) #pass test = True to get domain_dict instead of variable_dict
+    inserted_conditions = string_replace(conditions, variable_dict)
+    conditions_pass = sympify(latex_to_sympy(inserted_conditions))
+    if conditions_pass:
+        answer = string_replace(answer,variable_dict)
+        solution = string_replace(solution,variable_dict)
+
+        try: #todo: there is probably a better way to do this.
+            answer = parse_answer(answer)
+            solution = parse_solution(solution)
+            got_trough_test = 1
+        except Exception:
+            pass
+        if answer == 'error':
+            got_trough_test = 0
 
     return got_trough_test
 
