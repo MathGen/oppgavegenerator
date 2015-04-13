@@ -98,7 +98,7 @@ def submit(request):
         form = TemplateForm(request.POST)
         if form.is_valid():
             template = form.save(commit=False)
-            if request.REQUEST['pk'] != '':
+            if request.REQUEST['pk'] != '': #can this be writter as v = req != ''?
                 template.pk = request.REQUEST['pk'] #workaround, for some reason template doesn't automatically get template.pk
                 update = True
             else:

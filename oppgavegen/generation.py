@@ -579,10 +579,12 @@ def template_validation(template_id):
             valid = True
             break
     if valid:
-        template.flag = True
+        template.valid_flag = True
         template.save()
         success_string = "Mal lagret og validert!"
     else:
+        template.valid_flag = False
+        template.save()
         success_string = "Mal lagret, men kunne ikke valideres. Rediger malen din å prøv på nytt."
     return success_string
 
