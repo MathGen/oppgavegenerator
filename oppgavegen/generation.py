@@ -630,6 +630,8 @@ def latex_to_sympy(expression):
     expression = expression.replace('\\cdot','*')
     expression = expression.replace('\\left','')
     expression = expression.replace('\\right','')
+    expression = expression.replace('∨','|')
+    expression = expression.replace('∧','&')
 
     i = 0
     counter = 0

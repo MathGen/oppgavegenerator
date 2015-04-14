@@ -992,7 +992,7 @@ function submit_template(){
 
 	// CONDITIONS
 	if ($('#opt_conditions').is(':checked')) {
-		form_submit['conditions'] = convert_variables($('#con_input_mathquill').mathquill('latex'));
+		form_submit['conditions'] = double_equalsign(convert_variables($('#con_input_mathquill').mathquill('latex')));
 		form_submit['conditions_latex'] = $('#con_input_mathquill').mathquill('latex');
 	}
 	else {
@@ -1677,4 +1677,16 @@ function getCookie(name) {
         }
     }
     return cookieValue;
+}
+
+//Makes = into ==
+function double_equalsign(expression) {
+	for(var i = 0; i < expression.length; i++) {
+		if(expression[i] == '=') {
+			if (expression[i - 1] != '=' && expression[i - 1] != '=') {
+				expression = expression.substring(0, i) + '=' + expression.substring(i, expression.length);
+			}
+		}
+	}
+	return expression
 }
