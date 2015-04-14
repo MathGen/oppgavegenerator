@@ -1088,7 +1088,7 @@ function convert_variables(latex){
 	la = la.replace(/\\sin/g, '\\sin ');
 	la = la.replace(/\\cos/g, '\\cos ');
 	var counter = 0;
-	var dict_letters = {'a' : 'R0R', 'b' : 'R1R', 'c' : 'R2R', 'd' : 'R3R', 'g' : 'R6R', 'h' : 'R7R', 'i' : 'R8R', 'j' : 'R9R', 'k' : 'R10R',
+	var dict_letters = {'a' : 'R0R', 'b' : 'R1R', 'c' : 'R2R', 'g' : 'R6R', 'h' : 'R7R', 'j' : 'R9R', 'k' : 'R10R',
 						'l' : 'R11R', 'm' : 'R12R', 'n' : 'R13R', 'o' : 'R14R', 'p' : 'R15R', 'q' : 'R16R', 'r' : 'R17R', 's' : 'R18R', 't' : 'R19R',
 						'u' : 'R20R', 'v' : 'R21R', 'w' : 'R22R', 'A' : array_calc[0] , 'B' : array_calc[1],'C' : array_calc[2],'D' : array_calc[3],
 						'E' : array_calc[4],'F' : array_calc[5],'G' : array_calc[6],'H' : array_calc[7],'I' : array_calc[8], 'J' : array_calc[9],
