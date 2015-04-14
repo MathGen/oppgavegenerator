@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 {% block title %}{{ title }}{% endblock %}
 {% load app_filters %}
@@ -233,9 +234,9 @@
                                 <tbody>
                                 <tr>
                                     <td class="col-sm-3" style="vertical-align: middle; text-align: right">Utvalg:</td>
-                                    <td class="col-sm-3"><input id="opt_domain_from" type="number" class="form-control input-sm" placeholder="Fra:"></td>
-                                    <td class="col-sm-3"><input id="opt_domain_to" type="number" class="form-control input-sm" placeholder="Til:"></td>
-                                    <td style="vertical-align: middle"><a id="o_btn_adv_domain">Avansert<span id="o_adv_caret"><b class="caret"></b></span></a></td>
+                                    <td class="col-sm-3"><input id="opt_domain_from" type="number" class="form-control input-sm" placeholder="Fra:" disabled></td>
+                                    <td class="col-sm-3"><input id="opt_domain_to" type="number" class="form-control input-sm" placeholder="Til:" disabled></td>
+                                    <td style="vertical-align: middle"><a id="o_btn_adv_domain" hidden>Avansert<span id="o_adv_caret"><b class="caret"></b></span></a></td>
                                 </tr>
                                 </tbody>
                                 <tbody id="o_adv_domain" style="display:none; border-top: 0">
