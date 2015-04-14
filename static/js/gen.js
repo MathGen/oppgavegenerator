@@ -113,7 +113,7 @@ $(document).ready(function() {
 		var q_var = "a";
 		var q_var_id = 0;
 		while(var_available == false){
-			if($('#q_btn_abc_' + q_var_id).length || q_var == "e" || q_var == "f"){
+			if($('#q_btn_abc_' + q_var_id).length || q_var == "e" || q_var == "f" || q_var == "i" || q_var == "d"){
 				q_var = String.fromCharCode(q_var.charCodeAt(0) + 1);
 				q_var_id++;
 			}
@@ -411,7 +411,7 @@ $(document).ready(function() {
 			var var_id = e.keyCode - 65;
 			if(id_group == 'q'){
 				$('#' + id).find('var').each(function(){
-					if($(this).hasClass('content_x') || $(this).hasClass('content_var') || $(this).hasClass('florin') || $(this).html() == 'e'){}
+					if($(this).hasClass('content_x') || $(this).hasClass('content_var') || $(this).hasClass('florin') || $(this).html() == 'e' || $(this).html() == 'i' || $(this).html() == 'd'){}
 					else{
 						if(isUpperCase($(this).html())){}
 						else{
@@ -1372,7 +1372,7 @@ function refresh_char_colors(selector){
 	input_id = input_id[0];
 	$(selector).find('var').each(function(){
 		var f_var = $(this);
-		if(f_var.hasClass('content_x') || $(this).hasClass('content_var') || $(this).hasClass('florin') || $(this).html() == 'e'){}
+		if(f_var.hasClass('content_x') || $(this).hasClass('content_var') || $(this).hasClass('florin') || $(this).html() == 'e' || $(this).html() == 'i' || $(this).html() == 'd'){}
 		else{
 			if(f_var.html() == 'x' || f_var.html() == 'y' || f_var.html() == 'z'){
 				f_var.addClass('content_x');
