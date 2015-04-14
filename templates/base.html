@@ -76,7 +76,7 @@
 		</div>
 
         <!-- MESSAGE-BOARD -->
-        {% if user|is_superuser or user == 'siebe'  %}
+        {% if user.is_superuser or user.username == 'siebe'  %}
         <div class="container">
 			<div class="row">
 				<div class="col-lg-12">
