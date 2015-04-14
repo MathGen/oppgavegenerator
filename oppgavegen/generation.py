@@ -346,7 +346,7 @@ def check_conditions(conditions, variable_dict,domain_dict):
         #Check conditions --> if false: change a variable -> check conditions
         inserted_conditions = string_replace(conditions, variable_dict)
         test_counter = 0
-        while not sympify(latex_to_sympy(inserted_conditions)):
+        while not parse_expr(latex_to_sympy(inserted_conditions), transformations=standard_transformations+ (convert_xor, implicit_multiplication_application,),global_dict=None, evaluate=True):
             variable_to_change = choice(list(variable_dict.keys())) #chose a random key from variable_dict
             variable_dict[variable_to_change] = new_random_value(variable_to_change, domain_dict, 0, '')
             inserted_conditions = string_replace(conditions, variable_dict)
