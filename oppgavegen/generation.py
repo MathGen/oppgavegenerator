@@ -129,25 +129,6 @@ def task_with_solution(template_id, desired_type='normal'):
                    'template_specific' : template_specific, 'primary_key' : primary_key, 'number_of_answers' : number_of_answers}
     return return_dict
 
-###validate_solution###
-#Checks if the solution made is a valid one according to different tests
-#If it isn't a new solution will be made using different values
-def validate_solution(answer, decimal_allowed, zero_allowed):
-
-    if  '/' not in str(answer) and 'cos' not in str(answer) and 'sin' not in str(answer) and 'tan' not in str(answer) and '§' not in str(answer):
-        print('inside validate solution: ' + str(answer))
-        decimal_answer = False #check_for_decimal(parse_answer(answer).replace('`', ''))
-    elif '/' in str(answer): #checks if the answer contains /.
-        decimal_answer = False #technically the answer doesn't contain decimal numbers if for instance it is given on the form 1/5
-    else:
-        decimal_answer = True
-    contains_zero = answer == 0
-    valid_solution = True
-    if decimal_answer == True and decimal_allowed == False:
-        valid_solution = False
-    if contains_zero == True and zero_allowed == False:
-        valid_solution = False
-    return valid_solution
 
 ###check_for_decimal###
 #Returns True/False depending on if the float has decimals.
