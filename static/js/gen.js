@@ -724,6 +724,7 @@ $(document).ready(function() {
 		$('#a_btn_calc_delete').remove();
 		c_count = 0;
 		array_calc = [];
+		array_calc_unchanged = [];
 	});
 
 	// Show advanced domain settings
