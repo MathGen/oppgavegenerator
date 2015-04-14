@@ -86,7 +86,7 @@ def task_with_solution(template_id, desired_type='normal'):
 
         if new_answer == 'error': #error handling at its finest.
             continue #maybe add a counter everytime this happens so that it doesn't loop infinitely for bad templates
-        valid_solution = validate_solution(new_answer, decimal_allowed,zero_allowed)
+        valid_solution = True#validate_solution(new_answer, decimal_allowed,zero_allowed)
 
         try:
             int(new_answer) #Check if the answer is a number.
