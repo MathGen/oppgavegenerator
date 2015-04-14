@@ -19,10 +19,11 @@ var c_count 				= 0;
 var array_calc				= [];
 var array_calc_unchanged	= [];
 var MODIFY					= false;
-var SUBMIT_AS_NEW				= false;
+var SUBMIT_AS_NEW			= false;
 var mod_blanks				= 0;
 var mod_condition 			= 0;
 var mod_multiple			= 0;
+var VARIABLE_COUNT			= 0;
 
 $(document).ready(function() {
 	// Topic selection validation
@@ -136,6 +137,7 @@ $(document).ready(function() {
 		q_var = String.fromCharCode(q_var.charCodeAt(0) + 1);
 		q_var_id++;
 		$(Q_INPUT).find('textarea').focus();
+		update_variable_count();
 	});
 	
 	// Insert variable a,b,c,..
@@ -365,6 +367,7 @@ $(document).ready(function() {
 					$('#s_btn_abc_' + check_id[n]).remove();
 					$('#c_btn_abc_' + check_id[n]).remove();
 					$('#o_adv_' + check_id[n]).remove();
+					update_variable_count();
 				}
 			}
 		}
@@ -380,6 +383,7 @@ $(document).ready(function() {
 			$(Q_INPUT).mathquill('revert').mathquill('editable');
 			$('.btn_var_abc').remove();
 			$('.o_adv_dyn').remove();
+			update_variable_count();
 		}
 		else if(btn_id == 'n'){
 			refresh_conditions();
@@ -425,6 +429,7 @@ $(document).ready(function() {
 								$('#c_btn_var_dyn').append('<button id="c_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc">'+tmp_var_typed+'</button>');
 								$('#n_btn_var_dyn').append('<button id="n_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc">'+tmp_var_typed+'</button>');
 								$('#o_adv_domain').append('<tr id="o_adv_'+var_id+'" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">'+tmp_var_typed+':</td><td><input id="o_adv_from_'+var_id+'" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_'+var_id+'" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td></td></tr>');
+								update_variable_count();
 							}
 						}
 					}
@@ -459,6 +464,7 @@ $(document).ready(function() {
 						$('#c_btn_abc_' + check_id[n]).remove();
 						$('#n_btn_abc_' + check_id[n]).remove();
 						$('#o_adv_' + check_id[n]).remove();
+						update_variable_count();
 					}
 				}
 			}
@@ -935,13 +941,18 @@ function submit_template(){
 
 	// RANDOM_DOMAIN
 	// retrieves the list from latest letter in alphabet (w) to earliest (a) as that is the formatting used server side.
-	var tmp_r_domain = [];
-	for (var i = 22; i >= 0; i--) {
-		if ($('#o_adv_' + i).length) {
-			tmp_r_domain.push($('#o_adv_from_' + i).val() + " " + $('#o_adv_to_' + i).val());
+	if(VARIABLE_COUNT > 0){
+		var tmp_r_domain = [];
+		for (var i = 22; i >= 0; i--) {
+			if ($('#o_adv_' + i).length) {
+				tmp_r_domain.push($('#o_adv_from_' + i).val() + " " + $('#o_adv_to_' + i).val());
+			}
 		}
+		form_submit['random_domain'] = tmp_r_domain.join('§');
 	}
-	form_submit['random_domain'] = tmp_r_domain.join('§');
+	else{
+		form_submit['random_domain'] = "";
+	}
 
 	// NUMBER_OF_DECIMALS
 	form_submit['number_of_decimals'] = $('#opt_decimal').val();
@@ -1192,6 +1203,24 @@ function isUpperCase(str){
 }
 
 /**
+ * Updates the unique variable counter. To track whether or not to disable random domain settings.
+ * If there's no variables, disabled unneeded fields (or vice-versa).
+ */
+function update_variable_count(){
+	VARIABLE_COUNT = $('#q_btn_var_dyn').children().length-1;
+	if(VARIABLE_COUNT > 0){
+		$('#opt_domain_from').prop('disabled', false);
+		$('#opt_domain_to').prop('disabled', false);
+		$('#o_btn_adv_domain').prop('hidden', false);
+	}
+	else{
+		$('#opt_domain_from').prop('disabled', true);
+		$('#opt_domain_to').prop('disabled', true);
+		$('#o_btn_adv_domain').prop('hidden', true);
+	}
+}
+
+/**
  * Scroll to specific element given by id.
  * @param id - id of element to scroll to.
  */
@@ -1243,19 +1272,21 @@ function submit_validation(){
 			error_message('answer_' + ans, 'Dette feltet kan ikke være tomt.');
 		}
 	}
-	for(var adv = 22; adv >= 0; adv--){
-		if($('#o_adv_from_' + adv).length){
-			if($('#o_adv_from_' + adv).val() == ''){
-				valid = false;
-				error_message('o_adv_from_' + adv, 'Fyll ut!');
-				$('#o_adv_domain').fadeIn();
-				$('#o_adv_caret').addClass('dropup');
-			}
-			else if($('#o_adv_to_' + adv).val() == ''){
-				valid = false;
-				error_message('o_adv_to_' + adv, 'Fyll ut!');
-				$('#o_adv_domain').fadeIn();
-				$('#o_adv_caret').addClass('dropup');
+	if(VARIABLE_COUNT > 0){
+		for(var adv = 22; adv >= 0; adv--){
+			if($('#o_adv_from_' + adv).length){
+				if($('#o_adv_from_' + adv).val() == ''){
+					valid = false;
+					error_message('o_adv_from_' + adv, 'Fyll ut!');
+					$('#o_adv_domain').fadeIn();
+					$('#o_adv_caret').addClass('dropup');
+				}
+				else if($('#o_adv_to_' + adv).val() == ''){
+					valid = false;
+					error_message('o_adv_to_' + adv, 'Fyll ut!');
+					$('#o_adv_domain').fadeIn();
+					$('#o_adv_caret').addClass('dropup');
+				}
 			}
 		}
 	}
@@ -1462,11 +1493,21 @@ function insert_editable_data(){
 	// Inserting calculated references.
 	var calc_str = $('#calculation_references').text();
 	var calc_str = calc_str.split('§');
+	if(calc_str.length == 1){
+		if(calc_str[0] == ""){
+			calc_str = [];
+		}
+	}
 	for(var a = 0; a < calc_str.length; a++){
 		array_calc.push(calc_str[a]);
 	}
 	var calc_pop = $('#unchanged_ref').text();
 	var calc_pop = calc_pop.split('§');
+	if(calc_pop.length == 1){
+		if(calc_pop[0] == ""){
+			calc_pop = [];
+		}
+	}
 	for(var b = 0; b < calc_pop.length; b++){
 		array_calc_unchanged.push(calc_pop[b]);
 	}
@@ -1515,6 +1556,7 @@ function insert_editable_data(){
 
 	// Refreshing colors and adding required variable-buttons to the question.
 	refresh_char_colors('#q_input_mathquill');
+	update_variable_count();
 
 	// Insert solution
 	var edit_solution = $('#solution').text();
