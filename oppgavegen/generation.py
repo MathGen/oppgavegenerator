@@ -352,7 +352,7 @@ def check_conditions(conditions, variable_dict,domain_dict):
             inserted_conditions = string_replace(conditions, variable_dict)
             test_counter += 1
             if test_counter > 999:
-                break #todo: choose another task when this happens for the main program, or invalidate the task.
+                break #todo: choose another task when this happens for the main program, or invalidate the task..
     return variable_dict #maybe send a counter with how long it took to get trough conditions
 
 ###lesser_than###
