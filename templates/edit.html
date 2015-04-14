@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 {% extends "base.html" %}
+=======
+{% extends "index.html" %}
+>>>>>>> Stashed changes
 {% block title %}{{ title }}{% endblock %}
 {% load app_filters %}
 
@@ -10,6 +14,7 @@
 		{% csrf_token %}
 		</form>
 
+<<<<<<< Updated upstream
     <div hidden id="edit_template">true</div>
     <div hidden id="template_id">{{ template_id }}</div>
     <div hidden id="topic">{{ topic }}</div>
@@ -21,6 +26,12 @@
     <div hidden id="conditions">{{ conditions }}</div>
     <div hidden id="choices">{{ choices }}</div>
     <div hidden id="fill_in">{{ fill_in }}</div>
+=======
+        <div hidden id="edit_template">true</div>
+        <div hidden id="template_id">{{ template_id }}</div>
+        <div hidden id="solution">{{ solution }}</div>
+        <div hidden id="answer">{{ answer }}</div>
+>>>>>>> Stashed changes
 
 				<!-- PANELS -->
 		<div class="container">
@@ -37,6 +48,10 @@
 										<div class="col-sm-10">
 											<select id="category_selection" class="form-control">
                                                 <option disabled>Velg en kategori...</option>
+<<<<<<< Updated upstream
+=======
+												<option selected>{{ topic }}</option>
+>>>>>>> Stashed changes
 
 											</select>
 										</div>
@@ -107,9 +122,12 @@
 										<input id="s_text_1" type="text" class="form-control" placeholder="Forklaring...">
 										<div class="input_field s_input_field">
 											<span id="s_input_mathquill_1" class="mathquill-editable form-control input_mathquill"></span>
+<<<<<<< Updated upstream
                                             <button id="s_btn_clear_1" class="btn btn-default btn_clear" style="margin-left: 3px; border: none">
 												<span class="glyphicon glyphicon-trash" style="horizontal-align:middle; resize: vertical"></span>
 											</button>
+=======
+>>>>>>> Stashed changes
 										</div>
 									</div>
 								</form>
@@ -117,7 +135,11 @@
 							<!--SOLUTION KEYBOARD-->
 							<div class="panel-footer">
 								<div class="row">
+<<<<<<< Updated upstream
 									<div class="col-md-9">
+=======
+									<div class="col-md-8">
+>>>>>>> Stashed changes
 										<span id="s_btn_calc_dyn" class="btn-group">
 											<button id="s_btn_calc" class="btn btn-success" style="horizontal-align: middle" data-toggle="modal" data-target="#calc_modal">
 												<img src="/static/fonts/icon-calculator.png"/>
@@ -143,10 +165,20 @@
 										<button id="s_btn_integral_ab" class="btn btn-default btn_int_ab btn-xs mathquill-embedded-latex">\int_a^b</button>
                                         <button id="s_btn_binom" class="btn btn-default btn_binom btn-xs mathquill-embedded-latex">\binom{n}{k}</button>
 									</div>
+<<<<<<< Updated upstream
 									<div class="col-md-3">
 										<div class="btn-group pull-right">
 											<button id="s_btn_delete" class="btn btn-default btn_delete">
 												<span class="glyphicon glyphicon-erase"></span>
+=======
+									<div class="col-md-4">
+										<div class="btn-group pull-right">
+											<button id="s_btn_delete" class="btn btn-default btn_delete">
+												<span class="glyphicon glyphicon-chevron-left" style="horizontal-align:middle"></span>
+											</button>
+											<button id="s_btn_clear" class="btn btn-default btn_clear">
+												<span class="glyphicon glyphicon-trash" style="horizontal-align:middle"></span>
+>>>>>>> Stashed changes
 											</button>
 											<button id="s_btn_proceed" class="btn btn-primary btn-group-s btn_proceed" type="submit" disabled>Fortsett</button>
                                             <button id="s_btn_next" class="btn btn-default">
