@@ -44,7 +44,7 @@ def task_by_id_and_type(request, template_id, desired_type='normal'):
     context = RequestContext(request)
     context_dict = generation.task_with_solution(template_id, desired_type)
     context_dict['title'] = generation.printer()
-    if context_dict['question'] == 'error':
+    if context_dict['question'] == 'error.html':
         message = {'message' : 'Denne oppgavetypen har ikke blitt laget for denne oppgaven'}
         return render_to_response('error', message, context)
     return render_to_response('taskview.html', context_dict, context)
