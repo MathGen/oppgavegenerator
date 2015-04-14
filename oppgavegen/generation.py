@@ -45,20 +45,22 @@ def task_with_solution(template_id, desired_type='normal'):
         q = get_question('')  #gets a question from the DB
     else:
         q = get_question(template_id)
-    #I changed this to contain the amount of decimals allowed in the answer, so 0 = False basically.
+
+    if desired_type != 'normal':
+        if (desired_type == 'multiple' or desired_type == 'multifill') and not q.multiple_support:
+            return  {'question' : 'error'}
+        if desired_type == 'blanks' and not q.fill_in:
+            return  {'question' : 'error'}
+
     #todo make a rounding function using decimals_allowed
     decimals_allowed = int(q.number_of_decimals)
     decimal_allowed = (True if decimals_allowed > 0 else False) #Boolean for if the answer is required to be a integer
     #the domain of random numbers that can be generated for the question
     random_domain_list = (q.random_domain).split('§')
-    print(random_domain_list)
     zero_allowed = q.answer_can_be_zero#False #Boolean for 0 being a valid answer or not.
     task = str(q.question_text)
-    print(task)
     task = task.replace('\\\\', '\\')
-    print(task)
     template_type = desired_type
-
     choices = q.choices.replace('\\\\', '\\')
     conditions = q.conditions.replace('\\\\', '\\')
     dictionary = q.dictionary
@@ -628,28 +630,7 @@ def latex_to_sympy(expression):
     expression = expression.replace('\\cdot','*')
     expression = expression.replace('\\left','')
     expression = expression.replace('\\right','')
-    temp_expression = ""
-    i = 0
-    counter = 0
-    while(i < len(expression)):
-        if(expression[i] == '\\'):
-            if(expression[i + 1] == 't' and expression[i + 2] == 'e' and expression[i + 3] == 'x' and expression[i + 4] == 't'):
-                while(true):
-                    if(expression[i] == ')' and counter == 0):
-                        break
-                    if(expression[i] == '('):
-                        counter += 1
-                    elif(expression[i+1] == ')'):
-                        counter -= 1
-                    temp_expression += expression[i]
-                    i += 1
-            else:
-                while(expression[i] != '(' and expression[i] != ' '):
-                    temp_expression += expression[i]
-                    i += 1
-        temp_expression += expression[i]
-        i += 1
-    expression = temp_expression
+
     i = 0
     counter = 0
     recorder = false

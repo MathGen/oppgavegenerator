@@ -176,3 +176,27 @@ def make_variables(amount): #this is not needed anymore
     for x in range(0, amount):
         variables.append('R' + str(x))
     return variables
+
+def unused_skip_text(expression):
+    temp_expression = ""
+    i = 0
+    counter = 0
+    while(i < len(expression)):
+        if(expression[i] == '\\'):
+            if(expression[i + 1] == 't' and expression[i + 2] == 'e' and expression[i + 3] == 'x' and expression[i + 4] == 't'):
+                while(true):
+                    if(expression[i] == ')' and counter == 0):
+                        break
+                    if(expression[i] == '('):
+                        counter += 1
+                    elif(expression[i+1] == ')'):
+                        counter -= 1
+                    temp_expression += expression[i]
+                    i += 1
+            else:
+                while(expression[i] != '(' and expression[i] != ' '):
+                    temp_expression += expression[i]
+                    i += 1
+        temp_expression += expression[i]
+        i += 1
+    expression = temp_expression
