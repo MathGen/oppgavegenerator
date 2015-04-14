@@ -7,3 +7,9 @@ def is_teacher(user):
     if user.is_superuser:
         return True
     return user.groups.filter(name='Teacher').exists()
+
+@register.filter
+def is_superuser(user):
+    if user.is_superuser:
+        return True
+    return False
