@@ -59,7 +59,7 @@ def task_by_id(request, template_id):
 class QuestionForm(forms.Form):
     user_answer = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400)
     primary_key = forms.IntegerField()
-    variable_dictionary = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400)
+    variable_dictionary = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400, required=False)
     template_specific = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400, required=False)
     template_type = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=20)
 
