@@ -1719,6 +1719,7 @@ function getCookie(name) {
  */
 function parse_conditions(expression) {
 	for(var i = 0; i < expression.length; i++) {
+		expression = expression.replace('/\\ne/', '!=');
 		// Makes = into ==
 		if(expression[i] == '=') {
 			if (expression[i - 1] != '=' && expression[i - 1] != '=') {
