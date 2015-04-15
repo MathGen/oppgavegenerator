@@ -968,16 +968,6 @@ function submit_template(){
 		form_submit['random_domain'] = "";
 	}
 
-	// ANSWER_CAN_BE_ZERO
-	var tmp_allow_zero = "";
-	if ($('#opt_allow').is(':checked')) {
-		tmp_allow_zero = 'true';
-	}
-	else {
-		tmp_allow_zero = 'false';
-	}
-	form_submit['answer_can_be_zero'] = tmp_allow_zero;
-
 	// DICTIONARY
 	var array_dict = [];
 	var e_empty = true;
