@@ -177,7 +177,13 @@ $(document).ready(function() {
 		e.preventDefault();
 		$(get_input_field(this)).mathquill('write', '=').find('textarea').focus();
 	});
-	
+
+	// Insert not-equal to sign
+	$('.btn_not_equal').click(function(e){
+		e.preventDefault();
+		$(get_input_field(this)).mathquill('write', '\\ne').find('textarea').focus();
+	});
+
 	// Insert parentheses operator
 	var q_btn_par = $('.btn_par');
 	$(q_btn_par).click(function(e){
@@ -992,7 +998,7 @@ function submit_template(){
 
 	// CONDITIONS
 	if ($('#opt_conditions').is(':checked')) {
-		form_submit['conditions'] = double_equalsign(convert_variables($('#con_input_mathquill').mathquill('latex')));
+		form_submit['conditions'] = parse_conditions(convert_variables($('#con_input_mathquill').mathquill('latex')));
 		form_submit['conditions_latex'] = $('#con_input_mathquill').mathquill('latex');
 	}
 	else {
@@ -1708,9 +1714,12 @@ function getCookie(name) {
     return cookieValue;
 }
 
-//Makes = into ==
-function double_equalsign(expression) {
+/**
+ * Converts user-conditions to actual conditions sympy can compute.
+ */
+function parse_conditions(expression) {
 	for(var i = 0; i < expression.length; i++) {
+		// Makes = into ==
 		if(expression[i] == '=') {
 			if (expression[i - 1] != '=' && expression[i - 1] != '=') {
 				expression = expression.substring(0, i) + '=' + expression.substring(i, expression.length);
