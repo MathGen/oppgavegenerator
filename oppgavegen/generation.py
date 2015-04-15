@@ -143,7 +143,7 @@ def calculate_answer(s, domain):
         s = parse_expr(s, transformations=standard_transformations+ (convert_xor, implicit_multiplication_application,),global_dict=None, evaluate=False)
         s = latex(sympify(str(s))) #sometimes this returns the value 'zoo' | also could maybe use simplify instead of sympify
         if is_number(s):
-            s = round_answer(domain, s)
+            s = round_answer(domain, float(s))
 
     return str(s)
 
