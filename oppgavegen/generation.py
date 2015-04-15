@@ -137,12 +137,12 @@ def check_for_decimal(f):
 ###calculate_answer###
 #Calculates a string using sympify
 def calculate_answer(s, domain):
-    if not is_number(s):
+    if not is_number(s): #small optimization
         s = remove_unnecessary(s)
         s = str(latex_to_sympy(s))
         s = parse_expr(s, transformations=standard_transformations+ (convert_xor, implicit_multiplication_application,),global_dict=None, evaluate=False)
         s = latex(sympify(str(s))) #sometimes this returns the value 'zoo' | also could maybe use simplify instead of sympify
-        if is_number(s):
+    if is_number(s):
             s = round_answer(domain, float(s))
 
     return str(s)
