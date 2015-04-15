@@ -16,10 +16,7 @@ import html
 #s = round(s, 3)
 
 #Error message "(╯°□°）╯︵ ┻━┻"
-asciimath_sympy_dict = {'int(' : 'integrate('} #for use in converting between sympy and asciimath, might not need this
-errorino = "ಠ_ಠ"
-errorino2 = "Q_Q"
-testerino = "☺☻"
+
 
 ###printer###
 #Returns a string
@@ -97,12 +94,12 @@ def task_with_solution(template_id, desired_type='normal'):
         except: #hardcore error handling
             pass
 
-    new_solution = parse_solution(new_solution)
+    new_solution = parse_solution(new_solution, q.random_domain)
     if template_type.lower() == 'multiple':
         new_choices = new_choices.split('§')
         for x in range(len(new_choices)):
-            new_choices[x] = calculate_answer(new_choices[x])
-        new_choices.append(parse_solution(new_answer).replace('§', 'og'))
+            new_choices[x] = calculate_answer(new_choices[x], q.random_domain)
+        new_choices.append(parse_solution(new_answer, q.random_domain).replace('§', 'og'))
         shuffle(new_choices) #Shuffles the choices so that the answer is not always in the same place.
         new_choices = '§'.join(new_choices)
         template_specific = new_choices
@@ -110,7 +107,7 @@ def task_with_solution(template_id, desired_type='normal'):
         fill_in_dict = fill_in_the_blanks(fill_in)
         new_task = new_task + '\n' + fill_in_dict['fill_in'].replace('\\n', '\n')
         new_task = replace_variables_from_array(variables_used.split('§'), new_task)
-        new_task = parse_solution(new_task)
+        new_task = parse_solution(new_task, q.random_domain)
         template_specific = fill_in_dict['hole_positions']
     elif template_type == 'multifill':
         new_choices = choices + '§' + answer.replace('§', 'og')
@@ -139,17 +136,20 @@ def check_for_decimal(f):
 
 ###calculate_answer###
 #Calculates a string using sympify
-def calculate_answer(s):
-    if not is_number(s):
+def calculate_answer(s, domain):
+    if not is_number(s): #small optimization
         s = remove_unnecessary(s)
         s = str(latex_to_sympy(s))
         s = parse_expr(s, transformations=standard_transformations+ (convert_xor, implicit_multiplication_application,),global_dict=None, evaluate=False)
         s = latex(sympify(str(s))) #sometimes this returns the value 'zoo' | also could maybe use simplify instead of sympify
+    if is_number(s):
+            s = round_answer(domain, float(s))
+
     return str(s)
 
 ###parse_soltuion###
 #Parses a solution (or other string) and calculates using sympify where needed. (between @? ?@)
-def parse_solution(solution):
+def parse_solution(solution, domain):
     print('in parse_solution')
     print(solution)
     arr = []
@@ -168,7 +168,7 @@ def parse_solution(solution):
             s += c
         b=c
     for x in range(len(arr)):
-        newArr.append(calculate_answer(str((arr[x]))))
+        newArr.append(calculate_answer(str((arr[x])), domain))
         r = '@?' + arr[x] + '?@'
         new_solution = new_solution.replace(r, newArr[x])
     print(new_solution)
@@ -206,10 +206,10 @@ def replace_words(sentence, dictionary):
 ###calculate_array###
 #calculates all the answers in a array
 #Example: ['2+2','3+3'] -> [4,6]
-def calculate_array(array):
+def calculate_array(array, domain):
     out_arr = []
     for s in array:
-        out_arr.append(calculate_answer(s))
+        out_arr.append(calculate_answer(s, domain))
     return out_arr
 
 ###after_equal_sign###
@@ -228,13 +228,14 @@ def replace_variables_from_array(arr, s):
     for x in range(0,len(arr)-1,2): #set increment size to 2.
         s = s.replace(arr[x], arr[x+1])
     return s
+
 ###parse_answer###
 #parses the answer. works for arrays with multiple answers.
-def parse_answer(answer):
+def parse_answer(answer, domain):
     answer = answer.split('§')
     counter = 0
     for s in answer:
-        answer[counter] = parse_solution(s)
+        answer[counter] = parse_solution(s, domain)
         if answer[counter] == 'zoo':
             answer = ['error'] #This is an array so that join doesn't return e§r§r§o§r
             continue
@@ -574,14 +575,15 @@ def template_validation(template_id):
 def test_template(template):
     got_trough_test = 0 #1 if template got through test, and 0 if not.
     #make numbers, check condition, check calculations
-    random_domain = template.random_domain.split('§') #efficiency note: might be faster to pass these, instead of getting them from template every time.
+    random_domain = template.random_domain
+    random_domain_list = random_domain.split('§') #efficiency note: might be faster to pass these, instead of getting them from template every time.
     answer = template.answer
     question = template.question_text
     solution = template.solution
     conditions = template.conditions
 
-    variable_dict = generate_valid_numbers(question, random_domain, "", False) #pass no conditions to to just get back the first numbers made.
-    domain_dict = generate_valid_numbers(question, random_domain, "", True) #pass test = True to get domain_dict instead of variable_dict
+    variable_dict = generate_valid_numbers(question, random_domain_list, "", False) #pass no conditions to to just get back the first numbers made.
+    domain_dict = generate_valid_numbers(question, random_domain_list, "", True) #pass test = True to get domain_dict instead of variable_dict
     inserted_conditions = string_replace(conditions, variable_dict)
     if len(conditions) > 1:
         conditions_pass = sympify(latex_to_sympy(inserted_conditions))
@@ -592,8 +594,8 @@ def test_template(template):
         solution = string_replace(solution,variable_dict)
 
         try: #todo: there is probably a better way to do this.
-            answer = parse_answer(answer)
-            solution = parse_solution(solution)
+            answer = parse_answer(answer, random_domain)
+            solution = parse_solution(solution, random_domain)
             got_trough_test = 1
         except Exception:
             pass
@@ -662,7 +664,7 @@ def is_number(s):
 ###make_number###
 #Makes a new random number from the domain given.
 def make_number(domain):
-    number = uniform(int(domain[0]), int(domain[1]))
+    number = uniform(float(domain[0]), float(domain[1]))
     try:
         number = round(number, int(domain[2]))
         if number.is_integer():
@@ -670,3 +672,20 @@ def make_number(domain):
     except IndexError:
         number = round(number)
     return number
+
+def round_answer(domain, answer):
+    domain = domain.split('§')
+    rounding_number = 0
+    for s in domain:
+        try:
+            if rounding_number < int(s[2]):
+                rounding_number = int(s[2])
+        except IndexError:
+            pass
+        if rounding_number > 0:
+            answer = round(answer, rounding_number)
+            if answer.is_integer():
+                answer = round(answer)
+        else:
+            answer = round(answer)
+    return answer
