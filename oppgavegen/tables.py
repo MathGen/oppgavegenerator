@@ -43,6 +43,7 @@ class BootstrapTemplateTable(tables.Table):
         # fields to include in table (displayed in this order)
         fields = ("id", "creator", "topic", "type", "rating")
         sequence = ("id", "content", "creator", "topic", "type", "rating", "view")
+        order_by = ("-id")
 
 
 class UserTemplates(tables.Table):
@@ -80,4 +81,5 @@ class UserTemplates(tables.Table):
         # fields to include in table (displayed in this order)
         fields = ("id", "topic", "type", "rating")
         sequence = ("id", "content", "topic", "type", "rating", "action")
+        order_by = ("-id")
 
