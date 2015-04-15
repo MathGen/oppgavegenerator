@@ -486,6 +486,9 @@ $(document).ready(function() {
 				$('#' + id_group + '_btn_proceed').click();
 			}
 		}
+		else if(e.keyCode == 32){
+			$(get_input_field(this)).mathquill('write', '\\text{ }').find('textarea').focus();
+		}
 	});
 	
 	// Proceed to next panel
