@@ -15,6 +15,7 @@ def make_edit_context_dict(template_id):
     topic = q.topic
     random_domain = q.random_domain
     unchanged_ref = q.unchanged_ref
+    dictionary = q.dictionary
     topics = ""
     for e in Topic.objects.all():
         topics += '§' + str(e.pk) + '§'
@@ -24,7 +25,7 @@ def make_edit_context_dict(template_id):
                     'question_text' : question_text, 'calculation_references' : calculation_references,
                     'choices' : choices, 'conditions' : conditions, 'fill_in' : fill_in,
                     'topic' : topic, 'random_domain' : random_domain, 'unchanged_ref' : unchanged_ref,
-                    'topics' : topics}
+                    'topics' : topics, 'dictionary' : dictionary}
     return context_dict
 
 
