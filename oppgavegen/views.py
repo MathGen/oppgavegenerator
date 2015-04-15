@@ -33,16 +33,16 @@ def task(request):
     context = RequestContext(request)
     question_type = request.GET.get('q', '')
     if question_type != "":
-        context_dict = generation.task_with_solution(question_type)
+        context_dict = generation.generate_task(question_type)
     else:
-        context_dict = generation.task_with_solution("")
+        context_dict = generation.generate_task("")
     context_dict['title'] = generation.printer()
     return render_to_response('taskview.html', context_dict, context)
 
 @login_required
 def task_by_id_and_type(request, template_id, desired_type='normal'):
     context = RequestContext(request)
-    context_dict = generation.task_with_solution(template_id, desired_type)
+    context_dict = generation.generate_task(template_id, desired_type)
     context_dict['title'] = generation.printer()
     if context_dict['question'] == 'error':
         message = {'message' : 'Denne oppgavetypen har ikke blitt laget for denne oppgaven'}
@@ -52,7 +52,7 @@ def task_by_id_and_type(request, template_id, desired_type='normal'):
 @login_required
 def task_by_id(request, template_id):
     context = RequestContext(request)
-    context_dict = generation.task_with_solution(template_id)
+    context_dict = generation.generate_task(template_id)
     context_dict['title'] = generation.printer()
     return render_to_response('taskview.html', context_dict, context)
 
