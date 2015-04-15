@@ -661,9 +661,9 @@ def is_number(s):
 ###make_number###
 #Makes a new random number from the domain given.
 def make_number(domain):
-    number = uniform(domain[0], domain[1])
+    number = uniform(int(domain[0]), int(domain[1]))
     try:
-        number = round(number, domain[2])
+        number = round(number, int(domain[2]))
     except IndexError:
         number = round(number)
     if number.is_integer():
