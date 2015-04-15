@@ -36,8 +36,7 @@ def checkAnswer(user_answer, answer):
 
 ###task_with_solution###
 #Makes a valid task with solution from a template in the database.
-def task_with_solution(template_id, desired_type='normal'):
-    error = 0
+def generate_task(template_id, desired_type='normal'):
     if template_id == "":
         q = get_question('')  #gets a question from the DB
     else:
@@ -49,12 +48,8 @@ def task_with_solution(template_id, desired_type='normal'):
         if desired_type == 'blanks' and not q.fill_in:
             return  {'question' : 'error'}
 
-    #todo make a rounding function using decimals_allowed
-    decimals_allowed = int(q.number_of_decimals)
-    decimal_allowed = (True if decimals_allowed > 0 else False) #Boolean for if the answer is required to be a integer
     #the domain of random numbers that can be generated for the question
     random_domain_list = (q.random_domain).split('§')
-    zero_allowed = q.answer_can_be_zero#False #Boolean for 0 being a valid answer or not.
     task = str(q.question_text)
     task = task.replace('\\\\', '\\')
     template_type = desired_type
@@ -65,11 +60,7 @@ def task_with_solution(template_id, desired_type='normal'):
     primary_key = q.pk
     fill_in = q.fill_in.replace('\\\\', '\\')
     template_specific = "" #A type specific variable that holds the extra values for a given type. ie. choices for multiple.
-    variables_used = "" #sends a splitable string since dictionaries can't be passed between layers.
-    solution = str(task) + "\n"+str(q.solution).replace('\\\\', '\\') #db automatically adds a extra \ to \ --> \\
-    print(solution)
-    #solution = solution.replace('\&\#x222B\;', '&#x222B;')
-    #todo remove field for template types and just random one of the types for the task, depending on if choices != "" and fill in != ""
+    variables_used = "" #sends a splitable string since dictionaries can't be passed between layers. (could serialize instead)
 
     valid_solution = False
     while valid_solution == False: #loop until we get a form of the task that has a valid solution
@@ -77,24 +68,12 @@ def task_with_solution(template_id, desired_type='normal'):
         variables_used = dict_to_string(variable_dict) #get a string with the variables used
         new_task = string_replace(task,variable_dict)
         new_answer = string_replace(answer,variable_dict)
-        new_solution = string_replace(solution,variable_dict)
         new_choices = string_replace(choices,variable_dict)
-
 
         if new_answer == 'error': #error handling at its finest.
             continue #maybe add a counter everytime this happens so that it doesn't loop infinitely for bad templates
-        valid_solution = True#validate_solution(new_answer, decimal_allowed,zero_allowed)
+        valid_solution = True
 
-        try:
-            int(new_answer) #Check if the answer is a number.
-            if ((decimal_allowed == False and valid_solution == True) or (check_for_decimal(new_answer))): #Remove float status if the number is supposed to be a integer
-                print("answer is not a float") #todo find out if i need this anymore
-                new_answer = str(int(new_answer))
-                valid_solution = True
-        except: #hardcore error handling
-            pass
-
-    new_solution = parse_solution(new_solution, q.random_domain)
     if template_type.lower() == 'multiple':
         new_choices = new_choices.split('§')
         for x in range(len(new_choices)):
@@ -115,13 +94,10 @@ def task_with_solution(template_id, desired_type='normal'):
 
     if dictionary is not None:
         new_task = replace_words(new_task, dictionary)
-        new_solution = replace_words(new_solution, dictionary) #todo this logic moved into the view. do that.
         #todo might have to send a list of what words were replaced as well (a bit like variables used)
         new_answer = replace_words(new_answer, dictionary)
     number_of_answers = len(new_answer.split('§'))
 
-
-    #todo also remove parsing of solution in this function as it is not needed before the answer page (only true for normal actually)
     return_dict = {'question' : new_task, 'variable_dictionary' : variables_used, 'template_type' : template_type,
                    'template_specific' : template_specific, 'primary_key' : primary_key, 'number_of_answers' : number_of_answers}
     return return_dict
