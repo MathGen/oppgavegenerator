@@ -12,11 +12,8 @@ from sympy.parsing.sympy_parser import (parse_expr, standard_transformations, im
 from .models import Template
 from django.template.defaultfilters import *
 import html
-#s = RR(s)
-#s = round(s, 3)
 
 #Error message "(╯°□°）╯︵ ┻━┻"
-
 
 ###printer###
 #Returns a string
