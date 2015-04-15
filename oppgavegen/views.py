@@ -46,7 +46,7 @@ def task_by_id_and_type(request, template_id, desired_type='normal'):
     context_dict['title'] = generation.printer()
     if context_dict['question'] == 'error':
         message = {'message' : 'Denne oppgavetypen har ikke blitt laget for denne oppgaven'}
-        return render_to_response('error', message, context)
+        return render_to_response('error.html', message, context)
     return render_to_response('taskview.html', context_dict, context)
 
 @login_required
@@ -59,7 +59,7 @@ def task_by_id(request, template_id):
 class QuestionForm(forms.Form):
     user_answer = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400)
     primary_key = forms.IntegerField()
-    variable_dictionary = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400)
+    variable_dictionary = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400, required=False)
     template_specific = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400, required=False)
     template_type = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=20)
 
