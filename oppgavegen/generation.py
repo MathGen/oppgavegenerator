@@ -1,6 +1,6 @@
 
 from random import randint
-from random import sample
+from random import uniform
 from random import shuffle
 from random import choice
 import collections
@@ -259,8 +259,8 @@ def generate_valid_numbers(task, random_domain_list, conditions, test):
             except IndexError:
                 #uses the first domain in case one was not provided.
                 random_domain = random_domain_list[0].split()
-            random_number = str(randint(int(random_domain[0]),int(random_domain[1]))) #Todo change for floats
-            variables_used += '§' + hardcoded_variables[i] + '§' + random_number #todo remove?
+            random_number = str(make_number(random_domain)) #Todo change for floats
+            #variables_used += '§' + hardcoded_variables[i] + '§' + random_number #todo remove?
             domain_dict[hardcoded_variables[i]] = random_domain
             variable_dict[hardcoded_variables[i]]= random_number
             counter += 1 #counter to iterate through the random domains
@@ -657,3 +657,15 @@ def is_number(s):
         return True
     except ValueError:
         return False
+
+###make_number###
+#Makes a new random number from the domain given.
+def make_number(domain):
+    number = uniform(int(domain[0]), int(domain[1]))
+    try:
+        number = round(number, int(domain[2]))
+        if number.is_integer():
+            number = round(number)
+    except IndexError:
+        number = round(number)
+    return number
