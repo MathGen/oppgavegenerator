@@ -1093,8 +1093,6 @@ function convert_variables(latex){
 	var la = latex;
 	la = la.replace(/\\cdots/g, '\\cdot ');
 	la = la.replace(/\\cdot/g,'\\cdot ');
-	//la = la.replace(/\\left/g,'');
-	//la = la.replace(/\\right/g,'');
 	la = la.replace(/\\&/g, '&');
 	la = la.replace(/\\ln/g, '\\ln ');
 	la = la.replace(/\\sin/g, '\\sin ');
@@ -1111,7 +1109,13 @@ function convert_variables(latex){
 	for(var j = 0; j < la.length; j++){
 		if(la[j] == '^' || la[j] == '_'){
 			if(la[j+1] != '{'){
-				la = la.substring(0, j+1) + '{' + la[j+1] + '}' + la.substring(j+2, la.length);
+				// Bug with \circ where it was not wrapped with {}.
+				if(la[j+2] == 'c' && la[j+3] == 'i' && la[j+4] == 'r' && la[j+5] == 'c'){
+					la = la.substring(0, j+1) + '{\\circ }' + la.substring(j+6, la.length);
+				}
+				else{
+					la = la.substring(0, j+1) + '{' + la[j+1] + '}' + la.substring(j+2, la.length);
+				}
 			}
 		}
 	}
@@ -1619,7 +1623,7 @@ function insert_editable_data(){
 			$('#ans_title_1').show();
 			$('#a_form').append('<div id="answer_'+ANSWER+'" class="answer" style="display: none"><hr>' +
 				'<h4>Svar '+ANSWER+'<a id="a_btn_del_'+ANSWER+'" class="glyphicon glyphicon-remove del_answer" style="float:right"></a></h4>' +
-				'<div class="input_field a_input_field"><span id="a_input_mathquill_'+ANSWER+'" class="form-control input_mathquill">'+ edit_answer[index_a] +'</span></div>');
+				'<div class="input_field a_input_field"><span id="a_input_mathquill_'+ANSWER+'" class="form-control input_mathquill">'+ edit_answer[index_a - 1] +'</span></div>');
 			$('#a_input_mathquill_' + ANSWER).mathquill('editable');
 			$('#answer_' + ANSWER).show();
 		}
