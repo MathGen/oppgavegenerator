@@ -102,14 +102,6 @@ def generate_task(template_id, desired_type='normal'):
                    'template_specific' : template_specific, 'primary_key' : primary_key, 'number_of_answers' : number_of_answers}
     return return_dict
 
-
-###check_for_decimal###
-#Returns True/False depending on if the float has decimals.
-#Examples: 5.0000 returns True and 5.12312 returns False
-def check_for_decimal(f):
-    #todo this might not be necessary or even a good way of doing it
-    return float(f).is_integer() #Returns True if f doesn't have a decimal
-
 ###calculate_answer###
 #Calculates a string using sympify
 def calculate_answer(s, domain):

@@ -220,3 +220,10 @@ def validate_solution(answer, decimal_allowed, zero_allowed):
     if contains_zero == True and zero_allowed == False:
         valid_solution = False
     return valid_solution
+
+###check_for_decimal###
+#Returns True/False depending on if the float has decimals.
+#Examples: 5.0000 returns True and 5.12312 returns False
+def check_for_decimal(f):
+    #todo this might not be necessary or even a good way of doing it
+    return float(f).is_integer() #Returns True if f doesn't have a decimal
