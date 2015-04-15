@@ -27,7 +27,7 @@
 				<!-- PANELS -->
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-8">
+				<div class="col-lg-12">
 					<div class="list-group">
 						<!--QUESTION PANEL-->
 						<section id="q_panel" class="panel panel-default">
@@ -235,8 +235,9 @@
                                 <tbody>
                                 <tr>
                                     <td class="col-sm-3" style="vertical-align: middle; text-align: right">Utvalg:</td>
-                                    <td class="col-sm-3"><input id="opt_domain_from" type="number" class="form-control input-sm" placeholder="Fra:" disabled></td>
-                                    <td class="col-sm-3"><input id="opt_domain_to" type="number" class="form-control input-sm" placeholder="Til:" disabled></td>
+                                    <td class="col-sm-2"><input id="opt_domain_from" type="number" class="form-control input-sm" placeholder="Fra:" disabled></td>
+                                    <td class="col-sm-2"><input id="opt_domain_to" type="number" class="form-control input-sm" placeholder="Til:" disabled></td>
+                                    <td class="col-sm-2" style="border-left: thin dashed lightgray"><input id="opt_domain_dec" type="number" class="form-control input-sm opt_domain-dec" placeholder="Desimaler:"disabled></td>
                                     <td style="vertical-align: middle"><a id="o_btn_adv_domain" hidden>Avansert<span id="o_adv_caret"><b class="caret"></b></span></a></td>
                                 </tr>
                                 </tbody>
@@ -245,29 +246,24 @@
                                 </tbody>
                                 <tbody style="border-top: 0">
                                 <tr>
-                                    <td style="vertical-align: middle; text-align: right">Antall desimaler i svar:</td>
-                                    <td><input id="opt_decimal" type="number" class="form-control input-sm" placeholder="Antall:"></td>
-                                    <td></td><td></td>
-                                </tr>
-                                <tr>
                                     <td style="vertical-align: middle; text-align: right; height: 41px;">Betingelser:</td>
                                     <td style="vertical-align: middle"><input id="opt_conditions" type="checkbox"></td>
-                                    <td></td><td></td>
+                                    <td></td><td></td><td></td>
                                 </tr>
                                 <tr>
                                     <td style="vertical-align: middle; text-align: right; height: 41px">Tillat 0 som svar:</td>
                                     <td style="vertical-align: middle"><input id="opt_allow" type="checkbox"></td>
-                                    <td></td><td></td>
+                                    <td></td><td></td><td></td>
                                 </tr>
                                 <tr>
                                     <td style="vertical-align: middle; text-align: right; height: 41px">Flervalgsoppgave:</td>
                                     <td style="vertical-align: middle"><input id="opt_multiple_choice" type="checkbox"></td>
-                                    <td></td><td></td>
+                                    <td></td><td></td><td></td>
                                 </tr>
                                 <tr>
                                     <td style="vertical-align: middle; text-align: right; height: 41px">Utfyllingsoppgave:</td>
                                     <td style="vertical-align: middle"><input id="opt_fill_blanks" type="checkbox"></td>
-                                    <td></td><td></td>
+                                    <td></td><td></td><td></td>
                                 </tr>
                                 </tbody>
                             </table>
