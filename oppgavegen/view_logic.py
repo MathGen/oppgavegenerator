@@ -35,18 +35,19 @@ def make_answer_context_dict(form_values):
     template_specific = form_values['template_specific']
     q = Template.objects.get(pk=form_values['primary_key'])
     variable_dictionary = form_values['variable_dictionary'].split('§')
+    random_domain = q.random_domain
 
     if template_type != 'blanks':
         answer = generation.replace_variables_from_array(variable_dictionary, q.answer.replace('\\\\', '\\'))
     else:
         answer = generation.get_values_from_position(template_specific, q.solution.replace('\\\\', '\\'))
         answer = generation.replace_variables_from_array(variable_dictionary, answer)
-    answer = generation.parse_answer(answer)
+    answer = generation.parse_answer(answer, random_domain)
     answer = answer.replace('`', '')
     answer = answer.split('§')
     solution = str((q.question_text).replace('\\\\', '\\')) + "\\n" + str(q.solution.replace('\\\\', '\\'))
     solution = generation.replace_variables_from_array(variable_dictionary, solution)
-    solution = generation.parse_solution(solution)
+    solution = generation.parse_solution(solution, random_domain)
 
     # print(solution)
     user_answer = user_answer.split(
@@ -54,9 +55,9 @@ def make_answer_context_dict(form_values):
     #print(user_answer)
     #We format both the user answer and the answer the same way.
     user_answer = [generation.after_equal_sign(x) for x in user_answer]
-    user_answer = generation.calculate_array(user_answer)
+    user_answer = generation.calculate_array(user_answer, random_domain)
     answer = [generation.after_equal_sign(x) for x in answer]
-    answer = generation.calculate_array(answer)
+    answer = generation.calculate_array(answer, random_domain)
 
     answer_text = generation.checkAnswer(user_answer, answer)
     context_dict = {'title': "Oppgavegen", 'answer': str(answer_text), 'user_answer': user_answer, 'solution': solution}
