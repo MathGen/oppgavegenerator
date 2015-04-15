@@ -320,17 +320,6 @@ def new_random_value(value, domain_dict, bonus, arg):
 
     return new_value
 
-###greater_to_lesser_than###
-# changes x > y into y < x
-def greater_to_lesser_than(string):
-    if string[0] == '(' and string[len(string)-1] == ')':
-        string = string[1:len(string)-1]
-    string = string.split('>')
-    print(string)
-    string = string[1] + '<' + string[0]
-    print(string)
-    return string
-
 ###solve_inequality###
 #solves inequalities with for 1 unknown
 #example: R1 + R2 < R3, solve for R1 where R2 = 10 and R3 = 12
