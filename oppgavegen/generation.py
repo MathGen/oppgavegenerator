@@ -613,6 +613,7 @@ def latex_to_sympy(expression):
     expression = expression.replace('\\right','')
     expression = expression.replace('∨','|')
     expression = expression.replace('∧','&')
+    expression = expression.replace('text( )','')
 
     i = 0
     counter = 0
