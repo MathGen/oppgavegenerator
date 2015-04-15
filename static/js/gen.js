@@ -177,7 +177,13 @@ $(document).ready(function() {
 		e.preventDefault();
 		$(get_input_field(this)).mathquill('write', '=').find('textarea').focus();
 	});
-	
+
+	// Insert not-equal to sign
+	$('.btn_not_equal').click(function(e){
+		e.preventDefault();
+		$(get_input_field(this)).mathquill('write', '\\ne').find('textarea').focus();
+	});
+
 	// Insert parentheses operator
 	var q_btn_par = $('.btn_par');
 	$(q_btn_par).click(function(e){
@@ -992,7 +998,7 @@ function submit_template(){
 
 	// CONDITIONS
 	if ($('#opt_conditions').is(':checked')) {
-		form_submit['conditions'] = double_equalsign(convert_variables($('#con_input_mathquill').mathquill('latex')));
+		form_submit['conditions'] = parse_conditions(convert_variables($('#con_input_mathquill').mathquill('latex')));
 		form_submit['conditions_latex'] = $('#con_input_mathquill').mathquill('latex');
 	}
 	else {
@@ -1093,8 +1099,6 @@ function convert_variables(latex){
 	var la = latex;
 	la = la.replace(/\\cdots/g, '\\cdot ');
 	la = la.replace(/\\cdot/g,'\\cdot ');
-	//la = la.replace(/\\left/g,'');
-	//la = la.replace(/\\right/g,'');
 	la = la.replace(/\\&/g, '&');
 	la = la.replace(/\\ln/g, '\\ln ');
 	la = la.replace(/\\sin/g, '\\sin ');
@@ -1111,7 +1115,13 @@ function convert_variables(latex){
 	for(var j = 0; j < la.length; j++){
 		if(la[j] == '^' || la[j] == '_'){
 			if(la[j+1] != '{'){
-				la = la.substring(0, j+1) + '{' + la[j+1] + '}' + la.substring(j+2, la.length);
+				// Bug with \circ where it was not wrapped with {}.
+				if(la[j+2] == 'c' && la[j+3] == 'i' && la[j+4] == 'r' && la[j+5] == 'c'){
+					la = la.substring(0, j+1) + '{\\circ }' + la.substring(j+6, la.length);
+				}
+				else{
+					la = la.substring(0, j+1) + '{' + la[j+1] + '}' + la.substring(j+2, la.length);
+				}
 			}
 		}
 	}
@@ -1490,6 +1500,31 @@ $('#calc_modal').on('shown.bs.modal', function () {
  * Retrieving data from selected task to be modified. Inserting data to all required fields, and prepares for editing.
  */
 function insert_editable_data(){
+	// Inserting text-substitution
+	var dictionary = $('#dictionary').text();
+	dictionary = dictionary.split('§');
+	if(dictionary.length == 1){
+		if(dictionary[0] == ""){
+			dictionary = [];
+		}
+	}
+	if(dictionary.length != 0){
+		for(var d_make = 2; d_make <= (dictionary.length / 2); d_make++){
+			$('#e_btn_del_' + (d_make - 1)).hide();
+			$('#e_form').append('<div id="e_sub_'+d_make+'" style="display:none"><hr><div class="form-group"><label class="col-md-4 control-label">Bytt ut ord/setning:</label><div class="col-md-7"><input id="e_from_'+d_make+'" type="text" class="form-control" placeholder="Epler"></div><div class="col-md-1"><a id="e_btn_del_'+d_make+'" class="glyphicon glyphicon-remove del_sub" style="float:right"></a></div></div><div class="form-group"><label class="col-md-4 control-label">Med ord/setning:</label><div class="col-md-7"><textarea id="e_to_'+d_make+'" type="text" class="form-control" rows="2" placeholder="Bananer, P&#xE6;rer, Appelsiner, Druer"></textarea></div></div></div>');
+			$('#e_sub_' + d_make).fadeIn();
+		}
+		SUB = dictionary.length / 2;
+		var d_from = 1;
+		var d_to = 0;
+		for(var d = 1; d <= (dictionary.length / 2); d++){
+			$('#e_from_' + d).val(dictionary[d-d_from]);
+			$('#e_to_' + d).val(dictionary[d+d_to]);
+			d_from--;
+			d_to++;
+		}
+	}
+
 	// Inserting calculated references.
 	var calc_str = $('#calculation_references').text();
 	var calc_str = calc_str.split('§');
@@ -1594,7 +1629,7 @@ function insert_editable_data(){
 			$('#ans_title_1').show();
 			$('#a_form').append('<div id="answer_'+ANSWER+'" class="answer" style="display: none"><hr>' +
 				'<h4>Svar '+ANSWER+'<a id="a_btn_del_'+ANSWER+'" class="glyphicon glyphicon-remove del_answer" style="float:right"></a></h4>' +
-				'<div class="input_field a_input_field"><span id="a_input_mathquill_'+ANSWER+'" class="form-control input_mathquill">'+ edit_answer[index_a] +'</span></div>');
+				'<div class="input_field a_input_field"><span id="a_input_mathquill_'+ANSWER+'" class="form-control input_mathquill">'+ edit_answer[index_a - 1] +'</span></div>');
 			$('#a_input_mathquill_' + ANSWER).mathquill('editable');
 			$('#answer_' + ANSWER).show();
 		}
@@ -1679,9 +1714,13 @@ function getCookie(name) {
     return cookieValue;
 }
 
-//Makes = into ==
-function double_equalsign(expression) {
+/**
+ * Converts user-conditions to actual conditions sympy can compute.
+ */
+function parse_conditions(expression) {
 	for(var i = 0; i < expression.length; i++) {
+		expression = expression.replace('/\\ne/', '!=');
+		// Makes = into ==
 		if(expression[i] == '=') {
 			if (expression[i - 1] != '=' && expression[i - 1] != '=') {
 				expression = expression.substring(0, i) + '=' + expression.substring(i, expression.length);

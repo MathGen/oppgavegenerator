@@ -30,14 +30,20 @@ class BootstrapTemplateTable(tables.Table):
                    '</ul>' \
                    '</div>'
 
-    View = tables.TemplateColumn(dropdownhtml, orderable=False)
+    view = tables.TemplateColumn(dropdownhtml, orderable=False)
+    content = tables.TemplateColumn('<div class="input_field" style="width:400px;padding:-5px;margin:-5px;">'
+                                    '<span class="mathquill-embedded-latex input_mathquill" style="font-size:1.2em;width:parent;">'
+                                    '{{record.question_text_latex}}'
+                                    '</span></div>')
 
     class Meta:
         model = Template
         template = ("bstable.html")
         # attrs = {"class": "paleblue"} # add class="paleblue" (table theme) to <table> tag
         # fields to include in table (displayed in this order)
-        fields = ("id", "question_text", "creator", "topic", "type", "rating")
+        fields = ("id", "creator", "topic", "type", "rating")
+        sequence = ("id", "content", "creator", "topic", "type", "rating", "view")
+        order_by = ("-id")
 
 
 class UserTemplates(tables.Table):
@@ -62,12 +68,18 @@ class UserTemplates(tables.Table):
                    '</ul>' \
                    '</div>'
 
-    Action = tables.TemplateColumn(dropdownhtml, orderable=False)
+    action = tables.TemplateColumn(dropdownhtml, orderable=False)
+    content = tables.TemplateColumn('<div class="input_field" style="width:400px;padding:-5px;margin:-5px;">'
+                                    '<span class="mathquill-embedded-latex input_mathquill" style="font-size:1.2em;width:parent;">'
+                                    '{{record.question_text_latex}}'
+                                    '</span></div>')
 
     class Meta:
         model = Template
         template = ("bstable.html")
         # attrs = {"class": "paleblue"} # add class="paleblue" (table theme) to <table> tag
         # fields to include in table (displayed in this order)
-        fields = ("id", "question_text", "topic", "type", "rating")
+        fields = ("id", "topic", "type", "rating")
+        sequence = ("id", "content", "topic", "type", "rating", "action")
+        order_by = ("-id")
 

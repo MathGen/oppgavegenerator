@@ -22,6 +22,7 @@
     <div hidden id="conditions">{{ conditions }}</div>
     <div hidden id="choices">{{ choices }}</div>
     <div hidden id="fill_in">{{ fill_in }}</div>
+    <div hidden id="dictionary">{{ dictionary }}</div>
 
 				<!-- PANELS -->
 		<div class="container">
@@ -417,7 +418,10 @@
                         	<div class="col-md-9">
                                 <span id="n_btn_calc_dyn" class="btn-group"><!--DYNAMIC CALCULATION BTNs--></span>
 								<span id="n_btn_var_dyn" class="btn-group"><!--DYNAMIC VARIABLE BTNs--></span>
-								<button id="n_btn_equal" class="btn btn-default btn_equal btn-xs mathquill-embedded-latex">=</button>
+                                <span class="btn-group">
+									<button id="n_btn_equal" class="btn btn-default btn_equal btn-xs mathquill-embedded-latex">=</button>
+                                    <button id="n_btn_not_equal" class="btn btn-default btn_not_equal btn-xs mathquill-embedded-latex">\ne</button>
+                                </span>
                                 <span class="btn-group">
                                     <button id="n_btn_par_l" class="btn btn-default btn_par_l btn-xs mathquill-embedded-latex">(</button>
                                 	<button id="n_btn_par_r" class="btn btn-default btn_par_r btn-xs mathquill-embedded-latex">)</button>

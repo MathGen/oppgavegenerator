@@ -18,7 +18,7 @@ $(document).ready(function () {
         choices = choices.split('§');
         for (var i = 0; i < choices.length; i++) {
             text = choices[i];
-            w_target.append('<div class="col-md-12"><input type="radio" name="answer_button" id="radio' + i + '" value="' + choices[i] + '"/><span class="mathquill-embedded-latex">' + text + '</span></div>');
+            w_target.append('<div class="col-md-12"><input type="radio" name="answer_button" id="radio' + i + '" value="' + choices[i] + '"/><div class="input-field"><span input_mathquill class="mathquill-embedded-latex">' + text + '</span></div></div>');
         }
     }
     else if (template_type == 'normal') {
