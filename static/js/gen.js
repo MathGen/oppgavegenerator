@@ -133,7 +133,7 @@ $(document).ready(function() {
 		$('#c_btn_var_dyn').append('<button id="c_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
 		$('#a_btn_var_dyn').append('<button id="a_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
 		$('#n_btn_var_dyn').append('<button id="n_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
-		$('#o_adv_domain').append('<tr id="o_adv_'+q_var_id+'" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">'+q_var+':</td><td><input id="o_adv_from_'+q_var_id+'" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_'+q_var_id+'" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td></td></tr>');
+		$('#o_adv_domain').append('<tr id="o_adv_'+q_var_id+'" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">'+q_var+':</td><td><input id="o_adv_from_'+q_var_id+'" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_'+q_var_id+'" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td style="border-left: thin dashed lightgray"><input id="o_adv_dec_'+q_var_id+'" type="number" class="form-control input-sm opt_domain_dec" placeholder="Desimaler:"></td><td></td></tr>');
 		q_var = String.fromCharCode(q_var.charCodeAt(0) + 1);
 		q_var_id++;
 		$(Q_INPUT).find('textarea').focus();
@@ -434,7 +434,7 @@ $(document).ready(function() {
 								$(s_btn_var_dyn).append('<button id="s_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc">'+tmp_var_typed+'</button>');
 								$('#c_btn_var_dyn').append('<button id="c_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc">'+tmp_var_typed+'</button>');
 								$('#n_btn_var_dyn').append('<button id="n_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc">'+tmp_var_typed+'</button>');
-								$('#o_adv_domain').append('<tr id="o_adv_'+var_id+'" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">'+tmp_var_typed+':</td><td><input id="o_adv_from_'+var_id+'" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_'+var_id+'" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td></td></tr>');
+								$('#o_adv_domain').append('<tr id="o_adv_'+var_id+'" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">'+tmp_var_typed+':</td><td><input id="o_adv_from_'+var_id+'" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_'+var_id+'" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td style="border-left: thin dashed lightgray"><input id="o_adv_dec_'+var_id+'" type="number" class="form-control input-sm opt_domain_dec" placeholder="Desimaler:"></td><td></td></tr>');
 								update_variable_count();
 							}
 						}
@@ -755,13 +755,14 @@ $(document).ready(function() {
 	});
 
 	// Domain input-insertion to advanced settings
-	var opt_domain_from = $('#opt_domain_from');
-	var opt_domain_to = $('#opt_domain_to');
-	opt_domain_from.on('input', function(){
-		$('.opt_domain_from').val(opt_domain_from.val());
+	$('#opt_domain_from').on('input', function(){
+		$('.opt_domain_from').val($('#opt_domain_from').val());
 	});
-	opt_domain_to.on('input', function(){
-		$('.opt_domain_to').val(opt_domain_to.val());
+	$('#opt_domain_to').on('input', function(){
+		$('.opt_domain_to').val($('#opt_domain_to').val());
+	});
+	$('#opt_domain_dec').on('input', function(){
+		$('.opt_domain_dec').val($('#opt_domain_dec').val());
 	});
 
 	// Open variable conditions modal
@@ -958,7 +959,7 @@ function submit_template(){
 		var tmp_r_domain = [];
 		for (var i = 22; i >= 0; i--) {
 			if ($('#o_adv_' + i).length) {
-				tmp_r_domain.push($('#o_adv_from_' + i).val() + " " + $('#o_adv_to_' + i).val());
+				tmp_r_domain.push($('#o_adv_from_' + i).val() + " " + $('#o_adv_to_' + i).val() + " " + $('#o_adv_dec_' + i).val());
 			}
 		}
 		form_submit['random_domain'] = tmp_r_domain.join('§');
@@ -966,9 +967,6 @@ function submit_template(){
 	else{
 		form_submit['random_domain'] = "";
 	}
-
-	// NUMBER_OF_DECIMALS
-	form_submit['number_of_decimals'] = $('#opt_decimal').val();
 
 	// ANSWER_CAN_BE_ZERO
 	var tmp_allow_zero = "";
@@ -1228,11 +1226,13 @@ function update_variable_count(){
 	if(VARIABLE_COUNT > 0){
 		$('#opt_domain_from').prop('disabled', false);
 		$('#opt_domain_to').prop('disabled', false);
+		$('#opt_domain_dec').prop('disabled', false);
 		$('#o_btn_adv_domain').prop('hidden', false);
 	}
 	else{
 		$('#opt_domain_from').prop('disabled', true);
 		$('#opt_domain_to').prop('disabled', true);
+		$('#opt_domain_dec').prop('disabled', true);
 		$('#o_btn_adv_domain').prop('hidden', true);
 	}
 }
@@ -1304,12 +1304,14 @@ function submit_validation(){
 					$('#o_adv_domain').fadeIn();
 					$('#o_adv_caret').addClass('dropup');
 				}
+				else if($('#o_adv_dec_' + adv).val() == ''){
+					valid = false;
+					error_message('o_adv_dec_' + adv, 'Fyll ut!');
+					$('#o_adv_domain').fadeIn();
+					$('#o_adv_caret').addClass('dropup');
+				}
 			}
 		}
-	}
-	if($('#opt_decimal').val() == ''){
-		valid = false;
-		error_message('opt_decimal', 'Fyll ut!');
 	}
 	return valid;
 }
@@ -1440,7 +1442,7 @@ function refresh_char_colors(selector){
 						$('#s_btn_var_dyn').append('<button id="s_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc">' + f_var.html() + '</button>');
 						$('#c_btn_var_dyn').append('<button id="c_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc">' + f_var.html() + '</button>');
 						$('#n_btn_var_dyn').append('<button id="n_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc">' + f_var.html() + '</button>');
-						$('#o_adv_domain').append('<tr id="o_adv_' + var_id + '" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">' + f_var.html() + ':</td><td><input id="o_adv_from_' + var_id + '" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_' + var_id + '" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td></td></tr>');
+						$('#o_adv_domain').append('<tr id="o_adv_' + var_id + '" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">' + f_var.html() + ':</td><td><input id="o_adv_from_' + var_id + '" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_' + var_id + '" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td style="border-left: thin dashed lightgray"><input id="o_adv_dec_'+var_id+'" type="number" class="form-control input-sm opt_domain_dec" placeholder="Desimaler:"></td><td></td></tr>');
 					}
 				}
 			}
@@ -1658,13 +1660,12 @@ function insert_editable_data(){
 		if(rd == 0){
 			$('#opt_domain_from').val(edit_r[0]);
 			$('#opt_domain_to').val(edit_r[1]);
+			$('#opt_domain_dec').val(edit_r[2]);
 		}
 		$('#o_adv_from_' + rd_exist[rd]).val(edit_r[0]);
 		$('#o_adv_to_' + rd_exist[rd]).val(edit_r[1]);
+		$('#o_adv_dec_' + rd_exist[rd]).val(edit_r[2]);
 	}
-
-	// Insert number of decimals
-	$('#opt_decimal').val(0);
 
 	// Set checked on required alt.tasks.
 	if($('#conditions').text() != ""){
