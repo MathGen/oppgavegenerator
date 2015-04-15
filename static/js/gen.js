@@ -486,6 +486,13 @@ $(document).ready(function() {
 				$('#' + id_group + '_btn_proceed').click();
 			}
 		}
+		else if(e.keyCode == 32){
+			// To generate a space in math-input fields. (\text{ })
+			if($('span .cursor').parent().is('.text')){}
+			else{
+				$(get_input_field(this)).mathquill('write', '\\text{ }').find('textarea').focus();
+			}
+		}
 	});
 	
 	// Proceed to next panel
