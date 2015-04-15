@@ -131,7 +131,7 @@ def answers(request):
 def templates(request):
     panel_title = "Alle Maler"
     table = BootstrapTemplateTable(Template.objects.all())
-    RequestConfig(request).configure(table)
+    RequestConfig(request, paginate={"per_page": 20}).configure(table)
     return render(request, "templates.html", {"table": table, "panel_title": panel_title})
 
 @login_required
@@ -140,7 +140,7 @@ def template_table_by_user(request):
     user = request.user
     panel_title = "Dine Maler"
     table = UserTemplates(Template.objects.filter(creator=user))
-    RequestConfig(request).configure(table)
+    RequestConfig(request, paginate={"per_page": 20}).configure(table)
     return render(request, "templates.html", {"table": table, "panel_title": panel_title})
 
 @login_required
