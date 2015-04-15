@@ -228,8 +228,7 @@ def generate_valid_numbers(task, random_domain_list, conditions, test):
             except IndexError:
                 #uses the first domain in case one was not provided.
                 random_domain = random_domain_list[0].split()
-            random_number = str(make_number(random_domain)) #Todo change for floats
-            #variables_used += '§' + hardcoded_variables[i] + '§' + random_number #todo remove?
+            random_number = str(make_number(random_domain))
             domain_dict[hardcoded_variables[i]] = random_domain
             variable_dict[hardcoded_variables[i]]= random_number
             counter += 1 #counter to iterate through the random domains
@@ -269,82 +268,15 @@ def remove_unnecessary(string):
 #In the conditions numbers get changed to match the condition. This means all
 #Conditions will have to be tried again if one of the conditions fails and changes numbers around.
 def check_conditions(conditions, variable_dict,domain_dict):
-    redo = True #keeps track of if the conditions have to be tried again
-    conditions_dict = {}
     conditions = remove_unnecessary(conditions)
-
-    #Do it the fast way if | and = is not present in conditions
-    if (not '|' in conditions) and (not '=' in conditions) and False: #Disabled this for now
-        conditions = conditions.split('&')
-        while redo:
-            counter = 0
-            print(conditions)
-            for c in conditions:
-                print(c)
-                if '<' in c:
-                    conditions_dict = lesser_than(c, domain_dict, variable_dict)
-                elif '>' in c:
-                    print(greater_to_lesser_than(c))
-                    conditions_dict = lesser_than(greater_to_lesser_than(c), domain_dict, variable_dict)
-                variable_dict = conditions_dict['variable_dict'] #Updates the variable dictionary
-                something_changed = conditions_dict['something_changed'] #Tells if something has changed
-                if something_changed:
-                    counter += 1
-            if counter == 0:
-                redo = False #if nothing has changed, don't try the conditions again
-    else: #The slow/random way. todo: find a smart/better way to do this
-        #Check conditions --> if false: change a variable -> check conditions
+    #The slow/random way. todo: find a smart/better way to do this
+    #Check conditions --> if false: change a variable -> check conditions
+    inserted_conditions = string_replace(conditions, variable_dict)
+    while not parse_expr(latex_to_sympy(inserted_conditions), transformations=standard_transformations+ (convert_xor, implicit_multiplication_application,),global_dict=None, evaluate=True):
+        variable_to_change = choice(list(variable_dict.keys())) #chose a random key from variable_dict
+        variable_dict[variable_to_change] = new_random_value(variable_to_change, domain_dict, 0, '')
         inserted_conditions = string_replace(conditions, variable_dict)
-        test_counter = 0
-        while not parse_expr(latex_to_sympy(inserted_conditions), transformations=standard_transformations+ (convert_xor, implicit_multiplication_application,),global_dict=None, evaluate=True):
-            variable_to_change = choice(list(variable_dict.keys())) #chose a random key from variable_dict
-            variable_dict[variable_to_change] = new_random_value(variable_to_change, domain_dict, 0, '')
-            inserted_conditions = string_replace(conditions, variable_dict)
-            test_counter += 1
-            if test_counter > 999:
-                break #todo: choose another task when this happens for the main program, or invalidate the task..
     return variable_dict #maybe send a counter with how long it took to get trough conditions
-
-###lesser_than###
-#Checks if a lesser_than condition string is true or false.
-#If false the values in the string will be replaced and a variable notes that something has changed.
-#The function returns a updated dictionary of the variables that are used and also if something has changed
-def lesser_than(string, domain_dict, variable_dict):
-    #todo i might not have to split arr_changed
-    #will loop the full duration if string with no variable is passed. ie. 2 > 4
-    counter = 0 #To stop it from looping forever
-    something_changed = False #One of the returns values. Shows if something had to be changed.
-    arr_changed = string_replace(string, variable_dict).split('<')
-    arr_unchanged = string.split('<')
-    variables_left = get_variables_used(arr_unchanged[0], variable_dict)
-    variables_right = get_variables_used(arr_unchanged[1], variable_dict)
-    while sympify(latex_to_sympy(arr_changed[0] + '<' + arr_changed[1])) == False:
-        something_changed = True
-        change = randint(0,1)
-        if (len(variables_right) < 1) and (len(variables_left) < 1):
-            print('no variables given') #this is a error where no variables were given ie. 2 > 4
-        elif(len(variables_right) < 1):
-            change = 0
-        elif(len(variables_left) < 1):
-            change = 1
-
-        if change == 0 and len(variables_left) > 0: #change the left side of <
-            #todo add exception for the sympify
-            #todo add compatability with float numbers as well (random.uniform(1.2,1.9))
-            variable_to_change = variables_left[randint(0,len(variables_left)-1)]
-            new_value = new_random_value(variable_to_change,domain_dict, ceil(solve_inequality(string,variable_dict, variable_to_change)),'left') #todo ceil is only really good for templates with integers.
-            variable_dict[variable_to_change] = new_value
-        elif change == 1 and len(variables_right) > 0: #change the right side of <
-            variable_to_change = variables_right[randint(0,len(variables_right)-1)]
-            new_value = new_random_value(variable_to_change,domain_dict, ceil(solve_inequality(string,variable_dict, variable_to_change)), 'right') #Can't just move over - elements as this would fuck over / and *
-            variable_dict[variable_to_change] = new_value
-        arr_changed = string_replace(string, variable_dict).split('<') #change the values with the new one
-        counter += 1
-        if counter >= 100:
-            break
-    print("Sucess: " + '<'.join(arr_changed) + "  counter = " + str(counter))
-    return_dict = {'variable_dict' : variable_dict, 'something_changed' : something_changed}
-    return return_dict
 
 ###string_replace###
 #Replaces a string with variables (R0, R1..) with numbers from a dict.
