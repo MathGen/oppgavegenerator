@@ -1490,6 +1490,31 @@ $('#calc_modal').on('shown.bs.modal', function () {
  * Retrieving data from selected task to be modified. Inserting data to all required fields, and prepares for editing.
  */
 function insert_editable_data(){
+	// Inserting text-substitution
+	var dictionary = $('#dictionary').text();
+	dictionary = dictionary.split('§');
+	if(dictionary.length == 1){
+		if(dictionary[0] == ""){
+			dictionary = [];
+		}
+	}
+	if(dictionary.length != 0){
+		for(var d_make = 2; d_make <= (dictionary.length / 2); d_make++){
+			$('#e_btn_del_' + (d_make - 1)).hide();
+			$('#e_form').append('<div id="e_sub_'+d_make+'" style="display:none"><hr><div class="form-group"><label class="col-md-4 control-label">Bytt ut ord/setning:</label><div class="col-md-7"><input id="e_from_'+d_make+'" type="text" class="form-control" placeholder="Epler"></div><div class="col-md-1"><a id="e_btn_del_'+d_make+'" class="glyphicon glyphicon-remove del_sub" style="float:right"></a></div></div><div class="form-group"><label class="col-md-4 control-label">Med ord/setning:</label><div class="col-md-7"><textarea id="e_to_'+d_make+'" type="text" class="form-control" rows="2" placeholder="Bananer, P&#xE6;rer, Appelsiner, Druer"></textarea></div></div></div>');
+			$('#e_sub_' + d_make).fadeIn();
+		}
+		SUB = dictionary.length / 2;
+		var d_from = 1;
+		var d_to = 0;
+		for(var d = 1; d <= (dictionary.length / 2); d++){
+			$('#e_from_' + d).val(dictionary[d-d_from]);
+			$('#e_to_' + d).val(dictionary[d+d_to]);
+			d_from--;
+			d_to++;
+		}
+	}
+
 	// Inserting calculated references.
 	var calc_str = $('#calculation_references').text();
 	var calc_str = calc_str.split('§');
