@@ -664,8 +664,8 @@ def make_number(domain):
     number = uniform(int(domain[0]), int(domain[1]))
     try:
         number = round(number, int(domain[2]))
+        if number.is_integer():
+            number = round(number)
     except IndexError:
-        number = round(number)
-    if number.is_integer():
         number = round(number)
     return number
