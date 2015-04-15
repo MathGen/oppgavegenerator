@@ -488,7 +488,10 @@ $(document).ready(function() {
 		}
 		else if(e.keyCode == 32){
 			// To generate a space in math-input fields. (\text{ })
-			$(get_input_field(this)).mathquill('write', '\\text{ }').find('textarea').focus();
+			if($('span .cursor').parent().is('.text')){}
+			else{
+				$(get_input_field(this)).mathquill('write', '\\text{ }').find('textarea').focus();
+			}
 		}
 	});
 	
