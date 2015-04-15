@@ -688,4 +688,4 @@ def round_answer(domain, answer):
                 answer = round(answer)
         else:
             answer = round(answer)
-    return
+    return answer
