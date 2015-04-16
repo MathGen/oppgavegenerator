@@ -1123,46 +1123,54 @@ function convert_variables(latex){
 		}
 	}
 	// Iteration for converting variables to computable values, and fixing conflicts with latex-commands.
-	for(var i = 0; i < la.length; i++){
-		if(la[i] == '\\'){
-			if(la[i + 1] == 't' && la[i + 2] == 'e' && la[i + 3] == 'x' && la[i + 4] == 't'){
-				while(true){
-					if(la[i] == '}' && counter == 0){
+	for(var i = 0; i < la.length; i++) {
+		if (la[i] == '\\') {
+			if (la[i + 1] == 't' && la[i + 2] == 'e' && la[i + 3] == 'x' && la[i + 4] == 't') {
+				while (true) {
+					if (la[i] == '}' && counter == 0) {
 						break
 					}
-					if(la[i] == '{'){
+					if (la[i] == '{') {
 						counter++;
 					}
-					else if(la[i+1] == '}'){
+					else if (la[i + 1] == '}') {
 						counter--;
 					}
 					la2 += la[i];
 					i++;
 				}
 			}
-			else if(la[i + 1] == 'l' && la[i + 2] == 'e' && la[i + 3] == 'f' && la[i + 4] == 't'){
+			else if (la[i + 1] == 'l' && la[i + 2] == 'e' && la[i + 3] == 'f' && la[i + 4] == 't') {
 				la2 += '\\left';
 				i += 5;
 			}
-			else if(la[i + 1] == 'r' && la[i + 2] == 'i' && la[i + 3] == 'g' && la[i + 4] == 'h' && la[i + 5] == 't'){
+			else if (la[i + 1] == 'r' && la[i + 2] == 'i' && la[i + 3] == 'g' && la[i + 4] == 'h' && la[i + 5] == 't') {
 				la2 += '\\right';
 				i += 6;
 			}
-			else if(la[i + 1] == 'c' && la[i + 2] == 'd' && la[i + 3] == 'o' && la[i + 4] == 't'){
+			else if (la[i + 1] == 'c' && la[i + 2] == 'd' && la[i + 3] == 'o' && la[i + 4] == 't') {
 				la2 += '\\cdot ';
 				i += 5;
 			}
-			else if(la[i+1] == 'n'){
+			else if (la[i + 1] == 'n') {
 				la2 += '\\n';
 				i++;
 			}
-			else{
-				while(la[i] != '{' && la[i] != ' ' && la[i] != '_' && la[i] != '^'){
+			else {
+				// Iterating through the string after backslash '\' for inserting LaTeX-text that is not meant to
+				// be parsed as computable values. Checking for 'undefined' at the end of line if the LaTeX-command
+				// is the last thing in the string to prevent an endless loop.
+				// 		- alternative: add a whitespace at the end of string.
+				while (la[i] != '{' && la[i] != ' ' && la[i] != '_' && la[i] != '^' && la[i] != undefined) {
 					la2 += la[i];
 					i++;
-					if(la[i] == '\\'){
+					if (la[i] == '\\' ) {
+						i--;
 						break
 					}
+				}
+				if(la[i+1] == '\\' || la[i] == undefined){
+					continue
 				}
 			}
 		}
