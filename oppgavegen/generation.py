@@ -24,7 +24,7 @@ def printer():
 ###check_answer###
 #Takes both the user answer and answer and checks if they are equal.
 #Makes the answers into collections as some questions have multiple answers (ie. x^2 + x + 5).
-def checkAnswer(user_answer, answer):
+def check_answer(user_answer, answer):
     temp_s = ""
     temp_us = ""
     for s in answer:
@@ -38,7 +38,7 @@ def checkAnswer(user_answer, answer):
     if user_answer == []:
         string = "\\text{Du har svart riktig!}"
     else:
-        string = "\\text{Du har svart }" + ' og '.join(user_answer) + "\\text{.   det er Feil! Svaret er: }" + ' og '.join(answer)
+        string = "\\text{Du har svart }" + ' og '.join(user_answer) + "\\text{. Det er feil! Svaret er: }" + ' og '.join(answer)
     return string
 
 ###task_with_solution###
@@ -362,7 +362,6 @@ def fill_in_the_blanks(fill_in):
     hole_positions = array_to_string(hole_positions)
     fill_in = make_holes_dict['fill_in']
     return_dict = {'fill_in' : fill_in, 'hole_positions' : hole_positions}
-    print('hole people hole people..')
     print(hole_positions)
     return return_dict
 
