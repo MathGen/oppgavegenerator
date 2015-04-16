@@ -1358,7 +1358,7 @@ function refresh_conditions(){
 function refresh_fill_in_content(){
 	var f_dyn_fill = $('#f_dyn_fill_input');
 	$('.f_fill_content').remove();
-	if(MODIFY && mod_blanks < 2){
+	if(MODIFY && mod_blanks < 2 && $('#fill_in').text() != ""){
 		mod_blanks++;
 		var f_latex = $('#fill_in').text();
 		f_latex = f_latex.split('§');
@@ -1386,6 +1386,9 @@ function refresh_fill_in_content(){
 	$('#f_diff_latex').html("");
 }
 
+/**
+ * Refresh and display the solution over multiple-choices.
+ */
 function refresh_multiple_choice_template(){
 	var latex = get_solution_latex();
 	var wrapper = $('#m_dyn_solution');
