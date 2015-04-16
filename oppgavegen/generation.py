@@ -348,10 +348,7 @@ def solve_inequality(inequality, variable_dict, solve_for):
 #Takes the solution and the modified fill_in solution and makes it into a fill in the blanks task.
 def fill_in_the_blanks(fill_in):
     hole_dict = find_holes(fill_in)
-    max_holes = len(hole_dict)
-    number_of_holes = 1
-    if max_holes > 1:
-        number_of_holes = randint(1,max_holes)
+    number_of_holes = len(hole_dict)
     make_holes_dict = make_holes(hole_dict, fill_in, number_of_holes)
     holes_replaced = make_holes_dict['holes_replaced']
 
