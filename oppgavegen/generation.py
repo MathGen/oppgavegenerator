@@ -441,7 +441,7 @@ def template_validation(template_id):
     success_string = ""
     counter = 0
     q = Template.objects.get(pk=template_id)
-    for x in range(0,1000):
+    for x in range(0,10000):
         counter += test_template(q)
         if counter > 99:
             valid = True
