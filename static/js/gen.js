@@ -1047,15 +1047,15 @@ function submit_template(){
 		form_submit['pk'] = "";
 	}
 
-	//// SUBMIT
-	//post(/submit/, form_submit);
+	// SUBMIT
+	post(/submit/, form_submit);
 
-	// Testing output
-	var test_output = [];
-	for(var s in form_submit){
-		test_output.push(s + '\n' + form_submit[s]);
-	}
-	alert(test_output.join('\n'));
+	//// Testing output
+	//var test_output = [];
+	//for(var s in form_submit){
+	//	test_output.push(s + '\n' + form_submit[s]);
+	//}
+	//alert(test_output.join('\n'));
 }
 
 /**
