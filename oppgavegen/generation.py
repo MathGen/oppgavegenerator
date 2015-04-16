@@ -538,6 +538,8 @@ def latex_to_sympy(expression):
     expression = expression.replace('y', ' y')
     expression = expression.replace('z', ' z')
 
+    expression = expression.replace('  ', ' ') #remove double whitespace
+
     i = 0
     counter = 0
     recorder = false
