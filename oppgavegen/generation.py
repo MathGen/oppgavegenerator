@@ -68,14 +68,15 @@ def generate_task(template_id, desired_type='normal'):
     fill_in = q.fill_in.replace('\\\\', '\\')
     template_specific = "" #A type specific variable that holds the extra values for a given type. ie. choices for multiple.
     variables_used = "" #sends a splitable string since dictionaries can't be passed between layers. (could serialize instead)
+    replacing_words = '' #The words that got replaced, and the words that replaced them
 
     valid_solution = False
     while valid_solution == False: #loop until we get a form of the task that has a valid solution
         variable_dict = generate_valid_numbers(task, random_domain_list, conditions, False)
         variables_used = dict_to_string(variable_dict) #get a string with the variables used
-        new_task = string_replace(task,variable_dict)
-        new_answer = string_replace(answer,variable_dict)
-        new_choices = string_replace(choices,variable_dict)
+        new_task = string_replace(task, variable_dict)
+        new_answer = string_replace(answer, variable_dict)
+        new_choices = string_replace(choices, variable_dict)
 
         if new_answer == 'error': #error handling at its finest.
             continue #maybe add a counter everytime this happens so that it doesn't loop infinitely for bad templates
@@ -100,13 +101,15 @@ def generate_task(template_id, desired_type='normal'):
         template_specific = multifill(new_choices,variable_dict)
 
     if dictionary is not None:
-        new_task = replace_words(new_task, dictionary)
+        replace_words_dict = replace_words(new_task, dictionary)
+        new_task = replace_words_dict['sentence']
+        replacing_words = replace_words_dict['replace_string']
         #todo might have to send a list of what words were replaced as well (a bit like variables used)
-        new_answer = replace_words(new_answer, dictionary)
     number_of_answers = len(new_answer.split('§'))
 
     return_dict = {'question' : new_task, 'variable_dictionary' : variables_used, 'template_type' : template_type,
-                   'template_specific' : template_specific, 'primary_key' : primary_key, 'number_of_answers' : number_of_answers}
+                   'template_specific' : template_specific, 'primary_key' : primary_key,
+                   'number_of_answers' : number_of_answers, 'replacing_words' : replacing_words}
     return return_dict
 
 ###calculate_answer###
@@ -168,15 +171,18 @@ def get_question(topic):
     #something like SELECT * FROM Template WHERE rating BETWEEN user_rating+- 20
     return q
 
-###replace_words####
+###replace_words###
 #Replaces variables in a string with the value of a key in the given dictionary.
 #Example: "example string: R1", example_dict{'R1', '5'} -> "example string: 5
 def replace_words(sentence, dictionary):
     dictionary = dictionary.split('§')
+    replace_string = ''
     for i in range(0,len(dictionary)-1,2):
         replace_strings = dictionary[i+1].split(',')
-        sentence = sentence.replace(dictionary[i], replace_strings[randint(0,len(replace_strings)-1)])
-    return sentence
+        replace_word = replace_strings[randint(0,len(replace_strings)-1)]
+        sentence = sentence.replace(dictionary[i], replace_word)
+        replace_string += '§' + dictionary[i] + '§' + replace_word
+    return {'sentence' : sentence, 'replace_string' : replace_string[1:]}
 
 ###calculate_array###
 #calculates all the answers in a array
@@ -219,6 +225,7 @@ def parse_answer(answer, domain):
 ###generate_valid_numbers###
 #generates valid numbers using each variables random domain.
 #also makes sure all variables followes the given conditions.
+
 def generate_valid_numbers(task, random_domain_list, conditions, test):
     hardcoded_variables = ['R22R', 'R21R','R20R','R19R','R18R','R17R','R16R','R15R','R14R','R13R','R12R','R11R','R10R','R9R','R8R','R7R','R6R','R3R','R2R','R1R','R0R']
     variables_used = ""
