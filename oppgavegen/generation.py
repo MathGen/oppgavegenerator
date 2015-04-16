@@ -511,6 +511,7 @@ def test_template(template):
 #Turns a string of latex into a string sympy can use.
 def latex_to_sympy(expression):
     expression = expression
+    expression = expression.replace('\\ne','!=')
     expression = expression.replace('{', '(')
     expression = expression.replace('}', ')')
     expression = expression.replace('\\cdot','*')
