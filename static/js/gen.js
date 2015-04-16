@@ -1165,11 +1165,11 @@ function convert_variables(latex){
 					la2 += la[i];
 					i++;
 					if (la[i] == '\\' ) {
-						i--;
 						break
 					}
 				}
-				if(la[i+1] == '\\' || la[i] == undefined){
+				if(la[i] == '\\' || la[i] == undefined){
+					i--;
 					continue
 				}
 			}

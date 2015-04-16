@@ -3,6 +3,7 @@ from random import randint
 from random import uniform
 from random import shuffle
 from random import choice
+import re
 import collections
 from math import ceil
 from oppgavegen.nsp import NumericStringParser
@@ -528,15 +529,15 @@ def latex_to_sympy(expression):
     expression = expression.replace('int','integrate')
     expression = expression.replace('min (','Min(')
     expression = expression.replace('min  (','Min(')
-    #having no space before x,y,z in some cases has an impact, having to many spaces has none
-    #so we just add a space before every x,y,z
-    #This could possibly bug out if a expression contains x,y or z, but I can't think of any such expression.
-    #Example text has x so it would now be te xt. (text is only used for space in sympy expressions)
-    expression = expression.replace('x', ' x')
-    expression = expression.replace('ma x (','Max(') #workaround for the space that gets added before x.
-    expression = expression.replace('ma x  (','Max(')
-    expression = expression.replace('y', ' y')
-    expression = expression.replace('z', ' z')
+    expression = expression.replace('max (','Max(')
+    expression = expression.replace('max  (','Max(')
+
+    expression = expression.replace('cosx', 'cos x')
+    expression = expression.replace('sinx', 'sin x')
+    expression = expression.replace('tanx', 'tan x')
+    expression = expression.replace('siny', 'sin y')
+    expression = expression.replace('sinz', 'sin z')
+
 
     expression = expression.replace('  ', ' ') #remove double whitespace
 
