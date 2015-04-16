@@ -30,7 +30,7 @@ def check_answer(user_answer, answer):
     temp_us = ""
     for s in answer:
         for us in user_answer:
-            if parse_expr(latex_to_sympy(s) + '==' + latex_to_sympy(us), transformations=(convert_xor, implicit_multiplication_application,)+standard_transformations,global_dict=None, evaluate=True):
+            if parse_expr(latex_to_sympy(s) + '==' + latex_to_sympy(us), transformations=standard_transformations+(convert_xor, implicit_multiplication_application,),global_dict=None, evaluate=True):
                 user_answer.remove(us)
                 break
 
@@ -529,14 +529,19 @@ def latex_to_sympy(expression):
     expression = expression.replace('int','integrate')
     expression = expression.replace('min (','Min(')
     expression = expression.replace('min  (','Min(')
-    expression = expression.replace('max (','Max(')
-    expression = expression.replace('max  (','Max(')
 
-    expression = expression.replace('cosx', 'cos x')
-    expression = expression.replace('sinx', 'sin x')
-    expression = expression.replace('tanx', 'tan x')
-    expression = expression.replace('siny', 'sin y')
-    expression = expression.replace('sinz', 'sin z')
+
+    # expression = expression.replace('cosx', 'cos x')
+    # expression = expression.replace('sinx', 'sin x')
+    # expression = expression.replace('tanx', 'tan x')
+    # expression = expression.replace('siny', 'sin y')
+    # expression = expression.replace('sinz', 'sin z')
+    expression = expression.replace('x', ' x')
+    expression = expression.replace('y', ' y')
+    expression = expression.replace('z', ' z')
+    expression = expression.replace('ma x (','Max(')
+    expression = expression.replace('ma x  (','Max(')
+
 
 
     expression = expression.replace('  ', ' ') #remove double whitespace
