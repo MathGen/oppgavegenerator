@@ -35,6 +35,7 @@ def make_answer_context_dict(form_values):
     template_specific = form_values['template_specific']
     q = Template.objects.get(pk=form_values['primary_key'])
     variable_dictionary = form_values['variable_dictionary'].split('§')
+    replacing_words = form_values['replacing_words']
     random_domain = q.random_domain
 
     if template_type != 'blanks':
@@ -48,7 +49,8 @@ def make_answer_context_dict(form_values):
     solution = str((q.question_text).replace('\\\\', '\\')) + "\\n" + str(q.solution.replace('\\\\', '\\'))
     solution = generation.replace_variables_from_array(variable_dictionary, solution)
     solution = generation.parse_solution(solution, random_domain)
-
+    if len(replacing_words) > 0:
+        solution = generation.replace_words(solution, replacing_words)['sentence']
     # print(solution)
     user_answer = user_answer.split('§')  #if a string doesn't contain the split character it returns as a list with 1 element
     #print(user_answer)

@@ -7,6 +7,7 @@ $(document).ready(function () {
     template_type = $('#template_type').html();
     var template_specific = $('#template_specific').html();
     number_of_answers = $('#number_of_answers').html();
+    var replacing_words = $('#replacing_words').html();
     var primary_key = $('#primary_key').html();
     var variable_dictionary = $('#variable_dictionary').html();
     var w_target = $('#w_target');
@@ -102,7 +103,8 @@ $(document).ready(function () {
             "primary_key" : primary_key,
             "variable_dictionary" : variable_dictionary,
             "template_type" : template_type,
-            "template_specific" : template_specific
+            "template_specific" : template_specific,
+            "replacing_words" : replacing_words
         };
         if(answer_validation()) {
             post(/answers/, submit_dict);
