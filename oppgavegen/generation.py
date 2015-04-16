@@ -503,7 +503,15 @@ def latex_to_sympy(expression):
     expression = expression.replace('∨','|')
     expression = expression.replace('∧','&')
     expression = expression.replace('text( )','')
-
+    expression = expression.replace('arcsin','asin')
+    expression = expression.replace('arccos','acos')
+    expression = expression.replace('arctan','atan')
+    expression = expression.replace('arcsec','asec')
+    expression = expression.replace('arccosec','acsc')
+    expression = expression.replace('arccosec','acsc')
+    expression = expression.replace('arccot','acot')
+    expression = expression.replace('cosec','csc')
+    expression = expression.replace('int','integrate')
     i = 0
     counter = 0
     recorder = false
