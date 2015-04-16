@@ -17,7 +17,7 @@ $(document).ready(function () {
         var choices = template_specific;
         choices = choices.split('§');
         for (var i = 0; i < choices.length; i++) {
-            w_target.append('<div class="col-lg-12 input_field"><input type="radio" id="radio'+i+'" value="'+choices[i]+'">' +
+            w_target.append('<div class="col-lg-12 input_field"><input name="answer_button" type="radio" id="radio'+i+'" value="'+choices[i]+'">' +
                             '<span id="mathquill_output_'+i+'" style="margin-left: 6px"></span></div>');
             $('#mathquill_output_' + i).mathquill().mathquill('latex', choices[i]);
         }
