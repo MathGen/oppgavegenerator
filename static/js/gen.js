@@ -1114,8 +1114,11 @@ function convert_variables(latex){
 	// Iteration for adding required {} to single exponents and subscripts.
 	for(var j = 0; j < la.length; j++){
 		if(la[j] == '^' || la[j] == '_'){
-			if(la[j+1] != '{'){
+			if(la[j+1] != '{' && la[j+1] != '@'){
 				la = la.substring(0, j+1) + '{' + la[j+1] + '}' + la.substring(j+2, la.length);
+			} //Workaround for fill in. this fixes x^2 -> x^{@}xxxx@ to x^{@xxxx@}.
+			else if(la[j+1] != '{' && la[j+1] == '@') {
+				la = la.substring(0, j+1) + '{' + la.substring(j+1, j+7) + '}' + la.substring(j+8, la.length);
 			}
 		}
 	}
