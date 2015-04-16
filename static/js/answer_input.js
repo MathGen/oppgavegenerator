@@ -76,8 +76,7 @@ $(document).ready(function () {
                 if(f > 0) {
                     user_answer += '§';
                 }
-                var f_input = $(this).mathquill('latex');
-                user_answer += f_input;
+                user_answer += $(this).mathquill('latex');
             });
         }
         else if(template_type == 'multifill'){
@@ -161,7 +160,6 @@ function post(path, params, method) {
             hiddenField.setAttribute("type", "hidden");
             hiddenField.setAttribute("name", key);
             hiddenField.setAttribute("value", params[key]);
-
             form.appendChild(hiddenField);
          }
     }
