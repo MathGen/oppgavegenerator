@@ -58,7 +58,7 @@ def make_answer_context_dict(form_values):
     answer = [generation.after_equal_sign(x) for x in answer]
     answer = generation.calculate_array(answer, random_domain)
 
-    answer_text = generation.checkAnswer(user_answer, answer)
+    answer_text = generation.check_answer(user_answer, answer)
     context_dict = {'title': "Oppgavegen", 'answer': str(answer_text), 'user_answer': user_answer, 'solution': solution}
     return context_dict
 
