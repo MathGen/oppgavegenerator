@@ -561,6 +561,7 @@ def make_number(domain):
     return number
 
 def round_answer(domain, answer):
+    answer = float(answer) #cast it to float, if it is a integer, it will get rounded back to a integer.
     domain = domain.split('§')
     rounding_number = 0
     for s in domain:
