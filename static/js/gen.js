@@ -1644,7 +1644,9 @@ function insert_editable_data(){
 			$('#s_form').append('<div id="step_' + STEP + '" class="step" style="display: none"><hr>' +
 				'<h4>Steg ' + STEP + '<a id="s_btn_del_'+STEP+'" class="glyphicon glyphicon-remove del_step" style="float:right"></a></h4>' +
 				'<input id="s_text_' + STEP + '" type="text" class="form-control" placeholder="Forklaring...">' +
-				'<div class="input_field s_input_field"><span id="s_input_mathquill_'+STEP+'" class="form-control input_mathquill">'+ edit_solution[i_la] +'</span></div>');
+				'<div class="input_field s_input_field"><span id="s_input_mathquill_'+STEP+'" class="form-control input_mathquill">'+ edit_solution[i_la] +'</span>' +
+				'<button id="s_btn_clear_'+STEP+'" class="btn btn-default btn_clear" style="margin-left: 3px; border: none">' +
+				'<span class="glyphicon glyphicon-trash" style="horizontal-align:middle; resize: vertical"></span></button></div>');
 			$('#s_input_mathquill_' + STEP).mathquill('editable');
 			$('#step_' + STEP).show();
 			i_la += 2;
