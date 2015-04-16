@@ -573,15 +573,16 @@ def round_answer(domain, answer):
     domain = domain.split('§')
     rounding_number = 0
     for s in domain:
+        s = s.split()
         try:
             if rounding_number < int(s[2]):
                 rounding_number = int(s[2])
         except IndexError:
             pass
-        if rounding_number > 0:
-            answer = round(answer, rounding_number)
-            if answer.is_integer():
-                answer = round(answer)
-        else:
+    if rounding_number > 0:
+        answer = round(answer, rounding_number)
+        if answer.is_integer():
             answer = round(answer)
+    else:
+        answer = round(answer)
     return answer
