@@ -38,7 +38,7 @@ def checkAnswer(user_answer, answer):
     if user_answer == []:
         string = "\\text{Du har svart riktig!}"
     else:
-        string = "\\text{Du har svart feil. Svaret er: }" + ' og '.join(answer)
+        string = "\\text{Du har svart }" + ' og '.join(user_answer) + "text{. det er Feil! Svaret er: }" + ' og '.join(answer)
     return string
 
 ###task_with_solution###
