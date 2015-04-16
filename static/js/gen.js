@@ -1043,15 +1043,15 @@ function submit_template(){
 		form_submit['pk'] = "";
 	}
 
-	// SUBMIT
-	post(/submit/, form_submit);
+	//// SUBMIT
+	//post(/submit/, form_submit);
 
-	//// Testing output
-	//var test_output = [];
-	//for(var s in form_submit){
-	//	test_output.push(s + '\n' + form_submit[s]);
-	//}
-	//alert(test_output.join('\n'));
+	// Testing output
+	var test_output = [];
+	for(var s in form_submit){
+		test_output.push(s + '\n' + form_submit[s]);
+	}
+	alert(test_output.join('\n'));
 }
 
 /**
@@ -1098,6 +1098,7 @@ function convert_variables(latex){
 	la = la.replace(/\\ln/g, '\\ln ');
 	la = la.replace(/\\sin/g, '\\sin ');
 	la = la.replace(/\\cos/g, '\\cos ');
+	la = la.replace(/\\circ/g, '{\\circ }');
 	var counter = 0;
 	var dict_letters = {'a' : 'R0R', 'b' : 'R1R', 'c' : 'R2R', 'g' : 'R6R', 'h' : 'R7R', 'j' : 'R9R', 'k' : 'R10R',
 						'l' : 'R11R', 'm' : 'R12R', 'n' : 'R13R', 'o' : 'R14R', 'p' : 'R15R', 'q' : 'R16R', 'r' : 'R17R', 's' : 'R18R', 't' : 'R19R',
@@ -1110,13 +1111,7 @@ function convert_variables(latex){
 	for(var j = 0; j < la.length; j++){
 		if(la[j] == '^' || la[j] == '_'){
 			if(la[j+1] != '{'){
-				// Bug with \circ where it was not wrapped with {}.
-				if(la[j+2] == 'c' && la[j+3] == 'i' && la[j+4] == 'r' && la[j+5] == 'c'){
-					la = la.substring(0, j+1) + '{\\circ }' + la.substring(j+6, la.length);
-				}
-				else{
-					la = la.substring(0, j+1) + '{' + la[j+1] + '}' + la.substring(j+2, la.length);
-				}
+				la = la.substring(0, j+1) + '{' + la[j+1] + '}' + la.substring(j+2, la.length);
 			}
 		}
 	}
