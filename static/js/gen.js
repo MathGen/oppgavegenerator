@@ -1118,7 +1118,7 @@ function convert_variables(latex){
 				la = la.substring(0, j+1) + '{' + la[j+1] + '}' + la.substring(j+2, la.length);
 			} //Workaround for fill in. this fixes x^2 -> x^{@}xxxx@ to x^{@xxxx@}.
 			else if(la[j+1] != '{' && la[j+1] == '@' && la[j+2] == 'x') {
-				la = la.substring(0, j+1) + '{' + la.substring(j+1, j+7) + '}' + la.substring(j+8, la.length);
+				la = la.substring(0, j+1) + '{' + la.substring(j+1, j+14) + '}' + la.substring(j+15, la.length);
 			}
 		}
 	}
