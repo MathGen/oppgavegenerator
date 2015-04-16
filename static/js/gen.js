@@ -1717,10 +1717,10 @@ function getCookie(name) {
  */
 function parse_conditions(expression) {
 	for(var i = 0; i < expression.length; i++) {
-		expression = expression.replace('/\\ne/', '!=');
+		expression = expression.replace('/\\ne/g', '!=');
 		// Makes = into ==
 		if(expression[i] == '=') {
-			if (expression[i - 1] != '=' && expression[i - 1] != '=') {
+			if (expression[i - 1] != '=' && expression[i - 1] != '=' && expression[i - 1] != '!') {
 				expression = expression.substring(0, i) + '=' + expression.substring(i, expression.length);
 			}
 		}
