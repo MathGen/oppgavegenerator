@@ -785,6 +785,10 @@ $(document).ready(function() {
 			refresh_multiple_choice();
 			$('#multiple_choice_modal').modal('show');
 			$('#multiple_choice_modal').on('shown.bs.modal', function () {
+				refresh_multiple_choice_template();
+				for(var n = 1; n <= STEP; n ++){
+					refresh_char_colors('#m_sol_template_' + n);
+				}
 				for(var m = 1; m <= MULTI_CHOICE; m++){
 					$('#m_input_mathquill_' + m).mathquill('redraw');
 					refresh_char_colors('#m_input_mathquill_' + m);
@@ -1302,6 +1306,18 @@ function submit_validation(){
 }
 
 /**
+ * Returns an array of the latex in every math-input in solution.
+ * @returns {Array}
+ */
+function get_solution_latex(){
+	var latex = [];
+	for(var s = 1; s <= STEP; s++){
+		latex.push($('#s_input_mathquill_' + s).mathquill('latex'));
+	}
+	return latex;
+}
+
+/**
  * Retrieve multiple choices
  * @returns {string} returns all multiple choices as a string.
  */
@@ -1368,6 +1384,20 @@ function refresh_fill_in_content(){
 	$('.f_fill_content').unbind('keydown');
 	refresh_char_colors('.f_fill_content');
 	$('#f_diff_latex').html("");
+}
+
+function refresh_multiple_choice_template(){
+	var latex = get_solution_latex();
+	var wrapper = $('#m_dyn_solution');
+	wrapper.children().remove();
+	for(var i = 1; i <= STEP; i++){
+		if(i > 1){
+			$('#m_dyn_solution').append('<hr>');
+		}
+		wrapper.append('<div class="input_field"><span id="m_sol_template_'+i+'" class="mathquill-embedded-latex input_mathquill"></span></div>');
+		$('#m_sol_template_' + i).mathquill().mathquill('latex', latex[i-1]);
+	}
+	wrapper.append('<br>');
 }
 
 /**
