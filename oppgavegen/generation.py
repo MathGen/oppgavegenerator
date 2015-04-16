@@ -25,7 +25,17 @@ def printer():
 #Takes both the user answer and answer and checks if they are equal.
 #Makes the answers into collections as some questions have multiple answers (ie. x^2 + x + 5).
 def checkAnswer(user_answer, answer):
-    if collections.Counter(user_answer) == collections.Counter(answer):
+    temp_s = ""
+    temp_us = ""
+    for s in answer:
+        for us in user_answer:
+            if parse_expr(latex_to_sympy(s) + '==' + latex_to_sympy(us), transformations=(convert_xor, implicit_multiplication_application,)+standard_transformations,global_dict=None, evaluate=True):
+                user_answer.remove(us)
+                break
+
+
+    #if collections.Counter(user_answer) == collections.Counter(answer):
+    if user_answer == []:
         string = "\\text{Du har svart riktig!}"
     else:
         string = "\\text{Du har svart feil. Svaret er: }" + ' og '.join(answer)
@@ -105,7 +115,7 @@ def calculate_answer(s, domain):
     if not is_number(s): #small optimization
         s = remove_unnecessary(s)
         s = str(latex_to_sympy(s))
-        s = parse_expr(s, transformations=standard_transformations+ (convert_xor, implicit_multiplication_application,),global_dict=None, evaluate=False)
+        s = parse_expr(s, transformations=(convert_xor, implicit_multiplication_application,) + standard_transformations,global_dict=None, evaluate=False)
         s = latex(sympify(str(s))) #sometimes this returns the value 'zoo' | also could maybe use simplify instead of sympify
     if is_number(s):
             s = round_answer(domain, float(s))
@@ -502,7 +512,7 @@ def latex_to_sympy(expression):
     expression = expression.replace('\\right','')
     expression = expression.replace('∨','|')
     expression = expression.replace('∧','&')
-    expression = expression.replace('text( )','')
+    expression = expression.replace('text( )',' ')
     expression = expression.replace('arcsin','asin')
     expression = expression.replace('arccos','acos')
     expression = expression.replace('arctan','atan')
@@ -512,6 +522,14 @@ def latex_to_sympy(expression):
     expression = expression.replace('arccot','acot')
     expression = expression.replace('cosec','csc')
     expression = expression.replace('int','integrate')
+    #having no space before x,y,z in some cases has an impact, having to many spaces has none
+    #so we just add a space before every x,y,z
+    #This could possibly bug out if a expression contains x,y or z, but I can't think of any such expression.
+    #Example text has x so it would now be te xt. (text is only used for space in sympy expressions)
+    expression = expression.replace('x', ' x')
+    expression = expression.replace('y', ' y')
+    expression = expression.replace('z', ' z')
+
     i = 0
     counter = 0
     recorder = false

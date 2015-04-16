@@ -92,10 +92,8 @@ $(document).ready(function () {
                 if (j > 0) {
                     user_answer += '§';
                 }
-                var w_input = ($('#w_input_mathquill_' + j).mathquill('latex'));
-                user_answer += w_input;
+                user_answer += ($('#w_input_mathquill_' + j).mathquill('latex'));
             }
-
         }
 
         //make a dict with the user answer and the answer:
