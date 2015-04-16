@@ -1757,8 +1757,8 @@ function getCookie(name) {
  * Converts user-conditions to actual conditions sympy can compute.
  */
 function parse_conditions(expression) {
+	expression = expression.replace('/\\ne/g', '!=');
 	for(var i = 0; i < expression.length; i++) {
-		expression = expression.replace('/\\ne/g', '!=');
 		// Makes = into ==
 		if(expression[i] == '=') {
 			if (expression[i - 1] != '=' && expression[i - 1] != '=' && expression[i - 1] != '!') {
