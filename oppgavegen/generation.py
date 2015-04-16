@@ -104,7 +104,6 @@ def generate_task(template_id, desired_type='normal'):
         replace_words_dict = replace_words(new_task, dictionary)
         new_task = replace_words_dict['sentence']
         replacing_words = replace_words_dict['replace_string']
-        #todo might have to send a list of what words were replaced as well (a bit like variables used)
     number_of_answers = len(new_answer.split('§'))
 
     return_dict = {'question' : new_task, 'variable_dictionary' : variables_used, 'template_type' : template_type,
@@ -525,11 +524,15 @@ def latex_to_sympy(expression):
     expression = expression.replace('arccot','acot')
     expression = expression.replace('cosec','csc')
     expression = expression.replace('int','integrate')
+    expression = expression.replace('min (','Min(')
+    expression = expression.replace('min  (','Min(')
     #having no space before x,y,z in some cases has an impact, having to many spaces has none
     #so we just add a space before every x,y,z
     #This could possibly bug out if a expression contains x,y or z, but I can't think of any such expression.
     #Example text has x so it would now be te xt. (text is only used for space in sympy expressions)
     expression = expression.replace('x', ' x')
+    expression = expression.replace('ma x (','Max(') #workaround for the space that gets added before x.
+    expression = expression.replace('ma x  (','Max(')
     expression = expression.replace('y', ' y')
     expression = expression.replace('z', ' z')
 
