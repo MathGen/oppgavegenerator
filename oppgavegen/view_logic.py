@@ -50,11 +50,10 @@ def make_answer_context_dict(form_values):
     solution = generation.parse_solution(solution, random_domain)
 
     # print(solution)
-    user_answer = user_answer.split(
-        '§')  #if a string doesn't contain the split character it returns as a list with 1 element
+    user_answer = user_answer.split('§')  #if a string doesn't contain the split character it returns as a list with 1 element
     #print(user_answer)
     #We format both the user answer and the answer the same way.
-    user_answer = [generation.after_equal_sign(x) for x in user_answer]
+    user_answer = [generation.after_equal_sign(x) for x in user_answer] #only get the values after the last equal sign.
     user_answer = generation.calculate_array(user_answer, random_domain)
     answer = [generation.after_equal_sign(x) for x in answer]
     answer = generation.calculate_array(answer, random_domain)
