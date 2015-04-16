@@ -482,6 +482,7 @@ def test_template(template):
     question = template.question_text
     solution = template.solution
     conditions = template.conditions
+    conditions = remove_unnecessary(conditions)
 
     variable_dict = generate_valid_numbers(question, random_domain_list, "", False) #pass no conditions to to just get back the first numbers made.
     domain_dict = generate_valid_numbers(question, random_domain_list, "", True) #pass test = True to get domain_dict instead of variable_dict
