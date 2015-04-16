@@ -3,6 +3,7 @@ from random import randint
 from random import uniform
 from random import shuffle
 from random import choice
+import re
 import collections
 from math import ceil
 from oppgavegen.nsp import NumericStringParser
@@ -29,7 +30,7 @@ def check_answer(user_answer, answer):
     temp_us = ""
     for s in answer:
         for us in user_answer:
-            if parse_expr(latex_to_sympy(s) + '==' + latex_to_sympy(us), transformations=(convert_xor, implicit_multiplication_application,)+standard_transformations,global_dict=None, evaluate=True):
+            if parse_expr(latex_to_sympy(s) + '==' + latex_to_sympy(us), transformations=standard_transformations+(convert_xor, implicit_multiplication_application,),global_dict=None, evaluate=True):
                 user_answer.remove(us)
                 break
 
@@ -106,6 +107,8 @@ def generate_task(template_id, desired_type='normal'):
         replacing_words = replace_words_dict['replace_string']
     number_of_answers = len(new_answer.split('§'))
 
+    new_task = new_task.replace('+-', '-')
+    new_task = new_task.replace('--', '+')
     return_dict = {'question' : new_task, 'variable_dictionary' : variables_used, 'template_type' : template_type,
                    'template_specific' : template_specific, 'primary_key' : primary_key,
                    'number_of_answers' : number_of_answers, 'replacing_words' : replacing_words}
@@ -479,6 +482,7 @@ def test_template(template):
     question = template.question_text
     solution = template.solution
     conditions = template.conditions
+    conditions = remove_unnecessary(conditions)
 
     variable_dict = generate_valid_numbers(question, random_domain_list, "", False) #pass no conditions to to just get back the first numbers made.
     domain_dict = generate_valid_numbers(question, random_domain_list, "", True) #pass test = True to get domain_dict instead of variable_dict
@@ -507,6 +511,7 @@ def test_template(template):
 #Turns a string of latex into a string sympy can use.
 def latex_to_sympy(expression):
     expression = expression
+    expression = expression.replace('\\ne','!=')
     expression = expression.replace('{', '(')
     expression = expression.replace('}', ')')
     expression = expression.replace('\\cdot','*')
@@ -526,15 +531,22 @@ def latex_to_sympy(expression):
     expression = expression.replace('int','integrate')
     expression = expression.replace('min (','Min(')
     expression = expression.replace('min  (','Min(')
-    #having no space before x,y,z in some cases has an impact, having to many spaces has none
-    #so we just add a space before every x,y,z
-    #This could possibly bug out if a expression contains x,y or z, but I can't think of any such expression.
-    #Example text has x so it would now be te xt. (text is only used for space in sympy expressions)
+
+
+    # expression = expression.replace('cosx', 'cos x')
+    # expression = expression.replace('sinx', 'sin x')
+    # expression = expression.replace('tanx', 'tan x')
+    # expression = expression.replace('siny', 'sin y')
+    # expression = expression.replace('sinz', 'sin z')
     expression = expression.replace('x', ' x')
-    expression = expression.replace('ma x (','Max(') #workaround for the space that gets added before x.
-    expression = expression.replace('ma x  (','Max(')
     expression = expression.replace('y', ' y')
     expression = expression.replace('z', ' z')
+    expression = expression.replace('ma x (','Max(')
+    expression = expression.replace('ma x  (','Max(')
+
+
+
+    expression = expression.replace('  ', ' ') #remove double whitespace
 
     i = 0
     counter = 0
