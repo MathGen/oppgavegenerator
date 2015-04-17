@@ -28,13 +28,15 @@ def printer():
 def check_answer(user_answer, answer):
     temp_s = ""
     temp_us = ""
+    print(user_answer)
+    print(answer)
     for s in answer:
         for us in user_answer:
             if parse_expr(latex_to_sympy(s) + '==' + latex_to_sympy(us), transformations=standard_transformations+(convert_xor, implicit_multiplication_application,),global_dict=None, evaluate=True):
                 user_answer.remove(us)
                 break
 
-
+    print(user_answer)
     #if collections.Counter(user_answer) == collections.Counter(answer):
     if user_answer == []:
         string = "\\text{Du har svart riktig!}"
@@ -356,6 +358,8 @@ def solve_inequality(inequality, variable_dict, solve_for):
 ###fill_in_the_blanks###
 #Takes the solution and the modified fill_in solution and makes it into a fill in the blanks task.
 def fill_in_the_blanks(fill_in):
+    print('test')
+    print(fill_in)
     hole_dict = find_holes(fill_in)
     number_of_holes = len(hole_dict)
     make_holes_dict = make_holes(hole_dict, fill_in, number_of_holes)
@@ -369,6 +373,7 @@ def fill_in_the_blanks(fill_in):
     fill_in = make_holes_dict['fill_in']
     return_dict = {'fill_in' : fill_in, 'hole_positions' : hole_positions}
     print(hole_positions)
+    print(return_dict)
     return return_dict
 
 ###find_holes###

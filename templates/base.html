@@ -76,7 +76,7 @@
 		</div>
 
         <!-- MESSAGE-BOARD -->
-        {% if user.username == 'siebe'  %}
+        {% if user|is_teacher %}
         <div class="container">
 			<div class="row">
 				<div class="col-lg-12">
