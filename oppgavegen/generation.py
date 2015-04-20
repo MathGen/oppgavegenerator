@@ -542,6 +542,8 @@ def latex_to_sympy(expression):
     expression = expression.replace('ma x (','Max(')
     expression = expression.replace('ma x(','Max(')
     expression = expression.replace('min (','Min(')
+    expression = expression.replace('min(','Min(')
+
 
 
     i = 0
