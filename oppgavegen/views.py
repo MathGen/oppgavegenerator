@@ -132,7 +132,7 @@ def answers(request):
 @user_passes_test(is_teacher, '/')
 def templates(request):
     panel_title = "Alle Maler"
-    table = BootstrapTemplateTable(Template.objects.all())
+    table = BootstrapTemplateTable(Template.objects.filter(valid_flag=True))
     RequestConfig(request, paginate={"per_page": 20}).configure(table)
     return render(request, "templates.html", {"table": table, "panel_title": panel_title})
 
