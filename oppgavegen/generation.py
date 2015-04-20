@@ -576,7 +576,6 @@ def latex_to_sympy(expression):
                 recorder = false
         i+=1
     expression = expression.replace('\\','')
-    expression = expression.replace('cdot','*')
     expression = expression.replace('frac','')
     expression = expression.replace('binom', 'binomial')
     return expression
