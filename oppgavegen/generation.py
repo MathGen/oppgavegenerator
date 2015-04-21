@@ -26,10 +26,6 @@ def printer():
 #Takes both the user answer and answer and checks if they are equal.
 #Makes the answers into collections as some questions have multiple answers (ie. x^2 + x + 5).
 def check_answer(user_answer, answer):
-    temp_s = ""
-    temp_us = ""
-    print(user_answer)
-    print(answer)
     for s in answer:
         for us in user_answer:
             if parse_expr(latex_to_sympy(s) + '==' + latex_to_sympy(us), transformations=standard_transformations+(convert_xor, implicit_multiplication_application,),global_dict=None, evaluate=True):
@@ -166,8 +162,6 @@ def get_question(topic):
     else:
         q = Template.objects.get(pk=topic)
     #q = Template.objects.get(pk=7)
-
-
     #q = Template.objects.filter(topic__iexact=topic) #Gets all Templates in that topic
     #q = q.filter(rating ---------)
 
@@ -384,7 +378,8 @@ def find_holes(fill_in):
     counter = 0 #keeps track of how far in the string the loop is
     start_point = end_point = 0 #start and end point of box
     a = b = c = d = e = '' #Used to keep track of the last 5 variables iterated over.
-    #Note: it might be faster to use a the counter instead of storing previous characters in the for loop.
+    #Note: it might be faster/better to use a the counter instead of storing previous characters in the for loop.
+    #ie. for x in range(0, len(fill_in). Se latex_to_sympy for this in practice.
     for f in fill_in:
         if a == '@' and b == 'x' and c == 'x' and d == 'x' and e == 'x' and f == '@':
             recorder = not(recorder) #flip recorder
