@@ -35,14 +35,16 @@ class BootstrapTemplateTable(tables.Table):
                                     '<span class="mathquill-embedded-latex input_mathquill" style="font-size:1.2em;width:parent;">'
                                     '{{record.question_text_latex}}'
                                     '</span></div>')
+    multiple_support = tables.BooleanColumn(verbose_name='MC')
+    fill_in_support = tables.BooleanColumn(verbose_name='FI')
 
     class Meta:
         model = Template
         template = ("bstable.html")
         # attrs = {"class": "paleblue"} # add class="paleblue" (table theme) to <table> tag
         # fields to include in table (displayed in this order)
-        fields = ("id", "creator", "topic", "type", "rating")
-        sequence = ("id", "content", "creator", "topic", "type", "rating", "view")
+        fields = ("id", "creator", "topic", "multiple_support", "fill_in_support", "rating")
+        sequence = ("id", "content", "creator", "topic", "multiple_support", "fill_in_support", "rating", "view")
         order_by = ("-id")
 
 
@@ -73,13 +75,15 @@ class UserTemplates(tables.Table):
                                     '<span class="mathquill-embedded-latex input_mathquill" style="font-size:1.2em;width:parent;">'
                                     '{{record.question_text_latex}}'
                                     '</span></div>')
+    multiple_support = tables.BooleanColumn(verbose_name='MC')
+    fill_in_support = tables.BooleanColumn(verbose_name='FI')
 
     class Meta:
         model = Template
         template = ("bstable.html")
         # attrs = {"class": "paleblue"} # add class="paleblue" (table theme) to <table> tag
         # fields to include in table (displayed in this order)
-        fields = ("id", "topic", "type", "rating")
-        sequence = ("id", "content", "topic", "type", "rating", "action")
+        fields = ("id", "topic", "multiple_support", "fill_in_support", "rating")
+        sequence = ("id", "content", "topic", "multiple_support", "fill_in_support", "rating", "action")
         order_by = ("-id")
 

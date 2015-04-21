@@ -515,11 +515,11 @@ def test_template(template):
 ###latex_to_sympy###
 #Turns a string of latex into a string sympy can use.
 def latex_to_sympy(expression):
-    expression = expression
     expression = expression.replace('\\ne','!=')
     expression = expression.replace('{', '(')
     expression = expression.replace('}', ')')
     expression = expression.replace('\\cdot','*')
+    expression = expression.replace('\\times','*')
     expression = expression.replace('\\left','')
     expression = expression.replace('\\right','')
     expression = expression.replace('∨','|')
@@ -534,24 +534,17 @@ def latex_to_sympy(expression):
     expression = expression.replace('arccot','acot')
     expression = expression.replace('cosec','csc')
     expression = expression.replace('int','integrate')
-    expression = expression.replace('min (','Min(')
-    expression = expression.replace('min  (','Min(')
 
-
-    # expression = expression.replace('cosx', 'cos x')
-    # expression = expression.replace('sinx', 'sin x')
-    # expression = expression.replace('tanx', 'tan x')
-    # expression = expression.replace('siny', 'sin y')
-    # expression = expression.replace('sinz', 'sin z')
     expression = expression.replace('x', ' x')
     expression = expression.replace('y', ' y')
     expression = expression.replace('z', ' z')
-    expression = expression.replace('ma x (','Max(')
-    expression = expression.replace('ma x  (','Max(')
-
-
-
     expression = expression.replace('  ', ' ') #remove double whitespace
+    expression = expression.replace('ma x (','Max(')
+    expression = expression.replace('ma x(','Max(')
+    expression = expression.replace('min (','Min(')
+    expression = expression.replace('min(','Min(')
+
+
 
     i = 0
     counter = 0
@@ -583,7 +576,6 @@ def latex_to_sympy(expression):
                 recorder = false
         i+=1
     expression = expression.replace('\\','')
-    expression = expression.replace('cdot','*')
     expression = expression.replace('frac','')
     expression = expression.replace('binom', 'binomial')
     return expression
