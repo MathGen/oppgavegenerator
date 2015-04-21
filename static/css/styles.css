@@ -74,3 +74,14 @@ sub{							/* between bootstrap*/
 	width: 31px;
 	height: 31px;
 }
+.btn_var_abc_q,
+.btn_calc_ref{
+	padding-right: 22px;
+}
+.btn_var_del,
+.btn_calc_del{
+	position: absolute;
+	top: -1px;
+	right: -1px;
+	border-radius: 0 4px 0 4px;
+}
