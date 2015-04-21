@@ -1,12 +1,12 @@
 // Common variables
-var Q_INPUT					= '#q_input_mathquill';
-var S_INPUT					= '#s_input_mathquill_1';
-var A_INPUT					= '#a_input_mathquill_1';
-var C_INPUT					= '#c_input_mathquill';
-var W_INPUT					= '#w_input_mathquill_0';
-var M_INPUT					= '#m_input_mathquill_1';
-var F_INPUT					= '#f_fill_content_1';
-var N_INPUT					= '#con_input_mathquill';
+var Q_INPUT					= '#q_input_mathquill';		// Question input-field
+var S_INPUT					= '#s_input_mathquill_1';	// Default solution input-field
+var A_INPUT					= '#a_input_mathquill_1';	// Default answer input-field
+var C_INPUT					= '#c_input_mathquill';		// Calculation input-field
+var W_INPUT					= '#w_input_mathquill_0';	// Default user-answer input-field
+var M_INPUT					= '#m_input_mathquill_1';	// Default multiple-choice input-field
+var F_INPUT					= '#f_fill_content_1';		//
+var N_INPUT					= '#con_input_mathquill';	// Condition input-field
 var STEP					= 1;
 var ANSWER					= 1;
 var SUB						= 1;
@@ -16,8 +16,8 @@ var FILL_IN					= false;
 var CON_IN					= false;
 var SUBMITTING				= false;
 var c_count 				= 0;
-var array_calc				= [];
-var array_calc_unchanged	= [];
+var dict_calc				= {};
+var dict_calc_unchanged		= {};
 var MODIFY					= false;
 var SUBMIT_AS_NEW			= false;
 var mod_blanks				= 0;
@@ -122,20 +122,12 @@ $(document).ready(function() {
 				var_available = true;
 			}
 		}
-		$(Q_INPUT).mathquill('write', q_var);
-		$(Q_INPUT).find('var').each(function(){
-		if($(this).html() == q_var){
-			$(this).attr('id', 'R' + q_var_id).addClass('content_var');
-			}
-		});
-		$(q_btn_var_dyn).append('<button id="q_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
+		$(q_btn_var_dyn).append('<div id="q_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc btn_var_abc_q">'+q_var+'<a id="q_btn_abc_del_'+q_var_id+'" class="btn btn-danger btn-xs btn_var_del">x</a></div>');
 		$(s_btn_var_dyn).append('<button id="s_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
 		$('#c_btn_var_dyn').append('<button id="c_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
 		$('#a_btn_var_dyn').append('<button id="a_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
 		$('#n_btn_var_dyn').append('<button id="n_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
 		$('#o_adv_domain').append('<tr id="o_adv_'+q_var_id+'" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">'+q_var+':</td><td><input id="o_adv_from_'+q_var_id+'" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_'+q_var_id+'" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td style="border-left: thin dashed lightgray"><input id="o_adv_dec_'+q_var_id+'" type="number" class="form-control input-sm opt_domain_dec" placeholder="Desimaler:"></td><td></td></tr>');
-		q_var = String.fromCharCode(q_var.charCodeAt(0) + 1);
-		q_var_id++;
 		$(Q_INPUT).find('textarea').focus();
 		update_variable_count();
 	});
@@ -154,7 +146,19 @@ $(document).ready(function() {
 		});
 		$(get_input_field(this)).find('textarea').focus();
 	});
-	
+
+	// Remove variable a,b,c,..
+	$(document).on('click', '.btn_var_del', function(e){
+		var id = parseInt($(this).attr('id').match(/[\d]+$/));
+		$('#q_btn_abc_' + id).remove();
+		$('#s_btn_abc_' + id).remove();
+		$('#c_btn_abc_' + id).remove();
+		$('#n_btn_abc_' + id).remove();
+		$('#o_adv_' + id).remove();
+		// TODO: refresh char colors to all input fields.
+		e.stopPropagation();
+	});
+
 	// Insert unknown x,y,z
 	var btn_x = $('.btn_x');
 	$(btn_x).click(function(e){
@@ -430,7 +434,7 @@ $(document).ready(function() {
 							else{
 								var tmp_var_typed = "a";
 								tmp_var_typed = String.fromCharCode(tmp_var_typed.charCodeAt(0) + var_id);
-								$(q_btn_var_dyn).append('<button id="q_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc">'+tmp_var_typed+'</button>');
+								$(q_btn_var_dyn).append('<div id="q_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc btn_var_abc_q">'+tmp_var_typed+'<a id="q_btn_abc_del_'+var_id+'" class="btn btn-danger btn-xs btn_var_del">x</a></div>');
 								$(s_btn_var_dyn).append('<button id="s_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc">'+tmp_var_typed+'</button>');
 								$('#c_btn_var_dyn').append('<button id="c_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc">'+tmp_var_typed+'</button>');
 								$('#n_btn_var_dyn').append('<button id="n_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc">'+tmp_var_typed+'</button>');
@@ -443,36 +447,6 @@ $(document).ready(function() {
 			}
 			else{
 				refresh_char_colors('#' + id);
-			}
-		}
-		// Delete unused variable-buttons
-		else if(e.keyCode == 8 || e.keyCode == 46)
-		{
-			if(id_group == 'q'){
-				var check_char = [];
-				var check_id = [];
-				for(var i = 0; i < 23; i++){
-					if($('#q_btn_abc_' + i).length > 0){
-						check_char.push($('#q_btn_abc_' + i).html());
-						check_id.push(i);
-					}
-				}
-				for(var n = 0; n < check_char.length; n++){
-					var found = false;
-					$('#' + id).find('var').each(function(){
-						if($(this).html() == check_char[n]){
-							found = true;
-						}
-					});
-					if(!found){
-						$('#q_btn_abc_' + check_id[n]).remove();
-						$('#s_btn_abc_' + check_id[n]).remove();
-						$('#c_btn_abc_' + check_id[n]).remove();
-						$('#n_btn_abc_' + check_id[n]).remove();
-						$('#o_adv_' + check_id[n]).remove();
-						update_variable_count();
-					}
-				}
 			}
 		}
 		else if(e.keyCode == 13){
@@ -737,13 +711,16 @@ $(document).ready(function() {
 	
 	// Remove calculated reference buttons
 	$(document).on('click', '.btn_calc_del', function(e){
-		e.preventDefault();
-		$('.btn_calc').remove();
-		$('#s_btn_calc_delete').remove();
-		$('#a_btn_calc_delete').remove();
-		c_count = 0;
-		array_calc = [];
-		array_calc_unchanged = [];
+		// TODO: remove correct element in array.
+		var id = parseInt($(this).attr('id').match(/[\d]+$/));
+		$('#q_btn_calc_' + id).popover('destroy').remove();
+		$('#s_btn_calc_' + id).popover('destroy').remove();
+		$('#a_btn_calc_' + id).popover('destroy').remove();
+		$('#c_btn_calc_' + id).popover('destroy').remove();
+		$('#n_btn_calc_' + id).popover('destroy').remove();
+		delete dict_calc[id];
+		delete dict_calc_unchanged[id];
+		e.stopPropagation();
 	});
 
 	// Show advanced domain settings
@@ -847,54 +824,66 @@ $(document).ready(function() {
 		e.preventDefault();
 		var total_elements = $(C_INPUT).children().length-1;
 		if(total_elements != 0){
-			if(c_count == 0){
-				$('#s_btn_calc_dyn').append('<button id="s_btn_calc_delete" class="btn btn-success btn-xs btn_calc_del"><span class="glyphicon glyphicon-remove"></span></button>');
-				$('#a_btn_calc_dyn').append('<button id="a_btn_calc_delete" class="btn btn-success btn-xs btn_calc_del"><span class="glyphicon glyphicon-remove"></span></button>');
+			var char_available = false;
+			var calc_char = "A";
+			var calc_id = 0;
+			while(char_available == false){
+				if($('#q_btn_calc_' + calc_id).length){
+					calc_char = String.fromCharCode(calc_char.charCodeAt(0) + 1);
+					calc_id++;
+				}
+				else{
+					char_available = true;
+				}
 			}
-			var c_var = "A";
-			c_var = String.fromCharCode(c_var.charCodeAt(0) + c_count);
-			
 			var c_latex = $(C_INPUT).mathquill('latex');
 			var la = convert_variables(c_latex);
 			la = la.replace(/\?/g,'');
 			la = la.replace(/@/g,'');
-			array_calc.push('@?(' + la + ')?@');
-			array_calc_unchanged.push(c_latex);
+			dict_calc[calc_id] = '@?(' + la + ')?@';
+			dict_calc_unchanged[calc_id] = c_latex;
 			$(C_INPUT).mathquill('revert').mathquill('editable');
-
-			$('<button id="s_btn_calc_'+c_count+'" class="btn btn-success btn_calc">'+c_var+'</button>').insertBefore('#s_btn_calc_delete');
-			$('#s_btn_calc_' + c_count).popover({
+			// TODO: improve insertion of popovers, and finding available calc variables (A,B,C,..).
+			$('#q_btn_calc_dyn').append('<div id="q_btn_calc_'+calc_id+'" class="btn btn-success btn_calc btn_calc_ref">'+calc_char+'<a id="q_btn_abc_del_'+calc_id+'" class="btn btn-success btn-xs btn_calc_del">x</a></div>');
+			$('#q_btn_calc_' + calc_id).popover({
 				html: true,
 				content: '<img src="http://latex.codecogs.com/svg.latex?'+c_latex+'" border="0"/>',
 				placement: 'top',
 				trigger: 'hover',
 				container: 'body'
 			});
-			$('<button id="a_btn_calc_'+c_count+'" class="btn btn-success btn_calc">'+c_var+'</button>').insertBefore('#a_btn_calc_delete');
-			$('#a_btn_calc_' + c_count).popover({
+			$('#s_btn_calc_dyn').append('<div id="s_btn_calc_'+calc_id+'" class="btn btn-success btn_calc btn_calc_ref">'+calc_char+'<a id="s_btn_abc_del_'+calc_id+'" class="btn btn-success btn-xs btn_calc_del">x</a></div>');
+			$('#s_btn_calc_' + calc_id).popover({
 				html: true,
 				content: '<img src="http://latex.codecogs.com/svg.latex?'+c_latex+'" border="0"/>',
 				placement: 'top',
 				trigger: 'hover',
 				container: 'body'
 			});
-			$('#c_btn_calc_dyn').append('<button id="c_btn_calc_'+c_count+'" class="btn btn-success btn_calc">'+c_var+'</button>');
-			$('#c_btn_calc_' + c_count).popover({
+			$('#a_btn_calc_dyn').append('<div id="a_btn_calc_'+calc_id+'" class="btn btn-success btn_calc btn_calc_ref">'+calc_char+'<a id="a_btn_abc_del_'+calc_id+'" class="btn btn-success btn-xs btn_calc_del">x</a></div>');
+			$('#a_btn_calc_' + calc_id).popover({
 				html: true,
 				content: '<img src="http://latex.codecogs.com/svg.latex?'+c_latex+'" border="0"/>',
 				placement: 'top',
 				trigger: 'hover',
 				container: 'body'
 			});
-			$('#n_btn_calc_dyn').append('<button id="n_btn_calc_'+c_count+'" class="btn btn-success btn_calc">'+c_var+'</button>');
-			$('#n_btn_calc_' + c_count).popover({
+			$('#c_btn_calc_dyn').append('<button id="c_btn_calc_'+calc_id+'" class="btn btn-success btn_calc">'+calc_char+'</button>');
+			$('#c_btn_calc_' + calc_id).popover({
 				html: true,
 				content: '<img src="http://latex.codecogs.com/svg.latex?'+c_latex+'" border="0"/>',
 				placement: 'top',
 				trigger: 'hover',
 				container: 'body'
 			});
-			c_count++;
+			$('#n_btn_calc_dyn').append('<button id="n_btn_calc_'+calc_id+'" class="btn btn-success btn_calc">'+calc_char+'</button>');
+			$('#n_btn_calc_' + calc_id).popover({
+				html: true,
+				content: '<img src="http://latex.codecogs.com/svg.latex?'+c_latex+'" border="0"/>',
+				placement: 'top',
+				trigger: 'hover',
+				container: 'body'
+			});
 		}
 	});
 
@@ -1030,8 +1019,14 @@ function submit_template(){
 	}
 
 	// CALCULATION REFERENCE
-	form_submit['calculation_ref'] = array_calc.join('§');
-	form_submit['unchanged_ref'] = array_calc_unchanged.join('§');
+	var calc = [];
+	var calc_ref = [];
+	for(var c in dict_calc){
+		calc.push(c + '§' + dict_calc[c]);
+		calc_ref.push(c + '§' + dict_calc_unchanged[c]);
+	}
+	form_submit['calculation_ref'] = calc.join('§');
+	form_submit['unchanged_ref'] = calc_ref.join('§');
 
 	// CSRF_TOKEN
 	form_submit["csrfmiddlewaretoken"] = getCookie('csrftoken');
@@ -1106,10 +1101,10 @@ function convert_variables(latex){
 	var counter = 0;
 	var dict_letters = {'a' : 'R0R', 'b' : 'R1R', 'c' : 'R2R', 'g' : 'R6R', 'h' : 'R7R', 'j' : 'R9R', 'k' : 'R10R',
 						'l' : 'R11R', 'm' : 'R12R', 'n' : 'R13R', 'o' : 'R14R', 'p' : 'R15R', 'q' : 'R16R', 'r' : 'R17R', 's' : 'R18R', 't' : 'R19R',
-						'u' : 'R20R', 'v' : 'R21R', 'w' : 'R22R', 'A' : array_calc[0] , 'B' : array_calc[1],'C' : array_calc[2],'D' : array_calc[3],
-						'E' : array_calc[4],'F' : array_calc[5],'G' : array_calc[6],'H' : array_calc[7],'I' : array_calc[8], 'J' : array_calc[9],
-						'K' : array_calc[10],'L' : array_calc[11],'M' : array_calc[12],'N' : array_calc[13],'O' : array_calc[14], 'P' : array_calc[15],
-						'Q' : array_calc[16],'R' : array_calc[17],'S' : array_calc[18],'T' : array_calc[19],'U' : array_calc[20], 'V' : array_calc[21]};
+						'u' : 'R20R', 'v' : 'R21R', 'w' : 'R22R', 'A' : dict_calc[0] , 'B' : dict_calc[1],'C' : dict_calc[2],'D' : dict_calc[3],
+						'E' : dict_calc[4],'F' : dict_calc[5],'G' : dict_calc[6],'H' : dict_calc[7],'I' : dict_calc[8], 'J' : dict_calc[9],
+						'K' : dict_calc[10],'L' : dict_calc[11],'M' : dict_calc[12],'N' : dict_calc[13],'O' : dict_calc[14], 'P' : dict_calc[15],
+						'Q' : dict_calc[16],'R' : dict_calc[17],'S' : dict_calc[18],'T' : dict_calc[19],'U' : dict_calc[20], 'V' : dict_calc[21]};
 	var la2 = "";
 	// Iteration for adding required {} to single exponents and subscripts.
 	for(var j = 0; j < la.length; j++){
@@ -1467,7 +1462,7 @@ function refresh_char_colors(selector){
 					var var_id = f_var.html().charCodeAt(0) - 97; // Getting the button id (a:0, b:1, c:2)
 					if($('#q_btn_abc_' + var_id).length){}
 					else {
-						$('#q_btn_var_dyn').append('<button id="q_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc">' + f_var.html() + '</button>');
+						$('#q_btn_var_dyn').append('<div id="q_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc btn_var_abc_q">' + f_var.html() + '<a id="q_btn_abc_del_'+var_id+'" class="btn btn-danger btn-xs btn_var_del">x</a></div>');
 						$('#s_btn_var_dyn').append('<button id="s_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc">' + f_var.html() + '</button>');
 						$('#c_btn_var_dyn').append('<button id="c_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc">' + f_var.html() + '</button>');
 						$('#n_btn_var_dyn').append('<button id="n_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc">' + f_var.html() + '</button>');
@@ -1565,50 +1560,56 @@ function insert_editable_data(){
 
 	// Inserting calculated references.
 	var calc_str = $('#calculation_references').text();
-	var calc_str = calc_str.split('§');
+	var calc_pop = $('#unchanged_ref').text();
+	calc_str = calc_str.split('§');
+	calc_pop = calc_pop.split('§');
 	if(calc_str.length == 1){
 		if(calc_str[0] == ""){
 			calc_str = [];
 		}
-	}
-	for(var a = 0; a < calc_str.length; a++){
-		array_calc.push(calc_str[a]);
-	}
-	var calc_pop = $('#unchanged_ref').text();
-	var calc_pop = calc_pop.split('§');
-	if(calc_pop.length == 1){
 		if(calc_pop[0] == ""){
 			calc_pop = [];
 		}
 	}
-	for(var b = 0; b < calc_pop.length; b++){
-		array_calc_unchanged.push(calc_pop[b]);
+	if(calc_str.length != 0 && calc_pop.length != 0){
+		for(var c = 0; c < calc_str.length; c++){
+			dict_calc[calc_str[c]] = calc_str[c+1];
+			dict_calc_unchanged[calc_pop[c]] = calc_pop[c+1];
+			c++;
+		}
 	}
-	c_count = array_calc_unchanged.length;
-	if(c_count > 0){
-		$('#s_btn_calc_dyn').append('<button id="s_btn_calc_delete" class="btn btn-success btn-xs btn_calc_del"><span class="glyphicon glyphicon-remove"></span></button>');
-		$('#a_btn_calc_dyn').append('<button id="a_btn_calc_delete" class="btn btn-success btn-xs btn_calc_del"><span class="glyphicon glyphicon-remove"></span></button>');
+	if(calc_pop.length > 0){
 		// Logic for adding the calculated-reference buttons with popovers.
-		for(var c_index = 0; c_index < c_count; c_index++){
-			var c_var = "A";
-			c_var = String.fromCharCode(c_var.charCodeAt(0) + c_index);
-			$('<button id="s_btn_calc_'+c_index+'" class="btn btn-success btn_calc">'+c_var+'</button>').insertBefore('#s_btn_calc_delete');
+		for(var c in dict_calc_unchanged){
+			var c_char = "A";
+			var c_index = parseInt(c);
+			var c_latex = dict_calc_unchanged[c];
+			c_char = String.fromCharCode(c_char.charCodeAt(0) + c_index);
+			$('#q_btn_calc_dyn').append('<div id="q_btn_calc_'+c_index+'" class="btn btn-success btn_calc btn_calc_ref">'+c_char+'<a id="q_btn_abc_del_'+c_index+'" class="btn btn-success btn-xs btn_calc_del">x</a></div>');
+			$('#q_btn_calc_' + c_index).popover({
+				html: true,
+				content: '<img src="http://latex.codecogs.com/svg.latex?'+c_latex+'" border="0"/>',
+				placement: 'top',
+				trigger: 'hover',
+				container: 'body'
+			});
+			$('#s_btn_calc_dyn').append('<div id="s_btn_calc_'+c_index+'" class="btn btn-success btn_calc btn_calc_ref">'+c_char+'<a id="s_btn_abc_del_'+c_index+'" class="btn btn-success btn-xs btn_calc_del">x</a></div>');
 			$('#s_btn_calc_' + c_index).popover({
 				html: true,
-				content: '<img src="http://latex.codecogs.com/svg.latex?'+calc_pop[c_index]+'" border="0"/>',
+				content: '<img src="http://latex.codecogs.com/svg.latex?'+c_latex+'" border="0"/>',
 				placement: 'top',
 				trigger: 'hover',
 				container: 'body'
 			});
-			$('<button id="a_btn_calc_'+c_index+'" class="btn btn-success btn_calc">'+c_var+'</button>').insertBefore('#a_btn_calc_delete');
+			$('#a_btn_calc_dyn').append('<div id="a_btn_calc_'+c_index+'" class="btn btn-success btn_calc btn_calc_ref">'+c_char+'<a id="a_btn_abc_del_'+c_index+'" class="btn btn-success btn-xs btn_calc_del">x</a></div>');
 			$('#a_btn_calc_' + c_index).popover({
 				html: true,
-				content: '<img src="http://latex.codecogs.com/svg.latex?'+calc_pop[c_index]+'" border="0"/>',
+				content: '<img src="http://latex.codecogs.com/svg.latex?'+c_latex+'" border="0"/>',
 				placement: 'top',
 				trigger: 'hover',
 				container: 'body'
 			});
-			$('#c_btn_calc_dyn').append('<button id="c_btn_calc_'+c_index+'" class="btn btn-success btn_calc">'+c_var+'</button>');
+			$('#c_btn_calc_dyn').append('<button id="c_btn_calc_'+c_index+'" class="btn btn-success btn_calc">'+c_char+'</button>');
 			$('#c_btn_calc_' + c_index).popover({
 				html: true,
 				content: '<img src="http://latex.codecogs.com/svg.latex?'+calc_pop[c_index]+'" border="0"/>',
@@ -1616,7 +1617,7 @@ function insert_editable_data(){
 				trigger: 'hover',
 				container: 'body'
 			});
-			$('#n_btn_calc_dyn').append('<button id="n_btn_calc_'+c_index+'" class="btn btn-success btn_calc">'+c_var+'</button>');
+			$('#n_btn_calc_dyn').append('<button id="n_btn_calc_'+c_index+'" class="btn btn-success btn_calc">'+c_char+'</button>');
 			$('#n_btn_calc_' + c_index).popover({
 				html: true,
 				content: '<img src="http://latex.codecogs.com/svg.latex?'+calc_pop[c_index]+'" border="0"/>',
