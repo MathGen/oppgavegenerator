@@ -7,6 +7,7 @@ var W_INPUT					= '#w_input_mathquill_0';	// Default user-answer input-field
 var M_INPUT					= '#m_input_mathquill_1';	// Default multiple-choice input-field
 var F_INPUT					= '#f_fill_content_1';		//
 var N_INPUT					= '#con_input_mathquill';	// Condition input-field
+var T_INPUT					= '#t_input';				// Text-input in text-modal
 var STEP					= 1;
 var ANSWER					= 1;
 var SUB						= 1;
@@ -15,7 +16,6 @@ var MULTI_CHOICE			= 0;
 var FILL_IN					= false;
 var CON_IN					= false;
 var SUBMITTING				= false;
-var c_count 				= 0;
 var dict_calc				= {};
 var dict_calc_unchanged		= {};
 var MODIFY					= false;
@@ -73,9 +73,9 @@ $(document).ready(function() {
 	var t_btn_ok = $('#t_btn_ok');
 	$(t_btn_ok).click(function(e){
 		e.preventDefault();
-		var t_input = $('#t_input').val();
+		var t_input = $(T_INPUT).val();
 		$(Q_INPUT).mathquill('cmd', '\\text').mathquill('cmd', ' ' + t_input + ' ');
-		$('#t_input').val("");
+		$(T_INPUT).val("");
 		var custom_tab_event = $.Event('keydown');
 		custom_tab_event.bubbles = true;
 		custom_tab_event.cancelable = true;
@@ -90,7 +90,7 @@ $(document).ready(function() {
 	var t_btn_cancel = $('.btn_close_text');
 	$(t_btn_cancel).click(function(e){
 		e.preventDefault();
-		$('#t_input').val("");
+		$(T_INPUT).val("");
 		$('#text_modal').on('hidden.bs.modal', function () {
 			$(Q_INPUT).find('textarea').focus();
 		});
@@ -98,9 +98,9 @@ $(document).ready(function() {
 	
 	// Open text-input with focus
 	var btn_text = $('#q_btn_text');
-	$(btn_text).click(function(e){
+	$(btn_text).click(function(){
 		$('#text_modal').on('shown.bs.modal', function () {
-			$('#t_input').focus();
+			$(T_INPUT).focus();
 		});
 	});
 	
@@ -130,6 +130,7 @@ $(document).ready(function() {
 		$('#o_adv_domain').append('<tr id="o_adv_'+q_var_id+'" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">'+q_var+':</td><td><input id="o_adv_from_'+q_var_id+'" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_'+q_var_id+'" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td style="border-left: thin dashed lightgray"><input id="o_adv_dec_'+q_var_id+'" type="number" class="form-control input-sm opt_domain_dec" placeholder="Desimaler:"></td><td></td></tr>');
 		$(Q_INPUT).find('textarea').focus();
 		update_variable_count();
+		refresh_all_char_colors();
 	});
 	
 	// Insert variable a,b,c,..
@@ -155,7 +156,7 @@ $(document).ready(function() {
 		$('#c_btn_abc_' + id).remove();
 		$('#n_btn_abc_' + id).remove();
 		$('#o_adv_' + id).remove();
-		// TODO: refresh char colors to all input fields.
+		refresh_all_char_colors();
 		e.stopPropagation();
 	});
 
@@ -422,28 +423,8 @@ $(document).ready(function() {
 			}
 		}
 		else if(e.keyCode >= 65 && e.keyCode <= 87 && e.keyCode != 69 && e.keyCode != 70){
-			var var_id = e.keyCode - 65;
 			if(id_group == 'q'){
-				$('#' + id).find('var').each(function(){
-					if($(this).hasClass('content_x') || $(this).hasClass('content_var') || $(this).hasClass('florin') || $(this).html() == 'e' || $(this).html() == 'i' || $(this).html() == 'd'){}
-					else{
-						if(isUpperCase($(this).html())){}
-						else{
-							$(this).attr('id', 'R' + var_id).addClass('content_var');
-							if($('#q_btn_abc_' + var_id).length){}
-							else{
-								var tmp_var_typed = "a";
-								tmp_var_typed = String.fromCharCode(tmp_var_typed.charCodeAt(0) + var_id);
-								$(q_btn_var_dyn).append('<div id="q_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc btn_var_abc_q">'+tmp_var_typed+'<a id="q_btn_abc_del_'+var_id+'" class="btn btn-danger btn-xs btn_var_del">x</a></div>');
-								$(s_btn_var_dyn).append('<button id="s_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc">'+tmp_var_typed+'</button>');
-								$('#c_btn_var_dyn').append('<button id="c_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc">'+tmp_var_typed+'</button>');
-								$('#n_btn_var_dyn').append('<button id="n_btn_abc_'+var_id+'" class="btn btn-danger btn_var_abc">'+tmp_var_typed+'</button>');
-								$('#o_adv_domain').append('<tr id="o_adv_'+var_id+'" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">'+tmp_var_typed+':</td><td><input id="o_adv_from_'+var_id+'" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_'+var_id+'" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td style="border-left: thin dashed lightgray"><input id="o_adv_dec_'+var_id+'" type="number" class="form-control input-sm opt_domain_dec" placeholder="Desimaler:"></td><td></td></tr>');
-								update_variable_count();
-							}
-						}
-					}
-				});
+				refresh_all_char_colors();
 			}
 			else{
 				refresh_char_colors('#' + id);
@@ -711,7 +692,6 @@ $(document).ready(function() {
 	
 	// Remove calculated reference buttons
 	$(document).on('click', '.btn_calc_del', function(e){
-		// TODO: remove correct element in array.
 		var id = parseInt($(this).attr('id').match(/[\d]+$/));
 		$('#q_btn_calc_' + id).popover('destroy').remove();
 		$('#s_btn_calc_' + id).popover('destroy').remove();
@@ -720,6 +700,7 @@ $(document).ready(function() {
 		$('#n_btn_calc_' + id).popover('destroy').remove();
 		delete dict_calc[id];
 		delete dict_calc_unchanged[id];
+		refresh_all_char_colors();
 		e.stopPropagation();
 	});
 
@@ -884,6 +865,7 @@ $(document).ready(function() {
 				trigger: 'hover',
 				container: 'body'
 			});
+			refresh_all_char_colors();
 		}
 	});
 
@@ -1439,7 +1421,34 @@ function refresh_multiple_choice(){
 }
 
 /**
- * Adding colors to used variables, unknown characters and calculated references.
+ * Adding/removing colors to used and unused variables, unknown characters and caculated refereces in all
+ * mathquill input-fields.
+ */
+function refresh_all_char_colors(){
+	refresh_char_colors(Q_INPUT);
+	for(var step = 1; step <= STEP; step++){
+		refresh_char_colors('#s_input_mathquill_' + step);
+	}
+	for(var ans = 1; ans <= ANSWER; ans++){
+		refresh_char_colors('#a_input_mathquill_' + ans);
+	}
+	refresh_char_colors(C_INPUT);
+	if($(N_INPUT).attr('id') != undefined){
+		refresh_char_colors(N_INPUT);
+	}
+	for(var multi = 1; multi <= MULTI_CHOICE; multi++){
+		refresh_char_colors('#m_input_mathquill_' + multi);
+	}
+	if($('#f_fill_content_1').attr('id') != undefined){
+		for(var fill = 1; fill <= STEP; fill++){
+			refresh_char_colors('#f_fill_content_' + fill);
+		}
+	}
+}
+
+/**
+ * Adding/removing colors to used and unused variables, unknown characters and calculated references in given
+ * mathquill input-field. Also adds variable buttons if a new variable is typed in the question.
  * @param selector - Which input field to refresh.
  */
 function refresh_char_colors(selector){
@@ -1447,21 +1456,24 @@ function refresh_char_colors(selector){
 	input_id = input_id[0];
 	$(selector).find('var').each(function(){
 		var f_var = $(this);
-		if(f_var.hasClass('content_x') || $(this).hasClass('content_var') || $(this).hasClass('florin') || $(this).html() == 'e' || $(this).html() == 'i' || $(this).html() == 'd'){}
+		if(f_var.hasClass('content_x') || $(this).hasClass('florin') || $(this).html() == 'e' || $(this).html() == 'i' || $(this).html() == 'd'){}
 		else{
 			if(f_var.html() == 'x' || f_var.html() == 'y' || f_var.html() == 'z'){
 				f_var.addClass('content_x');
 			}
 			else if(f_var.html().match(/^[a-z]*$/)){
+				var var_exist = false;
 				$('.btn_var_abc').each(function(){
 					if($(this).html() == f_var.html()){
 						f_var.addClass('content_var');
+						var_exist = true;
 					}
 				});
 				if(input_id == 'q'){
 					var var_id = f_var.html().charCodeAt(0) - 97; // Getting the button id (a:0, b:1, c:2)
 					if($('#q_btn_abc_' + var_id).length){}
 					else {
+						f_var.addClass('content_var');
 						$('#q_btn_var_dyn').append('<div id="q_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc btn_var_abc_q">' + f_var.html() + '<a id="q_btn_abc_del_'+var_id+'" class="btn btn-danger btn-xs btn_var_del">x</a></div>');
 						$('#s_btn_var_dyn').append('<button id="s_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc">' + f_var.html() + '</button>');
 						$('#c_btn_var_dyn').append('<button id="c_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc">' + f_var.html() + '</button>');
@@ -1469,15 +1481,24 @@ function refresh_char_colors(selector){
 						$('#o_adv_domain').append('<tr id="o_adv_' + var_id + '" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">' + f_var.html() + ':</td><td><input id="o_adv_from_' + var_id + '" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_' + var_id + '" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td style="border-left: thin dashed lightgray"><input id="o_adv_dec_'+var_id+'" type="number" class="form-control input-sm opt_domain_dec" placeholder="Desimaler:"></td><td></td></tr>');
 					}
 				}
+				else if(!var_exist){
+					f_var.removeClass('content_var');
+				}
 			}
 			else if(f_var.html().match(/^[A-Z]*$/)){
+				var calc_exist = false;
 				$('.btn_calc').each(function(){
 					if($(this).html() == f_var.html()){
 						f_var.addClass('content_calc');
+						calc_exist = true;
 					}
 				});
+				if(!calc_exist){
+					f_var.removeClass('content_calc');
+				}
 			}
 		}
+		update_variable_count();
 	});
 }
 
