@@ -107,6 +107,7 @@ def generate_task(template_id, desired_type='normal'):
 
     new_task = new_task.replace('+-', '-')
     new_task = new_task.replace('--', '+')
+    new_task = parse_solution(new_task, q.random_domain)
     return_dict = {'question' : new_task, 'variable_dictionary' : variables_used, 'template_type' : template_type,
                    'template_specific' : template_specific, 'primary_key' : primary_key,
                    'number_of_answers' : number_of_answers, 'replacing_words' : replacing_words}
@@ -121,7 +122,7 @@ def calculate_answer(s, domain):
         s = parse_expr(s, transformations=standard_transformations+(convert_xor, implicit_multiplication_application,),global_dict=None, evaluate=False)
         s = latex(sympify(str(s))) #sometimes this returns the value 'zoo' | also could maybe use simplify instead of sympify
     if is_number(s):
-            s = round_answer(domain, float(s))
+        s = round_answer(domain, float(s))
 
     return str(s)
 
@@ -373,13 +374,15 @@ def fill_in_the_blanks(fill_in):
 ###find_holes###
 #Finds the avaiable holes in the task and their position.
 def find_holes(fill_in):
+    fill_in = fill_in.split('§')
+    fill_in = fill_in[randint(0, len(fill_in))]
     hole_dict = {} #keeps track of what is getting replaced and the position of that in the string.
     recorder = False
     counter = 0 #keeps track of how far in the string the loop is
     start_point = end_point = 0 #start and end point of box
     a = b = c = d = e = '' #Used to keep track of the last 5 variables iterated over.
     #Note: it might be faster/better to use a the counter instead of storing previous characters in the for loop.
-    #ie. for x in range(0, len(fill_in). Se latex_to_sympy for this in practice.
+    #ie. for x in range(0, len(fill_in). Se latex_to_sympy for this in action.
     for f in fill_in:
         if a == '@' and b == 'x' and c == 'x' and d == 'x' and e == 'x' and f == '@':
             recorder = not(recorder) #flip recorder
