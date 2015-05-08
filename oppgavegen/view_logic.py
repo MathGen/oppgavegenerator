@@ -128,8 +128,8 @@ def change_elo(template, user, user_won, type):
 
 def cheat_check(user_answer, disallowed):
     """Checks whether the user has used symbols/functions that are not allowed"""
-    standard_disallowed = ['int','test',"'",'§']
-    if disallowed is not None:
+    standard_disallowed = ['int','test',"'",'§', '@']
+    if disallowed is not None and disallowed != '':
         standard_disallowed = standard_disallowed + disallowed.split('§')
     for s in standard_disallowed:
         if s in user_answer:
