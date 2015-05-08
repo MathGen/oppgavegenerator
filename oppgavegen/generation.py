@@ -161,7 +161,7 @@ def get_question(user, template_id, topic=''):
     increase = 15
     q = ''
     if template_id == '':
-        u = User.objects.get(username=user.name)
+        u = User.objects.get(username=user.username)
         user_rating = u.extendeduser.rating
         while True:
             q = Template.objects.filter(rating__gt=(user_rating-slack))
