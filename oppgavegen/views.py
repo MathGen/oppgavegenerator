@@ -22,6 +22,7 @@ from oppgavegen.tables import *
 from django_tables2 import RequestConfig
 from oppgavegen.templatetags.app_filters import is_teacher
 from oppgavegen import view_logic
+from oppgavegen.view_logic import *
 
 def is_member(user): #Checks if a user is a member of a group
     if user.is_superuser:
@@ -33,16 +34,16 @@ def task(request):
     context = RequestContext(request)
     question_type = request.GET.get('q', '')
     if question_type != "":
-        context_dict = generation.generate_task(question_type)
+        context_dict = generation.generate_task(request.user, question_type)
     else:
-        context_dict = generation.generate_task("")
+        context_dict = generation.generate_task(request.user, "")
     context_dict['title'] = generation.printer()
     return render_to_response('taskview.html', context_dict, context)
 
 @login_required
 def task_by_id_and_type(request, template_id, desired_type='normal'):
     context = RequestContext(request)
-    context_dict = generation.generate_task(template_id, desired_type)
+    context_dict = generation.generate_task(request.user, template_id, desired_type)
     context_dict['title'] = generation.printer()
     if context_dict['question'] == 'error':
         message = {'message' : 'Denne oppgavetypen har ikke blitt laget for denne oppgaven'}
@@ -52,7 +53,7 @@ def task_by_id_and_type(request, template_id, desired_type='normal'):
 @login_required
 def task_by_id(request, template_id):
     context = RequestContext(request)
-    context_dict = generation.generate_task(template_id)
+    context_dict = generation.generate_task(request.user, template_id)
     context_dict['title'] = generation.printer()
     return render_to_response('taskview.html', context_dict, context)
 
@@ -61,20 +62,21 @@ class QuestionForm(forms.Form):
     primary_key = forms.IntegerField()
     variable_dictionary = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400, required=False)
     template_specific = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400, required=False)
-    template_type = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=20)
+    template_type = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=50)
     replacing_words = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400, required=False)
+    disallowed = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400, required=False)
 
     def process(self):
-        cd = {'variable_dictionary' : self.cleaned_data['variable_dictionary'],'primary_key' : self.cleaned_data['primary_key'],
-              'user_answer' : self.cleaned_data['user_answer'], 'template_type' : self.cleaned_data['template_type'],
-              'template_specific' : self.cleaned_data['template_specific'],
-              'replacing_words' : self.cleaned_data['replacing_words']}
+        cd = {'variable_dictionary': self.cleaned_data['variable_dictionary'],'primary_key': self.cleaned_data['primary_key'],
+              'user_answer': self.cleaned_data['user_answer'], 'template_type': self.cleaned_data['template_type'],
+              'template_specific': self.cleaned_data['template_specific'],
+              'replacing_words': self.cleaned_data['replacing_words'], 'disallowed': self.cleaned_data['disallowed']}
         return cd
 
 class TemplateForm(ModelForm):
     class Meta:
         model = Template
-        fields = '__all__' #['question_text', 'solution', 'answer', 'variables','number_of_decimals','answer_can_be_zero','random_domain']
+        fields = '__all__'
 
         def process(self):
             cd = [self.cleaned_data['question'], self.cleaned_data['answer']]
@@ -102,7 +104,7 @@ def submit(request):
         form = TemplateForm(request.POST)
         if form.is_valid():
             template = form.save(commit=False)
-            if request.REQUEST['pk'] != '': #can this be writter as v = req != ''?
+            if request.REQUEST['pk'] != '': #can this be written as v = req != ''?
                 template.pk = request.REQUEST['pk'] #workaround, for some reason template doesn't automatically get template.pk
                 update = True
             else:
@@ -117,12 +119,17 @@ def submit(request):
 @login_required
 def answers(request):
     context = RequestContext(request)
+    cheat_message = 'Ulovlig tegn har blitt brukt i svar'
     if request.method == 'POST':
         form = QuestionForm(request.POST)
-        counter = 0
+        #todo: add a check for invalid signs and return a cheating page
         if form.is_valid():
             form_values = form.process()
+            template = Template.objects.get(pk=form_values['primary_key'])
+            if cheat_check(form['user_answer'], template.disallowed):
+                return render_to_response('answers.html', {'answer': cheat_message}, context)
             context_dict = view_logic.make_answer_context_dict(form_values)
+            view_logic.change_elo(template, request.user, context_dict['user_won'], form_values['template_type'])
             return render_to_response('answers.html', context_dict, context)
         else:
             print(form.errors)

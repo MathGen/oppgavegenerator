@@ -42,11 +42,11 @@ def check_answer(user_answer, answer):
 
 ###task_with_solution###
 #Makes a valid task with solution from a template in the database.
-def generate_task(template_id, desired_type='normal'):
+def generate_task(user, template_id, desired_type='normal'):
     if template_id == "":
-        q = get_question('')  #gets a question from the DB
+        q = get_question(user, '')  #gets a question from the DB
     else:
-        q = get_question(template_id)
+        q = get_question(user, template_id)
 
     if desired_type != 'normal':
         if (desired_type == 'multiple' or desired_type == 'multifill') and not q.multiple_support:
@@ -155,19 +155,28 @@ def parse_solution(solution, domain):
 
 ###get_question###
 #Gets a question/template from the database and returns it.
-def get_question(topic):
-    #todo make this general so it doesn't just return a specified result
-    if topic == '':
-        q = Template.objects.all()
-        q = q.latest('id')
+def get_question(user, template_id, topic=''):
+    slack = 40
+    increase = 15
+    q = ''
+    if template_id == '':
+        user_rating = user.extendedusermodel.rating
+        while True:
+            q = Template.objects.filter(rating__gt=(user_rating-slack))
+            q = q.filter(rating__lt=(user_rating+slack))
+            if topic != '':
+                q = q.filter(topic_iexact=topic)
+            if q:
+                q = q[randint(0,q.count()-1)]
+                break
+            slack += increase
+            if slack >= 500:
+                q = Template.objects.all()
+                q = q.latest('id')
+                break
     else:
-        q = Template.objects.get(pk=topic)
-    #q = Template.objects.get(pk=7)
-    #q = Template.objects.filter(topic__iexact=topic) #Gets all Templates in that topic
-    #q = q.filter(rating ---------)
+        q = Template.objects.get(pk=template_id)
 
-    #todo add logic for returning 1 random task at appropriate elo.
-    #something like SELECT * FROM Template WHERE rating BETWEEN user_rating+- 20
     return q
 
 ###replace_words###
@@ -548,9 +557,9 @@ def latex_to_sympy(expression):
     counter = 0
     recorder = false
     while(i < len(expression)): #logic for insering a / in fractals
-        if(expression[i] == 'c' and expression[i-1] == 'a' and expression[i-2] == 'r' and expression[i-3] == 'f' and expression[i-4] == '\\'):
+        if expression[i] == 'c' and expression[i-1] == 'a' and expression[i-2] == 'r' and expression[i-3] == 'f' and expression[i-4] == '\\':
              recorder = true
-        if(recorder):
+        if recorder:
             if(expression[i] == '('):
                 counter += 1
             elif(expression[i] == ')'):
@@ -561,25 +570,25 @@ def latex_to_sympy(expression):
         i+=1
     i = 0
     counter = 0
-    while(i < len(expression)): #logic for making \binom(a/b) -> binomial(a,b)
-        if(expression[i] == 'o' and expression[i-1] == 'n' and expression[i-2] == 'i' and expression[i-3] == 'b' and expression[i-4] == '\\'):
+    while i < len(expression): #logic for making \binom(a/b) -> binomial(a,b)
+        if expression[i] == 'o' and expression[i-1] == 'n' and expression[i-2] == 'i' and expression[i-3] == 'b' and expression[i-4] == '\\':
              recorder = true
-        if(recorder):
-            if(expression[i] == '('):
+        if recorder:
+            if expression[i] == '(':
                 counter += 1
-            elif(expression[i] == ')'):
+            elif expression[i] == ')':
                 counter -= 1
-            if(expression[i] == ')' and counter == 0):
+            if expression[i] == ')' and counter == 0:
                 expression = expression[0:i] + "," + expression[i+2:len(expression)]
                 recorder = false
         i+=1
-    expression = expression.replace('\\','')
-    expression = expression.replace('frac','')
+    expression = expression.replace('\\', '')
+    expression = expression.replace('frac', '')
     expression = expression.replace('binom', 'binomial')
     return expression
 
 ###is_number###
-#Returns wether a string is a number or not.
+#Returns whether a string is a number or not.
 def is_number(s):
     try:
         float(s)
@@ -600,7 +609,7 @@ def make_number(domain):
     return number
 
 def round_answer(domain, answer):
-    answer = float(answer) #cast it to float. if it is a integer, it will get rounded back to a integer.
+    answer = float(answer) # Cast it to float. if it is a integer, it will get rounded back to a integer.
     domain = domain.split('§')
     rounding_number = 0
     for s in domain:

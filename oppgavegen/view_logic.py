@@ -60,10 +60,15 @@ def make_answer_context_dict(form_values):
     answer = [generation.after_equal_sign(x) for x in answer]
     answer = generation.calculate_array(answer, random_domain)
 
-    answer_text = generation.check_answer(user_answer, answer)
+    correct_answer = generation.check_answer(user_answer, answer)
+    if correct_answer:
+        answer_text = "\\text{Du har svart riktig!}"
+    else:
+        answer_text = "\\text{Du har svart }" + '\\text{ og }'.join(user_answer) + "\\text{. Det er feil! Svaret er: }" + '\\text{ og }'.join(answer)
+
     solution = solution.replace('+-', '-')
     solution = solution.replace('--', '+')
-    context_dict = {'title': "Oppgavegen", 'answer': str(answer_text), 'user_answer': user_answer, 'solution': solution}
+    context_dict = {'title': "Oppgavegen", 'answer': str(answer_text), 'user_answer': user_answer, 'solution': solution, 'user_won' : correct_answer}
     return context_dict
 
 
@@ -92,12 +97,36 @@ def submit_template(template, user, update):
     message = generation.template_validation(template.pk)
     return message
 
-def change_elo(template_id, user, winner, type):
-    if winner == user: #todo make this class properly.
-        user.rating += 10
-        template_id.rating -= 10
+
+def change_elo(template, user, user_won, type):
+    """Changes the elo of both user and task depending on who won."""
+    # Formula for elo: Rx = Rx(old) + prefactor *(W-Ex) where W=1 if wins and W=0 if x loses
+    # and Ex is the expected probability that x will win.
+    # Ea = (1+10^((Rb-Ra)/400))^-1
+    # Eb = (1+10^((Ra-Rb)/400))^-1
+    expected_user = (1+10**((template.rating-user.rating)/400))**(-1)
+    expected_template = (1+10**((template.rating-user.rating)/400))**(-1)
+    prefactor = 32 #This value should be adjusted according to elo of the user (lower for higher ratings..)
+
+    if user_won:
+        new_user_rating = user.rating + prefactor*(1-expected_user)
+        new_template_rating = template.rating + prefactor*(0-expected_template)
     else:
-        user.rating -= 10
-        template_id.rating += 10
+        new_user_rating = user.rating + prefactor*(1-expected_user)
+        new_template_rating = template.rating + prefactor*(0-expected_template)
+    user.rating = new_user_rating
+    user.save()
+    template.rating = new_template_rating
+    template.save()
 
     return
+
+def cheat_check(user_answer, disallowed):
+    """Checks whether the user has used symbols/functions that are not allowed"""
+    standard_disallowed = ['int','test',"'",'§'] + disallowed.split('§')
+    if disallowed is not None:
+        standard_disallowed += disallowed.split('§')
+    for c in standard_disallowed:
+        if user_answer.contains(c):
+            return True
+    return False

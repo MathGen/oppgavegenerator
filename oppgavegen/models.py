@@ -3,7 +3,8 @@ from django.contrib.auth.models import User
 from django.contrib import admin
 
 
-#This file contains the models for the database that are not default models in django (i.e. Users)
+#This file contains the models for the database that are not default models in Django (i.e. Users)
+#It also contains extensions to the default models in Django.
 #The classes have to be in order. The reason is that you might try to make a foreign key on a class that does not exist yet.
 
 class Topic(models.Model):
@@ -44,10 +45,8 @@ class Template(models.Model):
     conditions = models.CharField(max_length=10000, blank=True, null=True, default="")
     fill_in = models.CharField(max_length=10000, blank=True, null=True, default="")
     valid_flag = models.BooleanField(default=False, choices=valid_choices)
-    #todo: remove answer can be zero as that can be implemented in conditions using ans != 0.
-    #todo: also remove number of decimals
+    disallowed = models.CharField(max_length=1000, blank=True, null=True, default="")
     ##Also save the original latex for post-back:
-    ##no longer needed, only calculation references are.. todo: remove unnecessary fields.
     question_text_latex = models.CharField(max_length=200, blank=True, null=True)
     solution_latex =  models.CharField(max_length=10000, blank=True, null=True)
     answer_latex = models.CharField(max_length=200, blank=True, null=True)
@@ -60,10 +59,11 @@ class Template(models.Model):
     multiple_support = models.BooleanField(default=False) #Denotes whether the template supports multiple choice
     fill_in_support = models.BooleanField(default=False) #Denotes whether the template supports fill in the blanks
 
-
-
-
     def __str__(self):                                        #Makes it so that self.question_text shows up instead of topic(object)
         return self.question_text
 
-    #todo add random_domain to each individual random variable, yo.
+class ExtendedUser(models.Model):
+    user = models.OneToOneField(User)
+    rating = models.rating = models.PositiveSmallIntegerField(default=1200)
+    current_template = models.rating = models.SmallIntegerField(default=-1)
+
