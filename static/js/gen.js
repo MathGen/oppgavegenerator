@@ -1484,7 +1484,7 @@ function refresh_char_colors(selector){
 				if(input_id == 'q'){
 					var var_id = f_var.html().charCodeAt(0) - 97; // Getting the button id (a:0, b:1, c:2)
 					if($('#q_btn_abc_' + var_id).length){}
-					else if(var_id in VARIABLES){
+					else if(var_id in VARIABLES || !MODIFY){
 						f_var.addClass('content_var');
 						$('#q_btn_var_dyn').append('<div id="q_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc btn_var_abc_q">' + f_var.html() + '<a id="q_btn_abc_del_'+var_id+'" class="btn btn-danger btn-xs btn_var_del">x</a></div>');
 						$('#s_btn_var_dyn').append('<button id="s_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc">' + f_var.html() + '</button>');
