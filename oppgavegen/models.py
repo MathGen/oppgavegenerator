@@ -47,6 +47,7 @@ class Template(models.Model):
     valid_flag = models.BooleanField(default=False, choices=valid_choices)
     disallowed = models.CharField(max_length=1000, blank=True, null=True, default="")
     ##Also save the original latex for post-back:
+    used_variables = models.CharField(max_length=200, blank=True, null=True)
     question_text_latex = models.CharField(max_length=200, blank=True, null=True)
     solution_latex =  models.CharField(max_length=10000, blank=True, null=True)
     answer_latex = models.CharField(max_length=200, blank=True, null=True)
@@ -55,12 +56,12 @@ class Template(models.Model):
     fill_in_latex = models.CharField(max_length=10000, blank=True, null=True, default="")
     calculation_ref = models.CharField(max_length=1000, blank=True, null=True)
     unchanged_ref = models.CharField(max_length=1000, blank=True, null=True)
-
     multiple_support = models.BooleanField(default=False) #Denotes whether the template supports multiple choice
     fill_in_support = models.BooleanField(default=False) #Denotes whether the template supports fill in the blanks
 
     def __str__(self):                                        #Makes it so that self.question_text shows up instead of topic(object)
         return self.question_text
+
 
 class ExtendedUser(models.Model):
     user = models.OneToOneField(User)

@@ -8,14 +8,15 @@ var M_INPUT					= '#m_input_mathquill_1';	// Default multiple-choice input-field
 var F_INPUT					= '#f_fill_content_1';		//
 var N_INPUT					= '#con_input_mathquill';	// Condition input-field
 var T_INPUT					= '#t_input';				// Text-input in text-modal
-var STEP					= 1;
-var ANSWER					= 1;
-var SUB						= 1;
+var STEP					= 1;						// Number of steps in solution.
+var ANSWER					= 1;						// Number of answers.
+var SUB						= 1;						// Number of text-substitutions.
 var TOPIC_SELECTED			= false;
 var MULTI_CHOICE			= 0;
 var FILL_IN					= false;
 var CON_IN					= false;
 var SUBMITTING				= false;
+var VARIABLES				= {};						// Object containing variables in use.
 var dict_calc				= {};
 var dict_calc_unchanged		= {};
 var MODIFY					= false;
@@ -122,6 +123,7 @@ $(document).ready(function() {
 				var_available = true;
 			}
 		}
+		VARIABLES[q_var_id] = q_var;
 		$(q_btn_var_dyn).append('<div id="q_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc btn_var_abc_q">'+q_var+'<a id="q_btn_abc_del_'+q_var_id+'" class="btn btn-danger btn-xs btn_var_del">x</a></div>');
 		$(s_btn_var_dyn).append('<button id="s_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
 		$('#c_btn_var_dyn').append('<button id="c_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
@@ -131,6 +133,7 @@ $(document).ready(function() {
 		$(Q_INPUT).find('textarea').focus();
 		update_variable_count();
 		refresh_all_char_colors();
+		refresh_variables();
 	});
 	
 	// Insert variable a,b,c,..
@@ -157,6 +160,7 @@ $(document).ready(function() {
 		$('#n_btn_abc_' + id).remove();
 		$('#o_adv_' + id).remove();
 		refresh_all_char_colors();
+		refresh_variables();
 		e.stopPropagation();
 	});
 
@@ -425,6 +429,7 @@ $(document).ready(function() {
 		else if(e.keyCode >= 65 && e.keyCode <= 87 && e.keyCode != 69 && e.keyCode != 70){
 			if(id_group == 'q'){
 				refresh_all_char_colors();
+				refresh_variables();
 			}
 			else{
 				refresh_char_colors('#' + id);
@@ -1010,6 +1015,13 @@ function submit_template(){
 	form_submit['calculation_ref'] = calc.join('§');
 	form_submit['unchanged_ref'] = calc_ref.join('§');
 
+	// USED VARIABLES
+	var variables = [];
+	for(var vars in VARIABLES){
+		variables.push(VARIABLES[vars]);
+	}
+	form_submit['used_variables'] = variables.join(' ');
+
 	// CSRF_TOKEN
 	form_submit["csrfmiddlewaretoken"] = getCookie('csrftoken');
 
@@ -1093,7 +1105,7 @@ function convert_variables(latex){
 		if(la[j] == '^' || la[j] == '_'){
 			if(la[j+1] != '{' && la[j+1] != '@'){
 				la = la.substring(0, j+1) + '{' + la[j+1] + '}' + la.substring(j+2, la.length);
-			} //Workaround for fill in. this fixes x^2 -> x^{@}xxxx@ to x^{@xxxx@}.
+			} // Workaround for fill in. this fixes x^2 -> x^{@}xxxx@ to x^{@xxxx@}.
 			else if(la[j+1] != '{' && la[j+1] == '@' && la[j+2] == 'x') {
 				la = la.substring(0, j+1) + '{' + la.substring(j+1, j+14) + '}' + la.substring(j+15, la.length);
 			}
@@ -1151,7 +1163,7 @@ function convert_variables(latex){
 				}
 			}
 		}
-		if(la[i] in dict_letters){
+		if(la[i] in dict_letters && VARIABLES[parseInt(dict_letters[la[i]].replace(/R/g, ''))]){
 			if((la[i-1] in dict_letters || la[i-1] == ')' || !isNaN(la[i-1])) && la[i-2] != '\^' && la[i-2] != '\\'){
 				if(la[i-1] != ' ' && la[i-2] != 't' && la[i-3] != 'o' && la[i-4] != 'd' && la[i-5] != 'c'){
 					la2 += '\\cdot ' + dict_letters[la[i]];
@@ -1472,7 +1484,7 @@ function refresh_char_colors(selector){
 				if(input_id == 'q'){
 					var var_id = f_var.html().charCodeAt(0) - 97; // Getting the button id (a:0, b:1, c:2)
 					if($('#q_btn_abc_' + var_id).length){}
-					else {
+					else if(var_id in VARIABLES){
 						f_var.addClass('content_var');
 						$('#q_btn_var_dyn').append('<div id="q_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc btn_var_abc_q">' + f_var.html() + '<a id="q_btn_abc_del_'+var_id+'" class="btn btn-danger btn-xs btn_var_del">x</a></div>');
 						$('#s_btn_var_dyn').append('<button id="s_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc">' + f_var.html() + '</button>');
@@ -1537,7 +1549,7 @@ function get_diff_latex(latex_bool){
 /**
  * Before unload, ask user to confirm redirecting.
  */
-$(window).bind('beforeunload', function(e){
+$(window).bind('beforeunload', function(){
 	if(TOPIC_SELECTED && !SUBMITTING){
 		return 'Warning!';
 	}
@@ -1551,9 +1563,42 @@ $('#calc_modal').on('shown.bs.modal', function () {
 });
 
 /**
+ * Refresh the dictionary of used variables. Adds or removes variables if needed/unneeded.
+ */
+function refresh_variables(){
+	var id_check = {}; // Stores which variable-ids to check
+	// Adding used variables to dictionary.
+	$('.btn_var_abc_q').each(function(){
+		var variable_id = parseInt($(this).attr('id').replace(/q_btn_abc_/, ''));
+		var variable = $(this).text();
+		id_check[variable_id] = variable;
+		if(variable_id in VARIABLES){}
+		else{
+			VARIABLES[variable_id] = variable_id + '§' + variable.replace(/x/g, '');
+		}
+	});
+	// Removing unused variables from dictionary.
+	for(var variable_id in VARIABLES){
+		if(variable_id in id_check){}
+		else{
+			delete VARIABLES[variable_id];
+		}
+	}
+}
+
+/**
  * Retrieving data from selected task to be modified. Inserting data to all required fields, and prepares for editing.
  */
 function insert_editable_data(){
+	// Initialize valid variables
+	var var_str = $('#used_variables').text();
+	var_str = var_str.split(' ');
+	for(var v = 0; v < var_str.length; v++){
+		var tmp_var = var_str[v].split('§');
+		VARIABLES[tmp_var[0]] = tmp_var[1];
+	}
+	//console.log(VARIABLES);
+
 	// Inserting text-substitution
 	var dictionary = $('#dictionary').text();
 	dictionary = dictionary.split('§');
