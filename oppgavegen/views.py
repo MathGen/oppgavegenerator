@@ -114,7 +114,7 @@ def submit(request):
         else:
             print(form.errors)
     context = RequestContext(request)
-    return render_to_response('submit.html',{'message': message}, context)
+    return render_to_response('submit.html', {'message': message}, context)
 
 @login_required
 def answers(request):
