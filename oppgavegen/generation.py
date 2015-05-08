@@ -11,6 +11,7 @@ from sympy import *
 from sympy.parsing.sympy_parser import (parse_expr, standard_transformations, implicit_multiplication, implicit_application,
                                         auto_symbol, implicit_multiplication_application, factorial_notation, convert_xor)
 from .models import Template
+from django.contrib.auth.models import User
 from django.template.defaultfilters import *
 import html
 
@@ -160,7 +161,8 @@ def get_question(user, template_id, topic=''):
     increase = 15
     q = ''
     if template_id == '':
-        user_rating = user.extendeduser.rating
+        u = User.objects.get(username=user.name)
+        user_rating = u.extendeduser.rating
         while True:
             q = Template.objects.filter(rating__gt=(user_rating-slack))
             q = q.filter(rating__lt=(user_rating+slack))

@@ -2,6 +2,7 @@ from oppgavegen.models import Template
 from oppgavegen.models import Topic
 from oppgavegen import generation
 from datetime import datetime
+from django.contrib.auth.models import User
 
 def make_edit_context_dict(template_id):
     q = Template.objects.get(pk=template_id)
@@ -107,7 +108,8 @@ def change_elo(template, user, user_won, type):
     expected_user = (1+10**((template.rating-user.rating)/400))**(-1)
     expected_template = (1+10**((template.rating-user.rating)/400))**(-1)
     prefactor = 32 #This value should be adjusted according to elo of the user (lower for higher ratings..)
-    user_rating = user.extendeduser.rating
+    u = User.objects.get(username=user.name)
+    user_rating = u.extendeduser.rating
 
     if user_won:
         new_user_rating = user_rating + prefactor*(1-expected_user)
