@@ -107,12 +107,13 @@ def change_elo(template, user, user_won, type):
     expected_user = (1+10**((template.rating-user.rating)/400))**(-1)
     expected_template = (1+10**((template.rating-user.rating)/400))**(-1)
     prefactor = 32 #This value should be adjusted according to elo of the user (lower for higher ratings..)
+    user_rating = user.extendeduser.rating
 
     if user_won:
-        new_user_rating = user.rating + prefactor*(1-expected_user)
+        new_user_rating = user_rating + prefactor*(1-expected_user)
         new_template_rating = template.rating + prefactor*(0-expected_template)
     else:
-        new_user_rating = user.rating + prefactor*(1-expected_user)
+        new_user_rating = user_rating + prefactor*(1-expected_user)
         new_template_rating = template.rating + prefactor*(0-expected_template)
     user.rating = new_user_rating
     user.save()
