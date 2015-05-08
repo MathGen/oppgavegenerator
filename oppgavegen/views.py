@@ -126,7 +126,7 @@ def answers(request):
         if form.is_valid():
             form_values = form.process()
             template = Template.objects.get(pk=form_values['primary_key'])
-            if cheat_check(form['user_answer'], template.disallowed):
+            if cheat_check(form_values['user_answer'], template.disallowed):
                 return render_to_response('answers.html', {'answer': cheat_message}, context)
             context_dict = view_logic.make_answer_context_dict(form_values)
             view_logic.change_elo(template, request.user, context_dict['user_won'], form_values['template_type'])
