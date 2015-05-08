@@ -36,10 +36,10 @@ def check_answer(user_answer, answer):
     print(user_answer)
     #if collections.Counter(user_answer) == collections.Counter(answer):
     if user_answer == []:
-        string = "\\text{Du har svart riktig!}"
+        right_answer = True
     else:
-        string = "\\text{Du har svart }" + '\\text{ og }'.join(user_answer) + "\\text{. Det er feil! Svaret er: }" + '\\text{ og }'.join(answer)
-    return string
+        right_answer = False
+    return right_answer
 
 ###task_with_solution###
 #Makes a valid task with solution from a template in the database.
