@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from registration.signals import user_registered
 from django.contrib import admin
 
 
@@ -67,3 +69,9 @@ class ExtendedUser(models.Model):
     rating = models.rating = models.PositiveSmallIntegerField(default=1200)
     current_template = models.rating = models.SmallIntegerField(default=-1)
 
+
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+       profile, created = ExtendedUser.objects.get_or_create(user=instance)
+
+post_save.connect(create_user_profile, sender=User)
