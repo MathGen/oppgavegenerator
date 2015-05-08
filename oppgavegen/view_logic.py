@@ -102,15 +102,16 @@ def submit_template(template, user, update):
 
 def change_elo(template, user, user_won, type):
     """Changes the elo of both user and task depending on who won."""
+    u = User.objects.get(username=user.username)
+    user_rating = u.extendeduser.rating
     # Formula for elo: Rx = Rx(old) + prefactor *(W-Ex) where W=1 if wins and W=0 if x loses
     # and Ex is the expected probability that x will win.
     # Ea = (1+10^((Rb-Ra)/400))^-1
     # Eb = (1+10^((Ra-Rb)/400))^-1
-    expected_user = (1+10**((template.rating-user.rating)/400))**(-1)
-    expected_template = (1+10**((template.rating-user.rating)/400))**(-1)
+    expected_user = (1+10**((template.rating-user_rating)/400))**(-1)
+    expected_template = (1+10**((template.rating-user_rating)/400))**(-1)
     prefactor = 32 #This value should be adjusted according to elo of the user (lower for higher ratings..)
-    u = User.objects.get(username=user.username)
-    user_rating = u.extendeduser.rating
+
 
     if user_won:
         new_user_rating = user_rating + prefactor*(1-expected_user)
