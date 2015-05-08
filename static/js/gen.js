@@ -17,6 +17,7 @@ var FILL_IN					= false;
 var CON_IN					= false;
 var SUBMITTING				= false;
 var VARIABLES				= {};						// Object containing variables in use.
+var VAR_INIT				= false;
 var dict_calc				= {};
 var dict_calc_unchanged		= {};
 var MODIFY					= false;
@@ -1484,7 +1485,7 @@ function refresh_char_colors(selector){
 				if(input_id == 'q'){
 					var var_id = f_var.html().charCodeAt(0) - 97; // Getting the button id (a:0, b:1, c:2)
 					if($('#q_btn_abc_' + var_id).length){}
-					else if(var_id in VARIABLES){
+					else if(var_id in VARIABLES || !VAR_INIT){
 						f_var.addClass('content_var');
 						$('#q_btn_var_dyn').append('<div id="q_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc btn_var_abc_q">' + f_var.html() + '<a id="q_btn_abc_del_'+var_id+'" class="btn btn-danger btn-xs btn_var_del">x</a></div>');
 						$('#s_btn_var_dyn').append('<button id="s_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc">' + f_var.html() + '</button>');
@@ -1591,6 +1592,7 @@ function refresh_variables(){
  */
 function insert_editable_data(){
 	// Initialize valid variables
+	VAR_INIT = true;
 	var var_str = $('#used_variables').text();
 	var_str = var_str.split(' ');
 	for(var v = 0; v < var_str.length; v++){
@@ -1695,7 +1697,7 @@ function insert_editable_data(){
 	}
 
 	// Refreshing colors and adding required variable-buttons to the question.
-	refresh_char_colors('#q_input_mathquill');
+	//refresh_char_colors('#q_input_mathquill');
 	update_variable_count();
 
 	// Insert solution
@@ -1778,6 +1780,7 @@ function insert_editable_data(){
 		$('#opt_fill_blanks').prop('checked', true);
 		refresh_fill_in_content();
 	}
+	VAR_INIT = false;
 }
 
 function post(path, params, method) {
