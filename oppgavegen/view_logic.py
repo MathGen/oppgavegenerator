@@ -131,6 +131,6 @@ def cheat_check(user_answer, disallowed):
     if disallowed is not None:
         standard_disallowed += disallowed.split('§')
     for c in standard_disallowed:
-        if user_answer.contains(c):
+        if c in user_answer:
             return True
     return False
