@@ -119,7 +119,7 @@ def submit(request):
 @login_required
 def answers(request):
     context = RequestContext(request)
-    cheat_message = 'Ulovlig tegn har blitt brukt i svar'
+    cheat_message = '\\text{Ulovlig tegn har blitt brukt i svar}'
     if request.method == 'POST':
         form = QuestionForm(request.POST)
         #todo: add a check for invalid signs and return a cheating page
