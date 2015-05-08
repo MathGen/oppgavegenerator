@@ -11,6 +11,7 @@ from sympy import *
 from sympy.parsing.sympy_parser import (parse_expr, standard_transformations, implicit_multiplication, implicit_application,
                                         auto_symbol, implicit_multiplication_application, factorial_notation, convert_xor)
 from .models import Template
+from django.contrib.auth.models import User
 from django.template.defaultfilters import *
 import html
 
@@ -160,7 +161,8 @@ def get_question(user, template_id, topic=''):
     increase = 15
     q = ''
     if template_id == '':
-        user_rating = user.extendedusermodel.rating
+        u = User.objects.get(username=user.username)
+        user_rating = u.extendeduser.rating
         while True:
             q = Template.objects.filter(rating__gt=(user_rating-slack))
             q = q.filter(rating__lt=(user_rating+slack))
@@ -391,7 +393,7 @@ def find_holes(fill_in):
     start_point = end_point = 0 #start and end point of box
     a = b = c = d = e = '' #Used to keep track of the last 5 variables iterated over.
     #Note: it might be faster/better to use a the counter instead of storing previous characters in the for loop.
-    #ie. for x in range(0, len(fill_in). Se latex_to_sympy for this in action.
+    #ie. for x in range(0, len(fill_in). See latex_to_sympy for this in action.
     for f in fill_in:
         if a == '@' and b == 'x' and c == 'x' and d == 'x' and e == 'x' and f == '@':
             recorder = not(recorder) #flip recorder
@@ -415,7 +417,7 @@ def find_holes(fill_in):
     return hole_dict
 
 ###make_holes###
-#Makes holes at random designated places in the solution.
+#Makes holes at designated places in the solution.
 #Returns a dict with the task with holes and also a array of what holes were replaced.
 def make_holes(hole_dict, fill_in, number_of_holes):
     possible_holes = list(hole_dict.keys())
