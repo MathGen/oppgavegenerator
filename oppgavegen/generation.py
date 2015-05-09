@@ -166,6 +166,7 @@ def get_question(user, template_id, topic=''):
         while True:
             q = Template.objects.filter(rating__gt=(user_rating-slack))
             q = q.filter(rating__lt=(user_rating+slack))
+            q = q.filter(valid_flag=True)
             if topic != '':
                 q = q.filter(topic_iexact=topic)
             if q:
