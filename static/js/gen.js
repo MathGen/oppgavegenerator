@@ -1022,7 +1022,6 @@ function submit_template(){
 	for(var vars in VARIABLES){
 		variables.push(VARIABLES[vars]);
 	}
-	alert(variables.join(' '));
 	form_submit['used_variables'] = variables.join(' ');
 
 	// CSRF_TOKEN
