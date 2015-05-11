@@ -1145,7 +1145,7 @@ function convert_variables(latex){
 			}
 			else if (la[i + 1] == 'n') {
 				la2 += '\\n';
-				i++;
+				i += 2;
 			}
 			else {
 				// Iterating through the string after backslash '\' for inserting LaTeX-text that is not meant to
