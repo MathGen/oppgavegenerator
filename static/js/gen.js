@@ -1164,7 +1164,7 @@ function convert_variables(latex){
 				}
 			}
 		}
-		if(la[i] in dict_letters && VARIABLES[parseInt(dict_letters[la[i]].replace(/R/g, ''))]){
+		if(la[i] in dict_letters && (VARIABLES[parseInt(dict_letters[la[i]].replace(/R/g, ''))] || la[i].match(/^[A-Z]*$/))){
 			if((la[i-1] in dict_letters || la[i-1] == ')' || !isNaN(la[i-1])) && la[i-2] != '\^' && la[i-2] != '\\'){
 				if(la[i-1] != ' ' && la[i-2] != 't' && la[i-3] != 'o' && la[i-4] != 'd' && la[i-5] != 'c'){
 					la2 += '\\cdot ' + dict_letters[la[i]];
