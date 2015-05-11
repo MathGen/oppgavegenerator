@@ -135,3 +135,8 @@ def cheat_check(user_answer, disallowed):
         if s in user_answer:
             return True
     return False
+
+def get_user_rating(user):
+    u = User.objects.get(username=user.username)
+    rating = u.extendeduser.rating
+    return rating

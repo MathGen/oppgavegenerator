@@ -38,6 +38,7 @@ def task(request):
     else:
         context_dict = generation.generate_task(request.user, "")
     context_dict['title'] = generation.printer()
+    context_dict['rating'] = view_logic.get_user_rating(request.user)
     return render_to_response('taskview.html', context_dict, context)
 
 @login_required
@@ -45,6 +46,7 @@ def task_by_id_and_type(request, template_id, desired_type='normal'):
     context = RequestContext(request)
     context_dict = generation.generate_task(request.user, template_id, desired_type)
     context_dict['title'] = generation.printer()
+    context_dict['rating'] = view_logic.get_user_rating(request.user)
     if context_dict['question'] == 'error':
         message = {'message' : 'Denne oppgavetypen har ikke blitt laget for denne oppgaven'}
         return render_to_response('error.html', message, context)
@@ -55,6 +57,7 @@ def task_by_id(request, template_id):
     context = RequestContext(request)
     context_dict = generation.generate_task(request.user, template_id)
     context_dict['title'] = generation.printer()
+    context_dict['rating'] = view_logic.get_user_rating(request.user)
     return render_to_response('taskview.html', context_dict, context)
 
 class QuestionForm(forms.Form):
@@ -92,6 +95,7 @@ def gen(request):
         topics += e.topic
     topics = topics[1:]
     context_dict = {'topics':topics}
+    context_dict['rating'] = view_logic.get_user_rating(request.user)
     return render_to_response('gen.html', context_dict, context)
 
 @login_required
@@ -130,6 +134,7 @@ def answers(request):
                 return render_to_response('answers.html', {'answer': cheat_message}, context)
             context_dict = view_logic.make_answer_context_dict(form_values)
             view_logic.change_elo(template, request.user, context_dict['user_won'], form_values['template_type'])
+            context_dict['rating'] = view_logic.get_user_rating(request.user)
             return render_to_response('answers.html', context_dict, context)
         else:
             print(form.errors)
@@ -163,11 +168,13 @@ def new_template(request):
         topics += e.topic
     topics = topics[1:]
     context_dict = {'topics':topics}
+    context_dict['rating'] = view_logic.get_user_rating(request.user)
     return render_to_response('newtemplate.html', context_dict, context)
 
 
 def edit_template(request, template_id):
     context = RequestContext(request)
     context_dict = view_logic.make_edit_context_dict(template_id)
+    context_dict['rating'] = view_logic.get_user_rating(request.user)
     return render_to_response('edit.html', context_dict, context)
 
