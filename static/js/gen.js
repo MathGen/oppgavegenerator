@@ -41,6 +41,7 @@ $(document).ready(function() {
 	if($('#edit_template').text() == 'true'){
 		MODIFY = true;
 		TOPIC_SELECTED = true;
+		VAR_INIT = true;
 		insert_editable_data();
 	}
 
@@ -1021,6 +1022,7 @@ function submit_template(){
 	for(var vars in VARIABLES){
 		variables.push(VARIABLES[vars]);
 	}
+	alert(variables.join(' '));
 	form_submit['used_variables'] = variables.join(' ');
 
 	// CSRF_TOKEN
@@ -1489,6 +1491,7 @@ function refresh_char_colors(selector){
 						f_var.addClass('content_var');
 						$('#q_btn_var_dyn').append('<div id="q_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc btn_var_abc_q">' + f_var.html() + '<a id="q_btn_abc_del_'+var_id+'" class="btn btn-danger btn-xs btn_var_del">x</a></div>');
 						$('#s_btn_var_dyn').append('<button id="s_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc">' + f_var.html() + '</button>');
+						$('#a_btn_var_dyn').append('<button id="a_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc">' + f_var.html() + '</button>');
 						$('#c_btn_var_dyn').append('<button id="c_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc">' + f_var.html() + '</button>');
 						$('#n_btn_var_dyn').append('<button id="n_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc">' + f_var.html() + '</button>');
 						$('#o_adv_domain').append('<tr id="o_adv_' + var_id + '" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">' + f_var.html() + ':</td><td><input id="o_adv_from_' + var_id + '" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_' + var_id + '" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td style="border-left: thin dashed lightgray"><input id="o_adv_dec_'+var_id+'" type="number" class="form-control input-sm opt_domain_dec" placeholder="Desimaler:"></td><td></td></tr>');
@@ -1592,12 +1595,11 @@ function refresh_variables(){
  */
 function insert_editable_data(){
 	// Initialize valid variables
-	VAR_INIT = true;
 	var var_str = $('#used_variables').text();
 	var_str = var_str.split(' ');
 	for(var v = 0; v < var_str.length; v++){
 		var tmp_var = var_str[v].split('§');
-		VARIABLES[tmp_var[0]] = tmp_var[1];
+		VARIABLES[tmp_var[0]] = tmp_var.join('§');
 	}
 	//console.log(VARIABLES);
 
