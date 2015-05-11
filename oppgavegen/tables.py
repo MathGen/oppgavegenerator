@@ -2,6 +2,8 @@
 
 import django_tables2 as tables
 from oppgavegen.models import Template
+from oppgavegen.models import User
+from oppgavegen.models import ExtendedUser
 
 
 class TemplateTable(tables.Table):
@@ -87,3 +89,9 @@ class UserTemplates(tables.Table):
         sequence = ("id", "content", "topic", "multiple_support", "fill_in_support", "rating", "action")
         order_by = ("-id")
 
+class UserTable(tables.Table):
+
+    class Meta:
+        model = ExtendedUser
+        template = ("bstable.html")
+        fields = ("id", "user", "rating")

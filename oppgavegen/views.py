@@ -159,6 +159,14 @@ def template_table_by_user(request):
 
 @login_required
 @user_passes_test(is_teacher, '/')
+def user_overview_table(request):
+    panel_title = "Brukere"
+    table = UserTable(ExtendedUser.objects.all())
+    RequestConfig(request, paginate={"per_page": 20}).configure(table)
+    return render(request, "templates.html", {"table": table, "panel_title": panel_title})
+
+@login_required
+@user_passes_test(is_teacher, '/')
 def new_template(request):
     context = RequestContext(request)
     #retrieves a list of topics and passes them to the view.

@@ -15,4 +15,5 @@ urlpatterns = patterns('',
     url(r"^task/(\d+)/$", 'oppgavegen.views.task_by_id', name='task_by_id'),
     url(r"^task/(\d+)/(\w+)/$", 'oppgavegen.views.task_by_id_and_type', name='task_by_id_and_type'),
     url(r"^edit/(\d+)/$", 'oppgavegen.views.edit_template', name='edit_template'),
+    url(r'^useranalysis/', 'oppgavegen.views.user_overview_table', name='user_table'),
 )
