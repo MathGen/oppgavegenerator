@@ -544,8 +544,7 @@ def test_template(template):
 
         try: #todo: there is probably a better way to do this.
             answer = parse_answer(answer, random_domain)
-            #even if tghios is unused it still checks if parsing the solution crashes.
-            solution = parse_solution(solution, random_domain)
+            solution = parse_solution(solution, random_domain) # Even if this is unused it still checks if parsing the solution crashes.
             got_trough_test = 1
         except Exception:
             pass

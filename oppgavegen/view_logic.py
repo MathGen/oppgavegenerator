@@ -118,9 +118,11 @@ def change_elo(template, user, user_won, type):
     if user_won:
         new_user_rating = user_rating + prefactor*(1-expected_user)
         new_template_rating = template.rating + prefactor*(0-expected_template)
+        template.times_solved += 1
     else:
         new_user_rating = user_rating + prefactor*(0-expected_user)
         new_template_rating = template.rating + prefactor*(1-expected_template)
+        template.times_failed += 1
     user.extendeduser.rating = new_user_rating
     user.extendeduser.save()
     template.rating = new_template_rating
