@@ -10,27 +10,24 @@ from django.contrib import admin
 #The classes have to be in order. The reason is that you might try to make a foreign key on a class that does not exist yet.
 
 class Topic(models.Model):
-    topic = models.CharField(max_length=200)                  #Name of the topic.
-    def __str__(self):                                        #Makes it so that self.topic shows up instead of topic(object)
+    topic = models.CharField(max_length=200) #Name of the topic.
+    def __str__(self): #Makes it so that self.topic shows up instead of topic(object)
+        """Returns the objects topic"""
         return self.topic
 
-    def clean(self):                                          #Removes trailing whitespace from topic
+    def clean(self): #Removes trailing whitespace from topic
+        """Returns the topic without whitespace"""
         if self.topic:
             self.topic = self.topic.strip()
-class TemplateType(models.Model):
-    type = models.CharField(max_length=200)
-    def __str__(self):
-        return self.type
-    def clean(self):                                          #Removes trailing whitespace
-        if self.type:
-            self.type = self.type.strip()
 
+#Choices for valid_flag.
 valid_choices = (
     (True, 'Valid'),
     (False, 'Invalid')
 )
 
 class Template(models.Model):
+    """Stores information for Templates"""
     question_text = models.CharField(max_length=200)          #The template. Math expression or text question ex. "Solve: ax = b + cx"
     solution = models.CharField(max_length=10000)            #Step by step solution to the answer
     answer = models.CharField(max_length=200)                 #A simple math operation to calculate the problem template. Should be the last step in the solution.
@@ -48,7 +45,10 @@ class Template(models.Model):
     fill_in = models.CharField(max_length=10000, blank=True, null=True, default="")
     valid_flag = models.BooleanField(default=False, choices=valid_choices)
     disallowed = models.CharField(max_length=1000, blank=True, null=True, default="")
-    ##Also save the original latex for post-back:
+    multiple_support = models.BooleanField(default=False) #Denotes whether the template supports multiple choice
+    fill_in_support = models.BooleanField(default=False) #Denotes whether the template supports fill in the blanks
+
+    #Also save the original latex for post-back:
     used_variables = models.CharField(max_length=200, blank=True, null=True)
     question_text_latex = models.CharField(max_length=200, blank=True, null=True)
     solution_latex =  models.CharField(max_length=10000, blank=True, null=True)
@@ -58,20 +58,22 @@ class Template(models.Model):
     fill_in_latex = models.CharField(max_length=10000, blank=True, null=True, default="")
     calculation_ref = models.CharField(max_length=1000, blank=True, null=True)
     unchanged_ref = models.CharField(max_length=1000, blank=True, null=True)
-    multiple_support = models.BooleanField(default=False) #Denotes whether the template supports multiple choice
-    fill_in_support = models.BooleanField(default=False) #Denotes whether the template supports fill in the blanks
 
-    def __str__(self):                                        #Makes it so that self.question_text shows up instead of topic(object)
+
+    def __str__(self): #Makes it so that self.question_text shows up instead of topic(object)
+        """Returns the question_text field of the object"""
         return self.question_text
 
 
 class ExtendedUser(models.Model):
+    """Extends the default django user model with a one to one relation"""
     user = models.OneToOneField(User)
     rating = models.rating = models.PositiveSmallIntegerField(default=1200)
     current_template = models.rating = models.SmallIntegerField(default=-1)
 
 
 def create_user_profile(sender, instance, created, **kwargs):
+    """Adds a ExtendedUser to a new user when created with one to one relation"""
     if created:
        profile, created = ExtendedUser.objects.get_or_create(user=instance)
 
