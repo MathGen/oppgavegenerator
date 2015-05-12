@@ -17,16 +17,13 @@ import html
 
 #Error message "(╯°□°）╯︵ ┻━┻"
 
-###printer###
-#Returns a string
-def printer():
-    string = "Oppgavegenerator"
-    return string
-
-###check_answer###
-#Takes both the user answer and answer and checks if they are equal.
-#Makes the answers into collections as some questions have multiple answers (ie. x^2 + x + 5).
 def check_answer(user_answer, answer):
+    """Checks if the answer the user gave is correct.
+
+    :param user_answer: A list containing the answer(s) the user gave
+    :param answer: A list containing the answer(s) to the template
+    :return: Boolean of whether the answer is 
+    """
     for s in answer:
         for us in user_answer:
             if parse_expr(latex_to_sympy(s) + '==' + latex_to_sympy(us), transformations=standard_transformations+(convert_xor, implicit_multiplication_application,),global_dict=None, evaluate=True):
@@ -41,9 +38,15 @@ def check_answer(user_answer, answer):
         right_answer = False
     return right_answer
 
-###task_with_solution###
-#Makes a valid task with solution from a template in the database.
+
 def generate_task(user, template_id, desired_type='normal'):
+    """Makes a valid math question at the correct rating from a template in the database.
+
+    :param user: The user requesting a template
+    :param template_id: (optional) A id used for requesting a specific template.
+    :param desired_type: (optional) A string for requesting a specific template type.
+    :return: Returns a complete math question with generated numbers.
+    """
     if template_id == "":
         q = get_question(user, '')  #gets a question from the DB
     else:
@@ -114,9 +117,14 @@ def generate_task(user, template_id, desired_type='normal'):
                    'number_of_answers' : number_of_answers, 'replacing_words' : replacing_words}
     return return_dict
 
-###calculate_answer###
-#Calculates a string using sympify
+
 def calculate_answer(s, domain):
+    """Calculates a string using sympy.
+
+    :param s: String to be calculated
+    :param domain: The domain of the variables.
+    :return: A latex version of the calculated string.
+    """
     if not is_number(s): #small optimization
         s = remove_unnecessary(s)
         s = str(latex_to_sympy(s))
@@ -127,9 +135,14 @@ def calculate_answer(s, domain):
 
     return str(s)
 
-###parse_soltuion###
-#Parses a solution (or other string) and calculates using sympify where needed. (between @? ?@)
+
 def parse_solution(solution, domain):
+    """Parses a solution (or other similar string) and calculates where needed. (between @? ?@)
+
+    :param solution: The string to be parsed.
+    :param domain: The domain of the different variables.
+    :return: A parsed version of the input string (solution)
+    """
     print('in parse_solution')
     print(solution)
     arr = []
@@ -154,9 +167,15 @@ def parse_solution(solution, domain):
     print(new_solution)
     return new_solution
 
-###get_question###
-#Gets a question/template from the database and returns it.
+
 def get_question(user, template_id, topic=''):
+    """Gets a template from the database at a appropriate rating.
+
+    :param user: The user requesting a template
+    :param template_id: (optional) the id of a template
+    :param topic: the topic of the template.
+    :return: Template object.
+    """
     slack = 40
     increase = 15
     q = ''
@@ -182,10 +201,15 @@ def get_question(user, template_id, topic=''):
 
     return q
 
-###replace_words###
-#Replaces variables in a string with the value of a key in the given dictionary.
-#Example: "example string: R1", example_dict{'R1', '5'} -> "example string: 5
+
 def replace_words(sentence, dictionary):
+    """Replaces variables in a string with the value of a key in the given dictionary.
+    Example: ('example sentence', 'example § apple, grape') ->
+             {'sentence': 'apple sentence', 'replace_string' 'example § apple'}}
+    :param sentence: String to replace words in.
+    :param dictionary: A splitable (§) string with word alternatives.
+    :return: dictionary with the new sentence and a splitable string with what words were replaced
+    """
     dictionary = dictionary.split('§')
     replace_string = ''
     for i in range(0,len(dictionary)-1,2):
@@ -195,35 +219,44 @@ def replace_words(sentence, dictionary):
         replace_string += '§' + dictionary[i] + '§' + replace_word
     return {'sentence' : sentence, 'replace_string' : replace_string[1:]}
 
-###calculate_array###
-#calculates all the answers in a array
-#Example: ['2+2','3+3'] -> [4,6]
+
 def calculate_array(array, domain):
+    """Calculates all the answers in a list.
+
+    Example: ['2+2','3+3'] -> [4,6]
+    :param array: List of things to calculate.
+    :param domain: Domain for variables.
+    :return: Calculated list.
+    """
     out_arr = []
     for s in array:
         out_arr.append(calculate_answer(s, domain))
     return out_arr
 
-###after_equal_sign###
-#Returns everything after the last = sign of a string
-#Example: 'example = string = this' -> ' this'
+
 def after_equal_sign(s):
+    """Returns everything after the last '=' sign of a string."""
     if '=' in s:
         s = s.split("=")
         s = s[len(s)-1]
     return s
 
-###replace_variables_from_array###
-#Takes a string and replaces variables in the string with ones from the array
-#Example: (['R10', '5', 'R1', '7'], 'example string R1 and R10') -> 'example string 7 and 5'
+
 def replace_variables_from_array(arr, s):
+    """Takes a string and replaces variables in the string with ones from the array
+
+    #Example: (['R10', '5', 'R1', '7'], 'example string R1 and R10') -> 'example string 7 and 5'
+    :param arr: Array of variables
+    :param s: String to replace variables in
+    :return: String with replaced variables
+    """
     for x in range(0,len(arr)-1,2): #set increment size to 2.
         s = s.replace(arr[x], arr[x+1])
     return s
 
-###parse_answer###
-#parses the answer. works for arrays with multiple answers.
+
 def parse_answer(answer, domain):
+    """Parses the answer. works for arrays with multiple answers."""
     answer = answer.split('§')
     counter = 0
     for s in answer:
@@ -233,20 +266,26 @@ def parse_answer(answer, domain):
             continue
         counter += 1
     return '§'.join(answer) #join doesn't do anything if the list has 1 element, except converting it to str
-###generate_valid_numbers###
-#generates valid numbers using each variables random domain.
-#also makes sure all variables followes the given conditions.
 
-def generate_valid_numbers(task, random_domain_list, conditions, test):
+
+def generate_valid_numbers(template, random_domain_list, conditions, domain_dict):
+    """Generates valid numbers using each variables random domain.
+
+    Also makes sure all variables follows the given conditions.
+    :param template: The template used.
+    :param random_domain_list: List of the random domains.
+    :param conditions: The conditions the variable have to follow.
+    :param domain_dict: If true the function returns the domain_dict instead of variable_dict.
+    :return: The current generated variables used in the template.
+    """
     hardcoded_variables = ['R22R', 'R21R','R20R','R19R','R18R','R17R','R16R','R15R','R14R','R13R','R12R','R11R','R10R','R9R','R8R','R7R','R6R','R3R','R2R','R1R','R0R']
-    variables_used = ""
     domain_dict = {}
     variable_dict = {}
     counter = 0
     #Loops through all possible variable names, and generate a random number for it.
     #Adds the variables names and numbers to the 2 dictionaries and the string
     for i in range(len(hardcoded_variables)):
-        if task.count(hardcoded_variables[i]) > 0:
+        if template.count(hardcoded_variables[i]) > 0:
             #todo add support for domain being a list
             try: #in case of index out of bounds it just uses the first element of the array
                 random_domain = random_domain_list[counter].split()
@@ -265,34 +304,38 @@ def generate_valid_numbers(task, random_domain_list, conditions, test):
         return domain_dict
     return variable_dict
 
-###dict to string###
-#Returns a seperated string of the key and value pairs of a dict
+
 def dict_to_string(variable_dict):
+    """Returns a seperated string of the key and value pairs of a dict"""
     variables_used = ""
     for key in variable_dict:
         variables_used += '§' + str(key) + '§' + str(variable_dict[key])
     return variables_used[1:] #Use [1:] to remove unnecessary § from the start
 
-###array_to_string###
-#turns a array into a string seperated by §
+
 def array_to_string(array):
+    """Turns a array into a string separated by §."""
     string = ''
     for s in array:
         string += '§' + s
     return string[1:] #Use [1:] to remove unnecessary § from the start
 
-###remove_unnecessary###
-#removes unnecessary symbols from a string
+
 def remove_unnecessary(string):
+    """Removes unnecessary symbols from a string and returns the string."""
     string = string.replace('@?', '')
     string = string.replace('?@', '')
     return string
 
-### conditions ###
-#A function that loops trough the conditions for a given template.
-#In the conditions numbers get changed to match the condition. This means all
-#Conditions will have to be tried again if one of the conditions fails and changes numbers around.
+
 def check_conditions(conditions, variable_dict,domain_dict):
+    """A function that checks if the generated variables pass the conditions and generates new ones until they do.
+
+    :param conditions: The conditions of the template.
+    :param variable_dict: List of variables.
+    :param domain_dict: the domain of the variables.
+    :return: List of variables that pass the conditions of the given template.
+    """
     conditions = remove_unnecessary(conditions)
     #The slow/random way. todo: find a smart/better way to do this
     #Check conditions --> if false: change a variable -> check conditions
@@ -301,20 +344,23 @@ def check_conditions(conditions, variable_dict,domain_dict):
         variable_to_change = choice(list(variable_dict.keys())) #chose a random key from variable_dict
         variable_dict[variable_to_change] = new_random_value(variable_to_change, domain_dict, 0, '')
         inserted_conditions = string_replace(conditions, variable_dict)
-    return variable_dict #maybe send a counter with how long it took to get trough conditions
+    return variable_dict
 
-###string_replace###
-#Replaces a string with variables (R0, R1..) with numbers from a dict.
-#the dictionary holds keys which are the variables, and values which are the numbers
-#A typical variable dict might look like this: {'R0' : 10, R2 : 5}
+
 def string_replace(string, variable_dict):
+    """Replaces variables in a string with numbers from a dict
+
+    :param string: String with variables in it.
+    :param variable_dict: a dictionary with variable names as keys and the number to replace them which as values.
+    :return: String with numbers instead of variable names.
+    """
     for key in variable_dict:
         string = string.replace(key, str(variable_dict[key]))
     return string
 
-###get_variables_used###
-#Returns which variables are used in a given string
-def get_variables_used(string, variable_dict): #gets the variables used in a string and adds them to a array
+
+def get_variables_used(string, variable_dict):
+    """Returns what variables are used in the given string as a list."""
     used_variables = []
     for key in variable_dict:
         temp_string = string.replace(key, "")
@@ -323,11 +369,16 @@ def get_variables_used(string, variable_dict): #gets the variables used in a str
             string = temp_string
     return used_variables
 
-###new_random_value###
-#Creates a new random value for a given variable using it's domain.
-#The function also supports a bonus variable which helps in limiting the domain for the variable further if needed.
-#It also takes a argument for different configurations of what aproach to use for the new variable
+
 def new_random_value(value, domain_dict, bonus, arg):
+    """Creates a new random value for a given variable using its domain.
+
+    :param value: The value to change.
+    :param domain_dict: Domain of the variables, decides what range of the variable and number of decimals.
+    :param bonus: Used for limiting the domain for the variable further if needed.
+    :param arg: argument for different configurations of what approach to use for the new variable
+    :return: New value.
+    """
     domain = domain_dict[value]
     #kinda interesting: if bonus isn't between the domain values, changing the value won't fix the condition.
     #todo use this fact for good. #savetheworld
@@ -345,36 +396,14 @@ def new_random_value(value, domain_dict, bonus, arg):
 
     return new_value
 
-###solve_inequality###
-#solves inequalities with for 1 unknown
-#example: R1 + R2 < R3, solve for R1 where R2 = 10 and R3 = 12
-#this gets turned into solve_for_this + 10 < 12 -> solve_for_this < 2
-#the function then returns 2
-def solve_inequality(inequality, variable_dict, solve_for):
-    solve_for_this = symbols('solve_for_this')
-    variable_dict[solve_for] = solve_for_this
-    inequality = string_replace(inequality, variable_dict)
-    inequality_answer = str(solve(inequality, solve_for_this, rational=False))
-    #remove unnecessary information from the answer ( for instance it might return 3 > solve_for_this
-    #we only need 3 so we remove the > and solve_for_this
-    inequality_answer = inequality_answer.replace('<', "")
-    inequality_answer = inequality_answer.replace('solve_for_this', "")
 
-    return Float(inequality_answer)
-
-###fill_in_the_blanks###
-#Takes the solution and the modified fill_in solution and makes it into a fill in the blanks task.
 def fill_in_the_blanks(fill_in):
+    """Returns a fill in the blank template and the position of the holes."""
     print('test')
     print(fill_in)
     hole_dict = find_holes(fill_in)
     number_of_holes = len(hole_dict)
     make_holes_dict = make_holes(hole_dict, fill_in, number_of_holes)
-    #holes_replaced = make_holes_dict['holes_replaced']
-
-    #new_hole_dict = {} #make a dict with only the holes used.
-    #for s in holes_replaced:
-    #    new_hole_dict[s] = hole_dict[s]
     hole_positions = list(hole_dict.keys())
     hole_positions = array_to_string(hole_positions)
     fill_in = make_holes_dict['fill_in']
@@ -383,17 +412,17 @@ def fill_in_the_blanks(fill_in):
     print(return_dict)
     return return_dict
 
-###find_holes###
-#Finds the avaiable holes in the task and their position.
+
 def find_holes(fill_in):
-    fill_in = fill_in.split('§')
+    """Finds the available holes in the template and their position."""
+    fill_in = fill_in.split('§') #makes fill in into a list.
     fill_in = fill_in[len(fill_in)-1]
     hole_dict = {} #keeps track of what is getting replaced and the position of that in the string.
     recorder = False
     counter = 0 #keeps track of how far in the string the loop is
     start_point = end_point = 0 #start and end point of box
     a = b = c = d = e = '' #Used to keep track of the last 5 variables iterated over.
-    #Note: it might be faster/better to use a the counter instead of storing previous characters in the for loop.
+    #Note: it might be faster/better to use a counter instead of storing previous characters in the for loop.
     #ie. for x in range(0, len(fill_in). See latex_to_sympy for this in action.
     for f in fill_in:
         if a == '@' and b == 'x' and c == 'x' and d == 'x' and e == 'x' and f == '@':
@@ -420,10 +449,15 @@ def find_holes(fill_in):
     print(hole_dict)
     return hole_dict
 
-###make_holes###
-#Makes holes at designated places in the solution.
-#Returns a dict with the task with holes and also a array of what holes were replaced.
+
 def make_holes(hole_dict, fill_in, number_of_holes):
+    """Inserts holes at given places in the template for fill in the blanks
+
+    :param hole_dict: dictionary of the holes to replace.
+    :param fill_in: the template.
+    :param number_of_holes: number of holes to create.
+    :return: dictionary with fill in the blanks template with holes and which holes were replaced.
+    """
     holes_to_replace = list(hole_dict.values())
     for s in holes_to_replace:
         fill_in = fill_in.replace('@xxxx@'+s, '\\editable{}'+'@xxxx@') #why do i add @xxxx@?
@@ -431,9 +465,9 @@ def make_holes(hole_dict, fill_in, number_of_holes):
     return_dict = {'fill_in' : fill_in, 'holes_replaced' : holes_to_replace}
     return return_dict
 
-###get_values_from_position###
-#takes a array of positions and returns a array with the strings in between the positional coordinates.
+
 def get_values_from_position(position_string, solution):
+    """Takes a array of positions and returns a array with the strings in between the positional coordinates."""
     position_array = position_string.split('§')
     values = ''
     for s in position_array:
@@ -441,9 +475,9 @@ def get_values_from_position(position_string, solution):
         values += '§' + (solution[int(positions[0]):int(positions[1])])
     return values[1:]
 
-###multifill###
-#Makes the template into a multiple fill in the blanks.
+
 def multifill(choices, variable_dict):
+    """Returns choices with fill in the blanks capability"""
     choices = choices.replace('@?', '')
     choices = choices.replace('?@', '')
     possible_holes = list(variable_dict.keys())
@@ -462,12 +496,11 @@ def multifill(choices, variable_dict):
     choices = string_replace(choices, variable_dict)
     return choices
 
-###template_validation###
-#tests a template to see if it makes solvable tasks in a reasonable amount of tries.
+
 def template_validation(template_id):
+    """tests a template to see if it makes solvable tasks in a reasonable amount of tries. returns a success string"""
     valid = False
     template = Template.objects.get(pk=template_id)
-    success_string = ""
     counter = 0
     q = Template.objects.get(pk=template_id)
     for x in range(0,10000):
@@ -485,9 +518,9 @@ def template_validation(template_id):
         success_string = "Mal lagret, men kunne ikke valideres. Rediger malen din å prøv på nytt."
     return success_string
 
-###Tests_template###
-#Tests if the creation of a template ends up with a valid template
+
 def test_template(template):
+    """Tests if the creation of a template ends up with a valid template. Returns 1/0 for success/failure."""
     got_trough_test = 0 #1 if template got through test, and 0 if not.
     #make numbers, check condition, check calculations
     random_domain = template.random_domain
@@ -518,12 +551,11 @@ def test_template(template):
             pass
         if answer == 'error':
             got_trough_test = 0
-
     return got_trough_test
 
-###latex_to_sympy###
-#Turns a string of latex into a string sympy can use.
+
 def latex_to_sympy(expression):
+    """Takes a latex expression and returns a expression sympy can use"""
     expression = expression.replace('\\ne','!=')
     expression = expression.replace('{', '(')
     expression = expression.replace('}', ')')
@@ -589,18 +621,18 @@ def latex_to_sympy(expression):
     expression = expression.replace('binom', 'binomial')
     return expression
 
-###is_number###
-#Returns whether a string is a number or not.
+
 def is_number(s):
+    """Returns whether a string is a number or not."""
     try:
         float(s)
         return True
     except ValueError:
         return False
 
-###make_number###
-#Makes a new random number from the domain given.
+
 def make_number(domain):
+    """Returns a random number within the range and decimal point of the domain given."""
     number = uniform(float(domain[0]), float(domain[1]))
     try:
         number = round(number, int(domain[2]))
@@ -610,7 +642,9 @@ def make_number(domain):
         number = round(number)
     return number
 
+
 def round_answer(domain, answer):
+    """returns a rounded version of the answer given."""
     answer = float(answer) # Cast it to float. if it is a integer, it will get rounded back to a integer.
     domain = domain.split('§')
     rounding_number = 0

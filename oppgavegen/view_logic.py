@@ -76,6 +76,7 @@ def make_answer_context_dict(form_values):
 
 
 def submit_template(template, user, update):
+    """Submits or updates a template to the database (depending on if update is true or not)"""
     print(template.pk)
     print(template.answer)
     if update:

@@ -37,7 +37,6 @@ def task(request):
         context_dict = generation.generate_task(request.user, question_type)
     else:
         context_dict = generation.generate_task(request.user, "")
-    context_dict['title'] = generation.printer()
     context_dict['rating'] = view_logic.get_user_rating(request.user)
     return render_to_response('taskview.html', context_dict, context)
 
@@ -45,7 +44,6 @@ def task(request):
 def task_by_id_and_type(request, template_id, desired_type='normal'):
     context = RequestContext(request)
     context_dict = generation.generate_task(request.user, template_id, desired_type)
-    context_dict['title'] = generation.printer()
     context_dict['rating'] = view_logic.get_user_rating(request.user)
     if context_dict['question'] == 'error':
         message = {'message' : 'Denne oppgavetypen har ikke blitt laget for denne oppgaven'}
@@ -56,7 +54,6 @@ def task_by_id_and_type(request, template_id, desired_type='normal'):
 def task_by_id(request, template_id):
     context = RequestContext(request)
     context_dict = generation.generate_task(request.user, template_id)
-    context_dict['title'] = generation.printer()
     context_dict['rating'] = view_logic.get_user_rating(request.user)
     return render_to_response('taskview.html', context_dict, context)
 
