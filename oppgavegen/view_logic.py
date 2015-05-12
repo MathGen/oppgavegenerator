@@ -5,6 +5,7 @@ from datetime import datetime
 from django.contrib.auth.models import User
 
 def make_edit_context_dict(template_id):
+    """Returns context dict for use on the edit page"""
     q = Template.objects.get(pk=template_id)
     calculation_references = q.calculation_ref
     question_text = q.question_text_latex
@@ -32,6 +33,7 @@ def make_edit_context_dict(template_id):
 
 
 def make_answer_context_dict(form_values):
+    """Returns context dict for use on the answer page"""
     user_answer = form_values['user_answer']
     template_type = form_values['template_type']
     template_specific = form_values['template_specific']
@@ -111,8 +113,7 @@ def change_elo(template, user, user_won, type):
     # Eb = (1+10^((Ra-Rb)/400))^-1
     expected_user = (1+10**((template.rating-user_rating)/400))**(-1)
     expected_template = (1+10**((template.rating-user_rating)/400))**(-1)
-    prefactor = 32 #This value should be adjusted according to elo of the user (lower for higher ratings..)
-
+    prefactor = 30 #This value should be adjusted according to elo of the user (lower for higher ratings..)
 
     if user_won:
         new_user_rating = user_rating + prefactor*(1-expected_user)
@@ -138,6 +139,7 @@ def cheat_check(user_answer, disallowed):
     return False
 
 def get_user_rating(user):
+    """Returns the rating of the give user"""
     u = User.objects.get(username=user.username)
     rating = u.extendeduser.rating
     return rating
