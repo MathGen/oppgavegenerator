@@ -24,13 +24,15 @@ from oppgavegen.templatetags.app_filters import is_teacher
 from oppgavegen import view_logic
 from oppgavegen.view_logic import *
 
-def is_member(user): #Checks if a user is a member of a group
+def is_member(user):
+    """Returns true/false depending on if the user is a member of the teacher group (or is a superuser)"""
     if user.is_superuser:
         return True
     return user.groups.filter(name='Teacher').exists()
 
 @login_required
 def task(request):
+    """Returns a render of taskview.html with a rating apropriate math question"""
     context = RequestContext(request)
     question_type = request.GET.get('q', '')
     if question_type != "":
@@ -42,6 +44,7 @@ def task(request):
 
 @login_required
 def task_by_id_and_type(request, template_id, desired_type='normal'):
+    """Returns a render of taskview with a specific math template with specified type"""
     context = RequestContext(request)
     context_dict = generation.generate_task(request.user, template_id, desired_type)
     context_dict['rating'] = view_logic.get_user_rating(request.user)
@@ -52,6 +55,7 @@ def task_by_id_and_type(request, template_id, desired_type='normal'):
 
 @login_required
 def task_by_id(request, template_id):
+    """Returns a render of taskview with a specific math template"""
     context = RequestContext(request)
     context_dict = generation.generate_task(request.user, template_id)
     context_dict['rating'] = view_logic.get_user_rating(request.user)
@@ -67,6 +71,7 @@ class QuestionForm(forms.Form):
     disallowed = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400, required=False)
 
     def process(self):
+        """Returns a cleaned dictionary of it's own values."""
         cd = {'variable_dictionary': self.cleaned_data['variable_dictionary'],'primary_key': self.cleaned_data['primary_key'],
               'user_answer': self.cleaned_data['user_answer'], 'template_type': self.cleaned_data['template_type'],
               'template_specific': self.cleaned_data['template_specific'],
@@ -79,12 +84,14 @@ class TemplateForm(ModelForm):
         fields = '__all__'
 
         def process(self):
+            """Returns a cleaned dictionary of it's own values."""
             cd = [self.cleaned_data['question'], self.cleaned_data['answer']]
             return cd
 
 @login_required
 @user_passes_test(is_teacher, '/')
 def gen(request):
+    """Returns a render of gen.html"""
     context = RequestContext(request)
     topics = ""
     for e in Topic.objects.all(): #retrieves a list of topics and passes them to the view.
@@ -98,9 +105,10 @@ def gen(request):
 @login_required
 @user_passes_test(is_teacher, '/')
 def submit(request):
+    """Returns a render of submit html. Different depending on if the submission goes through ot not"""
     message = 'don\'t come here'
     if request.method == 'POST':
-        message = 'failure!'
+        message = 'Det har skjedd noe feil ved innsending av form'
         #todo check input for errors
         form = TemplateForm(request.POST)
         if form.is_valid():
@@ -119,6 +127,7 @@ def submit(request):
 
 @login_required
 def answers(request):
+    """Returns a render of answers.html"""
     context = RequestContext(request)
     cheat_message = '\\text{Ulovlig tegn har blitt brukt i svar}'
     if request.method == 'POST':
@@ -140,6 +149,7 @@ def answers(request):
 @login_required
 @user_passes_test(is_teacher, '/')
 def templates(request):
+    """Returns a render of templates.html with all the templates"""
     panel_title = "Alle Maler"
     table = BootstrapTemplateTable(Template.objects.filter(valid_flag=True))
     RequestConfig(request, paginate={"per_page": 20}).configure(table)
@@ -148,6 +158,7 @@ def templates(request):
 @login_required
 @user_passes_test(is_teacher, '/')
 def template_table_by_user(request):
+    """Returns a render of templates.html with only templates from the logged in user."""
     user = request.user
     panel_title = "Dine Maler"
     table = UserTemplates(Template.objects.filter(creator=user))
@@ -157,6 +168,7 @@ def template_table_by_user(request):
 @login_required
 @user_passes_test(is_teacher, '/')
 def user_overview_table(request):
+    """Returns a render of templates.html with overview over users"""
     panel_title = "Brukere"
     table = UserTable(ExtendedUser.objects.all())
     RequestConfig(request, paginate={"per_page": 20}).configure(table)
@@ -165,6 +177,7 @@ def user_overview_table(request):
 @login_required
 @user_passes_test(is_teacher, '/')
 def new_template(request):
+    """Returns a render of newtemplate.html used for creating new templates"""
     context = RequestContext(request)
     #retrieves a list of topics and passes them to the view.
     topics = ""
@@ -176,8 +189,10 @@ def new_template(request):
     context_dict['rating'] = view_logic.get_user_rating(request.user)
     return render_to_response('newtemplate.html', context_dict, context)
 
-
+@login_required
+@user_passes_test(is_teacher, '/')
 def edit_template(request, template_id):
+    """Returns a render of edit.html used for editing existing templates"""
     context = RequestContext(request)
     context_dict = view_logic.make_edit_context_dict(template_id)
     context_dict['rating'] = view_logic.get_user_rating(request.user)
