@@ -370,12 +370,12 @@ def fill_in_the_blanks(fill_in):
     hole_dict = find_holes(fill_in)
     number_of_holes = len(hole_dict)
     make_holes_dict = make_holes(hole_dict, fill_in, number_of_holes)
-    holes_replaced = make_holes_dict['holes_replaced']
+    #holes_replaced = make_holes_dict['holes_replaced']
 
-    new_hole_dict = {} #make a dict with only the holes used.
-    for s in holes_replaced:
-        new_hole_dict[s] = hole_dict[s]
-    hole_positions = list(new_hole_dict.values())
+    #new_hole_dict = {} #make a dict with only the holes used.
+    #for s in holes_replaced:
+    #    new_hole_dict[s] = hole_dict[s]
+    hole_positions = list(hole_dict.keys())
     hole_positions = array_to_string(hole_positions)
     fill_in = make_holes_dict['fill_in']
     return_dict = {'fill_in' : fill_in, 'hole_positions' : hole_positions}
@@ -387,7 +387,7 @@ def fill_in_the_blanks(fill_in):
 #Finds the avaiable holes in the task and their position.
 def find_holes(fill_in):
     fill_in = fill_in.split('§')
-    fill_in = fill_in[randint(0, len(fill_in))]
+    fill_in = fill_in[len(fill_in)-1]
     hole_dict = {} #keeps track of what is getting replaced and the position of that in the string.
     recorder = False
     counter = 0 #keeps track of how far in the string the loop is
@@ -403,7 +403,10 @@ def find_holes(fill_in):
                 start_point = counter+1
             elif not recorder:
                 end_point = counter
-                hole_dict[s[:-5]] = str(start_point) + ' ' + str(end_point-5)
+                #swapping
+                #hole_dict[s[:-5]] = str(start_point) + ' ' + str(end_point-5)
+                hole_dict[str(start_point) + ' ' + str(end_point-5)] = s[:-5]
+
                 counter -= 6 #sets the counter back 6 to compensate for @xxxx@ which is not in the original string
             s = ''
         elif recorder == True:
@@ -421,13 +424,9 @@ def find_holes(fill_in):
 #Makes holes at designated places in the solution.
 #Returns a dict with the task with holes and also a array of what holes were replaced.
 def make_holes(hole_dict, fill_in, number_of_holes):
-    possible_holes = list(hole_dict.keys())
-    shuffle(possible_holes)
-    holes_to_replace = []
-    for x in range(number_of_holes):
-        holes_to_replace.append(possible_holes[x])
+    holes_to_replace = list(hole_dict.values())
     for s in holes_to_replace:
-        fill_in = fill_in.replace('@xxxx@'+s, '\\editable{}'+'@xxxx@')
+        fill_in = fill_in.replace('@xxxx@'+s, '\\editable{}'+'@xxxx@') #why do i add @xxxx@?
     fill_in = fill_in.replace('@xxxx@', '')
     return_dict = {'fill_in' : fill_in, 'holes_replaced' : holes_to_replace}
     return return_dict
