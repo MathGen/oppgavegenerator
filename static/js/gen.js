@@ -315,6 +315,12 @@ $(document).ready(function() {
 		e.preventDefault();
 		$(get_input_field(this)).mathquill('cmd', '\\sqrt').find('textarea').focus();
 	});
+
+	// Insert nth-root
+	$('.btn_nthroot').click(function(e){
+		e.preventDefault();
+		$(get_input_field(this)).mathquill('cmd', '\\nthroot').find('textarea').focus();
+	});
 	
 	// Insert integral
 	var q_btn_integral = $('.btn_int');
@@ -342,6 +348,24 @@ $(document).ready(function() {
 	btn_binom.click(function(e){
 		e.preventDefault();
 		$(get_input_field(this)).mathquill('cmd', '\\binom').find('textarea').focus();
+	});
+
+	// Insert sin
+	$('.btn_sin').click(function(e){
+		e.preventDefault();
+		$(get_input_field(this)).mathquill('cmd', '\\sin').find('textarea').focus();
+	});
+
+	// Insert cos
+	$('.btn_cos').click(function(e){
+		e.preventDefault();
+		$(get_input_field(this)).mathquill('cmd', '\\cos').find('textarea').focus();
+	});
+
+	// Insert tan
+	$('.btn_tan').click(function(e){
+		e.preventDefault();
+		$(get_input_field(this)).mathquill('cmd', '\\tan').find('textarea').focus();
 	});
 
 	// Insert calculated A,B,C,..
