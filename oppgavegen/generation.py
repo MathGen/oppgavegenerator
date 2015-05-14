@@ -143,8 +143,8 @@ def parse_solution(solution, domain):
     :param domain: The domain of the different variables.
     :return: A parsed version of the input string (solution)
     """
-    print('in parse_solution')
-    print(solution)
+    #print('in parse_solution')
+    #print(solution)
     arr = []
     newArr = []
     recorder = False
@@ -268,14 +268,14 @@ def parse_answer(answer, domain):
     return '§'.join(answer) #join doesn't do anything if the list has 1 element, except converting it to str
 
 
-def generate_valid_numbers(template, random_domain_list, conditions, domain_dict):
+def generate_valid_numbers(Template, random_domain_list, conditions, test):
     """Generates valid numbers using each variables random domain.
 
     Also makes sure all variables follows the given conditions.
     :param template: The template used.
     :param random_domain_list: List of the random domains.
     :param conditions: The conditions the variable have to follow.
-    :param domain_dict: If true the function returns the domain_dict instead of variable_dict.
+    :param test: If true the function returns the domain_dict instead of variable_dict.
     :return: The current generated variables used in the template.
     """
     hardcoded_variables = ['R22R', 'R21R','R20R','R19R','R18R','R17R','R16R','R15R','R14R','R13R','R12R','R11R','R10R','R9R','R8R','R7R','R6R','R3R','R2R','R1R','R0R']
@@ -285,7 +285,7 @@ def generate_valid_numbers(template, random_domain_list, conditions, domain_dict
     #Loops through all possible variable names, and generate a random number for it.
     #Adds the variables names and numbers to the 2 dictionaries and the string
     for i in range(len(hardcoded_variables)):
-        if template.count(hardcoded_variables[i]) > 0:
+        if Template.count(hardcoded_variables[i]) > 0:
             #todo add support for domain being a list
             try: #in case of index out of bounds it just uses the first element of the array
                 random_domain = random_domain_list[counter].split()
@@ -354,6 +354,7 @@ def string_replace(string, variable_dict):
     :param variable_dict: a dictionary with variable names as keys and the number to replace them which as values.
     :return: String with numbers instead of variable names.
     """
+    print(variable_dict)
     for key in variable_dict:
         string = string.replace(key, str(variable_dict[key]))
     return string
@@ -528,12 +529,15 @@ def test_template(template):
     answer = template.answer
     question = template.question_text
     solution = template.solution
+    print(question + solution + answer)
     conditions = template.conditions
     conditions = remove_unnecessary(conditions)
 
     variable_dict = generate_valid_numbers(question, random_domain_list, "", False) #pass no conditions to to just get back the first numbers made.
+    print('this:')
+    print(variable_dict)
     domain_dict = generate_valid_numbers(question, random_domain_list, "", True) #pass test = True to get domain_dict instead of variable_dict
-    inserted_conditions = string_replace(conditions, variable_dict)
+    inserted_conditions = (conditions, variable_dict)
     if len(conditions) > 1:
         conditions_pass = sympify(latex_to_sympy(inserted_conditions))
     else:
@@ -541,7 +545,6 @@ def test_template(template):
     if conditions_pass:
         answer = string_replace(answer,variable_dict)
         solution = string_replace(solution,variable_dict)
-
         try: #todo: there is probably a better way to do this.
             answer = parse_answer(answer, random_domain)
             solution = parse_solution(solution, random_domain) # Even if this is unused it still checks if parsing the solution crashes.
