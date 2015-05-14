@@ -22,7 +22,7 @@ def check_answer(user_answer, answer):
 
     :param user_answer: A list containing the answer(s) the user gave
     :param answer: A list containing the answer(s) to the template
-    :return: Boolean of whether the answer is 
+    :return: Boolean of whether the answer is right or not
     """
     for s in answer:
         for us in user_answer:
