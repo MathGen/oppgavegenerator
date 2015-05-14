@@ -4,6 +4,7 @@ from oppgavegen import generation
 from datetime import datetime
 from django.contrib.auth.models import User
 
+
 def make_edit_context_dict(template_id):
     """Returns context dict for use on the edit page"""
     q = Template.objects.get(pk=template_id)
@@ -24,7 +25,7 @@ def make_edit_context_dict(template_id):
         topics += '§' + str(e.pk) + '§'
         topics += e.topic
     topics = topics[1:]
-    context_dict = {'template_id': template_id, 'answer' : answer, 'solution': solution,
+    context_dict = {'template_id': template_id, 'answer': answer, 'solution': solution,
                     'question_text': question_text, 'calculation_references': calculation_references,
                     'choices': choices, 'conditions': conditions, 'fill_in': fill_in,
                     'topic': topic, 'random_domain': random_domain, 'unchanged_ref': unchanged_ref,
@@ -50,16 +51,14 @@ def make_answer_context_dict(form_values):
     answer = generation.parse_answer(answer, random_domain)
     answer = answer.replace('`', '')
     answer = answer.split('§')
-    solution = str((q.question_text).replace('\\\\', '\\')) + "\\n" + str(q.solution.replace('\\\\', '\\'))
+    solution = str(q.question_text.replace('\\\\', '\\')) + "\\n" + str(q.solution.replace('\\\\', '\\'))
     solution = generation.replace_variables_from_array(variable_dictionary, solution)
     solution = generation.parse_solution(solution, random_domain)
     if len(replacing_words) > 0:
         solution = generation.replace_words(solution, replacing_words)['sentence']
-    # print(solution)
-    user_answer = user_answer.split('§')  #if a string doesn't contain the split character it returns as a list with 1 element
-    #print(user_answer)
-    #We format both the user answer and the answer the same way.
-    user_answer = [generation.after_equal_sign(x) for x in user_answer] #only get the values after the last equal sign.
+    user_answer = user_answer.split('§')  # If a string doesn't contain the character it returns a list with 1 element
+    # We format both the user answer and the answer the same way.
+    user_answer = [generation.after_equal_sign(x) for x in user_answer]  # Only get the values after last equal sign.
     user_answer = generation.calculate_array(user_answer, random_domain)
     answer = [generation.after_equal_sign(x) for x in answer]
     answer = generation.calculate_array(answer, random_domain)
@@ -68,11 +67,13 @@ def make_answer_context_dict(form_values):
     if correct_answer:
         answer_text = "\\text{Du har svart riktig!}"
     else:
-        answer_text = "\\text{Du har svart }" + '\\text{ og }'.join(user_answer) + "\\text{. Det er feil! Svaret er: }" + '\\text{ og }'.join(answer)
+        answer_text = "\\text{Du har svart }" + '\\text{ og }'.join(user_answer) + \
+                      "\\text{. Det er feil! Svaret er: }" + '\\text{ og }'.join(answer)
 
     solution = solution.replace('+-', '-')
     solution = solution.replace('--', '+')
-    context_dict = {'title': "Oppgavegen", 'answer': str(answer_text), 'user_answer': user_answer, 'solution': solution, 'user_won' : correct_answer}
+    context_dict = {'title': "Oppgavegen", 'answer': str(answer_text), 'user_answer': user_answer,
+                    'solution': solution, 'user_won': correct_answer}
     return context_dict
 
 
@@ -113,7 +114,7 @@ def change_elo(template, user, user_won, type):
     # Eb = (1+10^((Ra-Rb)/400))^-1
     expected_user = (1+10**((template.rating-user_rating)/400))**(-1)
     expected_template = (1+10**((template.rating-user_rating)/400))**(-1)
-    prefactor = 30 #This value should be adjusted according to elo of the user (lower for higher ratings..)
+    prefactor = 30  # This value should be adjusted according to elo of the user (lower for higher ratings..)
 
     if user_won:
         new_user_rating = user_rating + prefactor*(1-expected_user)
@@ -130,15 +131,17 @@ def change_elo(template, user, user_won, type):
 
     return
 
+
 def cheat_check(user_answer, disallowed):
     """Checks whether the user has used symbols/functions that are not allowed"""
-    standard_disallowed = ['int','test',"'", '@']
+    standard_disallowed = ['int', 'test', "'", '@']
     if disallowed is not None and disallowed != '':
         standard_disallowed = standard_disallowed + disallowed.split('§')
     for s in standard_disallowed:
         if s in user_answer:
             return True
     return False
+
 
 def get_user_rating(user):
     """Returns the rating of the give user"""
