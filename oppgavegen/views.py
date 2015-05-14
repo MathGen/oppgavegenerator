@@ -149,30 +149,30 @@ def answers(request):
 @login_required
 @user_passes_test(is_teacher, '/')
 def templates(request):
-    """Returns a render of templates.html with all the templates"""
+    """Returns a render of tableview.html with all the templates"""
     panel_title = "Alle Maler"
     table = BootstrapTemplateTable(Template.objects.filter(valid_flag=True))
     RequestConfig(request, paginate={"per_page": 20}).configure(table)
-    return render(request, "templates.html", {"table": table, "panel_title": panel_title})
+    return render(request, "tableview.html", {"table": table, "panel_title": panel_title})
 
 @login_required
 @user_passes_test(is_teacher, '/')
 def template_table_by_user(request):
-    """Returns a render of templates.html with only templates from the logged in user."""
+    """Returns a render of tableview.html with only templates from the logged in user."""
     user = request.user
     panel_title = "Dine Maler"
     table = UserTemplates(Template.objects.filter(creator=user))
     RequestConfig(request, paginate={"per_page": 20}).configure(table)
-    return render(request, "templates.html", {"table": table, "panel_title": panel_title})
+    return render(request, "tableview.html", {"table": table, "panel_title": panel_title})
 
 @login_required
 @user_passes_test(is_teacher, '/')
 def user_overview_table(request):
-    """Returns a render of templates.html with overview over users"""
+    """Returns a render of tableview.html with overview over users"""
     panel_title = "Brukere"
     table = UserTable(ExtendedUser.objects.all())
     RequestConfig(request, paginate={"per_page": 20}).configure(table)
-    return render(request, "templates.html", {"table": table, "panel_title": panel_title})
+    return render(request, "tableview.html", {"table": table, "panel_title": panel_title})
 
 @login_required
 @user_passes_test(is_teacher, '/')
