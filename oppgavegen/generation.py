@@ -15,8 +15,6 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import *
 import html
 
-# Error message "(╯°□°）╯︵ ┻━┻"
-
 def check_answer(user_answer, answer):
     """Checks if the answer the user gave is correct.
 
