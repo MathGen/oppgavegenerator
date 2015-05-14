@@ -17,6 +17,7 @@ var FILL_IN					= false;
 var CON_IN					= false;
 var SUBMITTING				= false;
 var VARIABLES				= {};						// Object containing variables in use.
+var MAX_VARIABLES			= 18;						// Max amount of unique variables.
 var VAR_INIT				= false;
 var dict_calc				= {};
 var dict_calc_unchanged		= {};
@@ -113,29 +114,34 @@ $(document).ready(function() {
 	var s_btn_var_dyn = $('#s_btn_var_dyn');
 	$(q_btn_var).click(function(e){
 		e.preventDefault();
-		var var_available = false;
-		var q_var = "a";
-		var q_var_id = 0;
-		while(var_available == false){
-			if($('#q_btn_abc_' + q_var_id).length || q_var == "e" || q_var == "f" || q_var == "i" || q_var == "d"){
-				q_var = String.fromCharCode(q_var.charCodeAt(0) + 1);
-				q_var_id++;
+		if(Object.keys(VARIABLES).length <= MAX_VARIABLES) {
+			var var_available = false;
+			var q_var = "a";
+			var q_var_id = 0;
+			while (var_available == false) {
+				if ($('#q_btn_abc_' + q_var_id).length || q_var == "e" || q_var == "f" || q_var == "i" || q_var == "d" || q_var == "x" || q_var == "y" || q_var == "z") {
+					q_var = String.fromCharCode(q_var.charCodeAt(0) + 1);
+					q_var_id++;
+				}
+				else {
+					var_available = true;
+				}
 			}
-			else{
-				var_available = true;
-			}
+			VARIABLES[q_var_id] = q_var;
+			$(q_btn_var_dyn).append('<div id="q_btn_abc_' + q_var_id + '" class="btn btn-danger btn_var_abc btn_var_abc_q">' + q_var + '<a id="q_btn_abc_del_' + q_var_id + '" class="btn btn-danger btn-xs btn_var_del">x</a></div>');
+			$(s_btn_var_dyn).append('<button id="s_btn_abc_' + q_var_id + '" class="btn btn-danger btn_var_abc">' + q_var + '</button>');
+			$('#c_btn_var_dyn').append('<button id="c_btn_abc_' + q_var_id + '" class="btn btn-danger btn_var_abc">' + q_var + '</button>');
+			$('#a_btn_var_dyn').append('<button id="a_btn_abc_' + q_var_id + '" class="btn btn-danger btn_var_abc">' + q_var + '</button>');
+			$('#n_btn_var_dyn').append('<button id="n_btn_abc_' + q_var_id + '" class="btn btn-danger btn_var_abc">' + q_var + '</button>');
+			$('#o_adv_domain').append('<tr id="o_adv_' + q_var_id + '" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">' + q_var + ':</td><td><input id="o_adv_from_' + q_var_id + '" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_' + q_var_id + '" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td style="border-left: thin dashed lightgray"><input id="o_adv_dec_' + q_var_id + '" type="number" class="form-control input-sm opt_domain_dec" placeholder="Desimaler:"></td><td></td></tr>');
+			$(Q_INPUT).find('textarea').focus();
+			update_variable_count();
+			refresh_all_char_colors();
+			refresh_variables();
 		}
-		VARIABLES[q_var_id] = q_var;
-		$(q_btn_var_dyn).append('<div id="q_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc btn_var_abc_q">'+q_var+'<a id="q_btn_abc_del_'+q_var_id+'" class="btn btn-danger btn-xs btn_var_del">x</a></div>');
-		$(s_btn_var_dyn).append('<button id="s_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
-		$('#c_btn_var_dyn').append('<button id="c_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
-		$('#a_btn_var_dyn').append('<button id="a_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
-		$('#n_btn_var_dyn').append('<button id="n_btn_abc_'+q_var_id+'" class="btn btn-danger btn_var_abc">'+q_var+'</button>');
-		$('#o_adv_domain').append('<tr id="o_adv_'+q_var_id+'" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">'+q_var+':</td><td><input id="o_adv_from_'+q_var_id+'" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_'+q_var_id+'" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td style="border-left: thin dashed lightgray"><input id="o_adv_dec_'+q_var_id+'" type="number" class="form-control input-sm opt_domain_dec" placeholder="Desimaler:"></td><td></td></tr>');
-		$(Q_INPUT).find('textarea').focus();
-		update_variable_count();
-		refresh_all_char_colors();
-		refresh_variables();
+		else{
+			alert('Ikke tillat med flere variabler.');
+		}
 	});
 	
 	// Insert variable a,b,c,..
@@ -309,6 +315,12 @@ $(document).ready(function() {
 		e.preventDefault();
 		$(get_input_field(this)).mathquill('cmd', '\\sqrt').find('textarea').focus();
 	});
+
+	// Insert nth-root
+	$('.btn_nthroot').click(function(e){
+		e.preventDefault();
+		$(get_input_field(this)).mathquill('cmd', '\\nthroot').find('textarea').focus();
+	});
 	
 	// Insert integral
 	var q_btn_integral = $('.btn_int');
@@ -336,6 +348,24 @@ $(document).ready(function() {
 	btn_binom.click(function(e){
 		e.preventDefault();
 		$(get_input_field(this)).mathquill('cmd', '\\binom').find('textarea').focus();
+	});
+
+	// Insert sin
+	$('.btn_sin').click(function(e){
+		e.preventDefault();
+		$(get_input_field(this)).mathquill('cmd', '\\sin').find('textarea').focus();
+	});
+
+	// Insert cos
+	$('.btn_cos').click(function(e){
+		e.preventDefault();
+		$(get_input_field(this)).mathquill('cmd', '\\cos').find('textarea').focus();
+	});
+
+	// Insert tan
+	$('.btn_tan').click(function(e){
+		e.preventDefault();
+		$(get_input_field(this)).mathquill('cmd', '\\tan').find('textarea').focus();
 	});
 
 	// Insert calculated A,B,C,..
@@ -398,9 +428,9 @@ $(document).ready(function() {
 		btn_id = btn_id[0];
 		if(btn_id == 'q'){
 			$(Q_INPUT).mathquill('revert').mathquill('editable');
-			$('.btn_var_abc').remove();
-			$('.o_adv_dyn').remove();
-			update_variable_count();
+			//$('.btn_var_abc').remove();
+			//$('.o_adv_dyn').remove();
+			//update_variable_count();
 		}
 		else if(btn_id == 'n'){
 			refresh_conditions();
@@ -1486,7 +1516,7 @@ function refresh_char_colors(selector){
 				if(input_id == 'q'){
 					var var_id = f_var.html().charCodeAt(0) - 97; // Getting the button id (a:0, b:1, c:2)
 					if($('#q_btn_abc_' + var_id).length){}
-					else if(var_id in VARIABLES || !VAR_INIT){
+					else if((var_id in VARIABLES || !VAR_INIT) && Object.keys(VARIABLES).length <= MAX_VARIABLES){
 						f_var.addClass('content_var');
 						$('#q_btn_var_dyn').append('<div id="q_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc btn_var_abc_q">' + f_var.html() + '<a id="q_btn_abc_del_'+var_id+'" class="btn btn-danger btn-xs btn_var_del">x</a></div>');
 						$('#s_btn_var_dyn').append('<button id="s_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc">' + f_var.html() + '</button>');
@@ -1577,7 +1607,9 @@ function refresh_variables(){
 		id_check[variable_id] = variable;
 		if(variable_id in VARIABLES){}
 		else{
-			VARIABLES[variable_id] = variable_id + '§' + variable.replace(/x/g, '');
+			if(Object.keys(VARIABLES).length <= MAX_VARIABLES) {
+				VARIABLES[variable_id] = variable_id + '§' + variable.replace(/x/g, '');
+			}
 		}
 	});
 	// Removing unused variables from dictionary.

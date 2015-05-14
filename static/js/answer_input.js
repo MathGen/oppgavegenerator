@@ -12,6 +12,7 @@ $(document).ready(function () {
     var variable_dictionary = $('#variable_dictionary').html();
     var w_target = $('#w_target');
     if (String(template_type) == 'multiple') {
+        $('.keypad_answer').hide();
         var output = $('#get_question').text();
         $('#mathquill_field').append('<div id="mathquill_output" class="input_mathquill"></div><hr>');
         $('#mathquill_output').mathquill().mathquill('latex', output);

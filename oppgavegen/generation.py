@@ -22,7 +22,7 @@ def check_answer(user_answer, answer):
 
     :param user_answer: A list containing the answer(s) the user gave
     :param answer: A list containing the answer(s) to the template
-    :return: Boolean of whether the answer is right or not
+    :return: Boolean of whether the answer is correct
     """
     for s in answer:
         for us in user_answer:
@@ -143,8 +143,8 @@ def parse_solution(solution, domain):
     :param domain: The domain of the different variables.
     :return: A parsed version of the input string (solution)
     """
-    #print('in parse_solution')
-    #print(solution)
+    print('in parse_solution')
+    print(solution)
     arr = []
     newArr = []
     recorder = False
@@ -354,7 +354,6 @@ def string_replace(string, variable_dict):
     :param variable_dict: a dictionary with variable names as keys and the number to replace them which as values.
     :return: String with numbers instead of variable names.
     """
-    print(variable_dict)
     for key in variable_dict:
         string = string.replace(key, str(variable_dict[key]))
     return string
@@ -529,15 +528,12 @@ def test_template(template):
     answer = template.answer
     question = template.question_text
     solution = template.solution
-    print(question + solution + answer)
     conditions = template.conditions
     conditions = remove_unnecessary(conditions)
 
     variable_dict = generate_valid_numbers(question, random_domain_list, "", False) #pass no conditions to to just get back the first numbers made.
-    print('this:')
-    print(variable_dict)
     domain_dict = generate_valid_numbers(question, random_domain_list, "", True) #pass test = True to get domain_dict instead of variable_dict
-    inserted_conditions = (conditions, variable_dict)
+    inserted_conditions = string_replace(conditions, variable_dict)
     if len(conditions) > 1:
         conditions_pass = sympify(latex_to_sympy(inserted_conditions))
     else:
@@ -545,6 +541,7 @@ def test_template(template):
     if conditions_pass:
         answer = string_replace(answer,variable_dict)
         solution = string_replace(solution,variable_dict)
+
         try: #todo: there is probably a better way to do this.
             answer = parse_answer(answer, random_domain)
             solution = parse_solution(solution, random_domain) # Even if this is unused it still checks if parsing the solution crashes.

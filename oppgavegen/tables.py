@@ -17,10 +17,9 @@ class TemplateTable(tables.Table):
 
 
 class BootstrapTemplateTable(tables.Table):
-    # Normal = tables.TemplateColumn('<a href="../task/{{record.id}}/">View</a>', orderable=False)
-    # Blanks = tables.TemplateColumn('<a href="../task/{{record.id}}/blanks">View</a>', orderable=False)
-    # Multiple = tables.TemplateColumn('<a href="../task/{{record.id}}/multiple">View</a>', orderable=False)
-    # Multifill = tables.TemplateColumn('<a href="../task/{{record.id}}/multifill">View</a>', orderable=False)
+    """
+    Generate a html table with all templates marked valid.
+    """
 
     dropdownhtml = '<div class="btn-group">' \
                    '<a href="#" class="dropdown-toggle" data-toggle="dropdown">View<b class="caret"></b></a>' \
@@ -51,12 +50,9 @@ class BootstrapTemplateTable(tables.Table):
 
 
 class UserTemplates(tables.Table):
-    # Normal = tables.TemplateColumn('<a href="../task/{{record.id}}/">View</a>', orderable=False)
-    # Blanks = tables.TemplateColumn('<a href="../task/{{record.id}}/blanks">View</a>', orderable=False)
-    # Multiple = tables.TemplateColumn('<a href="../task/{{record.id}}/multiple">View</a>', orderable=False)
-    # Multifill = tables.TemplateColumn('<a href="../task/{{record.id}}/multifill">View</a>', orderable=False)
-    # Edit = tables.TemplateColumn("<a href={% url 'edit_template' record.id %}>Edit</a>", orderable=False)
-
+    """
+    Generate a html table with the logged in users own templates, and an action menu.
+    """
     dropdownhtml = '<div class="btn-group">' \
                    '<button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">' \
                    '<span class="caret"></span>' \
@@ -90,6 +86,9 @@ class UserTemplates(tables.Table):
         order_by = ("-id")
 
 class UserTable(tables.Table):
+    """
+    Generate a table of all users and their current rating.
+    """
 
     class Meta:
         model = ExtendedUser
