@@ -501,7 +501,7 @@ $(document).ready(function() {
 					s_panel.fadeIn(function(){
 						$('.mathquill-embedded-latex').mathquill('redraw');
 					});
-					scrollTo(s_panel);
+					scroll_to(s_panel);
 					$(S_INPUT).find('textarea').focus();
 				}
 				else{
@@ -533,7 +533,7 @@ $(document).ready(function() {
 				a_panel.fadeIn(function(){
 					$('.mathquill-embedded-latex').mathquill('redraw');
 				});
-				scrollTo(a_panel);
+				scroll_to(a_panel);
 				$(A_INPUT).find('textarea').focus()
 			}
 		}
@@ -552,7 +552,7 @@ $(document).ready(function() {
 				o_panel.fadeIn(function(){
 					$('.mathquill-embedded-latex').mathquill('redraw');
 				});
-				scrollTo(o_panel);
+				scroll_to(o_panel);
 			}
 		}
 	});
@@ -572,7 +572,7 @@ $(document).ready(function() {
 		$('#s_input_mathquill_' + STEP).mathquill('editable');
 		$('#step_' + STEP).fadeIn();
 		S_INPUT = '#s_input_mathquill_' + STEP;
-		scrollTo($('#step_' + STEP));
+		scroll_to($('#step_' + STEP));
 		$(S_INPUT).find('textarea').focus();
 	});
 	
@@ -593,7 +593,7 @@ $(document).ready(function() {
 		$('#a_input_mathquill_' + ANSWER).mathquill('editable');
 		$('#answer_' + ANSWER).fadeIn();
 		A_INPUT = '#a_input_mathquill_' + ANSWER;
-		scrollTo($('#answer_' + ANSWER));
+		scroll_to($('#answer_' + ANSWER));
 		$(A_INPUT).find('textarea').focus();
 	});
 
@@ -627,10 +627,10 @@ $(document).ready(function() {
 		$('#s_btn_del_' + STEP).show();
 		S_INPUT = '#s_input_mathquill_' + STEP;
 		if(STEP == 1){
-			scrollTo($('#s_panel'));
+			scroll_to($('#s_panel'));
 		}
 		else{
-			scrollTo($('#step_' + STEP));
+			scroll_to($('#step_' + STEP));
 		}
 		$(S_INPUT).find('textarea').focus();
 	});
@@ -649,10 +649,10 @@ $(document).ready(function() {
 		$('#a_btn_del_' + ANSWER).show();
 		A_INPUT = '#a_input_mathquill_' + ANSWER;
 		if(ANSWER == 1){
-			scrollTo($('#a_panel'));
+			scroll_to($('#a_panel'));
 		}
 		else{
-			scrollTo($('#answer_' + ANSWER));
+			scroll_to($('#answer_' + ANSWER));
 		}
 		$(A_INPUT).find('textarea').focus();
 	});
@@ -686,7 +686,7 @@ $(document).ready(function() {
 			$('#s_input_mathquill_1').mathquill('revert').mathquill('editable');
 			$('#s_panel').fadeOut();
 			$('.btn-group-q').prop('disabled', false);
-			scrollTo($('#q_panel'));
+			scroll_to($('#q_panel'));
 			$(Q_INPUT).find('textarea').focus();
 		}
 		else if(btn_id == 'c'){
@@ -707,10 +707,10 @@ $(document).ready(function() {
 			$('#ans_title_1').hide();
 			$('.btn-group-s').prop('disabled', false);
 			if(STEP == 1){
-				scrollTo($('#s_panel'));
+				scroll_to($('#s_panel'));
 			}
 			else{
-				scrollTo($('#step_' + STEP));
+				scroll_to($('#step_' + STEP));
 			}
 			$(S_INPUT).find('textarea').focus();
 		}
@@ -718,10 +718,10 @@ $(document).ready(function() {
 			$('#o_panel').fadeOut();
 			$('.btn-group-a').prop('disabled', false);
 			if(ANSWER == 1){
-				scrollTo($('#a_panel'));
+				scroll_to($('#a_panel'));
 			}
 			else{
-				scrollTo($('#answer_' + ANSWER));
+				scroll_to($('#answer_' + ANSWER));
 			}
 			$(A_INPUT).find('textarea').focus();
 		}
@@ -928,7 +928,9 @@ $(document).ready(function() {
 });
 
 /**
- * Submit template to database
+ * Submit template to database.
+ * Iterating and collect all data from user-inputs in both parsed and original LaTeX form (for editing).
+ * Store each data in corresponding dictionaries(objects), before posting to database.
  */
 function submit_template(){
 	var form_submit = {};
@@ -1080,8 +1082,11 @@ function submit_template(){
 }
 
 /**
-* Checks which input field to type in
-*/
+ * Checks which input-field the user is currently at.
+ * @param {object} obj - The current object the user is operating with, which will return the input-field it's
+ * corresponding to.
+ * @returns {string} - The id of the current input-field.
+ */
 function get_input_field(obj){
 	var btn_id = $(obj).attr('id');
 	btn_id = btn_id[0];
@@ -1112,8 +1117,10 @@ function get_input_field(obj){
 }
 
 /**
- * Converting variables (a,b,c,d.. etc) to computable ids (R0R,R1R,R2R,.. etc),
- * and calculated references (A,B,C, etc) with its content.
+ * Takes in a LaTeX string and converts variables (a,b,c,d.. etc) to computable ids (R0R,R1R,R2R,.. etc),
+ * and calculated references (A,B,C, etc) with its content. The LaTeX string will also get cleaned/optimized.
+ * @param {string} latex - The LaTeX string to iterate and convert.
+ * @returns {string} la - The cleaned/optimized LaTeX string with converted variables.
  */
 function convert_variables(latex){
 	var la = latex;
@@ -1232,13 +1239,6 @@ function convert_variables(latex){
 }
 
 /**
-* Check if string is all upper-case
-*/
-function isUpperCase(str){
-    return str === str.toUpperCase();
-}
-
-/**
  * Updates the unique variable counter. To track whether or not to disable random domain settings.
  * If there's no variables, disabled unneeded fields (or vice-versa).
  */
@@ -1262,14 +1262,14 @@ function update_variable_count(){
  * Scroll to specific element given by id.
  * @param id - id of element to scroll to.
  */
-function scrollTo(id){
+function scroll_to(id){
 	$('html,body').animate({scrollTop: id.offset().top - 65}); // -65 because of the navbar.
 }
 
 /**
- * Add a error message under the given element.
- * @param element_id - id of element to apply error message to.
- * @param message - the error message.
+ * Add an error message under the given element.
+ * @param {string} element_id - id of element to apply error message to.
+ * @param {string} message - the error message.
  */
 function error_message(element_id, message){
 	var element = $('#' + element_id);
@@ -1282,7 +1282,7 @@ function error_message(element_id, message){
 }
 
 /**
- * Validates required fields before submitting.
+ * Validates required fields before submitting. Adds error messages for elements that is not valid.
  * @returns {boolean} returns true if the validation pass.
  */
 function submit_validation(){
@@ -1339,7 +1339,7 @@ function submit_validation(){
 
 /**
  * Returns an array of the latex in every math-input in solution.
- * @returns {Array}
+ * @returns {string|Array} latex - The array of LaTeX strings.
  */
 function get_solution_latex(){
 	var latex = [];
@@ -1350,8 +1350,8 @@ function get_solution_latex(){
 }
 
 /**
- * Retrieve multiple choices
- * @returns {string} returns all multiple choices as a string.
+ * Retrieve the LaTeX string for multiple choices.
+ * @returns {string} returns all multiple choices as one string.
  */
 function get_multiple_choices(latex_bool){
 	var multiple_choices = [];
@@ -1369,7 +1369,7 @@ function get_multiple_choices(latex_bool){
 }
 
 /**
- * Reset the conditions input-field.
+ * Reset the input-field for conditions.
  */
 function refresh_conditions(){
 	var con_input = $('#con_dyn_input');
@@ -1385,7 +1385,7 @@ function refresh_conditions(){
 }
 
 /**
- * Refreshing the contents of fill-in-the-blanks from the solutions.
+ * Refreshing the contents of fill-in-the-blanks. Retrieves all data from each step in the solution.
  */
 function refresh_fill_in_content(){
 	var f_dyn_fill = $('#f_dyn_fill_input');
@@ -1419,7 +1419,7 @@ function refresh_fill_in_content(){
 }
 
 /**
- * Refresh and display the solution over multiple-choices.
+ * Refresh and display the solution before the multiple-choices.
  */
 function refresh_multiple_choice_template(){
 	var latex = get_solution_latex();
@@ -1436,7 +1436,7 @@ function refresh_multiple_choice_template(){
 }
 
 /**
- * Refreshing multiple-choice contents. If in modify get previous content.
+ * Refreshing multiple-choice contents. If in modify, get previous content.
  */
 function refresh_multiple_choice(){
 	if(MULTI_CHOICE == 0 && MODIFY == false) {
@@ -1465,7 +1465,7 @@ function refresh_multiple_choice(){
 }
 
 /**
- * Adding/removing colors to used and unused variables, unknown characters and caculated refereces in all
+ * Adding/removing colors to used and unused variables, unknown characters and calculated references in all
  * mathquill input-fields.
  */
 function refresh_all_char_colors(){
@@ -1493,7 +1493,7 @@ function refresh_all_char_colors(){
 /**
  * Adding/removing colors to used and unused variables, unknown characters and calculated references in given
  * mathquill input-field. Also adds variable buttons if a new variable is typed in the question.
- * @param selector - Which input field to refresh.
+ * @param {string|object} selector - Which input field to refresh.
  */
 function refresh_char_colors(selector){
 	var input_id = $(selector).attr('id');
@@ -1549,7 +1549,8 @@ function refresh_char_colors(selector){
 
 /**
  * Compare two latex strings, converting it to asciimath, and wrap parts of string that differs with a tag.
- * @returns {*|jQuery} - The asciimath string with blank tags.
+ * @param {Boolean} latex_bool - Whether or not to join the explanation part of the solution before the LaTeX string.
+ * @returns {string|jQuery} - The asciimath string with blank tags.
  */
 function get_diff_latex(latex_bool){
 	var dmp = new diff_match_patch();
@@ -1858,6 +1859,8 @@ function getCookie(name) {
 
 /**
  * Converts user-conditions to actual conditions sympy can compute.
+ * @param {string} expression - The LaTeX string of the conditions to be parsed.
+ * @returns {string} the parsed expression.
  */
 function parse_conditions(expression) {
 	expression = expression.replace('/\\ne/g', '!=');

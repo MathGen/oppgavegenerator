@@ -1,6 +1,10 @@
-/* use following colors: http://paletton.com/#uid=10I0u0kdjGP3WXJ8DQyhGvZlGrw */
+/* use following colors: http://paletton.com/#uid=10Y0u0k6Aqe1mIs3Gv09Ym7dti6 */
 body{
-	background-color: #FFD295;
+	background: #D1C3A6 url('../img/MathGen%20Background_mini.jpg') no-repeat fixed center;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
 	padding-top: 65px; /*la til denne for at body ikke skal bli gjemt bak navbar (funker bare hvis navbar er fixed)*/
 	margin-bottom: 80px;
 }
