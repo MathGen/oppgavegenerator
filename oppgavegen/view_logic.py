@@ -63,7 +63,8 @@ def make_answer_context_dict(form_values):
     answer = [generation.after_equal_sign(x) for x in answer]
     answer = generation.calculate_array(answer, random_domain)
 
-    correct_answer = generation.check_answer(user_answer, answer)
+    correct_answer = generation.check_answer(user_answer, answer)  # Check if the user answered correctly.
+
     if correct_answer:
         answer_text = "\\text{Du har svart riktig!}"
     else:

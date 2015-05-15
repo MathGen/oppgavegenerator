@@ -24,9 +24,7 @@ def check_answer(user_answer, answer):
                 user_answer.remove(us)
                 break
 
-    print(user_answer)
-    # If collections.Counter(user_answer) == collections.Counter(answer):
-    if user_answer is []:
+    if user_answer == []:  # Can not be written as user_answer is []
         right_answer = True
     else:
         right_answer = False
