@@ -1,20 +1,8 @@
-# predefined tables to be rendered with django-tables
+"""Predefined tables to be rendered with django-tables2"""
 
 import django_tables2 as tables
 from oppgavegen.models import Template
-from oppgavegen.models import User
 from oppgavegen.models import ExtendedUser
-
-
-class TemplateTable(tables.Table):
-    View = tables.TemplateColumn('<a href="../task/{{record.id}}">View</a>', orderable=False)
-
-    class Meta:
-        model = Template
-        attrs = {"class": "paleblue"}  # add class="paleblue" (table theme) to <table> tag
-        # fields to include in table (displayed in this order)
-        fields = ("id", "question_text", "creator", "topic", "type", "rating")
-
 
 class BootstrapTemplateTable(tables.Table):
     """
