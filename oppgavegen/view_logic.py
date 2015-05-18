@@ -1,3 +1,10 @@
+"""
+
+Defines reusable functions often called from views.py
+
+"""
+
+
 from oppgavegen.models import Template
 from oppgavegen.models import Topic
 from oppgavegen import generation

@@ -1,3 +1,9 @@
+"""
+
+Defines views, and renders data to html templates.
+
+"""
+
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.template import RequestContext
 from django.shortcuts import render_to_response

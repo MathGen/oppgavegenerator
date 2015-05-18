@@ -1,3 +1,9 @@
+"""
+ Defines the models for the database that are not default models in Django (i.e. Users)
+ It also contains extensions to the default models in Django.
+ The classes have to be in order as foreign keys must be from existing classes.
+"""
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save

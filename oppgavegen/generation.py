@@ -1,3 +1,9 @@
+"""
+
+Handles user-input, task generation from templates,
+calculations, and parsing strings between LaTex and SymPy.
+
+"""
 
 from random import randint
 from random import uniform
@@ -201,12 +207,13 @@ def get_question(user, template_id, topic=''):
 
 
 def replace_words(sentence, dictionary):
-    """Replaces variables in a string with the value of a key in the given dictionary.
+    """
+    Replaces variables in a string with the value of a key in the given dictionary.
     Example: ('example sentence', 'example § apple, grape') ->
              {'sentence': 'apple sentence', 'replace_string' 'example § apple'}}
     :param sentence: String to replace words in.
-    :param dictionary: A splitable (§) string with word alternatives.
-    :return: dictionary with the new sentence and a splitable string with what words were replaced
+    :param dictionary: A splittable (§) string with word alternatives.
+    :return: dictionary with the new sentence and a splittable string with what words were replaced
     """
     dictionary = dictionary.split('§')
     replace_string = ''
