@@ -1,6 +1,7 @@
 Django==1.7.4
 django-bootstrap3==5.1.1
+django-registration-redux==1.1
+django-tables2==1.0.4
+gunicorn==19.2.1
 sympy==0.7.6
-virtualenv==12.0.6
-virtualenv-clone==0.2.5
-virtualenvwrapper==4.3.2
+

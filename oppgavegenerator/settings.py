@@ -19,29 +19,20 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 TEMPLATE_DEBUG = True
-
-#if socket.gethostname() == '158.38.101.36':     # Edit this to your domain name or production server IP-address
-#    DEBUG = TEMPLATE_DEBUG = False
-#else:
-#    DEBUG = TEMPLATE_DEBUG = True
-
-ALLOWED_HOSTS = ['localhost', '158.38.101.36']  # Edit this to your domain name or production server IP-address
-
 
 # Application definition
 
 INSTALLED_APPS = (
     'oppgavegen',
-    'django.contrib.admin',
+    'django.contrib.admin',         # django admin panel
     'django.contrib.auth',          # needed for registration
     'django.contrib.sites',         # needed for registration
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages',      #todo:see if we need this for anything.
+    'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap3',                   # django-bootstrap-3
     'registration',                 # django-registration-redux
@@ -91,10 +82,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_ROOT = '/var/www/oppgavegenerator/collectstatic/' # Static files on production server. Edit this accordingly. Should not be the same as STATIC_URL
+# Static files on production server. Edit this accordingly. Should not be the same as STATIC_URL
+STATIC_ROOT = '/var/www/oppgavegenerator/collectstatic/'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-
 
 #PATH_PROJECT = os.path.realpath(os.path.dirname(__file__))
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
