@@ -196,13 +196,12 @@ def get_question(user, template_id, topic=''):
                 q = q[randint(0, q.count()-1)]
                 break
             slack += increase
-            if slack >= 500:
+            if slack >= 800:
                 q = Template.objects.all()
                 q = q.latest('id')
                 break
     else:
         q = Template.objects.get(pk=template_id)
-
     return q
 
 
@@ -584,7 +583,7 @@ def latex_to_sympy(expr):
     i = 0
     counter = 0
     recorder = false
-    while i < len(expr):  # Logic for insering a / in fractals
+    while i < len(expr):  # Logic for inserting a / in fractals
         if expr[i] == 'c' and expr[i-1] == 'a' and expr[i-2] == 'r' and expr[i-3] == 'f' and expr[i-4] == '\\':
             recorder = true
         if recorder:
@@ -613,7 +612,30 @@ def latex_to_sympy(expr):
     expr = expr.replace('\\', '')
     expr = expr.replace('frac', '')
     expr = expr.replace('binom', 'binomial')
+    expr = parenthesis_around_minus(expr)
     return expr
+
+def parenthesis_around_minus(expression):
+    """Takes a expression and returns it with parenthesis around numbers with - where needed."""
+    numbers = '0123456789.'
+    expression += ' '
+    new_expr = expression
+    count = 0
+    record = False
+    difference = 0
+    for i in range(0, len(expression)):
+        if expression[i] == '-' and expression[i-1] not in numbers:
+            record = True
+        elif record and expression[i] not in numbers:
+            record = False
+            if count > 0:
+                insert_start = i-count+difference-1
+                new_expr = new_expr[:insert_start] + '(' + new_expr[insert_start:i] + ')' + new_expr[i:len(new_expr)]
+                difference += 2
+                count = 0
+        elif record:
+            count += 1
+    return new_expr
 
 
 def is_number(s):

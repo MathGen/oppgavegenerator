@@ -80,8 +80,11 @@ def make_answer_context_dict(form_values):
 
     solution = solution.replace('+-', '-')
     solution = solution.replace('--', '+')
+    answer_text = latex_exceptions(answer_text)
     context_dict = {'title': "Oppgavegen", 'answer': str(answer_text), 'user_answer': user_answer,
                     'solution': solution, 'user_won': correct_answer}
+    print('this')
+    print(answer_text)
     return context_dict
 
 
@@ -156,3 +159,9 @@ def get_user_rating(user):
     u = User.objects.get(username=user.username)
     rating = u.extendeduser.rating
     return rating
+
+
+def latex_exceptions(string):
+    """Replaces wrong latex with the proper one"""
+    string = string.replace('\\tilde', '\\sim')
+    return string
