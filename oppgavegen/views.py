@@ -154,7 +154,7 @@ def answers(request):
 def templates(request):
     """Returns a render of tableview.html with all the templates"""
     panel_title = "Alle Maler"
-    table = BootstrapTemplateTable(Template.objects.filter(valid_flag=True))
+    table = TemplateTable(Template.objects.filter(valid_flag=True))
     RequestConfig(request, paginate={"per_page": 20}).configure(table)
     return render(request, "tableview.html", {"table": table, "panel_title": panel_title})
 
@@ -165,7 +165,7 @@ def template_table_by_user(request):
     """Returns a render of tableview.html with only templates from the logged in user."""
     user = request.user
     panel_title = "Dine Maler"
-    table = UserTemplates(Template.objects.filter(creator=user))
+    table = UserTemplatesTable(Template.objects.filter(creator=user))
     RequestConfig(request, paginate={"per_page": 20}).configure(table)
     return render(request, "tableview.html", {"table": table, "panel_title": panel_title})
 

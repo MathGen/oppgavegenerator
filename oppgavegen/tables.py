@@ -1,10 +1,10 @@
-"""Predefined tables to be rendered with django-tables2"""
+"""Defines tables and their data sources to be rendered in HTML with django-tables2 """
 
 import django_tables2 as tables
 from oppgavegen.models import Template
 from oppgavegen.models import ExtendedUser
 
-class BootstrapTemplateTable(tables.Table):
+class TemplateTable(tables.Table):
     """
     Generate a html table with all templates marked valid.
     """
@@ -37,7 +37,7 @@ class BootstrapTemplateTable(tables.Table):
         order_by = ("-id")
 
 
-class UserTemplates(tables.Table):
+class UserTemplatesTable(tables.Table):
     """
     Generate a html table with the logged in users own templates, and an action menu.
     """
