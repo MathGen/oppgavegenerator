@@ -630,7 +630,8 @@ def parenthesis_around_minus(expression):
             record = False
             if count > 0:
                 insert_start = i-count+difference-1
-                new_expr = new_expr[:insert_start] + '(' + new_expr[insert_start:i] + ')' + new_expr[i:len(new_expr)]
+                t_i = i + difference
+                new_expr = new_expr[:insert_start] + '(' + new_expr[insert_start:t_i] + ')' + new_expr[t_i:len(new_expr)]
                 difference += 2
                 count = 0
         elif record:

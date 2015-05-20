@@ -7,15 +7,10 @@
 {% block title %}Templates{% endblock %}
 
 {% block panels %}
-
     <section id="table_panel" class="panel panel-default">
         <div class="panel-heading"><h3 class="panel-title">{{ panel_title }}</h3></div>
-            <div class="panel-body" style="overflow-x:scroll;overflow-y:visible!important;">
-
-                                                    {% render_table table %}
-
-            </div>
+        <div class="panel-body" style="overflow-x:scroll;overflow-y:visible!important;">
+            {% render_table table %}
         </div>
     </section>
-
 {% endblock %}

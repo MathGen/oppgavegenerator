@@ -34,7 +34,7 @@ class TemplateTable(tables.Table):
         # fields to include in table (displayed in this order)
         fields = ("id", "creator", "topic", "multiple_support", "fill_in_support", "rating")
         sequence = ("id", "content", "creator", "topic", "multiple_support", "fill_in_support", "rating", "view")
-        order_by = ("-id")
+        order_by = "-id"
 
 
 class UserTemplatesTable(tables.Table):
@@ -72,6 +72,16 @@ class UserTemplatesTable(tables.Table):
         fields = ("id", "topic", "multiple_support", "fill_in_support", "rating")
         sequence = ("id", "content", "topic", "multiple_support", "fill_in_support", "rating", "action")
         order_by = ("-id")
+
+class UserTable(tables.Table):
+    """
+    Generate a table of all users and their current rating.
+    """
+
+    class Meta:
+        model = ExtendedUser
+        template = ("bstable.html")
+        fields = ("id", "user", "rating")
 
 class UserTable(tables.Table):
     """
