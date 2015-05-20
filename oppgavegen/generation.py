@@ -617,7 +617,7 @@ def latex_to_sympy(expr):
 
 def parenthesis_around_minus(expression):
     """Takes a expression and returns it with parenthesis around numbers with - where needed."""
-    numbers = '0123456789.'
+    numbers = '0123456789.)'
     expression += ' '
     new_expr = expression
     count = 0
