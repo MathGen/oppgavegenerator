@@ -153,6 +153,13 @@ function answer_validation(){
     return valid;
 }
 
+/**
+ * Posts a form to the server
+ * submits a form to the given path with a form of the given parameters.
+ * @param {string} path - the path form gets posted to.
+ * @param {dictionary} params - a dictionary that is the form that gets posted.
+ * @param {string} method - sets the method for the submission. Uses post by default.
+ */
 function post(path, params, method) {
     method = method || "post"; // Set method to post by default if not specified.
 
@@ -176,6 +183,11 @@ function post(path, params, method) {
     form.submit();
 }
 
+/**
+ *Gets a cookie and returns its value
+ * @param {string} name - the name of the cookie to get.
+ * @returns {string} - Returns the value of the cookie specified.
+ */
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie != '') {
