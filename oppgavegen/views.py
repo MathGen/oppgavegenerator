@@ -203,3 +203,6 @@ def edit_template(request, template_id):
     context_dict = view_logic.make_edit_context_dict(template_id)
     context_dict['rating'] = view_logic.get_user_rating(request.user)
     return render_to_response('edit.html', context_dict, context)
+
+def index(request):
+    pass
