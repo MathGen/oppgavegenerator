@@ -1,4 +1,7 @@
-
+/**
+ * Opens and draws all steps in solution.
+ * Collapse and Un-collapse the panel by button-click.
+ */
 $(document).ready(function () {
     // See step-by-step solution
     var v_solution = $('#v_solution');

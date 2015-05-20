@@ -71,7 +71,7 @@ $(document).ready(function () {
         e.preventDefault();
         var user_answer = "";
         if (template_type == 'multiple') {
-            user_answer = getRadioValue('answer_button');
+            user_answer = get_radio_value('answer_button');
         }
         else if(template_type == 'blanks'){
             $('#mathquill_field').find('.blank_input').each(function(f){
@@ -82,7 +82,7 @@ $(document).ready(function () {
             });
         }
         else if(template_type == 'multifill'){
-            var radio_values = getRadioValue('answer_button');
+            var radio_values = get_radio_value('answer_button');
             radio_values = radio_values.split('§');
             user_answer = radio_values[1];
             var boxx_content = $('#multifill_' + radio_values[0]).mathquill('latex');
@@ -125,6 +125,11 @@ $(window).load(function(){
     $('.mathquill-embedded-latex').mathquill('redraw');
 });
 
+/**
+ * Validates the user-answer before submitting.
+ * Checks whether or not the user-input is empty and displays an error-message and preventing from submitting.
+ * @returns {boolean} - If validation passed or not.
+ */
 function answer_validation(){
     var valid = true;
     if(template_type == 'normal'){
@@ -187,7 +192,12 @@ function getCookie(name) {
     return cookieValue;
 }
 
-function getRadioValue(groupName) {
+/**
+ * Checks which radio-button is checked and return its value.
+ * @param groupName - Group name of all radio-buttons.
+ * @returns {string} - the value of the checked radio-button.
+ */
+function get_radio_value(groupName) {
     var radios = document.getElementsByName(groupName);
     var rdValue; // declares the global variable 'rdValue'
     for (var i = 0; i < radios.length; i++) {
