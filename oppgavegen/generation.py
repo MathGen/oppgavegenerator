@@ -194,7 +194,6 @@ def get_question(user, template_id, topic=''):
             q = q.filter(rating__lt=(user_rating+slack))
             q = q.filter(valid_flag=True)
             if topic != '':
-                #topic = topic.replace('%20', ' ') # lightweight utf8 decoding
                 q = q.filter(topic__topic__iexact=topic)
             if q:
                 q = q[randint(0, q.count()-1)]
