@@ -7,16 +7,10 @@
 <!-- QUESTION PANEL -->
 <script src="/static/js/answer_input.js?16"></script>
 <link href="/static/css/stud_style.css" rel="stylesheet">
-<script>
-    MathJax.Hub.Register.StartupHook("End",function () {
-  		$('#w_question_loading').remove();
-  		$('#w_question_display').fadeIn();
-	});
-</script>
 <section class="panel panel-default">
     <div class="panel-heading"><h3 class="panel-title">Spørsmål</h3></div>
     <div class="panel-body">
-        <form id="w_question_display" class="form-horizontal" style="display:none">
+        <form id="w_question_display" class="form-horizontal">
             <!-- this might seem a bit redundant, but for some reason using var choices = {{choices}} did not work -->
             <div hidden id="template_type">{{template_type}}</div>
             <div hidden id="primary_key">{{primary_key}}</div>
@@ -37,7 +31,8 @@
             <div id="w_target" class="row"></div>
             <form>{% csrf_token %} </form>
         </form>
-        <form id="w_question_loading" class="loading"></form>
+        <!-- LOADING: display loading icon when math is rendering -->
+        <form id="w_question_loading" class="loading" style="display:none"></form>
 
     </div>
     <!-- USER-INPUT -->

@@ -2,23 +2,6 @@
 <!DOCTYPE html>
 <html>
 	<head>
-    	<!-- Mathjax so mathml works -->
-        <!-- tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} -->
-        <script type="text/x-mathjax-config">
-            // sdad
-            MathJax.Hub.Config({
-            	AsciiMath: {
-    			fixphi: true,
-    			useMathMLspacing: true,
-    			displaystyle: true,
-            	decimalsign: ".",
-            	delimiters: [['`','`'], ['$$','$$']]
-  				}
-            });
-		</script>
-        <script type="text/javascript"
-			src="http://cdn.mathjax.org/mathjax/2.1-latest/MathJax.js?config=TeX-MML-AM_HTMLorMML">
-		</script>
 		<meta name="viewport" charset="UTF-8" content="width=device-width, initial-scale=1.0">
 		<link href="/static/css/bootstrap.min.css" rel = "stylesheet">
     	<link rel="stylesheet" type="text/css" href="/static/css/mathquill.css">
@@ -26,7 +9,6 @@
         <link rel="shortcut icon" type="image/png" href="{{STATIC_URL}}favicon.ico"/>
         <link rel="shortcut icon" type="image/png" href="/static/favicon.ico"/>
         <link href="/static/css/bootstrap-tables2.css" rel="stylesheet">
-    	<script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
     	<script src="/static/js/jquery-1.11.2.min.js"></script>
         <title>Mattegenerator Demo</title>
 	</head>
