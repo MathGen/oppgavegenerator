@@ -15,6 +15,7 @@ from django.db.models.signals import post_save
 
 
 class Topic(models.Model):
+    """Stores the different topic types"""
     topic = models.CharField(max_length=200)  # Name of the topic.
 
     def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)

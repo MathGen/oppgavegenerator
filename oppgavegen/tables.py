@@ -3,16 +3,15 @@
 import django_tables2 as tables
 from oppgavegen.models import Template
 from oppgavegen.models import ExtendedUser
+from oppgavegen.models import Topic
 
 class TemplateTable(tables.Table):
-    """
-    Generate a html table with all templates marked valid.
-    """
+    """ Generate a html table with all templates marked valid. """
 
     dropdownhtml = '<div class="btn-group">' \
                    '<a href="#" class="dropdown-toggle" data-toggle="dropdown">View<b class="caret"></b></a>' \
                    '<ul class="dropdown-menu dropdown-menu-right" role="menu">' \
-                   '<li><a href="{% url "task_by_id" record.id %}">Normal</a></li>' \
+                   '<li><a href="{% url "task_by_extra" record.id %}">Normal</a></li>' \
                    '<li><a href="{% url "task_by_id_and_type" record.id "blanks" %}">Fill in the Blanks</a></li>' \
                    '<li><a href="{% url "task_by_id_and_type" record.id "multiple" %}">Multiple Choice</a></li>' \
                    '<li><a href="{% url "task_by_id_and_type" record.id "multifill" %}">Multiple Fill-Ins</a></li>' \
@@ -38,16 +37,14 @@ class TemplateTable(tables.Table):
 
 
 class UserTemplatesTable(tables.Table):
-    """
-    Generate a html table with the logged in users own templates, and an action menu.
-    """
+    """Generate a html table with the logged in users own templates, and an action menu."""
     dropdownhtml = '<div class="btn-group">' \
                    '<button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">' \
                    '<span class="caret"></span>' \
                    '<span class="sr-only">Toggle Dropdown</span>' \
                    '</button>' \
                    '<ul class="dropdown-menu dropdown-menu-right" role="menu">' \
-                   '<li><a href="{% url "task_by_id" record.id %}">Normal</a></li>' \
+                   '<li><a href="{% url "task_by_extra" record.id %}">Normal</a></li>' \
                    '<li><a href="{% url "task_by_id_and_type" record.id "blanks" %}">Fill in the Blanks</a></li>' \
                    '<li><a href="{% url "task_by_id_and_type" record.id "multiple" %}">Multiple Choice</a></li>' \
                    '<li><a href="{% url "task_by_id_and_type" record.id "multifill" %}">Multiple Fill-Ins</a></li>' \
@@ -74,21 +71,10 @@ class UserTemplatesTable(tables.Table):
         order_by = ("-id")
 
 class UserTable(tables.Table):
-    """
-    Generate a table of all users and their current rating.
-    """
+    """Generate a table of all users and their current rating."""
 
     class Meta:
         model = ExtendedUser
         template = ("bstable.html")
         fields = ("id", "user", "rating")
 
-class UserTable(tables.Table):
-    """
-    Generate a table of all users and their current rating.
-    """
-
-    class Meta:
-        model = ExtendedUser
-        template = ("bstable.html")
-        fields = ("id", "user", "rating")

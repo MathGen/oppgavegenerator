@@ -37,18 +37,21 @@ def check_answer(user_answer, answer):
     return right_answer
 
 
-def generate_task(user, template_id, desired_type='normal'):
+def generate_task(user, template_extra, desired_type='normal'):
     """Makes a valid math question at the correct rating from a template in the database.
 
     :param user: The user requesting a template
-    :param template_id: (optional) A id used for requesting a specific template.
+    :param template_extra: (optional) A id used for requesting a specific template.
     :param desired_type: (optional) A string for requesting a specific template type.
+    :param topic: (optional) A string for requesting a question of a specific topic.
     :return: Returns a complete math question with generated numbers.
     """
-    if template_id == "":
+    if template_extra == "":
         q = get_question(user, '')  # Gets a question from the DB
+    elif template_extra.isdigit():
+        q = get_question(user, template_extra)
     else:
-        q = get_question(user, template_id)
+        q = get_question(user, '', template_extra)
 
     if desired_type != 'normal':
         if (desired_type == 'multiple' or desired_type == 'multifill') and not q.multiple_support:
@@ -180,7 +183,7 @@ def get_question(user, template_id, topic=''):
     :param topic: the topic of the template.
     :return: Template object.
     """
-    slack = 40
+    slack = 60
     increase = 15
     q = ''
     if template_id == '':
@@ -191,7 +194,7 @@ def get_question(user, template_id, topic=''):
             q = q.filter(rating__lt=(user_rating+slack))
             q = q.filter(valid_flag=True)
             if topic != '':
-                q = q.filter(topic_iexact=topic)
+                q = q.filter(topic__topic__iexact=topic)
             if q:
                 q = q[randint(0, q.count()-1)]
                 break

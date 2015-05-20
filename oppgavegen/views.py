@@ -38,10 +38,10 @@ def task(request):
 
 
 @login_required
-def task_by_id_and_type(request, template_id, desired_type='normal'):
+def task_by_id_and_type(request, template_extra, desired_type='normal'):
     """Returns a render of taskview with a specific math template with specified type"""
     context = RequestContext(request)
-    context_dict = generation.generate_task(request.user, template_id, desired_type)
+    context_dict = generation.generate_task(request.user, template_extra, desired_type)
     context_dict['rating'] = view_logic.get_user_rating(request.user)
     if context_dict['question'] == 'error':
         message = {'message': 'Denne oppgavetypen har ikke blitt laget for denne oppgaven'}
@@ -50,10 +50,10 @@ def task_by_id_and_type(request, template_id, desired_type='normal'):
 
 
 @login_required
-def task_by_id(request, template_id):
+def task_by_extra(request, template_extra):
     """Returns a render of taskview with a specific math template"""
     context = RequestContext(request)
-    context_dict = generation.generate_task(request.user, template_id)
+    context_dict = generation.generate_task(request.user, template_extra)
     context_dict['rating'] = view_logic.get_user_rating(request.user)
     return render_to_response('taskview.html', context_dict, context)
 
@@ -111,7 +111,7 @@ def submit(request):
     message = 'don\'t come here'
     if request.method == 'POST':
         message = 'Det har skjedd noe feil ved innsending av form'
-        #todo check input for errors
+        # todo check input for errors
         form = TemplateForm(request.POST)
         if form.is_valid():
             template = form.save(commit=False)
@@ -204,5 +204,10 @@ def edit_template(request, template_id):
     context_dict['rating'] = view_logic.get_user_rating(request.user)
     return render_to_response('edit.html', context_dict, context)
 
+
+@login_required
 def index(request):
-    pass
+    list = Topic.objects.values_list('topic', flat=True)
+
+    return render(request, "index.html", {"list": list})
+
