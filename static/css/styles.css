@@ -89,3 +89,9 @@ sub{							/* between bootstrap*/
 	right: -1px;
 	border-radius: 0 4px 0 4px;
 }
+.front_header{
+	margin-top: 0;
+}
+.jumbotron{
+	background: rgba(86, 71, 32, 0.5);
+}

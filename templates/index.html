@@ -8,9 +8,19 @@
 {% load app_filters %}
 
 {% block panels %}
-    <ul>
-        {% for item in list %}
-            <li class="list-group-item"><a href="task/{{item}}">{{ item }}</a></li>
-        {% endfor %}
-    </ul>
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-md-6">
+                <h2 class="front_header" style="color: #EAD7AF">Velkommen til MathGen</h2>
+                <h4 class="front_description" style="color: #EAD7AF">Eksempel tekst...</h4>
+            </div>
+            <div class="col-md-6">
+                <ul>
+                    {% for item in list %}
+                        <li class="list-group-item"><a href="task/{{item}}">{{ item }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
 {% endblock %}
