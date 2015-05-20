@@ -95,3 +95,12 @@ sub{							/* between bootstrap*/
 .jumbotron{
 	background: rgba(86, 71, 32, 0.5);
 }
+
+.list-group-item:first-letter {
+    text-transform: uppercase;
+}
+
+.list-group-item a{
+    color:#EAD7AF;
+	font-weight: bold;
+}
