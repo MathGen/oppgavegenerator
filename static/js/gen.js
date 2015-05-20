@@ -164,6 +164,7 @@ $(document).ready(function() {
 		var id = parseInt($(this).attr('id').match(/[\d]+$/));
 		$('#q_btn_abc_' + id).remove();
 		$('#s_btn_abc_' + id).remove();
+		$('#a_btn_abc_' + id).remove();
 		$('#c_btn_abc_' + id).remove();
 		$('#n_btn_abc_' + id).remove();
 		$('#o_adv_' + id).remove();
