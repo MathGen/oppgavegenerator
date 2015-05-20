@@ -836,6 +836,11 @@ $(document).ready(function() {
 		get_diff_latex();
 	});
 
+	// Redraws the rendered-math in keypad in the calculation-modal
+	$('#calc_modal').on('shown.bs.modal', function () {
+		$('.mathquill-embedded-latex').mathquill('redraw');
+	});
+
 	// Retrieve and insert calculation to solution
 	var c_btn_ok = $('#c_btn_ok');
 	$(c_btn_ok).click(function(e){
