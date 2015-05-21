@@ -100,7 +100,7 @@ def gen(request):
         topics += '§' + str(e.pk) + '§'
         topics += e.topic
     topics = topics[1:]
-    context_dict = {'topics': topics, 'rating': view_logic.get_user_rating(request.user)}
+    context_dict = {'topics': topics}
     return render_to_response('gen.html', context_dict, context)
 
 
@@ -142,7 +142,6 @@ def answers(request):
                 return render_to_response('answers.html', {'answer': cheat_message}, context)
             context_dict = view_logic.make_answer_context_dict(form_values)
             view_logic.change_elo(template, request.user, context_dict['user_won'], form_values['template_type'])
-            context_dict['rating'] = view_logic.get_user_rating(request.user)
             return render_to_response('answers.html', context_dict, context)
         else:
             print(form.errors)
@@ -191,7 +190,7 @@ def new_template(request):
         topics += '§' + str(e.pk) + '§'
         topics += e.topic
     topics = topics[1:]
-    context_dict = {'topics': topics, 'rating': view_logic.get_user_rating(request.user)}
+    context_dict = {'topics': topics}
     return render_to_response('newtemplate.html', context_dict, context)
 
 
@@ -201,7 +200,6 @@ def edit_template(request, template_id):
     """Returns a render of edit.html used for editing existing templates"""
     context = RequestContext(request)
     context_dict = view_logic.make_edit_context_dict(template_id)
-    context_dict['rating'] = view_logic.get_user_rating(request.user)
     return render_to_response('edit.html', context_dict, context)
 
 
@@ -210,5 +208,5 @@ def index(request):
     """Returns the index view with a list of topics"""
     list = Topic.objects.values_list('topic', flat=True)
 
-    return render(request, "index.html", {"list": list, "rating": view_logic.get_user_rating(request.user)})
+    return render(request, "index.html", {"list": list})
 
