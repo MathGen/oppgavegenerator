@@ -1,3 +1,10 @@
+"""
+
+Defines functions needed to translate LaTeX Math-expressions
+to expressions compatible with SymPy
+
+"""
+
 def latex_to_sympy(expr):
     """Takes a latex expression and returns a expression sympy can use"""
     expr = expr.replace('\\ne', '!=')

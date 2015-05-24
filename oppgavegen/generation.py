@@ -1,7 +1,6 @@
 """
 
-Handles user-input, task generation from templates,
-calculations, and parsing strings between LaTeX and SymPy.
+Handles task generation from templates
 
 """
 
