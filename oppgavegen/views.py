@@ -209,5 +209,5 @@ def index(request):
     """Returns the index view with a list of topics"""
     list = Topic.objects.values_list('topic', flat=True)
 
-    return render(request, "index.html", {"list": list, "hostname": request.META['HTTP_HOST']})
+    return render(request, "index.html", {"list": list })
 
