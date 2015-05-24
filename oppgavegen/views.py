@@ -4,6 +4,7 @@ Defines views, and renders data to html templates.
 
 """
 
+
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -208,5 +209,5 @@ def index(request):
     """Returns the index view with a list of topics"""
     list = Topic.objects.values_list('topic', flat=True)
 
-    return render(request, "index.html", {"list": list})
+    return render(request, "index.html", {"list": list, "hostname": request.META['HTTP_HOST']})
 
