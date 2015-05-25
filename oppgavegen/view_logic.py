@@ -10,6 +10,7 @@ from oppgavegen.models import Topic
 from oppgavegen import generation
 from datetime import datetime
 from django.contrib.auth.models import User
+from oppgavegen.answer_checker import check_answer
 
 
 def make_edit_context_dict(template_id):
@@ -70,7 +71,7 @@ def make_answer_context_dict(form_values):
     answer = [generation.after_equal_sign(x) for x in answer]
     answer = generation.calculate_array(answer, random_domain)
 
-    correct_answer = generation.check_answer(user_answer, answer)  # Check if the user answered correctly.
+    correct_answer = check_answer(user_answer, answer)  # Check if the user answered correctly.
 
     if correct_answer:
         answer_text = "\\text{Du har svart riktig!}"
