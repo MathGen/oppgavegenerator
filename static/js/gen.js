@@ -127,7 +127,6 @@ $(document).ready(function() {
 					var_available = true;
 				}
 			}
-			VARIABLES[q_var_id] = q_var;
 			$(q_btn_var_dyn).append('<div id="q_btn_abc_' + q_var_id + '" class="btn btn-danger btn_var_abc btn_var_abc_q">' + q_var + '<a id="q_btn_abc_del_' + q_var_id + '" class="btn btn-danger btn-xs btn_var_del">x</a></div>');
 			$(s_btn_var_dyn).append('<button id="s_btn_abc_' + q_var_id + '" class="btn btn-danger btn_var_abc">' + q_var + '</button>');
 			$('#c_btn_var_dyn').append('<button id="c_btn_abc_' + q_var_id + '" class="btn btn-danger btn_var_abc">' + q_var + '</button>');
