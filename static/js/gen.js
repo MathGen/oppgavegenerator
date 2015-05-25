@@ -413,6 +413,7 @@ $(document).ready(function() {
 				if(!found){
 					$('#q_btn_abc_' + check_id[n]).remove();
 					$('#s_btn_abc_' + check_id[n]).remove();
+					$('#a_btn_abc_' + check_id[n]).remove();
 					$('#c_btn_abc_' + check_id[n]).remove();
 					$('#o_adv_' + check_id[n]).remove();
 					update_variable_count();
