@@ -72,11 +72,12 @@ def latex_to_sympy(expr):
     expr = parenthesis_around_minus(expr)
     return expr
 
+
 def parenthesis_around_minus(expression):
     """Takes a expression and returns it with parenthesis around numbers with - where needed."""
     exceptions = '0123456789.)(xyz'
     expression += ' ' #add a empty space at the end of the string to avoid error.
-    new_expr = expression
+    new_exp = expression
     count = 0
     record = False
     difference = 0
@@ -88,9 +89,9 @@ def parenthesis_around_minus(expression):
             if count > 0:
                 insert_start = i-count+difference-1
                 t_i = i + difference
-                new_expr = new_expr[:insert_start] + '(' + new_expr[insert_start:t_i] + ')' + new_expr[t_i:len(new_expr)]
+                new_exp = new_exp[:insert_start] + '(' + new_exp[insert_start:t_i] + ')' + new_exp[t_i:len(new_exp)]
                 difference += 2
                 count = 0
         elif record:
             count += 1
-    return new_expr
+    return new_exp

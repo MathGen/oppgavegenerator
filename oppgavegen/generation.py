@@ -129,8 +129,6 @@ def parse_solution(solution, domain):
     :param domain: The domain of the different variables.
     :return: A parsed version of the input string (solution)
     """
-    print('in parse_solution')
-    print(solution)
     arr = []
     new_arr = []
     recorder = False
@@ -409,11 +407,14 @@ def find_holes(fill_in):
             if recorder:
                 counter -= 6  # Sets the counter back 6 to compensate for @xxxx@ which is not in the original string
                 start_point = counter+1
+                if counter < len(fill_in):
+                    if fill_in[counter] == '{' or fill_in[counter] == '(': # This is to avoid a specific bug
+                        start_point = counter
             elif not recorder:
-                end_point = counter
+                end_point = counter-5
                 # Swapping
                 # Hole_dict[s[:-5]] = str(start_point) + ' ' + str(end_point-5)
-                hole_dict[str(start_point) + ' ' + str(end_point-5)] = s[:-5]
+                hole_dict[str(start_point) + ' ' + str(end_point)] = s[:-5]
 
                 counter -= 6  # Sets the counter back 6 to compensate for @xxxx@ which is not in the original string
             s = ''
