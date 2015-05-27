@@ -127,7 +127,6 @@ $(document).ready(function() {
 					var_available = true;
 				}
 			}
-			VARIABLES[q_var_id] = q_var;
 			$(q_btn_var_dyn).append('<div id="q_btn_abc_' + q_var_id + '" class="btn btn-danger btn_var_abc btn_var_abc_q">' + q_var + '<a id="q_btn_abc_del_' + q_var_id + '" class="btn btn-danger btn-xs btn_var_del">x</a></div>');
 			$(s_btn_var_dyn).append('<button id="s_btn_abc_' + q_var_id + '" class="btn btn-danger btn_var_abc">' + q_var + '</button>');
 			$('#c_btn_var_dyn').append('<button id="c_btn_abc_' + q_var_id + '" class="btn btn-danger btn_var_abc">' + q_var + '</button>');
@@ -413,6 +412,7 @@ $(document).ready(function() {
 				if(!found){
 					$('#q_btn_abc_' + check_id[n]).remove();
 					$('#s_btn_abc_' + check_id[n]).remove();
+					$('#a_btn_abc_' + check_id[n]).remove();
 					$('#c_btn_abc_' + check_id[n]).remove();
 					$('#o_adv_' + check_id[n]).remove();
 					update_variable_count();
@@ -1144,15 +1144,22 @@ function convert_variables(latex){
 						'E' : dict_calc[4],'F' : dict_calc[5],'G' : dict_calc[6],'H' : dict_calc[7],'I' : dict_calc[8], 'J' : dict_calc[9],
 						'K' : dict_calc[10],'L' : dict_calc[11],'M' : dict_calc[12],'N' : dict_calc[13],'O' : dict_calc[14], 'P' : dict_calc[15],
 						'Q' : dict_calc[16],'R' : dict_calc[17],'S' : dict_calc[18],'T' : dict_calc[19],'U' : dict_calc[20], 'V' : dict_calc[21]};
-	var la2 = "";
+	var la2 = '';
 	// Iteration for adding required {} to single exponents and subscripts.
+
 	for(var j = 0; j < la.length; j++){
 		if(la[j] == '^' || la[j] == '_'){
 			if(la[j+1] != '{' && la[j+1] != '@'){
 				la = la.substring(0, j+1) + '{' + la[j+1] + '}' + la.substring(j+2, la.length);
 			} // Workaround for fill in. this fixes x^2 -> x^{@}xxxx@ to x^{@xxxx@}.
-			else if(la[j+1] != '{' && la[j+1] == '@' && la[j+2] == 'x') {
-				la = la.substring(0, j+1) + '{' + la.substring(j+1, j+14) + '}' + la.substring(j+15, la.length);
+			else if(la[j+1] == '@' && la[j+2] == 'x' && la[j+7] == '{') {  //find the opening @xxxx@, insert } before.
+				la = la.substring(0, j+1) + '{' + la.substring(j+1, la.length);
+				for(var jj = j; jj < la.length; jj++){ //find the closing @xxxx@ and insert a } after.
+					if(la[jj+1] == '}' && la[jj+2] == '@' && la[jj+3] == 'x') {
+						la = la.substring(0, jj+8) + '}' + la.substring(jj+8, la.length);
+						break;
+					}
+				}
 			}
 		}
 	}
