@@ -9,6 +9,8 @@ from sympy.parsing.sympy_parser import (parse_expr, standard_transformations, im
 from .models import Template
 from django.template.defaultfilters import *
 
+# Old/Deprecated functions
+
 def arithmetics():
     number1 = randint(0,10)
     number2 = randint(0,10)
