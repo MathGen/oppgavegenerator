@@ -16,7 +16,7 @@ from django_tables2 import RequestConfig
 from oppgavegen.templatetags.app_filters import is_teacher
 from oppgavegen import view_logic
 from oppgavegen.view_logic import *
-
+from django.views.decorators.cache import cache_control
 
 def is_member(user):
     """Returns true/false depending on if the user is a member of the teacher group (or is a superuser)"""
@@ -25,6 +25,7 @@ def is_member(user):
     return user.groups.filter(name='Teacher').exists()
 
 
+@cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)
 @login_required
 def task(request):
     """Returns a render of taskview.html with a rating apropriate math question"""
@@ -37,7 +38,7 @@ def task(request):
     context_dict['rating'] = view_logic.get_user_rating(request.user)
     return render_to_response('taskview.html', context_dict, context)
 
-
+@cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)
 @login_required
 def task_by_id_and_type(request, template_extra, desired_type='normal'):
     """Returns a render of taskview with a specific math template with specified type"""
@@ -49,7 +50,7 @@ def task_by_id_and_type(request, template_extra, desired_type='normal'):
         return render_to_response('error.html', message, context)
     return render_to_response('taskview.html', context_dict, context)
 
-
+@cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)
 @login_required
 def task_by_extra(request, template_extra):
     """Returns a render of taskview with a specific math template"""
