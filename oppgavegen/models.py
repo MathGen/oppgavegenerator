@@ -75,7 +75,7 @@ class Template(models.Model):
 class Level(models.Model):
     """Stores setts of chapters"""
     name = models.CharField(max_length=200)  # Name of the topic.
-    template = models.ForeignKey(Template)
+    template = models.ManyToManyField(Template)
 
     def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
         """Returns the objects topic"""
@@ -84,7 +84,7 @@ class Level(models.Model):
 class Chapter(models.Model):
     """Stores setts of chapters"""
     name = models.CharField(max_length=200)  # Name of the topic.
-    level = models.ForeignKey(Level)
+    level = models.ManyToManyField(Level)
 
     def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
         """Returns the objects topic"""
@@ -93,7 +93,7 @@ class Chapter(models.Model):
 class Set(models.Model):
     """Stores setts of chapters"""
     name = models.CharField(max_length=200)  # Name of the topic.
-    chapter = models.ForeignKey(Chapter)
+    chapter = models.ManyToManyField(Chapter)
 
     def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
         """Returns the objects topic"""
