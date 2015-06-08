@@ -72,12 +72,44 @@ class Template(models.Model):
         """Returns the question_text field of the object"""
         return self.question_text
 
+class Level(models.Model):
+    """Stores setts of chapters"""
+    name = models.CharField(max_length=200)  # Name of the topic.
+    template = models.ForeignKey(Template)
+
+    def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
+        """Returns the objects topic"""
+        return self.topic
+
+class Chapter(models.Model):
+    """Stores setts of chapters"""
+    name = models.CharField(max_length=200)  # Name of the topic.
+    level = models.ForeignKey(Level)
+
+    def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
+        """Returns the objects topic"""
+        return self.topic
+
+class Set(models.Model):
+    """Stores setts of chapters"""
+    name = models.CharField(max_length=200)  # Name of the topic.
+    chapter = models.ForeignKey(Chapter)
+
+    def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
+        """Returns the objects topic"""
+        return self.topic
 
 class ExtendedUser(models.Model):
     """Extends the default django user model with a one to one relation"""
     user = models.OneToOneField(User)
     rating = models.rating = models.PositiveSmallIntegerField(default=1200)
-    current_template = models.rating = models.SmallIntegerField(default=-1)
+    current_template = models.rating = models.SmallIntegerField(default=-1) #Might be redundant in the new system
+    # It would have to keep track of which level the user is on and what task is given there
+    # Making a abandonment system is probably better. whgere the user is forced to finish the template or lose
+    # rating/stars.
+
+
+
 
 
 def create_user_profile(sender, instance, created, **kwargs):
