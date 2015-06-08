@@ -107,6 +107,7 @@ class ExtendedUser(models.Model):
     # It would have to keep track of which level the user is on and what task is given there
     # Making a abandonment system is probably better. whgere the user is forced to finish the template or lose
     # rating/stars.
+    winstreak = models.SmallIntegerField(default=0)
 
 
 
