@@ -16,7 +16,7 @@ from .models import Template
 from django.contrib.auth.models import User
 
 
-def generate_task(user, template_extra, desired_type='normal'):
+def generate_task(user, template_extra, desired_type=''):
     """Makes a valid math question at the correct rating from a template in the database.
 
     :param user: The user requesting a template
@@ -26,12 +26,14 @@ def generate_task(user, template_extra, desired_type='normal'):
     :return: Returns a complete math question with generated numbers.
     """
     if template_extra == "":
-        q = get_question(user, '')  # Gets a question from the DB
+        get_question_dict = get_question(user, '')  # Gets a question from the DB
     elif template_extra.isdigit():
-        q = get_question(user, template_extra)
+        get_question_dict = get_question(user, template_extra)
     else:
-        q = get_question(user, '', template_extra)
-
+        get_question_dict = get_question(user, '', template_extra)
+    q = get_question_dict['template']
+    if desired_type == '':
+        desired_type = get_question_dict['type']
     if desired_type != 'normal':
         if (desired_type == 'multiple' or desired_type == 'multifill') and not q.multiple_support:
             return {'question': 'error'}
@@ -163,6 +165,7 @@ def get_question(user, template_id, topic=''):
     slack = 60
     increase = 15
     q = ''
+    template_type = 'normal'
     if template_id == '':
         u = User.objects.get(username=user.username)
         user_rating = u.extendeduser.rating
@@ -170,19 +173,48 @@ def get_question(user, template_id, topic=''):
             q = Template.objects.filter(rating__gt=(user_rating-slack))
             q = q.filter(rating__lt=(user_rating+slack))
             q = q.filter(valid_flag=True)
+
+            m = Template.objects.filter(choice_rating__gt=(user_rating-slack))
+            m = m.filter(choice_rating__lt=(user_rating+slack))
+            m = m.filter(valid_flag=True)
+            m = m.filter(fill_in_support=True)
+
+            f = Template.objects.filter(fill_rating__gt=(user_rating-slack))
+            f = f.filter(fill_rating__lt=(user_rating+slack))
+            f = f.filter(valid_flag=True)
+            f = f.filter(multiple_support=True)
+
             if topic != '':
                 q = q.filter(topic__topic__iexact=topic)
-            if q:
-                q = q[randint(0, q.count()-1)]
+                f = f.filter(topic__topic__iexact=topic)
+                m = m.filter(topic__topic__iexact=topic)
+
+            # Use count instead of len as len loads the records.
+            # Using len would be faster if we had to load all the records to python objects.
+            length_normal = q.count()
+            length_multiple = m.count()
+            length_fill_in = f.count()
+            length_total = length_fill_in + length_normal + length_multiple
+            if length_total > 0:
+                r_number = randint(1, length_total)
+                if r_number <= length_fill_in and length_fill_in>0:
+                    q = f[r_number-1]
+                    template_type = 'blanks'
+                elif r_number <= length_multiple+length_fill_in and length_multiple>0:
+                    template_type = 'multiple'
+                    q = m[r_number-length_fill_in-1]
+                else:
+                    q = q[r_number-length_fill_in-length_multiple-1]
                 break
             slack += increase
+
             if slack >= 800:
                 q = Template.objects.all()
                 q = q.latest('id')
                 break
     else:
         q = Template.objects.get(pk=template_id)
-    return q
+    return {'template' : q, 'type' : template_type}
 
 
 def replace_words(sentence, dictionary):
