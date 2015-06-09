@@ -107,12 +107,17 @@ class ExtendedUser(models.Model):
     rating = models.rating = models.PositiveSmallIntegerField(default=1200)
     current_template = models.rating = models.SmallIntegerField(default=-1) #Might be redundant in the new system
     # It would have to keep track of which level the user is on and what task is given there
-    # Making a abandonment system is probably better. whgere the user is forced to finish the template or lose
+    # Making a abandonment system is probably better. where the user is forced to finish the template or lose
     # rating/stars.
     winstreak = models.SmallIntegerField(default=0)
 
+class Tag(models.Model):
+    """Stores setts of chapters"""
+    name = models.CharField(max_length=200)  # Name of the tag.
 
-
+    def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
+        """Returns the objects topic"""
+        return self.name
 
 
 def create_user_profile(sender, instance, created, **kwargs):

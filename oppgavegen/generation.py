@@ -12,7 +12,7 @@ from sympy import *
 from sympy.parsing.sympy_parser import (parse_expr, standard_transformations,
                                         implicit_multiplication_application, convert_xor)
 from oppgavegen.latex_translator import latex_to_sympy
-from .models import Template
+from .models import Template, Level
 from django.contrib.auth.models import User
 
 
@@ -214,6 +214,11 @@ def get_question(user, template_id, topic=''):
                 break
     else:
         q = Template.objects.get(pk=template_id)
+
+    # test
+    #b = Level.objects.all()
+    #print(b)
+    #print(b.filter(template__topic__topic__contains='Integrasjon'))
     return {'template' : q, 'type' : template_type}
 
 
