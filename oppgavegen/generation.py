@@ -177,12 +177,12 @@ def get_question(user, template_id, topic=''):
             m = Template.objects.filter(choice_rating__gt=(user_rating-slack))
             m = m.filter(choice_rating__lt=(user_rating+slack))
             m = m.filter(valid_flag=True)
-            m = m.filter(fill_in_support=True)
+            m = m.filter(multiple_support=True)
 
             f = Template.objects.filter(fill_rating__gt=(user_rating-slack))
             f = f.filter(fill_rating__lt=(user_rating+slack))
             f = f.filter(valid_flag=True)
-            f = f.filter(multiple_support=True)
+            f = f.filter(fill_in_support=True)
 
             if topic != '':
                 q = q.filter(topic__topic__iexact=topic)
