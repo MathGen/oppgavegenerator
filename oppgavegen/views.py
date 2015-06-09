@@ -113,7 +113,6 @@ def submit(request):
     message = 'don\'t come here'
     if request.method == 'POST':
         message = 'Det har skjedd noe feil ved innsending av form'
-        # todo check input for errors
         form = TemplateForm(request.POST)
         if form.is_valid():
             template = form.save(commit=False)

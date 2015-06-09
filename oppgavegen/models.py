@@ -41,7 +41,9 @@ class Template(models.Model):
     answer = models.CharField(max_length=200)  # The answer of the question.
     creator = models.ForeignKey(User, blank=True, null=True)  # User ID of creator of template
     creation_date = models.DateTimeField('date created', blank=True, null=True)  # Date and time of creation
-    rating = models.PositiveSmallIntegerField(blank=True, null=True)  # Difficulty rating. Defaults to 1200.
+    rating = models.PositiveSmallIntegerField(blank=True, null=True, default=1200)  # Difficulty rating.
+    fill_rating = models.PositiveSmallIntegerField(blank=True, null=True, default=1150)  # Rating for fill.
+    choice_rating = models.PositiveSmallIntegerField(blank=True, null=True, default=1100)  # Rating for multiple choice.
     times_solved = models.PositiveIntegerField(blank=True, null=True)  # Times the problem has been solved.
     times_failed = models.PositiveIntegerField(blank=True, null=True)  # Times the problem has not been solved.
     topic = models.ForeignKey(Topic)  # ID of the topic this problem belongs to ex. 2 (where 2 means algebra.)
@@ -79,7 +81,7 @@ class Level(models.Model):
 
     def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
         """Returns the objects topic"""
-        return self.topic
+        return self.name
 
 class Chapter(models.Model):
     """Stores setts of chapters"""
@@ -88,7 +90,7 @@ class Chapter(models.Model):
 
     def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
         """Returns the objects topic"""
-        return self.topic
+        return self.name
 
 class Set(models.Model):
     """Stores setts of chapters"""
@@ -97,7 +99,7 @@ class Set(models.Model):
 
     def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
         """Returns the objects topic"""
-        return self.topic
+        return self.name
 
 class ExtendedUser(models.Model):
     """Extends the default django user model with a one to one relation"""
