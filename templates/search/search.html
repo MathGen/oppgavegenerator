@@ -1,0 +1,18 @@
+{% extends 'search/searchbase.html' %}
+
+
+{% block main %}
+
+    <div>
+        <input id="q" type="text"/>
+        <input id="searchSubmit" type="submit" value="Search"/>
+        <br/>
+        <span class="hint">Search templates by topics</span>
+
+        <div class="margin">
+            <span id="spinner"><img src="http://upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif"></span>
+
+            <div id="results"></div>
+        </div>
+    </div>
+{% endblock %}
