@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from oppgavegen.views import *
 
 urlpatterns = patterns('',
     url(r'^$', 'oppgavegen.views.index', name='home'),
@@ -16,6 +17,10 @@ urlpatterns = patterns('',
     url(r"^task/(\d+)/([\w ]+)/$", 'oppgavegen.views.task_by_id_and_type', name='task_by_id_and_type'),
     url(r"^edit/(\d+)/$", 'oppgavegen.views.edit_template', name='edit_template'),
     url(r'^useranalysis/', 'oppgavegen.views.user_overview_table', name='user_table'),
+
+    # Search urls
     url(r'^search/', include('haystack.urls')),
+    url(r'^search/templates/$', TemplateSearchView.as_view(), name='template_search_view'),
+
     # url(r'^search/', include( 'ajaxsearch.urls' )),
 )

@@ -17,6 +17,11 @@ from oppgavegen.templatetags.app_filters import is_teacher
 from oppgavegen import view_logic
 from oppgavegen.view_logic import *
 from django.views.decorators.cache import cache_control
+from datetime import time
+
+# Search Views and Forms
+from .forms import TemplateSearchForm
+from haystack.generic_views import SearchView
 
 def is_member(user):
     """Returns true/false depending on if the user is a member of the teacher group (or is a superuser)"""
@@ -211,3 +216,7 @@ def index(request):
 
     return render(request, "index.html", {"list": list })
 
+class TemplateSearchView(SearchView):
+    """Advanced Template Search"""
+    template_name = 'search/templatesearch.html'
+    form_class = TemplateSearchForm
