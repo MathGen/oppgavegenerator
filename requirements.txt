@@ -5,3 +5,5 @@ django-registration-redux==1.1
 django-tables2==1.0.4
 gunicorn==19.2.1
 sympy==0.7.6
+whoosh==2.7.0
+django-haystack==2.4.0
