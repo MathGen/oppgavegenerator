@@ -81,7 +81,7 @@ def parenthesis_around_minus(expression):
     count = 0
     record = False
     difference = 0
-    for i in range(0, len(expression)):
+    for i in range(1, len(expression)):
         if expression[i] == '-' and expression[i-1] not in exceptions:
             record = True
         elif record and expression[i] not in exceptions:
