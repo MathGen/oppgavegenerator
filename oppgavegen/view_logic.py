@@ -70,22 +70,19 @@ def make_answer_context_dict(form_values):
     user_answer = generation.calculate_array(user_answer, random_domain)
     answer = [generation.after_equal_sign(x) for x in answer]
     answer = generation.calculate_array(answer, random_domain)
+    answer_text = "\\text{Du har svart }" + '\\text{ og }'.join(user_answer) + \
+                      "\\text{. Det er feil! Svaret er: }" + '\\text{ og }'.join(answer)
 
-    correct_answer = check_answer(user_answer, answer)  # Check if the user answered correctly.
+    correct_answer = check_answer(user_answer, answer, template_type)  # Check if the user answered correctly.
 
     if correct_answer:
         answer_text = "\\text{Du har svart riktig!}"
-    else:
-        answer_text = "\\text{Du har svart }" + '\\text{ og }'.join(user_answer) + \
-                      "\\text{. Det er feil! Svaret er: }" + '\\text{ og }'.join(answer)
 
     solution = solution.replace('+-', '-')
     solution = solution.replace('--', '+')
     answer_text = latex_exceptions(answer_text)
-    context_dict = {'title': "Oppgavegen", 'answer': str(answer_text), 'user_answer': user_answer,
+    context_dict = {'title': "Oppgavegen", 'answer': str(answer_text),
                     'solution': solution, 'user_won': correct_answer}
-    print('this')
-    print(answer_text)
     return context_dict
 
 
