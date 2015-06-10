@@ -38,4 +38,5 @@ def check_answer(user_answer, answer, template_type):
     return right_answer
 
 def parse_using_sympy(s):
-    return parse_expr(s, transformations=standard_transformations + (convert_xor, implicit_multiplication_application,), global_dict=None, evaluate=True)
+    transformations = standard_transformations + (convert_xor, implicit_multiplication_application,)
+    return parse_expr(s, transformations=transformations, global_dict=None, evaluate=True)
