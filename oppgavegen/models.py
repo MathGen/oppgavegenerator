@@ -27,6 +27,14 @@ class Topic(models.Model):
         if self.topic:
             self.topic = self.topic.strip()
 
+class Tag(models.Model):
+    """Searchable tags for problem templates."""
+    name = models.CharField(max_length=200)  # Name of the tag.
+
+    def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
+        """Returns the objects topic"""
+        return self.name
+
 # Choices for valid_flag.
 valid_choices = (
     (True, 'Valid'),
@@ -36,6 +44,8 @@ valid_choices = (
 
 class Template(models.Model):
     """Stores information for Templates"""
+    title = models.CharField(max_length=50, default='Uten Tittel') # The template title. Main identifier for teacher users.
+    tags = models.ManyToManyField(Tag) # Template tags. Tags should describe content of math problems i.e "arithmetic"
     question_text = models.CharField(max_length=200)  # Math expression or text question ex. "Solve: ax = b + cx"
     solution = models.CharField(max_length=10000)  # Step by step solution to the answer
     answer = models.CharField(max_length=200)  # The answer of the question.
@@ -110,14 +120,6 @@ class ExtendedUser(models.Model):
     # Making a abandonment system is probably better. where the user is forced to finish the template or lose
     # rating/stars.
     winstreak = models.SmallIntegerField(default=0)
-
-class Tag(models.Model):
-    """Stores setts of chapters"""
-    name = models.CharField(max_length=200)  # Name of the tag.
-
-    def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
-        """Returns the objects topic"""
-        return self.name
 
 
 def create_user_profile(sender, instance, created, **kwargs):

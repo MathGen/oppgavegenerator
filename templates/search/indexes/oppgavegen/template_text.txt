@@ -1,0 +1,3 @@
+{{ object.title }}
+{{ object.author }}
+{{ object.question_tex_latex }}

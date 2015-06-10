@@ -32,6 +32,7 @@ INSTALLED_APPS = (
     'registration',                 # django-registration-redux
     'gunicorn',                     # gunicorn (for unix deployment)
     'django_tables2',               # django-tables2
+    'haystack'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -58,6 +59,13 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+}
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+    },
 }
 
 # Internationalization
@@ -99,3 +107,4 @@ SITE_ID = 1                     # Temporary solution for local production-enviro
 LOGIN_URL = '/user/login/'
 LOGOUT_URL = '/user/logout/'
 LOGIN_REDIRECT_URL = '/'
+
