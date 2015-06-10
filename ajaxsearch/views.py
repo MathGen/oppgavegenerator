@@ -1,3 +1,5 @@
+"""Primitive ajax search views (might delete these ok)"""
+
 from django.http import Http404, HttpResponse
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
@@ -22,8 +24,6 @@ def ajax_template_search(request, ):
     else:
         return HttpResponse("Request is not AJAX")
 
-
-# todo fix jquery code to match this ok
 def ajax_template_search_test(request, query=None):
     # if request.is_ajax():
         if query is not None:
