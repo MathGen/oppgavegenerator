@@ -1152,7 +1152,7 @@ function convert_variables(latex){
 			if(la[j+1] != '{' && la[j+1] != '@'){
 				la = la.substring(0, j+1) + '{' + la[j+1] + '}' + la.substring(j+2, la.length);
 			} // Workaround for fill in. this fixes x^2 -> x^{@}xxxx@ to x^{@xxxx@}.
-			else if(la[j+1] == '@' && la[j+2] == 'x' && la[j+7] == '{') {  //find the opening @xxxx@, insert } before.
+			else if(la[j+1] == '@' && la[j+2] == 'x' && la[j+8] == '7') {  //find the opening @xxxx@, insert { before.
 				la = la.substring(0, j+1) + '{' + la.substring(j+1, la.length);
 				for(var jj = j; jj < la.length; jj++){ //find the closing @xxxx@ and insert a } after.
 					if(la[jj+1] == '}' && la[jj+2] == '@' && la[jj+3] == 'x') {
@@ -1562,6 +1562,29 @@ function refresh_char_colors(selector){
 }
 
 /**
+ * Adds curly brackets to captial letters that have ^ in front of them. This is done to fix a bug.
+ * @param {string|object s - The string which gets the brackets added to it.}
+ * */
+function add_curlybrackets(s){
+	var capital_letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+				       'Q', 'R', 'S', 'T', 'U', 'V', 'D', 'X', 'Y', 'Z'];
+	var new_s = s[0];
+	var count = 0;
+	s = s[0];
+
+	// Subtracts minus one from length, because math should never end with a ^.
+	for(i = 0; i < s.length-1; i++) {
+
+		if (s[i] == '^' && capital_letters.indexOf(s[i + 1]) != -1) {
+			new_s =  new_s.substring(0, i+1) + '{' + new_s[i+1] + '}' + new_s.substring(i+2, new_s.length);
+			count += 2;
+		}
+	}
+	new_s_array = [new_s];
+	return new_s_array;
+}
+
+/**
  * Compare two latex strings, converting it to asciimath, and wrap parts of string that differs with a tag.
  * @param {Boolean} latex_bool - Whether or not to join the explanation part of the solution before the LaTeX string.
  * @returns {string|jQuery} - The asciimath string with blank tags.
@@ -1577,6 +1600,7 @@ function get_diff_latex(latex_bool){
 			//latex_before.push(latex_to_asciimath($('#s_input_mathquill_' + la_orig).mathquill('latex')));
 			//latex_after.push(latex_to_asciimath($('#f_fill_content_' + la_orig).mathquill('latex')));
 			latex_before.push('\\text{' + $('#s_text_' + la_orig).val() + '}' + '\\n' + $('#s_input_mathquill_' + la_orig).mathquill('latex'));
+			latex_before = add_curlybrackets(latex_before);
 			latex_after.push('\\text{' + $('#s_text_' + la_orig).val() + '}' + '\\n' + $('#f_fill_content_' + la_orig).mathquill('latex'));
 		}
 		var d = dmp.diff_main(latex_before.join('\\n'), latex_after.join('\\n')); // Two strings to compare.
