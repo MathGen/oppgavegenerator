@@ -451,6 +451,7 @@ def find_holes(fill_in):
                 end_point = counter-5
                 # Swapping
                 # Hole_dict[s[:-5]] = str(start_point) + ' ' + str(end_point-5)
+                print(start_point)
                 hole_dict[str(start_point) + ' ' + str(end_point)] = s[:-5]
 
                 counter -= 6  # Sets the counter back 6 to compensate for @xxxx@ which is not in the original string
@@ -486,7 +487,7 @@ def get_values_from_position(position_string, solution):
     """Takes a array of positions and returns a array with the strings in between the positional coordinates."""
     position_array = position_string.split('§')
     values = ''
-    for s in position_array:
+    for s in sorted(position_array):
         positions = s.split()
         values += '§' + (solution[int(positions[0]):int(positions[1])])
     return values[1:]
