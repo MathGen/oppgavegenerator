@@ -97,12 +97,16 @@ def submit_template(template, user, update):
     if update:
         q = Template.objects.get(pk=template.pk)
         template.rating = q.rating
+        template.choice_rating = q.choice_rating
+        template.fill_rating = q.fill_rating
         template.times_failed = q.times_failed
         template.times_solved = q.times_solved
         template.creation_date = q.creation_date
         template.creator = q.creator
     else:
         template.rating = 1200
+        template.fill_rating = 1150
+        template.choice_rating = 1100
         template.times_failed = 0
         template.times_solved = 0
         template.creation_date = datetime.now()

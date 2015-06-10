@@ -35,6 +35,8 @@ def latex_to_sympy(expr):
     expr = expr.replace('ma x(', 'Max(')
     expr = expr.replace('min (', 'Min(')
     expr = expr.replace('min(', 'Min(')
+    if expr[0] == '*':
+        expr = expr[1:]
 
     i = 0
     counter = 0
