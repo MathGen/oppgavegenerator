@@ -1,9 +1,14 @@
+"""
+
+Old and redundant functions
+
+"""
+
 from random import randint
 from random import sample
 from random import shuffle
 import collections
 from math import ceil
-from oppgavegen.nsp import NumericStringParser
 from sympy import *
 from sympy.parsing.sympy_parser import (parse_expr, standard_transformations, implicit_multiplication)
 from .models import Template

@@ -1,6 +1,6 @@
 """
 
-Handles task generation from templates
+Handles task generation from templates.
 
 """
 
@@ -22,7 +22,6 @@ def generate_task(user, template_extra, desired_type=''):
     :param user: The user requesting a template
     :param template_extra: (optional) A id used for requesting a specific template.
     :param desired_type: (optional) A string for requesting a specific template type.
-    :param topic: (optional) A string for requesting a question of a specific topic.
     :return: Returns a complete math question with generated numbers.
     """
     if template_extra == "":
