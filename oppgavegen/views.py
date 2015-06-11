@@ -16,7 +16,7 @@ from oppgavegen.view_logic import *
 from django.views.decorators.cache import cache_control
 
 # Search Views and Forms
-from .forms import TemplateSearchForm, QuestionForm, TemplateForm
+from .forms import QuestionForm, TemplateForm
 from haystack.generic_views import SearchView
 
 
