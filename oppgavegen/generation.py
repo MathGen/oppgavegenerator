@@ -196,14 +196,14 @@ def get_question(user, template_id, topic=''):
             length_total = length_fill_in + length_normal + length_multiple
             if length_total > 0:
                 r_number = randint(1, length_total)
-                if r_number <= length_fill_in and length_fill_in>0:
-                    q = f[r_number-1]
+                if r_number <= length_fill_in and length_fill_in > 0:
+                    q = f[r_number - 1]
                     template_type = 'blanks'
-                elif r_number <= length_multiple+length_fill_in and length_multiple>0:
+                elif r_number <= length_multiple + length_fill_in and length_multiple > 0:
                     template_type = 'multiple'
-                    q = m[r_number-length_fill_in-1]
+                    q = m[r_number - length_fill_in - 1]
                 else:
-                    q = q[r_number-length_fill_in-length_multiple-1]
+                    q = q[r_number - length_fill_in - length_multiple - 1]
                 break
             slack += increase
 
@@ -390,7 +390,7 @@ def get_variables_used(string, variable_dict):
     return used_variables
 
 
-def new_random_value(value, domain_dict, bonus, extra):
+def new_random_value(value, domain_dict, bonus=0, extra=''):
     """Creates a new random value for a given variable using its domain.
 
     :param value: The value to change.
@@ -483,7 +483,7 @@ def make_holes(hole_dict, fill_in):
 
 
 def get_values_from_position(position_string, solution):
-    """Takes a array of positions and returns a array with the strings in between the positional coordinates."""
+    """Takes a string of positions and returns a values from the string with those positions"""
     position_array = position_string.split('§')
     values = ''
     for s in sorted(position_array):
