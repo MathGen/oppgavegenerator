@@ -1,3 +1,9 @@
+"""
+
+Contains various forms that are used in views
+
+"""
+
 from django.forms import ModelForm
 from django.forms import forms
 from django import forms

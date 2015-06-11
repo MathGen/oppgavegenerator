@@ -1,4 +1,8 @@
-# Haystack Search Indexes
+"""
+
+Search Indexes for use in Haystack
+
+"""
 
 import datetime
 from haystack import indexes

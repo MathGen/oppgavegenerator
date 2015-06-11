@@ -1,4 +1,8 @@
-"""Defines tables and their data sources to be rendered in HTML with django-tables2 """
+"""
+
+Defines tables and their data sources to be rendered in HTML with django-tables2
+
+"""
 
 import django_tables2 as tables
 from oppgavegen.models import Template

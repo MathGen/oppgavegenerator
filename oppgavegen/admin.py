@@ -1,3 +1,9 @@
+"""
+
+Configuration for the admin page
+
+"""
+
 from django.contrib import admin
 from oppgavegen.models import Template, Topic, ExtendedUser, Level, Chapter, Set, Tag
 from django.contrib.auth.models import User
