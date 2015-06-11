@@ -1,6 +1,12 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from oppgavegen.views import *
+from haystack.forms import SearchForm
+import datetime
+from haystack.query import SearchQuerySet
+from haystack.views import SearchView
+
+sqs = SearchQuerySet().filter(creation_date__lte=datetime.datetime.now())
 
 urlpatterns = patterns('',
     url(r'^$', 'oppgavegen.views.index', name='home'),
@@ -18,9 +24,14 @@ urlpatterns = patterns('',
     url(r"^edit/(\d+)/$", 'oppgavegen.views.edit_template', name='edit_template'),
     url(r'^useranalysis/', 'oppgavegen.views.user_overview_table', name='user_table'),
 
-    # Search urls
+    # Messy haystack search urls. Could put these in own file and import here.
     url(r'^search/', include('haystack.urls')),
-    url(r'^search/templates/$', TemplateSearchView.as_view(), name='template_search_view'),
+    url(r'^search/templates/$', SearchView(
+        template='search/template_search.html',
+        searchqueryset=sqs,
+        form_class=TemplateSearchForm
+    ), name='haystack_search'),
+
 
     # url(r'^search/', include( 'ajaxsearch.urls' )),
 )

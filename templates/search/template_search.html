@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
+{% load bootstrap3 %}
 
 {% block panels %}
     <h2>Search</h2>
 
     <form method="get" action=".">
-        <table>
-            {{ form.as_table }}
-            <tr>
-                <td>&nbsp;</td>
-                <td>
-                    <input type="submit" value="Search">
-                </td>
-            </tr>
-        </table>
+
+        {% bootstrap_form form %}
+        {% buttons %}
+            <button type="submit" class="btn btn-primary">
+                {% bootstrap_icon "search" %} Search
+            </button>
+        {% endbuttons %}
+
 
         {% if query %}
             <h3>Results</h3>

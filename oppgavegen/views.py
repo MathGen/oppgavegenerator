@@ -4,7 +4,6 @@ Defines views, and renders data to html templates.
 
 """
 
-
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -22,6 +21,7 @@ from datetime import time
 # Search Views and Forms
 from .forms import TemplateSearchForm
 from haystack.generic_views import SearchView
+
 
 def is_member(user):
     """Returns true/false depending on if the user is a member of the teacher group (or is a superuser)"""
@@ -43,6 +43,7 @@ def task(request):
     context_dict['rating'] = view_logic.get_user_rating(request.user)
     return render_to_response('taskview.html', context_dict, context)
 
+
 @cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)
 @login_required
 def task_by_id_and_type(request, template_extra, desired_type='normal'):
@@ -54,6 +55,7 @@ def task_by_id_and_type(request, template_extra, desired_type='normal'):
         message = {'message': 'Denne oppgavetypen har ikke blitt laget for denne oppgaven'}
         return render_to_response('error.html', message, context)
     return render_to_response('taskview.html', context_dict, context)
+
 
 @cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)
 @login_required
@@ -214,9 +216,15 @@ def index(request):
     """Returns the index view with a list of topics"""
     list = Topic.objects.values_list('topic', flat=True)
 
-    return render(request, "index.html", {"list": list })
+    return render(request, "index.html", {"list": list})
+
 
 class TemplateSearchView(SearchView):
     """Advanced Template Search"""
-    template_name = 'search/templatesearch.html'
+    template_name = 'search/template_search.html'
     form_class = TemplateSearchForm
+
+    def get_queryset(self):
+        queryset = super(TemplateSearchView.self).get_queryset()
+        # further filter queryset based on some set of criteria
+        return queryset.filter(creation_date__lte=datetime.datetime.now)

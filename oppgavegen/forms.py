@@ -8,7 +8,6 @@ from .models import Template
 
 class TemplateSearchForm(SearchForm):
     title = forms.CharField(required=False)
-    tags = forms.CharField(required=False)
     creator = forms.CharField(required=False)
     min_rating = forms.IntegerField(required=False)
     max_rating = forms.IntegerField(required=False)
@@ -30,10 +29,6 @@ class TemplateSearchForm(SearchForm):
         if self.cleaned_data['creator']:
             sqs = sqs.filter(creator__username__contains=self.cleaned_data['creator'])
 
-        # Check for tags input
-        if self.cleaned_data['tags']:
-            sqs = sqs.filter(tag__name__contains=self.cleaned_data['tags'])
-
         # Check for max rating input
         if self.cleaned_data['max_rating']:
             sqs = sqs.filter(rating__lt=self.cleaned_data['max_rating'])
@@ -44,11 +39,11 @@ class TemplateSearchForm(SearchForm):
 
         # Check for min rating input
         if self.cleaned_data['multiple']:
-            sqs = sqs.filter(rating_gt=self.cleaned_data['min_rating'])
+            sqs = sqs.filter(rating_gt=self.cleaned_data['multiple'])
 
         # Check for min rating input
-        if self.cleaned_data['min_rating']:
-            sqs = sqs.filter(rating_gt=self.cleaned_data['min_rating'])
+        if self.cleaned_data['fill_in']:
+            sqs = sqs.filter(rating_gt=self.cleaned_data[''])
 
         return sqs
 
