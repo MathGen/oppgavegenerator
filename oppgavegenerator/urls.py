@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from oppgavegen.views import *
+from oppgavegen.forms import *
 from haystack.forms import SearchForm
 import datetime
 from haystack.query import SearchQuerySet
@@ -30,7 +31,7 @@ urlpatterns = patterns('',
         template='search/template_search.html',
         searchqueryset=sqs,
         form_class=TemplateSearchForm
-    ), name='haystack_search'),
+    ), name='template_search'),
 
 
     # url(r'^search/', include( 'ajaxsearch.urls' )),
