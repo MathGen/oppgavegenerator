@@ -181,14 +181,3 @@ def index(request):
     """Returns the index view with a list of topics"""
     list = Topic.objects.values_list('topic', flat=True)
     return render(request, "index.html", {"list": list})
-
-
-class TemplateSearchView(SearchView):
-    """Advanced Template Search"""
-    template_name = 'search/template_search.html'
-    form_class = TemplateSearchForm
-
-    def get_queryset(self):
-        queryset = super(TemplateSearchView.self).get_queryset()
-        # further filter queryset based on some set of criteria
-        return queryset.filter(creation_date__lte=datetime.datetime.now)
