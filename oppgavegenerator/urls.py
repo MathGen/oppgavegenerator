@@ -1,3 +1,9 @@
+"""
+
+Configures how urls for the site works
+
+"""
+
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from oppgavegen.views import *
