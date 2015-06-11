@@ -59,9 +59,9 @@ class templateGenerationTest(TestCase):
     template1 = testTemplate(question_text='\\text{hva er R1R + R2R}', answer='R1R+R2R',
                               solution='\\text{Adderer regnestykket:} \\n R1R+R2R = @?R1R+R2R?@',
                               rating=1200, fill_rating=1150, choice_rating=1100, topic='aritmetikk',
-                              choices='@?(R0R+R1R)?@-1ง@?(R0R+R1R)?@-2ง@?(R0R+R1R)?@+1',
+                              choices='@?(R0R+R1R)?@-1ยง@?(R0R+R1R)?@-2ยง@?(R0R+R1R)?@+1',
                               fill_in='\\text{Legger sammen slik}\\nR0R+@xxxx@R1R@xxxx@=@?(R0R+R1R)?@',
-                              random_domain='1 10 0ง1 10 0')
+                              random_domain='1 10 0ยง1 10 0')
 
     def test_calculate_answer(self):
         """
