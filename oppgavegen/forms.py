@@ -49,7 +49,7 @@ class TemplateSearchForm(SearchForm):
 
         # Check for min rating input
         if self.cleaned_data['fill_in']:
-            sqs = sqs.filter(rating_gt=self.cleaned_data[''])
+            sqs = sqs.filter(rating_gt=self.cleaned_data['fill_in'])
 
         return sqs
 

@@ -5,3 +5,5 @@
 {% endfor %}
 {{ object.question_text_latex }}
 {{ object.solution_latex }}
+{{ object.multiple_support }}
+{{ object.fill_in_support }}
