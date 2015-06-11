@@ -1,6 +1,6 @@
+# Tests
 from django.test import TestCase
 from oppgavegen.generation import *
-
 
 class testTemplate:
 
