@@ -100,6 +100,8 @@ def submit_template(template, user, update):
         template.times_solved = q.times_solved
         template.creation_date = q.creation_date
         template.creator = q.creator
+        template.tags = q.tags.all()
+        template.title = q.title
     else:
         template.rating = 1200
         template.fill_rating = 1150

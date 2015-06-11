@@ -44,8 +44,8 @@ valid_choices = (
 
 class Template(models.Model):
     """Stores information for Templates"""
-    title = models.CharField(max_length=50, default='Uten Tittel') # The template title. Main identifier for teacher users.
-    tags = models.ManyToManyField(Tag, null=True) # Template tags. Tags should describe content of math problems i.e "arithmetic"
+    title = models.CharField(max_length=50, blank=True, default='Uten Tittel') # The template title. Main identifier for teacher users.
+    tags = models.ManyToManyField(Tag, blank=True) # Template tags. Tags should describe content of math problems i.e "arithmetic"
     question_text = models.CharField(max_length=200)  # Math expression or text question ex. "Solve: ax = b + cx"
     solution = models.CharField(max_length=10000)  # Step by step solution to the answer
     answer = models.CharField(max_length=200)  # The answer of the question.
