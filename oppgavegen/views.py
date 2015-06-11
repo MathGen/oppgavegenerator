@@ -8,18 +8,15 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.shortcuts import render
-from django import forms
-from django.forms import ModelForm
 from oppgavegen.tables import *
 from django_tables2 import RequestConfig
 from oppgavegen.templatetags.app_filters import is_teacher
 from oppgavegen import view_logic
 from oppgavegen.view_logic import *
 from django.views.decorators.cache import cache_control
-from datetime import time
 
 # Search Views and Forms
-from .forms import TemplateSearchForm
+from .forms import TemplateSearchForm, QuestionForm, TemplateForm
 from haystack.generic_views import SearchView
 
 
@@ -65,38 +62,6 @@ def task_by_extra(request, template_extra):
     context_dict = generation.generate_task(request.user, template_extra)
     context_dict['rating'] = view_logic.get_user_rating(request.user)
     return render_to_response('taskview.html', context_dict, context)
-
-
-class QuestionForm(forms.Form):
-    user_answer = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400)
-    primary_key = forms.IntegerField()
-    variable_dictionary = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400, required=False)
-    template_specific = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400, required=False)
-    template_type = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=50)
-    replacing_words = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400, required=False)
-    disallowed = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400, required=False)
-
-    def process(self):
-        """Returns a cleaned dictionary of it's own values."""
-        cd = {'variable_dictionary': self.cleaned_data['variable_dictionary'],
-              'primary_key': self.cleaned_data['primary_key'],
-              'user_answer': self.cleaned_data['user_answer'],
-              'template_type': self.cleaned_data['template_type'],
-              'template_specific': self.cleaned_data['template_specific'],
-              'replacing_words': self.cleaned_data['replacing_words'],
-              'disallowed': self.cleaned_data['disallowed']}
-        return cd
-
-
-class TemplateForm(ModelForm):
-    class Meta:
-        model = Template
-        fields = '__all__'
-
-        def process(self):
-            """Returns a cleaned dictionary of it's own values."""
-            cd = {self.cleaned_data['question'], self.cleaned_data['answer']}
-            return cd
 
 
 @login_required
@@ -215,5 +180,4 @@ def edit_template(request, template_id):
 def index(request):
     """Returns the index view with a list of topics"""
     list = Topic.objects.values_list('topic', flat=True)
-
     return render(request, "index.html", {"list": list})
