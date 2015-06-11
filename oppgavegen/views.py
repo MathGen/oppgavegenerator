@@ -8,14 +8,12 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.shortcuts import render
-from django.forms import ModelForm
 from oppgavegen.tables import *
 from django_tables2 import RequestConfig
 from oppgavegen.templatetags.app_filters import is_teacher
 from oppgavegen import view_logic
 from oppgavegen.view_logic import *
 from django.views.decorators.cache import cache_control
-from datetime import time
 
 # Search Views and Forms
 from .forms import TemplateSearchForm, QuestionForm, TemplateForm
@@ -182,7 +180,6 @@ def edit_template(request, template_id):
 def index(request):
     """Returns the index view with a list of topics"""
     list = Topic.objects.values_list('topic', flat=True)
-
     return render(request, "index.html", {"list": list})
 
 
