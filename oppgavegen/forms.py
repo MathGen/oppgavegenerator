@@ -58,3 +58,34 @@ class LevelForm(ModelForm):
     class Meta:
         model = Level
         fields = ('name', 'template')
+
+
+class QuestionForm(forms.Form):
+    user_answer = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400)
+    primary_key = forms.IntegerField()
+    variable_dictionary = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400, required=False)
+    template_specific = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400, required=False)
+    template_type = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=50)
+    replacing_words = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400, required=False)
+    disallowed = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400, required=False)
+
+    def process(self):
+        """Returns a cleaned dictionary of it's own values."""
+        cd = {'variable_dictionary': self.cleaned_data['variable_dictionary'],
+              'primary_key': self.cleaned_data['primary_key'],
+              'user_answer': self.cleaned_data['user_answer'],
+              'template_type': self.cleaned_data['template_type'],
+              'template_specific': self.cleaned_data['template_specific'],
+              'replacing_words': self.cleaned_data['replacing_words'],
+              'disallowed': self.cleaned_data['disallowed']}
+        return cd
+
+class TemplateForm(ModelForm):
+    class Meta:
+        model = Template
+        fields = '__all__'
+
+        def process(self):
+            """Returns a cleaned dictionary of it's own values."""
+            cd = {self.cleaned_data['question'], self.cleaned_data['answer']}
+            return cd
