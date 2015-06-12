@@ -26,7 +26,7 @@
 					<ul class="nav navbar-nav navbar-right">
 						<!--MENU ITEMS-->
                     	<li><a href="#">{{  user|get_rating }}</a></li>
-                    	{% if user|is_teacher   %}
+                    	{% if user|is_teacher %}
 						<li><a href="{% url 'newtemplate' %}">Ny Mal</a></li>
                         {%endif%}
                     	<li><a href="{% url 'templates' %}">Maler</a></li>
@@ -35,8 +35,9 @@
                         <li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user">&nbsp;</span>{{ user.username|capfirst }}<b class="caret"></b></a>
 							<ul class="dropdown-menu">
-                                {% if user|is_teacher   %}
+                                {% if user|is_teacher %}
                                 <li><a href="{% url 'user_templates' %}">Mine Maler</a></li>
+                                <li><a href="{% url 'user_sets' %}">Oppgavesett</a></li>
                                 {%endif%}
 								<li><a href="{% url 'auth_logout' %}">Logg ut</a></li>
 								<li><a href="{% url 'auth_password_change' %}">Bytt Passord</a></li>

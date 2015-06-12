@@ -186,23 +186,34 @@ def index(request):
 
 ### SET, CHAPTER, LEVEL FORM VIEWS ###
 
-@login_required
-class SetCreate(CreateView):
+def preview_template(request, template_id):
+    """Render a template to html"""
+    if request.is_ajax():
+        q = Template.objects.get(pk=template_id)
+        preview = str(q.question_text_latex.replace('\\\\', '\\')) + "\\n" + str(q.solution_latex.replace('\\\\', '\\'))
+
+    return render_to_response('search/template_preview.html',)
+
+
+class SetCreateView(CreateView):
     # form_class = SetForm
     model = Set
     fields = ['name', 'chapter']
     template_name = 'sets/set_create_form.html'
 
-    def form_valid(self, form):
-        form.instance.creator = self.request.user
-        return super(SetCreate, self).form_valid(form)
+    #def form_valid(self, form):
+    #    form.instance.creator = self.request.user
+    #    return super(SetCreateView, self).form_valid(form)
 
-@login_required
 class UserSetListView(ListView):
     template_name = 'sets/set_list.html'
 
     def get_queryset(self):
-        q = Set.objects.filter(creator=self.request.user)
+        return Set.objects.filter(creator=self.request.user)
+
+    #def get_context_data(self, **kwargs):
+    #    context = super(UserSetListView, self).get_context_data(**kwargs)
+    #    context['now'] = datetime.datetim
 
 @login_required
 class ChapterCreate(CreateView):
@@ -218,3 +229,8 @@ class ChapterCreate(CreateView):
 class LevelCreate(CreateView):
     model = Level
     fields = ['name', 'template']
+    template_name = 'sets/level_create_form.html'
+
+    def form_valid(self, form):
+        form.instance.creator = self.request.user
+        return super(Level)

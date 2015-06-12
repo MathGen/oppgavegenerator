@@ -57,19 +57,19 @@ class TemplateSearchForm(SearchForm):
 class SetForm(ModelForm):
     class Meta:
         model = Set
-        fields = ('name', 'chapter')
+        fields = ('name', 'chapters')
 
 
 class ChapterForm(ModelForm):
     class Meta:
         model = Chapter
-        fields = ('name', 'level')
+        fields = ('name', 'levels')
 
 
 class LevelForm(ModelForm):
     class Meta:
         model = Level
-        fields = ('name', 'template')
+        fields = ('name', 'templates')
 
 
 class QuestionForm(forms.Form):

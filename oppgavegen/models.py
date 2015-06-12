@@ -85,19 +85,19 @@ class Template(models.Model):
         return self.question_text
 
 class Level(models.Model):
-    """Stores setts of chapters"""
+    """Stores sets of templates"""
     name = models.CharField(max_length=200)  # Name of the topic.
-    template = models.ManyToManyField(Template)
+    templates = models.ManyToManyField(Template)
     creator = models.OneToOneField(User, blank=True, null=True)
 
-    def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
-        """Returns the objects topic"""
+    def __str__(self):  # return self.name instead of level-object
+        """Returns the level name"""
         return self.name
 
 class Chapter(models.Model):
-    """Stores setts of chapters"""
+    """Stores sets of levels"""
     name = models.CharField(max_length=200)  # Name of the topic.
-    level = models.ManyToManyField(Level)
+    levels = models.ManyToManyField(Level)
     creator = models.OneToOneField(User, blank=True, null=True)
 
     def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
@@ -105,9 +105,9 @@ class Chapter(models.Model):
         return self.name
 
 class Set(models.Model):
-    """Stores setts of chapters"""
+    """Stores sets of chapters"""
     name = models.CharField(max_length=200)  # Name of the topic.
-    chapter = models.ManyToManyField(Chapter)
+    chapters = models.ManyToManyField(Chapter)
     creator = models.OneToOneField(User, blank=True, null=True)
 
     def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)

@@ -6,8 +6,7 @@ Search Indexes for use in Haystack
 
 import datetime
 from haystack import indexes
-from .models import Template
-from .models import Tag
+from .models import Template, Set, Chapter, Level
 
 class TemplateIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
@@ -30,3 +29,29 @@ class TemplateIndex(indexes.SearchIndex, indexes.Indexable):
     def index_queryset(self, using=None):
         """Used when the entire index for the model is updated."""
         return self.get_model().objects.filter(creation_date__lte=datetime.datetime.now())
+
+# class SetIndex(indexes.SearchIndex, indexes.Indexable):
+#     text=indexes.CharField(document=True, use_template=True)
+#     name=indexes.CharField(model_attr='name')
+#     creator=indexes.CharField(model_attr='creator')
+#     chapters=indexes.MultiValueField()
+#
+#     def prepare_chapters(self, object):
+#         return [chapter.name for chapter in object.chapters.all()]
+#
+#     def get_model(self):
+#         return Set
+#
+#     def index_queryset(self, using=None):
+#         return self.get_model().objects.filter(creation_date__lte=datetime.datetime.now())
+#
+# class ChapterIndex(indexes.SearhIndex, indexes.Indexable):
+#     text=indexes.CharField(document=True, use_template=True)
+#     creator=indexes.CharField(model_attr='creator')
+#     levels = indexes.MultiValueField()
+#
+#     def prepare_levels(self, object):
+#         return [level.name for level in object.levels.all()]
+#
+#     def index_queryset(self, using=None):
+#         return self.get_model().objects.filter(creation_date__lte=datetime.datetime.now())
