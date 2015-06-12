@@ -117,8 +117,8 @@ class Set(models.Model):
 class ExtendedUser(models.Model):
     """Extends the default django user model with a one to one relation"""
     user = models.OneToOneField(User)
-    rating = models.rating = models.PositiveSmallIntegerField(default=1200)
-    current_template = models.rating = models.SmallIntegerField(default=-1) #Might be redundant in the new system
+    rating = models.PositiveSmallIntegerField(default=1200)
+    current_template = models.SmallIntegerField(default=-1) #Might be redundant in the new system
     # It would have to keep track of which level the user is on and what task is given there
     # Making a abandonment system is probably better. where the user is forced to finish the template or lose
     # rating/stars.

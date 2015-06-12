@@ -1,0 +1,11 @@
+{% extends 'sets/setbase.html' %}
+
+<h1>Oppgavesett</h1>
+
+<ul>
+{% for set in object_list %}
+    <li>{{ set.name }}</li>
+{% empty %}
+    <li>No articles yet.</li>
+{% endfor %}
+</ul>

@@ -14,12 +14,12 @@ from oppgavegen.templatetags.app_filters import is_teacher
 from oppgavegen import view_logic
 from oppgavegen.view_logic import *
 from django.views.generic.edit import CreateView
+from django.views.generic.list import ListView
 from django.views.decorators.cache import cache_control
 from oppgavegen.models import Set, Chapter, Level, Template
 
 # Search Views and Forms
 from .forms import QuestionForm, TemplateForm, SetForm
-from haystack.generic_views import SearchView
 
 
 def is_member(user):
@@ -186,8 +186,35 @@ def index(request):
 
 ### SET, CHAPTER, LEVEL FORM VIEWS ###
 
+@login_required
 class SetCreate(CreateView):
-    #form_class = SetForm
+    # form_class = SetForm
     model = Set
     fields = ['name', 'chapter']
     template_name = 'sets/set_create_form.html'
+
+    def form_valid(self, form):
+        form.instance.creator = self.request.user
+        return super(SetCreate, self).form_valid(form)
+
+@login_required
+class UserSetListView(ListView):
+    template_name = 'sets/set_list.html'
+
+    def get_queryset(self):
+        q = Set.objects.filter(creator=self.request.user)
+
+@login_required
+class ChapterCreate(CreateView):
+    model = Chapter
+    fields = ['name', 'level']
+    template_name = 'sets/chapter_create_form.html'
+
+    def form_valid(self, form):
+        form.instance.creator = self.request.user
+        return super(ChapterCreate, self).form_valid(form)
+
+@login_required
+class LevelCreate(CreateView):
+    model = Level
+    fields = ['name', 'template']
