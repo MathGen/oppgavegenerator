@@ -49,7 +49,7 @@ class Template(models.Model):
     question_text = models.CharField(max_length=200)  # Math expression or text question ex. "Solve: ax = b + cx"
     solution = models.CharField(max_length=10000)  # Step by step solution to the answer
     answer = models.CharField(max_length=200)  # The answer of the question.
-    creator = models.ForeignKey(User, blank=True, null=True)  # User ID of creator of template
+    creator = models.OneToOneField(User, blank=True, null=True)  # User ID of creator of template
     creation_date = models.DateTimeField('date created', blank=True, null=True)  # Date and time of creation
     rating = models.PositiveSmallIntegerField(blank=True, null=True, default=1200)  # Difficulty rating.
     fill_rating = models.PositiveSmallIntegerField(blank=True, null=True, default=1150)  # Rating for fill.
@@ -88,6 +88,7 @@ class Level(models.Model):
     """Stores setts of chapters"""
     name = models.CharField(max_length=200)  # Name of the topic.
     template = models.ManyToManyField(Template)
+    creator = models.OneToOneField(User, blank=True, null=True)
 
     def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
         """Returns the objects topic"""
@@ -97,6 +98,7 @@ class Chapter(models.Model):
     """Stores setts of chapters"""
     name = models.CharField(max_length=200)  # Name of the topic.
     level = models.ManyToManyField(Level)
+    creator = models.OneToOneField(User, blank=True, null=True)
 
     def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
         """Returns the objects topic"""
@@ -106,6 +108,7 @@ class Set(models.Model):
     """Stores setts of chapters"""
     name = models.CharField(max_length=200)  # Name of the topic.
     chapter = models.ManyToManyField(Chapter)
+    creator = models.OneToOneField(User, blank=True, null=True)
 
     def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
         """Returns the objects topic"""

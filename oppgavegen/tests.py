@@ -1,6 +1,8 @@
 # Tests
 from django.test import TestCase
 from oppgavegen.generation import *
+from oppgavegen.latex_translator import *
+from oppgavegen.view_logic import *
 
 class testTemplate:
 
@@ -176,4 +178,10 @@ class TemplateGenerationTest(TestCase):
         self.assertEqual(get_values_from_position('32 35', self.template1.solution), 'R1R')
 
 class LatexTranslatorTest(TestCase):
-    pass
+
+    def test_latex_to_sympy(self):
+        string1 = '\\frac{\\sqrt{1}}{\\frac{2}{3}\cdot4}'
+        self.assertEqual()
+
+    def test_parenthesis_around_minus(self):
+        pass
