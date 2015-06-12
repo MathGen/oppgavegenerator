@@ -4,10 +4,8 @@ Handles task generation from templates.
 
 """
 
-from random import randint
-from random import uniform
-from random import shuffle
-from random import choice
+from random import randint, uniform, shuffle, choice
+from math import floor, copysign
 from sympy import *
 from sympy.parsing.sympy_parser import (parse_expr, standard_transformations,
                                         implicit_multiplication_application, convert_xor)
@@ -444,7 +442,7 @@ def find_holes(fill_in):
                 counter -= 6  # Sets the counter back 6 to compensate for @xxxx@ which is not in the original string
                 start_point = counter+1
                 if counter < len(fill_in):
-                    if fill_in[counter] == '{' or fill_in[counter] == '(': # This is to avoid a specific bug
+                    if fill_in[counter] == '{' or fill_in[counter] == '(':  # This is to avoid a specific bug
                         start_point = counter
             elif not recorder:
                 end_point = counter-5
@@ -603,9 +601,23 @@ def round_answer(domain, answer):
         except IndexError:
             pass
     if rounding_number > 0:
-        answer = round(answer, rounding_number)
+        answer = custom_round(answer, rounding_number)
         if answer.is_integer():
-            answer = round(answer)
+            answer = custom_round(answer)
     else:
-        answer = round(answer)
+        answer = custom_round(answer)
     return answer
+
+def custom_round(x, d=0):
+    """
+    Python 3.x rounding function uses bankers rounding, which is note the same as method of rounding
+    A math student would expect. This round function rounds in the expected way. ie. 2.5 = 3 and 1.5 = 2.
+    :param x: the number to be rounded.
+    :param d: number of decimals.
+    :return the rounded version of x.
+    """
+    p = 10 ** d
+    round_x = float(floor((x * p) + copysign(0.5, x)))/p
+    if d == 0:
+        round_x = int(round(x))
+    return round_x

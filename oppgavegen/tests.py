@@ -55,7 +55,7 @@ class testTemplate:
     # def fill_in(self):
     #     return self.__fill_in
 
-class templateGenerationTest(TestCase):
+class TemplateGenerationTest(TestCase):
     template1 = testTemplate(question_text='\\text{hva er} R1R + R2R', answer='R1R+R2R',
                               solution='\\text{Adderer regnestykket:} \\n R1R+R2R = @?R1R+R2R?@',
                               rating=1200, fill_rating=1150, choice_rating=1100, topic='aritmetikk',
@@ -69,16 +69,16 @@ class templateGenerationTest(TestCase):
         The function also rounds the answer according to domain using round_answer()
         """
         self.assertEqual(calculate_answer(1+1, self.template1.random_domain), '2')
-
+        self.assertEqual(calculate_answer(1.25+1, '1 2 2'), '2.25')
+        self.assertEqual(calculate_answer(1.50+1.50, '1 2 2'), '3') #check to se if 3.00 gets converted to 3.
 
     def test_round_answer(self):
         """
         round_answer() rounds a number according to domain
         """
-        self.assertEqual(calculate_answer(1.25, '2 5 0'), '1')
-        self.assertEqual(calculate_answer(1.25, '2 5 1'), '1.2')
-        self.assertEqual(calculate_answer(1.25, '2 5 2'), '1.25')
-
+        self.assertEqual(round_answer('2 5 0', 1.25), 1)
+        self.assertEqual(round_answer('2 5 1', 1.25), 1.3)
+        self.assertEqual(round_answer('2 5 2', 1.25), 1.25)
 
     def test_parse_solution(self):
         """
@@ -144,7 +144,7 @@ class templateGenerationTest(TestCase):
         domain2 = [1.25, 1.25, 1]
         domain3 = [1.25, 1.25, 2]
         self.assertEqual(make_number(domain1),1)
-        self.assertEqual(make_number(domain2),1.2)
+        self.assertEqual(make_number(domain2),1.2) #the reason this is 1.2 is bankers rounding.
         self.assertEqual(make_number(domain3),1.25)
 
     def test_check_conditions(self):
@@ -175,4 +175,5 @@ class templateGenerationTest(TestCase):
     def test_get_values_from_position(self):
         self.assertEqual(get_values_from_position('32 35', self.template1.solution), 'R1R')
 
-
+class LatexTranslatorTest(TestCase):
+    pass

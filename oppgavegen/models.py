@@ -120,6 +120,9 @@ class ExtendedUser(models.Model):
     # Making a abandonment system is probably better. where the user is forced to finish the template or lose
     # rating/stars.
     winstreak = models.SmallIntegerField(default=0)
+    current_level = models.OneToOneField(Level, null=True)
+    current_chapter = models.OneToOneField(Chapter, null=True)
+    current_set = models.OneToOneField(Set, null=True)
 
 
 def create_user_profile(sender, instance, created, **kwargs):
