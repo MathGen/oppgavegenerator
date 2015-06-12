@@ -13,10 +13,12 @@ from django_tables2 import RequestConfig
 from oppgavegen.templatetags.app_filters import is_teacher
 from oppgavegen import view_logic
 from oppgavegen.view_logic import *
+from django.views.generic.edit import CreateView
 from django.views.decorators.cache import cache_control
+from oppgavegen.models import Set, Chapter, Level, Template
 
 # Search Views and Forms
-from .forms import QuestionForm, TemplateForm
+from .forms import QuestionForm, TemplateForm, SetForm
 from haystack.generic_views import SearchView
 
 
@@ -181,3 +183,11 @@ def index(request):
     """Returns the index view with a list of topics"""
     list = Topic.objects.values_list('topic', flat=True)
     return render(request, "index.html", {"list": list})
+
+### SET, CHAPTER, LEVEL FORM VIEWS ###
+
+class SetCreate(CreateView):
+    #form_class = SetForm
+    model = Set
+    fields = ['name', 'chapter']
+    template_name = 'sets/set_create_form.html'

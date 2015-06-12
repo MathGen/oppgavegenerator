@@ -1,0 +1,10 @@
+{% load bootstrap3 %}
+<form action="." method="post" class="form">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+        <button type="submit" class="btn btn-primary pull-right">
+            {% bootstrap_icon "ok" %} Send
+        </button>
+    {% endbuttons %}
+</form>

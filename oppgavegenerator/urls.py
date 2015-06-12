@@ -30,6 +30,9 @@ urlpatterns = patterns('',
     url(r"^task/(\d+)/([\w ]+)/$", 'oppgavegen.views.task_by_id_and_type', name='task_by_id_and_type'),
     url(r"^edit/(\d+)/$", 'oppgavegen.views.edit_template', name='edit_template'),
     url(r'^useranalysis/', 'oppgavegen.views.user_overview_table', name='user_table'),
+    url(r'^user/set/new/', SetCreate.as_view(), name='set_create_view'),
+
+
 
     # Messy haystack search urls. Could put these in own file and import here.
     url(r'^search/', include('haystack.urls')),
