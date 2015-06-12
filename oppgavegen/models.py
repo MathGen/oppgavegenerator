@@ -49,7 +49,7 @@ class Template(models.Model):
     question_text = models.CharField(max_length=200)  # Math expression or text question ex. "Solve: ax = b + cx"
     solution = models.CharField(max_length=10000)  # Step by step solution to the answer
     answer = models.CharField(max_length=200)  # The answer of the question.
-    creator = models.OneToOneField(User, blank=True, null=True)  # User ID of creator of template
+    creator = models.ForeignKey(User, blank=True, null=True)  # User ID of creator of template
     creation_date = models.DateTimeField('date created', blank=True, null=True)  # Date and time of creation
     rating = models.PositiveSmallIntegerField(blank=True, null=True, default=1200)  # Difficulty rating.
     fill_rating = models.PositiveSmallIntegerField(blank=True, null=True, default=1150)  # Rating for fill.

@@ -181,7 +181,7 @@ class LatexTranslatorTest(TestCase):
 
     def test_latex_to_sympy(self):
         string1 = '\\frac{\\sqrt{1}}{\\frac{2}{3}\cdot4}'
-        self.assertEqual()
+        self.assertEqual(latex_to_sympy(string1),'(1)/((2)/(3))*4')
 
     def test_parenthesis_around_minus(self):
         pass
