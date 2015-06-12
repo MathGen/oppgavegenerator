@@ -19,7 +19,8 @@
 
             {% for result in page.object_list %}
                 <p>
-                    {{ result.object.title }} -  - {{ result.object.creator }} - {{ result.object.multiple_support }}
+                    {{ result.object.title }} - {{ result.object.rating }} - {{ result.object.creator }}
+                    - Multiple: {{ result.object.multiple_support }} - FillIn: {{ result.object.fill_in_support }}
                 </p>
             {% empty %}
                 <p>No results found.</p>
