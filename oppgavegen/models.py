@@ -85,27 +85,30 @@ class Template(models.Model):
         return self.question_text
 
 class Level(models.Model):
-    """Stores setts of chapters"""
+    """Stores sets of templates"""
     name = models.CharField(max_length=200)  # Name of the topic.
-    template = models.ManyToManyField(Template)
+    templates = models.ManyToManyField(Template)
+    creator = models.OneToOneField(User, blank=True, null=True)
 
-    def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
-        """Returns the objects topic"""
+    def __str__(self):  # return self.name instead of level-object
+        """Returns the level name"""
         return self.name
 
 class Chapter(models.Model):
-    """Stores setts of chapters"""
+    """Stores sets of levels"""
     name = models.CharField(max_length=200)  # Name of the topic.
-    level = models.ManyToManyField(Level)
+    levels = models.ManyToManyField(Level)
+    creator = models.OneToOneField(User, blank=True, null=True)
 
     def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
         """Returns the objects topic"""
         return self.name
 
 class Set(models.Model):
-    """Stores setts of chapters"""
+    """Stores sets of chapters"""
     name = models.CharField(max_length=200)  # Name of the topic.
-    chapter = models.ManyToManyField(Chapter)
+    chapters = models.ManyToManyField(Chapter)
+    creator = models.OneToOneField(User, blank=True, null=True)
 
     def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
         """Returns the objects topic"""
@@ -114,12 +117,15 @@ class Set(models.Model):
 class ExtendedUser(models.Model):
     """Extends the default django user model with a one to one relation"""
     user = models.OneToOneField(User)
-    rating = models.rating = models.PositiveSmallIntegerField(default=1200)
-    current_template = models.rating = models.SmallIntegerField(default=-1) #Might be redundant in the new system
+    rating = models.PositiveSmallIntegerField(default=1200)
+    current_template = models.SmallIntegerField(default=-1) #Might be redundant in the new system
     # It would have to keep track of which level the user is on and what task is given there
     # Making a abandonment system is probably better. where the user is forced to finish the template or lose
     # rating/stars.
     winstreak = models.SmallIntegerField(default=0)
+    current_level = models.OneToOneField(Level, null=True)
+    current_chapter = models.OneToOneField(Chapter, null=True)
+    current_set = models.OneToOneField(Set, null=True)
 
 
 def create_user_profile(sender, instance, created, **kwargs):

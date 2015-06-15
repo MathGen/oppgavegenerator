@@ -12,6 +12,7 @@ from haystack.forms import SearchForm
 import datetime
 from haystack.query import SearchQuerySet
 from haystack.views import SearchView
+from django.views.generic import ListView
 
 sqs = SearchQuerySet().filter(creation_date__lte=datetime.datetime.now())
 
@@ -25,11 +26,15 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^user/', include('registration.backends.default.urls')),
     url(r'^user/templates/', 'oppgavegen.views.template_table_by_user', name='user_templates'),
+    url(r'^user/sets/', UserSetListView.as_view(), name='user_sets'),
     url(r'^task/$', 'oppgavegen.views.task'),
     url(r"^task/([\w ]+)/$", 'oppgavegen.views.task_by_extra', name='task_by_extra'),
     url(r"^task/(\d+)/([\w ]+)/$", 'oppgavegen.views.task_by_id_and_type', name='task_by_id_and_type'),
     url(r"^edit/(\d+)/$", 'oppgavegen.views.edit_template', name='edit_template'),
     url(r'^useranalysis/', 'oppgavegen.views.user_overview_table', name='user_table'),
+    url(r'^user/set/new/', SetCreateView.as_view(), name='set_create_view'),
+
+
 
     # Messy haystack search urls. Could put these in own file and import here.
     url(r'^search/', include('haystack.urls')),

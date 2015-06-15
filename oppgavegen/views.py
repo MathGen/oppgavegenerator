@@ -13,11 +13,13 @@ from django_tables2 import RequestConfig
 from oppgavegen.templatetags.app_filters import is_teacher
 from oppgavegen import view_logic
 from oppgavegen.view_logic import *
+from django.views.generic.edit import CreateView
+from django.views.generic.list import ListView
 from django.views.decorators.cache import cache_control
+from oppgavegen.models import Set, Chapter, Level, Template
 
 # Search Views and Forms
-from .forms import QuestionForm, TemplateForm
-from haystack.generic_views import SearchView
+from .forms import QuestionForm, TemplateForm, SetForm
 
 
 def is_member(user):
@@ -181,3 +183,54 @@ def index(request):
     """Returns the index view with a list of topics"""
     list = Topic.objects.values_list('topic', flat=True)
     return render(request, "index.html", {"list": list})
+
+### SET, CHAPTER, LEVEL FORM VIEWS ###
+
+def preview_template(request, template_id):
+    """Render a template to html"""
+    if request.is_ajax():
+        q = Template.objects.get(pk=template_id)
+        preview = str(q.question_text_latex.replace('\\\\', '\\')) + "\\n" + str(q.solution_latex.replace('\\\\', '\\'))
+
+    return render_to_response('search/template_preview.html',)
+
+
+class SetCreateView(CreateView):
+    # form_class = SetForm
+    model = Set
+    fields = ['name', 'chapter']
+    template_name = 'sets/set_create_form.html'
+
+    #def form_valid(self, form):
+    #    form.instance.creator = self.request.user
+    #    return super(SetCreateView, self).form_valid(form)
+
+class UserSetListView(ListView):
+    template_name = 'sets/set_list.html'
+
+    def get_queryset(self):
+        return Set.objects.filter(creator=self.request.user)
+
+    #def get_context_data(self, **kwargs):
+    #    context = super(UserSetListView, self).get_context_data(**kwargs)
+    #    context['now'] = datetime.datetim
+
+@login_required
+class ChapterCreate(CreateView):
+    model = Chapter
+    fields = ['name', 'level']
+    template_name = 'sets/chapter_create_form.html'
+
+    def form_valid(self, form):
+        form.instance.creator = self.request.user
+        return super(ChapterCreate, self).form_valid(form)
+
+@login_required
+class LevelCreate(CreateView):
+    model = Level
+    fields = ['name', 'template']
+    template_name = 'sets/level_create_form.html'
+
+    def form_valid(self, form):
+        form.instance.creator = self.request.user
+        return super(Level)

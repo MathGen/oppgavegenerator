@@ -7,10 +7,8 @@ Contains various forms that are used in views
 from django.forms import ModelForm
 from django.forms import forms
 from django import forms
-from haystack.forms import SearchForm
-from .models import Set
-from .models import Level
-from .models import Template
+from haystack.forms import SearchForm, ModelSearchForm, FacetedSearchForm
+from .models import Set, Chapter, Level, Template
 
 class TemplateSearchForm(SearchForm):
     title = forms.CharField(required=False)
@@ -35,21 +33,23 @@ class TemplateSearchForm(SearchForm):
         if self.cleaned_data['creator']:
             sqs = sqs.filter(creator__username__contains=self.cleaned_data['creator'])
 
-        # Check for max rating input
-        if self.cleaned_data['max_rating']:
-            sqs = sqs.filter(rating__lt=self.cleaned_data['max_rating'])
-
         # Check for min rating input
         if self.cleaned_data['min_rating']:
-            sqs = sqs.filter(rating_gt=self.cleaned_data['min_rating'])
+            sqs = sqs.filter(rating__gte=self.cleaned_data['min_rating'])
 
-        # Check for min rating input
+        # Check for max rating input
+        if self.cleaned_data['max_rating']:
+            sqs = sqs.filter(rating__lte=self.cleaned_data['max_rating'])
+
+        # Check for multiple-choice filter
         if self.cleaned_data['multiple']:
-            sqs = sqs.filter(rating_gt=self.cleaned_data['multiple'])
+            #sqs = sqs.filter(multiple_support=self.cleaned_data['multiple'])
+            sqs = sqs.filter(multiple='True')
 
-        # Check for min rating input
+        # Check for fill-in filter
         if self.cleaned_data['fill_in']:
-            sqs = sqs.filter(rating_gt=self.cleaned_data['fill_in'])
+            #sqs = sqs.filter(fill_in_support=self.cleaned_data['fill_in'])
+            sqs = sqs.filter(fill_in='True')
 
         return sqs
 
@@ -57,13 +57,19 @@ class TemplateSearchForm(SearchForm):
 class SetForm(ModelForm):
     class Meta:
         model = Set
-        fields = ('name', 'chapter')
+        fields = ('name', 'chapters')
+
+
+class ChapterForm(ModelForm):
+    class Meta:
+        model = Chapter
+        fields = ('name', 'levels')
 
 
 class LevelForm(ModelForm):
     class Meta:
         model = Level
-        fields = ('name', 'template')
+        fields = ('name', 'templates')
 
 
 class QuestionForm(forms.Form):
