@@ -24,7 +24,7 @@ class TemplateTable(tables.Table):
 
     view = tables.TemplateColumn(dropdownhtml, orderable=False)
     content = tables.TemplateColumn('<div class="input_field" style="width:400px;padding:-5px;margin:-5px;">'
-                                    '<span class="mathquill-embedded-latex input_mathquill" style="font-size:1.2em;width:parent;">'
+                                    '<span class="static-math input_mathquill" style="font-size:1.2em;width:parent;">'
                                     '{{record.question_text_latex}}'
                                     '</span></div>')
     multiple_support = tables.BooleanColumn(verbose_name='MC')
@@ -59,7 +59,7 @@ class UserTemplatesTable(tables.Table):
 
     action = tables.TemplateColumn(dropdownhtml, orderable=False)
     content = tables.TemplateColumn('<div class="input_field" style="width:400px;padding:-5px;margin:-5px;">'
-                                    '<span class="mathquill-embedded-latex input_mathquill" style="font-size:1.2em;width:parent;">'
+                                    '<span class="static-math input_mathquill" style="font-size:1.2em;width:parent;">'
                                     '{{record.question_text_latex}}'
                                     '</span></div>')
     multiple_support = tables.BooleanColumn(verbose_name='MC')

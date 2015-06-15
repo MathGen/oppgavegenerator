@@ -9,7 +9,8 @@ $(document).ready(function () {
     v_solution.click(function (e) {
         e.preventDefault();
         v_panel.fadeIn(function(){
-            $('.mathquill-rendered-math').mathquill('redraw'); // Redraws the latex math when it is shown.
+            redraw_mathquill_elements();
+            //$('.mathquill-rendered-math').mathquill('redraw'); // Redraws the latex math when it is shown.
         });
     });
 
@@ -23,14 +24,14 @@ $(document).ready(function () {
     var solution = $('#get_solution').text();
     solution = solution.split('\\n');
     for(var s = 0; s < solution.length; s++){
-        $('#mathquill_field').append('<div class="input_field"><div id="mathquill_solution_'+s+'" class="input_mathquill"></div></div><br/>');
-        $('#mathquill_solution_' + s).mathquill().mathquill('latex', solution[s]);
+        $('#mathquill_field').append('<div class="input_field"><div id="mathquill_solution_'+s+'" class="static-math input_mathquill">'+solution[s]+'</div></div><br/>');
+        //$('#mathquill_solution_' + s).mathquill().mathquill('latex', solution[s]);
     }
 });
 
 /**
  * When all elements are loaded after document-ready, we need to redraw mathquill-ified elements.
  */
-$(window).load(function(){
-   $('.mathquill-rendered-math').mathquill('redraw');
-});
+//$(window).load(function(){
+//   $('.mathquill-rendered-math').mathquill('redraw');
+//});

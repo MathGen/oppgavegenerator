@@ -81,7 +81,9 @@ def generate_task(user, template_extra, desired_type=''):
         template_specific = new_choices
     elif template_type == 'blanks':
         fill_in_dict = fill_in_the_blanks(fill_in)
-        new_task = new_task + '\n' + fill_in_dict['fill_in'].replace('\\n', '\n')
+        # new_task = new_task + '\n' + fill_in_dict['fill_in'].replace('\\n', '\n')
+        new_task = new_task + '§' + fill_in_dict['fill_in']
+        print(fill_in_dict)
         new_task = replace_variables_from_array(variables_used.split('§'), new_task)
         new_task = parse_solution(new_task, q.random_domain)
         template_specific = fill_in_dict['hole_positions']
@@ -428,8 +430,8 @@ def fill_in_the_blanks(fill_in):
 
 def find_holes(fill_in):
     """Finds the available holes in the template and their position."""
-    fill_in = fill_in.split('§')  # Makes fill in into a list.
-    fill_in = fill_in[len(fill_in)-1]
+    #fill_in = fill_in.split('§')  # Makes fill in into a list.
+    #fill_in = fill_in[len(fill_in)-1]
     hole_dict = {}  # Keeps track of what is getting replaced and the position of that in the string.
     recorder = False
     counter = 0  # Keeps track of how far in the string the loop is
@@ -476,7 +478,7 @@ def make_holes(hole_dict, fill_in):
     """
     holes_to_replace = list(hole_dict.values())
     for s in holes_to_replace:
-        fill_in = fill_in.replace('@xxxx@'+s, '\\editable{}'+'@xxxx@')
+        fill_in = fill_in.replace('@xxxx@'+s, '\\MathQuillMathField{}'+'@xxxx@')
     fill_in = fill_in.replace('@xxxx@', '')
     return_dict = {'fill_in': fill_in, 'holes_replaced': holes_to_replace}
     return return_dict
@@ -502,11 +504,11 @@ def multifill(choices, variable_dict):
     shuffle(choices)
     for x in range(len(choices)):
         if choices[x].count(possible_holes[0]) > 0:
-            choices[x] = choices[x].replace(possible_holes[0], '\editable{}')
+            choices[x] = choices[x].replace(possible_holes[0], '\\MathQuillMathField{}')
         else:
             for z in range(1, len(possible_holes)):
                 if choices[x].count(possible_holes[z]) > 0:
-                    choices[x] = choices[x].replace(possible_holes[z], '\editable{}')
+                    choices[x] = choices[x].replace(possible_holes[z], '\\MathQuillMathField{}')
                     break
     choices = '§'.join(choices)
     choices = string_replace(choices, variable_dict)

@@ -7,10 +7,10 @@
 .content_x{
 	color: #000000;
 }
-.mathquill-rendered-math{
+.mq-math-mode{
     font-size: 2em;
 }
-.mathquill-editable:not(.input_mathquill){
+.mq-editable-field:not(.input_mathquill){
     font-size: 1em;
 }
 .btn{

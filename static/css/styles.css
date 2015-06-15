@@ -15,7 +15,8 @@ sup{							/**/
 sub{							/* between bootstrap*/
 	bottom: 0em;				/* and mathquill, we*/
 }								/* need to make these*/
-.denominator{					/* new rules*/
+.mq-denominator,				/* new rules*/
+.mq-numerator{					/**/
     box-sizing: content-box;	/**/
 }								/**/
 /**********************************/
@@ -27,21 +28,27 @@ sub{							/* between bootstrap*/
 	display: table-cell;
 	vertical-align: middle;
 }
+.output_mathquill{
+	display: table-cell;
+	vertical-align: middle;
+}
 .multi_field{
 	margin-top: 10px;
 }
 .btn{
 	margin-bottom: 5px;
 }
-.mathquill-editable{
+.mq-editable-field{
 	font-size: 2em;
+	border-radius: 4px;
 }
-.mathquill-embedded-latex:not(.btn){
+.mq-math-mode:not(.btn){
 	font-size: 2em;
 	margin-left: 6px;
 	margin-bottom: 16px;
 }
-.text{
+.mq-text-mode,
+#t_input{
 	color: #5BC0DE;
 }
 .content_var{
@@ -62,7 +69,7 @@ sub{							/* between bootstrap*/
 .s_input_field{
 	margin-top: 15px;
 }
-.mathquill-embedded-latex{
+.mq-math-mode:not(.mq-editable-field):not(.input_mathquill){
 	height: 34px;
 	width: 34px;
 }
@@ -103,4 +110,25 @@ sub{							/* between bootstrap*/
 .list-group-item a{
     color:#EAD7AF;
 	font-weight: bold;
+}
+#popover_content_matrix td{
+  width:22px;
+  height:22px;
+  text-align:center;
+  vertical-align:middle;
+  background-color:#ccc;
+  border:1px solid #fff;
+}
+#popover_content_matrix td.highlighted {
+  background-color:#999;
+}
+.caret-right {
+    border-bottom: 4px solid transparent;
+    border-top: 4px solid transparent;
+    border-left: 4px solid;
+    display: inline-block;
+    height: 0;
+    opacity: 0.8;
+    vertical-align: bottom;
+    width: 0;
 }

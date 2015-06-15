@@ -5,7 +5,7 @@
 
 {% block panels %}
 <!-- QUESTION PANEL -->
-<script src="/static/js/answer_input.js?16"></script>
+<script src="/static/js/answer_input.js?17"></script>
 <link href="/static/css/stud_style.css" rel="stylesheet">
 <section class="panel panel-default">
     <div class="panel-heading"><h3 class="panel-title">Spørsmål</h3></div>
@@ -22,9 +22,7 @@
 
 
 
-            <div id="mathquill_field"></div>
-
-            <!--<h5 hidden class="input_field"><div id="question" class="mathquill-embedded-latex input_mathquill">{{ question|linebreaks}}</div></h5>-->
+            <div id="mathquill_field" class="input_field"></div>
 
             <h4 id="w_answer_head" style="display: none"><hr>Ditt svar</h4>
 
@@ -37,20 +35,18 @@
     </div>
     <!-- USER-INPUT -->
     <div class="panel-footer">
-        <div class="row">
-            <div class="col-md-9 keypad_answer">
-                <button id="w_btn_addition" class="btn btn-default btn_addition btn-xs mathquill-embedded-latex">+</button>
-                <button id="w_btn_subtraction" class="btn btn-default btn_subtraction btn-xs mathquill-embedded-latex">-</button>
-                <button id="w_btn_multiplication" class="btn btn-default btn_multiplication btn-xs mathquill-embedded-latex">&#xd7;</button>
-                <button id="w_btn_division" class="btn btn-default btn_division btn-xs mathquill-embedded-latex">&#xf7;</button>
-                <button id="w_btn_par" class="btn btn-default btn_par btn-xs mathquill-embedded-latex">()</button>
-                <button id="w_btn_exponent" class="btn btn-default btn_exponent btn-xs mathquill-embedded-latex">a^n</button>
-                <button id="w_btn_sqrt" class="btn btn-default btn_sqrt btn-xs mathquill-embedded-latex">&#x221a;</button>
+        <div id="keypad_w" class="row keypad">
+            <div class="col-lg-9 keypad_answer">
+                {% include 'keypad/operators.html' %}
             </div>
-            <div class="col-md-3 pull-right">
+            <div class="col-lg-3 pull-right">
                 <button id="submit_answer" class="btn btn-primary pull-right" type="submit">Svar</button>
             </div>
         </div>
+    </div>
+
+    <div style="display:none">
+        {% include 'keypad/custom_matrix.html' %}
     </div>
 </section>
 {% endblock %}
