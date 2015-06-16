@@ -3,9 +3,15 @@ from django.test import TestCase
 from oppgavegen.generation import *
 from oppgavegen.latex_translator import *
 from oppgavegen.view_logic import *
+from django.core import management
+
+def setup():
+        management.call_command('loaddata', 'initial_data.json', verbosity=0)
+
+def teardown():
+        management.call_command('flush', verbosity=0, interactive=False)
 
 class testTemplate:
-
     def __init__(self, question_text, solution, answer, rating, fill_rating, choice_rating, topic, random_domain,
                  choices='', dictionary='', conditions='', fill_in=''):
         self.question_text = question_text
@@ -21,48 +27,14 @@ class testTemplate:
         self.conditions = conditions
         self.fill_in = fill_in
 
-    # def question_text(self):
-    #     return self.__question_text
-    #
-    # def solution(self):
-    #     return self.__solution
-    #
-    # def answer(self):
-    #     return self.__answer
-    #
-    # def rating(self):
-    #     return self.__rating
-    #
-    # def fill_rating(self):
-    #     return self.__fill_in_rating
-    #
-    # def choice_rating(self):
-    #     return self.__choice_rating
-    #
-    # def topic(self):
-    #     return self.__topic
-    #
-    # def random_domain(self):
-    #     return self.__random_domain
-    #
-    # def choices(self):
-    #     return self.__choices
-    #
-    # def dictionary(self):
-    #     return self.__dictionary
-    #
-    # def conditions(self):
-    #     return self.__conditions
-    #
-    # def fill_in(self):
-    #     return self.__fill_in
-
 class TemplateGenerationTest(TestCase):
+    fixtures =  ['initial_data.json']
+
     template1 = testTemplate(question_text='\\text{hva er} R1R + R2R', answer='R1R+R2R',
                               solution='\\text{Adderer regnestykket:} \\n R1R+R2R = @?R1R+R2R?@',
                               rating=1200, fill_rating=1150, choice_rating=1100, topic='aritmetikk',
                               choices='@?(R0R+R1R)?@-1§@?(R0R+R1R)?@-2§@?(R0R+R1R)?@+1',
-                              fill_in='\\text{Legger sammen slik}\\nR0R+@xxxx@R1R@xxxx@=@?(R0R+R1R)?@',
+                              fill_in='\\text{Legger sammen slik} R0R+@xxxx@R1R@xxxx@=@?(R0R+R1R)?@',
                               random_domain='1 10 0§1 10 0')
 
     def test_calculate_answer(self):
@@ -163,15 +135,15 @@ class TemplateGenerationTest(TestCase):
 
     def test_make_holes(self):
         correct = {'holes_replaced': ['R1R'],
-                   'fill_in': '\\text{Legger sammen slik}\\nR0R+\\editable{}=@?(R0R+R1R)?@'}
+                   'fill_in': '\\text{Legger sammen slik} R0R+\\MathQuillMathField{}=@?(R0R+R1R)?@'}
         self.assertEqual(make_holes({'31 34': 'R1R'}, self.template1.fill_in), correct)
 
     def test_find_holes(self):
-        self.assertEqual(find_holes(self.template1.fill_in), {'31 34': 'R1R'})
+        self.assertEqual(find_holes(self.template1.fill_in), {'30 33': 'R1R'})
 
     def test_fill_in_the_blanks(self):
-        correct_dict = {'hole_positions': '31 34',
-                        'fill_in': '\\text{Legger sammen slik}\\nR0R+\\editable{}=@?(R0R+R1R)?@'}
+        correct_dict = {'hole_positions': '30 33',
+                        'fill_in': '\\text{Legger sammen slik} R0R+\\MathQuillMathField{}=@?(R0R+R1R)?@'}
         self.assertEqual(fill_in_the_blanks(self.template1.fill_in), correct_dict)
 
     def test_get_values_from_position(self):
@@ -181,7 +153,20 @@ class LatexTranslatorTest(TestCase):
 
     def test_latex_to_sympy(self):
         string1 = '\\frac{\\sqrt{1}}{\\frac{2}{3}\cdot4}'
-        self.assertEqual(latex_to_sympy(string1),'(1)/((2)/(3))*4')
+        self.assertEqual(latex_to_sympy(string1),'(sqrt(1))/((2)/(3)*4) ')
 
     def test_parenthesis_around_minus(self):
+        string1 = '-1*-2+3'
+        string2 = '1--2+x-1'
+        self.assertEqual(parenthesis_around_minus(string1), '-1*(-2)+3 ')
+        self.assertEqual(parenthesis_around_minus(string2), '1-(-2)+x-1 ')
+
+    def test_get_question(self):
+        #user = User.objects.get(pk=1)
+        #question = get_question(user, 1)
+        #self.assertEqual(question, Template.objects.get(pk=1))
         pass
+
+
+class ViewLogicTest(TestCase):
+    pass
