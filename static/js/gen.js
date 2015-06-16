@@ -787,15 +787,15 @@ function submit_template(){
 		form_submit['pk'] = "";
 	}
 
+	// Testing output TODO: When finished testing, switch to submit method.
+	var test_output = [];
+	for(var s in form_submit){
+		test_output.push(s + '\n' + form_submit[s]);
+	}
+	alert(test_output.join('\n'));
+
 	// SUBMIT
 	post(/submit/, form_submit);
-
-	//// Testing output TODO: When finished testing, switch to submit method.
-	//var test_output = [];
-	//for(var s in form_submit){
-	//	test_output.push(s + '\n' + form_submit[s]);
-	//}
-	//alert(test_output.join('\n'));
 }
 
 /**
@@ -876,7 +876,9 @@ function convert_variables(latex){
 	// Iteration for converting variables to computable values, and fixing conflicts with latex-commands.
 	for(var i = 0; i < la.length; i++) {
 		if (la[i] == '\\') {
-			if (la[i + 1] == 't' && la[i + 2] == 'e' && la[i + 3] == 'x' && la[i + 4] == 't') {
+			if ((la[i + 1] == 't' && la[i + 2] == 'e' && la[i + 3] == 'x' && la[i + 4] == 't') ||
+				(la[i + 1] == 'b' && la[i + 2] == 'e' && la[i + 3] == 'g' && la[i + 4] == 'i' && la[i + 5] == 'n') ||
+				(la[i + 1] == 'e' && la[i + 2] == 'n' && la[i + 3] == 'd')) { //FIXME: some variables is not converted inside the matrix.
 				while (true) {
 					if (la[i] == '}' && counter == 0) {
 						break
@@ -890,6 +892,11 @@ function convert_variables(latex){
 					la2 += la[i];
 					i++;
 				}
+			}
+			else if (la[i+1] == '\\'){
+				la2 += '\\\\';
+				i++;
+				continue
 			}
 			else if (la[i + 1] == 'l' && la[i + 2] == 'e' && la[i + 3] == 'f' && la[i + 4] == 't') {
 				la2 += '\\left';
@@ -943,6 +950,9 @@ function convert_variables(latex){
 					else{
 						la2 += dict_letters[la[i]];
 					}
+				}
+				else if(la[i-1] == '\\' && la[i-2] == '\\'){
+					la2 += '\\' + dict_letters[la[i]]; //FIXME: matrix, problem with variables after '\\'
 				}
 				else{
 					if(la[i-1] != '\\'){
