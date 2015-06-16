@@ -1,0 +1,10 @@
+<h2>Kapitler</h2>
+
+<form method="post" action="">
+    {{ formset.management_form }}
+    <table>
+        {% for form in formset %}
+        {{ form }}
+        {% endfor %}
+    </table>
+</form>
