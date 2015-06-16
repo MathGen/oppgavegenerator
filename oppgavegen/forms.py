@@ -3,12 +3,16 @@
 Contains various forms that are used in views
 
 """
-
+from .models import Set, Chapter, Level, Template
 from django.forms import ModelForm
+from django.forms.models import BaseModelFormSet
+from django.forms.formsets import formset_factory, BaseFormSet
 from django.forms import forms
 from django import forms
 from haystack.forms import SearchForm, ModelSearchForm, FacetedSearchForm
-from .models import Set, Chapter, Level, Template
+from selectable.forms import AutoCompleteWidget, AutoCompleteSelectMultipleWidget
+from .lookups import TemplateLookup
+
 
 class TemplateSearchForm(SearchForm):
     title = forms.CharField(required=False)
@@ -65,8 +69,28 @@ class ChapterForm(ModelForm):
         model = Chapter
         fields = ('name', 'levels')
 
+class ChapterNameForm(ModelForm):
+    class Meta:
+        model = Chapter
+        fields = ('name',)
 
-class LevelForm(ModelForm):
+class BaseChapterNameFormSet(BaseFormSet):
+    # Return a formset for all chapter names in spesific set
+    def __init__(self, *args, **kwargs):
+        super(BaseChapterNameFormSet, self).__init__(*args, **kwargs)
+        self.queryset = Set.chapters.all()
+
+# class LevelForm(ModelForm):
+#     class Meta:
+#         model = Level
+#         fields = ('name', 'templates')
+
+class LevelCreateForm(ModelForm):
+    templates = forms.ModelMultipleChoiceField(
+        queryset=Template.objects.all(),
+        widget = forms.CheckboxSelectMultiple
+    )
+
     class Meta:
         model = Level
         fields = ('name', 'templates')

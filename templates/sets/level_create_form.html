@@ -1,10 +1,40 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{{ form.media.css }}
+{{ form.media.js }}
+
+{% load selectable_tags %}
+{% include_jquery_libs %}
+
+<script>
+    $.ui.djselectable.prototype._comboButtonTemplate = function (input) {
+        var icon = $("<i>").addClass("icon-chevron-down");
+        // Remove current classes on the text input
+        $(input).attr("class", "");
+        // Wrap with input-append
+        $(input).wrap('<div class="input-append" />');
+        // Return button link with the chosen icon
+        return $("<a>").append(icon).addClass("btn btn-small");
+    };
+    $.ui.djselectable.prototype._removeButtonTemplate = function (item) {
+        var icon = $("<i>").addClass("icon-remove-sign");
+        // Return button link with the chosen icon
+        return $("<a>").append(icon).addClass("btn btn-small pull-right");
+    };
+</script>
+
+
+
+{% block panels %}
+
+    <h3>Ny Level</h3>
+
+    <form action="" method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Lagre" />
+</form>
+
+{% endblock %}
+
+
+

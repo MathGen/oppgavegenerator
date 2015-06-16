@@ -6,7 +6,8 @@ Defines views, and renders data to html templates.
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
+from django.http import JsonResponse
 from django.shortcuts import render
 from oppgavegen.tables import *
 from django_tables2 import RequestConfig
@@ -19,7 +20,11 @@ from django.views.decorators.cache import cache_control
 from oppgavegen.models import Set, Chapter, Level, Template
 
 # Search Views and Forms
-from .forms import QuestionForm, TemplateForm, SetForm
+from .forms import QuestionForm, TemplateForm, SetForm, LevelCreateForm, ChapterNameForm
+from django.forms.formsets import formset_factory
+from django import http
+from django.forms.models import modelformset_factory, inlineformset_factory
+from django.core.urlresolvers import reverse
 
 
 def is_member(user):
@@ -186,27 +191,42 @@ def index(request):
 
 ### SET, CHAPTER, LEVEL FORM VIEWS ###
 
+def level_add_template(request, level_id, template_id):
+    response_data = {}
+    level = Level.objects.get(pk=level_id)
+    template = Template.objects.get(pk=template_id)
+    level.templates.add(template)
+    response_data['result'] = 'Template added to Level!'
+    return HttpResponse("Template added to level!")
+
+
 def preview_template(request, template_id):
     """Render a template to html"""
-    if request.is_ajax():
-        q = Template.objects.get(pk=template_id)
-        preview = str(q.question_text_latex.replace('\\\\', '\\')) + "\\n" + str(q.solution_latex.replace('\\\\', '\\'))
+    #if request.is_ajax():
+    q = Template.objects.get(pk=template_id)
+    solution = str(q.question_text_latex.replace('\\\\', '\\')) + "\\n" + str(q.solution_latex.replace('\\\\', '\\'))
 
-    return render_to_response('search/template_preview.html',)
+    return render_to_response('search/template_preview.html',
+                              { 'solution': solution },
+                              context_instance=RequestContext(request))
 
 
 class SetCreateView(CreateView):
     # form_class = SetForm
     model = Set
-    fields = ['name', 'chapter']
+    fields = ['name', 'chapters',]
     template_name = 'sets/set_create_form.html'
+    success_url = '/user/sets'
 
-    #def form_valid(self, form):
-    #    form.instance.creator = self.request.user
-    #    return super(SetCreateView, self).form_valid(form)
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.creator = self.request.user
+        obj.save()
+        return http.HttpResponseRedirect('/user/sets/')
+
 
 class UserSetListView(ListView):
-    template_name = 'sets/set_list.html'
+    template_name = 'sets/user_set_list.html'
 
     def get_queryset(self):
         return Set.objects.filter(creator=self.request.user)
@@ -214,6 +234,7 @@ class UserSetListView(ListView):
     #def get_context_data(self, **kwargs):
     #    context = super(UserSetListView, self).get_context_data(**kwargs)
     #    context['now'] = datetime.datetim
+
 
 @login_required
 class ChapterCreate(CreateView):
@@ -225,12 +246,84 @@ class ChapterCreate(CreateView):
         form.instance.creator = self.request.user
         return super(ChapterCreate, self).form_valid(form)
 
+
+class SetChapterListView(ListView):
+    """List Chapters in Set"""
+    template_name = 'sets/set_chapter_list.html'
+
+    def get_queryset(self):
+        self.set = get_object_or_404(Set, id=self.args[0])
+        return self.set.chapters.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(SetChapterListView, self).get_context_data(**kwargs)
+        context['set'] = self.set
+        return context
+
+
+class ChapterLevelsListView(ListView):
+    """List levels in chapter"""
+    template_name = 'sets/chapter_level_list.html'
+
+    def get_queryset(self):
+        self.chapter = get_object_or_404(Chapter, id=self.args[0])
+        return self.chapter.levels.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(ChapterLevelsListView, self).get_context_data(**kwargs)
+        context['chapter'] = self.chapter
+        return context
+
+
+class LevelsTemplatesListView(ListView):
+    """List templates in level"""
+    template_name = 'sets/level_template_list.html'
+
+    def get_queryset(self):
+        self.level = get_object_or_404(Level, id=self.args[0])
+        return self.level.templates.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(LevelsTemplatesListView, self).get_context_data(**kwargs)
+        context['level'] = self.level
+        return context
+
+
+def manage_chapters(request):
+    # Mass edit chapter names. (( Testing formsets ))
+    # Should take a set PK to batch-edit chapter names in set or mass add inital empty chapters to a new set
+    ChapterNameFormSet = formset_factory(ChapterNameForm, extra=9)
+    if request.method == 'POST':
+        formset = ChapterNameFormSet(request.post)
+        if formset.is_valid():
+            print("ok")
+            pass
+    else:
+        formset = ChapterNameFormSet()
+    return render_to_response('sets/chapter_formset.html', {'formset': formset})
+
+
+def manage_chapters_in_set(request, set_id):
+    # Mass edit chapter names. (( Testing formsets ))
+    # Should take a set PK to batch-edit chapter names in set or mass add inital empty chapters to a new set
+    q = Set.objects.get(pk=set_id)
+    ChapterNameInlineFormSet = inlineformset_factory(Set, Chapter, fields = ('name',))
+    if request.method == 'POST':
+        formset = ChapterNameInlineFormSet(request.POST, instance=q)
+        if formset.is_valid():
+            formset.save()
+            # mer her?
+            return HttpResponse("WE DID IT REDDIT")
+    else:
+        formset = ChapterNameInlineFormSet(instance=q)
+    return render_to_response('sets/chapter_formset.html', {'formset': formset, })
+
+
 @login_required
-class LevelCreate(CreateView):
-    model = Level
-    fields = ['name', 'template']
+class LevelCreateView(CreateView):
+    form_class = LevelCreateForm
     template_name = 'sets/level_create_form.html'
 
-    def form_valid(self, form):
-        form.instance.creator = self.request.user
-        return super(Level)
+    #def form_valid(self, form):
+    #    form.instance.creator = self.request.user
+    #    return super(Level)
