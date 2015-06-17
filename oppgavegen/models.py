@@ -87,8 +87,8 @@ class Template(models.Model):
 class Level(models.Model):
     """Stores sets of templates"""
     name = models.CharField(max_length=200)  # Name of the topic.
-    templates = models.ManyToManyField(Template)
-    creator = models.OneToOneField(User, blank=True, null=True)
+    templates = models.ManyToManyField(Template, blank=True)
+    creator = models.ForeignKey(User, blank=True, null=True)
 
     def __str__(self):  # return self.name instead of level-object
         """Returns the level name"""
@@ -97,8 +97,8 @@ class Level(models.Model):
 class Chapter(models.Model):
     """Stores sets of levels"""
     name = models.CharField(max_length=200)  # Name of the topic.
-    levels = models.ManyToManyField(Level)
-    creator = models.OneToOneField(User, blank=True, null=True)
+    levels = models.ManyToManyField(Level, blank=True)
+    creator = models.ForeignKey(User, blank=True, null=True)
 
     def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
         """Returns the objects topic"""
@@ -107,8 +107,8 @@ class Chapter(models.Model):
 class Set(models.Model):
     """Stores sets of chapters"""
     name = models.CharField(max_length=200)  # Name of the topic.
-    chapters = models.ManyToManyField(Chapter)
-    creator = models.OneToOneField(User, blank=True, null=True)
+    chapters = models.ManyToManyField(Chapter, blank=True)
+    creator = models.ForeignKey(User, blank=True, null=True)
 
     def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
         """Returns the objects topic"""

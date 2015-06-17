@@ -1,0 +1,19 @@
+{# LIST SETS BY USER #}
+
+{% extends 'sets/setbase.html' %}
+
+{% block panels %}
+    <h1>Dine Oppgavesett</h1>
+    <a href="{% url 'set_create_new' %}">Opprett nytt oppgavesett</a>
+    <ul>
+        {% for set in object_list %}
+            <li>
+                <a href="{% url 'chapters_by_set' set.id %}">
+                    {{ set.name }}
+                </a> -
+                {{ set.chapters.all.count }} kapitler</li>
+        {% empty %}
+            <li>Du har ingen oppgavesett enda.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

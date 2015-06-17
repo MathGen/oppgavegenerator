@@ -1,0 +1,20 @@
+{# LIST LEVELS IN CHAPTER #}
+{% extends 'sets/setbase.html' %}
+
+{% block panels %}
+    <h1>Oppgaver i tema "{{ level.name|title }}"</h1>
+    {% if user == level.creator %}
+        <a href="{% url 'level_create' %}">
+            Legg til oppgaver
+        </a>
+    {% else %}
+        Dette temaet er laget av {{ level.creator }}.
+    {% endif %}
+    <ul>
+        {% for template in object_list %}
+            <li>{{ template.title }} - laget av {{ template.creator }}</li>
+        {% empty %}
+            <li>Ingen oppgaver i temaet enda.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

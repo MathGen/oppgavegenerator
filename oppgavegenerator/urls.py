@@ -32,9 +32,15 @@ urlpatterns = patterns('',
     url(r"^task/(\d+)/([\w ]+)/$", 'oppgavegen.views.task_by_id_and_type', name='task_by_id_and_type'),
     url(r"^edit/(\d+)/$", 'oppgavegen.views.edit_template', name='edit_template'),
     url(r'^useranalysis/', 'oppgavegen.views.user_overview_table', name='user_table'),
-    url(r'^user/set/new/', SetCreateView.as_view(), name='set_create_view'),
 
-
+    # Sets, chapters and level management urls
+    url(r'^set/new/', SetCreateView.as_view(), name='set_create_new'),
+    url(r'^set/(\d+)/chapters/edit/$', 'oppgavegen.views.manage_chapters_in_set', name='manage_chapters_in_set'),
+    url(r'^set/(\d+)/chapters/$', SetChapterListView.as_view(), name='chapters_by_set'),
+    url(r'^chapter/new/', 'oppgavegen.views.manage_chapters', name='manage_chapters' ),
+    url(r'^chapter/(\d+)/levels/$', ChapterLevelsListView.as_view(), name='levels_by_chapter'),
+    url(r'^level/new/', CreateView.as_view(form_class=LevelCreateForm, template_name='sets/level_create_form.html'), name='level_create',),
+    url(r'^level/(\d+)/templates/$', LevelsTemplatesListView.as_view(), name='templates_by_level'),
 
     # Messy haystack search urls. Could put these in own file and import here.
     url(r'^search/', include('haystack.urls')),
@@ -45,5 +51,15 @@ urlpatterns = patterns('',
     ), name='template_search'),
 
 
-    # url(r'^search/', include( 'ajaxsearch.urls' )),
+    # AJAX FUNCTION URLS
+    # Return template preview html
+    url(r'^template/([\w ]+)/preview/$', 'oppgavegen.views.preview_template', name='preview_template'),
+    # Add template to a level i.e ( /level/[level id]
+    url(r'^level/(\d+)/template/(\d+)/add/$', 'oppgavegen.views.level_add_template', name='level_add_template' ),
+
+    # DJANGO SELECTABLE
+    url(r'^selectable/', include('selectable.urls')),
+
+    # Experimental ajax search functions
+    url(r'ajax/search/', include('ajaxsearch.urls')),
 )

@@ -1,0 +1,26 @@
+{# LIST CHAPTERS IN SET #}
+{% extends 'sets/setbase.html' %}
+
+{% block panels %}
+    <h1>Kapitler i oppgavesettet "{{ set.name|title }}"</h1>
+
+    {% if user == set.creator %}
+
+        <a href="{% url 'manage_chapters_in_set' set.id %}">
+            Legg til kapittel
+        </a>
+
+    {% else %}
+        Dette oppgavesettet er laget av {{ set.creator }}.
+    {% endif %}
+
+    <ul>
+        {% for chapter in object_list %}
+            <a href="{% url 'levels_by_chapter' chapter.id %}">
+            <li>{{ chapter.name }}</a>
+            - {{ chapter.levels.all.count }} tema</li>
+        {% empty %}
+            <li>Ingen tema i settet enda.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

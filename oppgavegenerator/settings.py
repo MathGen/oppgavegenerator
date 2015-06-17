@@ -32,7 +32,8 @@ INSTALLED_APPS = (
     'registration',                 # django-registration-redux
     'gunicorn',                     # gunicorn (for unix deployment)
     'django_tables2',               # django-tables2
-    'haystack'
+    'haystack',
+    'selectable'
 )
 
 MIDDLEWARE_CLASSES = (
