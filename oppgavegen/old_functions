@@ -331,3 +331,21 @@ def solve_inequality(inequality, variable_dict, solve_for):
     inequality_answer = inequality_answer.replace('solve_for_this', "")
 
     return Float(inequality_answer)
+
+def calculate_matrix(s, domain):
+    """Method to use when doing calculations inside matrices"""
+    print('what is this i don..')
+    print(s)
+    start_string = 'begin{pmatrix}'
+    end_string = '\\end{pmatrix}'
+    print(s)
+    start = s.index(start_string) + len(start_string)
+    end = s.rindex(end_string)
+    inside = s[start:end]
+    inside = inside.split('\\\\')
+    new_s = ''
+    for x in inside:
+        calculations = x.split('&')
+        new_s += '&'.join(calculate_array(calculations, domain)) + '\\\\'
+    new_s = s[:start] + new_s + end_string + s[end:]
+    return new_s

@@ -56,6 +56,7 @@ def make_answer_context_dict(form_values):
     else:
         answer = generation.get_values_from_position(template_specific, q.solution.replace('\\\\', '\\'))
         answer = generation.replace_variables_from_array(variable_dictionary, answer)
+
     answer = generation.parse_answer(answer, random_domain)
     answer = answer.replace('`', '')
     answer = answer.split('§')

@@ -40,7 +40,7 @@ def generate_task(user, template_extra, desired_type=''):
     # The domain of random numbers that can be generated for the question
     random_domain_list = q.random_domain.split('§')
     task = str(q.question_text)
-    task = task.replace('\\\\', '\\')
+    task = task.replace('\\\\', '\\') # Replaces double \\ with \
     template_type = desired_type
     choices = q.choices.replace('\\\\', '\\')
     conditions = q.conditions.replace('\\\\', '\\')
@@ -118,7 +118,7 @@ def calculate_answer(s, domain):
                        (convert_xor, implicit_multiplication_application,), global_dict=None, evaluate=False)
         s = latex(sympify(str(s)))
         # Sometimes sympify returns the value 'zoo'
-    if is_number(s):
+    else:
         s = round_answer(domain, float(s))
     return str(s)
 
@@ -623,3 +623,5 @@ def custom_round(x, d=0):
     if d == 0:
         round_x = int(round(x))
     return round_x
+
+
