@@ -26,6 +26,7 @@
 					<ul class="nav navbar-nav navbar-right">
 						<!--MENU ITEMS-->
                     	<li><a href="#">{{  user|get_rating }}</a></li>
+                        <li><a href="#endre">{{ user.extendeduser.current_level.name }}</a></li>
                     	{% if user|is_teacher %}
 						<li><a href="{% url 'newtemplate' %}">Ny Mal</a></li>
                         {%endif%}

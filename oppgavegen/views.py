@@ -199,6 +199,23 @@ def level_add_template(request, level_id, template_id):
     response_data['result'] = 'Template added to Level!'
     return HttpResponse("Template added to level!")
 
+def add_template_to_current_level(request, template_id):
+    """Add a template to the current level a teacher user is working on."""
+    level = request.user.extendeduser.current_level
+    template = Template.objects.get()
+    level.templates.add(template)
+    return HttpResponse('Template added to level ' + level.name + '. (This will be a background process eventually.')
+
+def remove_template_from_current_level(request, template_id):
+    """Remove a template from the current level a teacher user is working on."""
+    level = request.user.extendeduser.current_level
+    template = Template.objects.get()
+    level.templates.remove(template)
+    return HttpResponse('Template removed from level '
+                        + level.name +
+                        '. (This will be a background process eventually.')
+
+
 
 def preview_template(request, template_id):
     """Render a template to html"""

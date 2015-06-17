@@ -54,7 +54,7 @@ urlpatterns = patterns('',
     # AJAX FUNCTION URLS
     # Return template preview html
     url(r'^template/([\w ]+)/preview/$', 'oppgavegen.views.preview_template', name='preview_template'),
-    # Add level to template
+    # Add template to a level i.e ( /level/[level id]
     url(r'^level/(\d+)/template/(\d+)/add/$', 'oppgavegen.views.level_add_template', name='level_add_template' ),
 
     # DJANGO SELECTABLE
