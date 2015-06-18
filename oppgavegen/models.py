@@ -122,7 +122,7 @@ class UserLevelProgress(models.Model):
     stars = models.IntegerField(default=0)
 
     def __str__(self):  #  Returns the pk
-        return self.pk
+        return str(self.pk)
 
 
 class ExtendedUser(models.Model):
