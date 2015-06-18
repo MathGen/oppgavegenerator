@@ -10,7 +10,7 @@ from .models import Template, Set, Chapter, Level
 
 class TemplateIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
-    title = indexes.CharField(model_attr='title')
+    name = indexes.CharField(model_attr='name')
     question_text = indexes.CharField(model_attr='question_text_latex')
     solution_text = indexes.CharField(model_attr='solution_latex')
     creator = indexes.CharField(model_attr='creator')
@@ -18,7 +18,11 @@ class TemplateIndex(indexes.SearchIndex, indexes.Indexable):
     rating = indexes.IntegerField(model_attr='rating', indexed=False)
     multiple = indexes.BooleanField(model_attr='multiple_support', default='false', indexed=False)
     fill_in = indexes.BooleanField(model_attr='fill_in_support', default='false', indexed=False)
+    levels = indexes.MultiValueField()
     tags = indexes.MultiValueField()
+
+    def prepare_levels(self, object):
+        return [level.name for level in object.levels.all()]
 
     def prepare_tags(self, object):
         return [tag.name for tag in object.tags.all()]

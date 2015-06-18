@@ -2,7 +2,7 @@
 {% load bootstrap3 %}
 
 {% block panels %}
-    <h2>Search</h2>
+    <h2>Søk etter oppgavemaler</h2>
 
     <form method="get" action=".">
 
@@ -13,28 +13,48 @@
             </button>
         {% endbuttons %}
 
+        {# {% if query %} #}
 
-        {% if query %}
-            <h3>Results</h3>
+        <h3>Resultater</h3>
 
-            {% for result in page.object_list %}
-                <p>
-                    {{ result.object.title }} - {{ result.object.rating }} - {{ result.object.creator }}
-                    - Multiple: {{ result.object.multiple_support }} - FillIn: {{ result.object.fill_in_support }}
-                </p>
-            {% empty %}
-                <p>No results found.</p>
-            {% endfor %}
+        {% for result in page.object_list %}
+            <p>
+                {{ result.object.title }} - {{ result.object.rating }} -
+                {% ifequal result.creator user.username %}
+                    Laget av: Deg!
+                {% else %}
+                    Laget av: {{ result.object.creator }}
+                {% endifequal %}
 
-            {% if page.has_previous or page.has_next %}
-                <div>
-                    {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
-                    |
-                    {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
-                </div>
-            {% endif %}
-        {% else %}
-            {# Show some example queries to run, maybe query syntax, something else? #}
+                - Multiple: {{ result.object.multiple_support }} - FillIn: {{ result.object.fill_in_support }} -
+
+                {% if result.title in user.extendeduser.current_level.templates %}
+                    <a href="{% url 'current_level_remove' result.object.id %}">Fjern fra
+                        "{{ user.extendeduser.current_level.name }}"</a>
+                {% else %}
+                    <a href="{% url 'current_level_add' result.object.id %}">Legg til i
+                        "{{ user.extendeduser.current_level.name }}"</a>
+                {% endif %}
+                - Finnes i levels: {{ result.object.levels }}
+
+            </p>
+        {% empty %}
+            <p>No results found.</p>
+        {% endfor %}
+
+        {% if page.has_previous or page.has_next %}
+            <div>
+                {% if page.has_previous %}
+                    <a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous
+                {% if page.has_previous %}</a>{% endif %}
+                |
+                {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}
+                Next &raquo;{% if page.has_next %}</a>{% endif %}
+            </div>
         {% endif %}
+        {# {% else %} #}
+        {# Show some example queries to run, maybe query syntax, something else? #}
+        {# {% endif %} #}
     </form>
+
 {% endblock %}

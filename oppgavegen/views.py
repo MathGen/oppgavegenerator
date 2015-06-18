@@ -192,28 +192,43 @@ def index(request):
 ### SET, CHAPTER, LEVEL FORM VIEWS ###
 
 def level_add_template(request, level_id, template_id):
-    response_data = {}
+    """Add a template fo a specified level"""
+    response_data = {} # ajax response data
     level = Level.objects.get(pk=level_id)
     template = Template.objects.get(pk=template_id)
-    level.templates.add(template)
-    response_data['result'] = 'Template added to Level!'
-    return HttpResponse("Template added to level!")
+    if level.creator == request.user:
+        level.templates.add(template)
+        response_data['result'] = 'Template added to Level!'
+        return HttpResponse("Template added to level!")
+    else:
+        return HttpResponse('You need to be the owner of the level you\'re editing!')
+
+
 
 def add_template_to_current_level(request, template_id):
     """Add a template to the current level a teacher user is working on."""
     level = request.user.extendeduser.current_level
-    template = Template.objects.get()
-    level.templates.add(template)
-    return HttpResponse('Template added to level ' + level.name + '. (This will be a background process eventually.')
+    template = Template.objects.get(pk=template_id)
+    if level.creator == request.user:
+        level.templates.add(template)
+        return HttpResponse('Template added to level "'
+                            + level.name +
+                            '". (This will be a background process eventually.)')
+    else:
+        return HttpResponse('You need to be the owner of the level you\'re editing!')
+
 
 def remove_template_from_current_level(request, template_id):
     """Remove a template from the current level a teacher user is working on."""
     level = request.user.extendeduser.current_level
-    template = Template.objects.get()
-    level.templates.remove(template)
-    return HttpResponse('Template removed from level '
+    template = Template.objects.get(pk=template_id)
+    if level.creator == request.user:
+        level.templates.remove(template)
+        return HttpResponse('Template removed from level "'
                         + level.name +
-                        '. (This will be a background process eventually.')
+                        '". (This will be a background process eventually.)')
+    else:
+        return HttpResponse('You need to be the owner of the level you\'re editing!')
 
 
 
@@ -241,6 +256,20 @@ class SetCreateView(CreateView):
         obj.save()
         return http.HttpResponseRedirect('/user/sets/')
 
+def set_detail_view(request, set_id):
+    """ List titles for all chapters, levels and templates in a set. """
+    detailed_set = Set.objects.get(pk=set_id)
+    set_chapters = detailed_set.chapters.all()
+    #chapter_levels = set_chapters.levels.all()
+    ## level_templates = chapter_levels.templates.all()
+    set_title = detailed_set.name
+
+    return render_to_response(
+        'sets/user_set_details.html', { 'set' : detailed_set,
+                                        'chapters': set_chapters,
+                                        #'levels': chapter_levels, 'templates': level_templates,
+                                        }, context_instance=RequestContext(request))
+
 
 class UserSetListView(ListView):
     template_name = 'sets/user_set_list.html'
@@ -250,7 +279,7 @@ class UserSetListView(ListView):
 
     #def get_context_data(self, **kwargs):
     #    context = super(UserSetListView, self).get_context_data(**kwargs)
-    #    context['now'] = datetime.datetim
+    #    context['now'] = datetime.datetime ???
 
 
 @login_required
@@ -308,7 +337,7 @@ class LevelsTemplatesListView(ListView):
 
 def manage_chapters(request):
     # Mass edit chapter names. (( Testing formsets ))
-    # Should take a set PK to batch-edit chapter names in set or mass add inital empty chapters to a new set
+    # Should take a set PK to batch-edit chapter names in set or mass add inital chapters to a new set
     ChapterNameFormSet = formset_factory(ChapterNameForm, extra=9)
     if request.method == 'POST':
         formset = ChapterNameFormSet(request.post)
@@ -321,10 +350,10 @@ def manage_chapters(request):
 
 
 def manage_chapters_in_set(request, set_id):
-    # Mass edit chapter names. (( Testing formsets ))
-    # Should take a set PK to batch-edit chapter names in set or mass add inital empty chapters to a new set
+    # Mass-edit chapters in a set. (( Testing formsets )) # todo: rework this to manage chapters by a logged in user
+    # Should take a set PK to batch-edit chapter content in set or mass add inital empty chapters to a new set
     q = Set.objects.get(pk=set_id)
-    ChapterNameInlineFormSet = inlineformset_factory(Set, Chapter, fields = ('name',))
+    ChapterNameInlineFormSet = inlineformset_factory(Set, Chapter, fields = ('name','levels'))
     if request.method == 'POST':
         formset = ChapterNameInlineFormSet(request.POST, instance=q)
         if formset.is_valid():
@@ -341,6 +370,6 @@ class LevelCreateView(CreateView):
     form_class = LevelCreateForm
     template_name = 'sets/level_create_form.html'
 
-    #def form_valid(self, form):
+    # def form_valid(self, form):
     #    form.instance.creator = self.request.user
     #    return super(Level)
