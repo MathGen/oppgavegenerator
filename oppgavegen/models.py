@@ -100,8 +100,8 @@ class Chapter(models.Model):
     levels = models.ManyToManyField(Level, blank=True)
     creator = models.ForeignKey(User, blank=True, null=True)
 
-    def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
-        """Returns the objects topic"""
+    def __str__(self):  # Makes it so that self.name shows up instead of set(object)
+        """Returns the chapter name"""
         return self.name
 
 class Set(models.Model):
@@ -110,15 +110,26 @@ class Set(models.Model):
     chapters = models.ManyToManyField(Chapter, blank=True)
     creator = models.ForeignKey(User, blank=True, null=True)
 
-    def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
-        """Returns the objects topic"""
+    def __str__(self):  # Makes it so that self.name shows up instead of set(object)
+        """Returns the set name"""
         return self.name
+
+class UserLevelProgress(models.Model):
+    """Stores the users progress on a level"""
+    user = models.ForeignKey(User, blank=True, null=True)
+    level = models.ForeignKey(Level, blank=True, null=True)
+    level_rating = models.IntegerField(default=1200)
+    stars = models.IntegerField(default=0)
+
+    def __str__(self):  #  Returns the pk
+        return self.pk
+
 
 class ExtendedUser(models.Model):
     """Extends the default django user model with a one to one relation"""
     user = models.OneToOneField(User)
-    rating = models.PositiveSmallIntegerField(default=1200)
-    current_template = models.SmallIntegerField(default=-1) #Might be redundant in the new system
+    rating = models.PositiveSmallIntegerField(default=1200) #may not be needed in the new system
+    current_template = models.SmallIntegerField(default=-1) # Might be redundant in the new system
     # It would have to keep track of which level the user is on and what task is given there
     # Making a abandonment system is probably better. where the user is forced to finish the template or lose
     # rating/stars.
