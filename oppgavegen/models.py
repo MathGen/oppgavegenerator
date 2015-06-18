@@ -99,6 +99,7 @@ class Chapter(models.Model):
     name = models.CharField(max_length=200)  # Name of the topic.
     levels = models.ManyToManyField(Level, related_name='chapters', blank=True)
     creator = models.ForeignKey(User, blank=True, null=True)
+    level_order = models.CharField(max_length=400) #CSV list of the order of levels.
 
     def __str__(self):  # Makes it so that self.name shows up instead of set(object)
         """Returns the chapter name"""
@@ -109,6 +110,7 @@ class Set(models.Model):
     name = models.CharField(max_length=200)  # Name of the topic.
     chapters = models.ManyToManyField(Chapter, related_name='sets', blank=True)
     creator = models.ForeignKey(User, blank=True, null=True)
+    chapter_order = models.CharField(max_length=400)
 
     def __str__(self):  # Makes it so that self.name shows up instead of set(object)
         """Returns the set name"""
@@ -122,7 +124,7 @@ class UserLevelProgress(models.Model):
     stars = models.IntegerField(default=0)
 
     def __str__(self):  #  Returns the pk
-        return self.pk
+        return str(self.pk)
 
 
 class ExtendedUser(models.Model):
