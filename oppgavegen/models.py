@@ -44,7 +44,7 @@ valid_choices = (
 
 class Template(models.Model):
     """Stores information for Templates"""
-    title = models.CharField(max_length=50, blank=True, default='Uten Tittel') # The template title. Main identifier for teacher users.
+    name = models.CharField(max_length=50, blank=True, default='Uten Tittel') # The template name. Main identifier for teacher users.
     tags = models.ManyToManyField(Tag, blank=True) # Template tags. Tags should describe content of math problems i.e "arithmetic"
     question_text = models.CharField(max_length=200)  # Math expression or text question ex. "Solve: ax = b + cx"
     solution = models.CharField(max_length=10000)  # Step by step solution to the answer
@@ -87,7 +87,7 @@ class Template(models.Model):
 class Level(models.Model):
     """Stores sets of templates"""
     name = models.CharField(max_length=200)  # Name of the topic.
-    templates = models.ManyToManyField(Template, blank=True)
+    templates = models.ManyToManyField(Template, related_name='levels',blank=True) # List of templates in level
     creator = models.ForeignKey(User, blank=True, null=True)
 
     def __str__(self):  # return self.name instead of level-object
@@ -97,7 +97,7 @@ class Level(models.Model):
 class Chapter(models.Model):
     """Stores sets of levels"""
     name = models.CharField(max_length=200)  # Name of the topic.
-    levels = models.ManyToManyField(Level, blank=True)
+    levels = models.ManyToManyField(Level, related_name='chapters', blank=True)
     creator = models.ForeignKey(User, blank=True, null=True)
     level_order = models.CharField(max_length=400, default='') #CSV list of the order of levels.
 
@@ -108,7 +108,7 @@ class Chapter(models.Model):
 class Set(models.Model):
     """Stores sets of chapters"""
     name = models.CharField(max_length=200)  # Name of the topic.
-    chapters = models.ManyToManyField(Chapter, blank=True)
+    chapters = models.ManyToManyField(Chapter, related_name='sets', blank=True)
     creator = models.ForeignKey(User, blank=True, null=True)
     chapter_order = models.CharField(max_length=400, default='')
 

@@ -15,7 +15,7 @@ from .lookups import TemplateLookup
 
 
 class TemplateSearchForm(SearchForm):
-    title = forms.CharField(required=False)
+    name = forms.CharField(required=False)
     creator = forms.CharField(required=False)
     min_rating = forms.IntegerField(required=False)
     max_rating = forms.IntegerField(required=False)
@@ -29,9 +29,9 @@ class TemplateSearchForm(SearchForm):
         if not self.is_valid():
             return self.no_query_found()
 
-        # Check for title input
-        if self.cleaned_data['title']:
-            sqs = sqs.filter(title__contains=self.cleaned_data['title'])
+        # Check for bane input
+        if self.cleaned_data['name']:
+            sqs = sqs.filter(title__contains=self.cleaned_data['name'])
 
         # Check for creator input
         if self.cleaned_data['creator']:

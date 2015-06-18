@@ -101,7 +101,7 @@ def submit_template(template, user, update):
         template.creation_date = q.creation_date
         template.creator = q.creator
         template.tags = q.tags.all()
-        template.title = q.title
+        template.name = q.name
     else:
         template.rating = 1200
         template.fill_rating = 1150

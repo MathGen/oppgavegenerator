@@ -1,30 +1,30 @@
 {% if results|length %}
- 
-<table>
-<tr class='even'>
-<td colspan='3' class='right'>
-<strong>Found {{ results|length }} templates</strong>
-</td>
-</tr>
- 
-{% for template in results %}
-    <tr class="{% cycle 'odd' 'even' %}">
-<td><strong>{{ forloop.counter }}.</strong></td>
-<td>
-{{ template.question_text_latex }}<br/>
-<span class="hint">{{ template.creator }}</span>
-</td>
-<td class="right">
+
+    <table>
+        <tr class='even'>
+            <td colspan='3' class='right'>
+                <strong>Found {{ results|length }} templates</strong>
+            </td>
+        </tr>
+
+        {% for template in results %}
+            <tr class="{% cycle 'odd' 'even' %}">
+                <td><strong>{{ forloop.counter }}.</strong></td>
+                <td>
+                    {{ template.question_text_latex }}<br/>
+                    <span class="hint">{{ template.creator }}</span>
+                </td>
+                <td class="right">
 <span class="hint">
 Created {{ template.creation_date|timesince }} ago<br/>
 Rating {{ template.rating }}
 </span>
-</td>
-</tr>
-{% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
     </table>
 {% else %}
     <div class="note">
-Your search yielded no results
-</div>
+        Your search yielded no results
+    </div>
 {% endif %}
