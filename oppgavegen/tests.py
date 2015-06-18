@@ -11,7 +11,7 @@ def setup():
 def teardown():
         management.call_command('flush', verbosity=0, interactive=False)
 
-class testTemplate:
+class TestTemplate:
     def __init__(self, question_text, solution, answer, rating, fill_rating, choice_rating, topic, random_domain,
                  choices='', dictionary='', conditions='', fill_in=''):
         self.question_text = question_text
@@ -30,7 +30,7 @@ class testTemplate:
 class TemplateGenerationTest(TestCase):
     fixtures =  ['initial_data.json']
 
-    template1 = testTemplate(question_text='\\text{hva er} R1R + R2R', answer='R1R+R2R',
+    template1 = TestTemplate(question_text='\\text{hva er} R1R + R2R', answer='R1R+R2R',
                               solution='\\text{Adderer regnestykket:} \\n R1R+R2R = @?R1R+R2R?@',
                               rating=1200, fill_rating=1150, choice_rating=1100, topic='aritmetikk',
                               choices='@?(R0R+R1R)?@-1§@?(R0R+R1R)?@-2§@?(R0R+R1R)?@+1',
@@ -149,6 +149,12 @@ class TemplateGenerationTest(TestCase):
     def test_get_values_from_position(self):
         self.assertEqual(get_values_from_position('32 35', self.template1.solution), 'R1R')
 
+    def test_get_question(self):
+        #user = User.objects.get(pk=1)
+        #question = get_question(user, 1)
+        #self.assertEqual(question, Template.objects.get(pk=1))
+        pass
+
 class LatexTranslatorTest(TestCase):
 
     def test_latex_to_sympy(self):
@@ -161,12 +167,26 @@ class LatexTranslatorTest(TestCase):
         self.assertEqual(parenthesis_around_minus(string1), '-1*(-2)+3 ')
         self.assertEqual(parenthesis_around_minus(string2), '1-(-2)+x-1 ')
 
-    def test_get_question(self):
-        #user = User.objects.get(pk=1)
-        #question = get_question(user, 1)
-        #self.assertEqual(question, Template.objects.get(pk=1))
-        pass
+    def test_find_indexes(self):
+        test_string1 = '\\begin{pmatrix}1&2\\\\3&4\\\\5&6\\end{pmatrix} test ' \
+                       '\\begin{pmatrix}7&8\\\\9&10\\\\11&12\\end{pmatrix}'
+        index1 = '\\begin{pmatrix}'
 
+        self.assertEqual(find_indexes(test_string1, index1), [0, 47])
+
+    def test_sort_nesting(self):
+        list1 = [1, 2, 3]
+        list2 = [8, 9, 10]
+
+        self.assertEqual(sort_nesting(list1, list2), [10,9,8])
+
+    def test_pmatrix_to_matrix(self):
+        test_string1 = '\\begin(pmatrix)1&2\\\\3&4\\\\5&6\\end(pmatrix) test ' \
+                       '\\begin(pmatrix)7&8\\\\9&10\\\\11&12\\end(pmatrix)'
+        correct_string = ' Matrix([[1, 2], [3, 4], [5, 6]])  test  Matrix([[7, 8], [9, 10], [11, 12]]) '
+
+        self.assertEqual(pmatrix_to_matrix(test_string1), correct_string)
 
 class ViewLogicTest(TestCase):
     pass
+
