@@ -182,7 +182,6 @@ def change_level_rating(template, user, user_won, type, level):
     prefactor_user = 30  # This value should be adjusted according to elo of the user (lower for higher ratings..)
     prefactor_template = 16  # This value should be adjusted according to elo of the user (lower for higher ratings..)
 
-
     if user_won:
         new_user_rating = user_rating + prefactor_user*(1-expected_user)
         new_template_rating = template_rating + prefactor_template*(0-expected_template)

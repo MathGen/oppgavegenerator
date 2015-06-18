@@ -99,7 +99,7 @@ class Chapter(models.Model):
     name = models.CharField(max_length=200)  # Name of the topic.
     levels = models.ManyToManyField(Level, blank=True)
     creator = models.ForeignKey(User, blank=True, null=True)
-    level_order = models.CharField(max_length=400) #CSV list of the order of levels.
+    level_order = models.CharField(max_length=400, default='') #CSV list of the order of levels.
 
     def __str__(self):  # Makes it so that self.name shows up instead of set(object)
         """Returns the chapter name"""
@@ -110,7 +110,7 @@ class Set(models.Model):
     name = models.CharField(max_length=200)  # Name of the topic.
     chapters = models.ManyToManyField(Chapter, blank=True)
     creator = models.ForeignKey(User, blank=True, null=True)
-    chapter_order = models.CharField(max_length=400)
+    chapter_order = models.CharField(max_length=400, default='')
 
     def __str__(self):  # Makes it so that self.name shows up instead of set(object)
         """Returns the set name"""

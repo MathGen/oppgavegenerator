@@ -10,7 +10,7 @@ from sympy import *
 from sympy.parsing.sympy_parser import (parse_expr, standard_transformations,
                                         implicit_multiplication_application, convert_xor)
 from oppgavegen.latex_translator import latex_to_sympy
-from .models import Template, Level
+from .models import Template, Level, UserLevelProgress
 from django.contrib.auth.models import User
 
 
@@ -213,6 +213,64 @@ def get_question(user, template_id, topic=''):
                 break
     else:
         q = Template.objects.get(pk=template_id)
+
+    # test
+    #b = Level.objects.all()
+    #print(b)
+    #print(b.filter(template__topic__topic__contains='Integrasjon'))
+    return {'template' : q, 'type' : template_type}
+
+def get_level_question(user, level):
+    """Gets a template from the database at a appropriate rating.
+
+    :param user: The user requesting a template
+    :param template_id: (optional) the id of a template
+    :param topic: the topic of the template.
+    :return: Template object.
+    """
+    slack = 60
+    increase = 15
+    user_progress = UserLevelProgress.objects.get(user=user.username, level=level.pk)
+    user_rating = user_progress.level_rating
+
+    while True:
+        q = Template.objects.filter(rating__gt=(user_rating-slack))
+        q = q.filter(rating__lt=(user_rating+slack))
+        q = q.filter(valid_flag=True)
+
+        m = Template.objects.filter(choice_rating__gt=(user_rating-slack))
+        m = m.filter(choice_rating__lt=(user_rating+slack))
+        m = m.filter(valid_flag=True)
+        m = m.filter(multiple_support=True)
+
+        f = Template.objects.filter(fill_rating__gt=(user_rating-slack))
+        f = f.filter(fill_rating__lt=(user_rating+slack))
+        f = f.filter(valid_flag=True)
+        f = f.filter(fill_in_support=True)
+
+        # Use count instead of len as len loads the records.
+        # Using len would be faster if we had to load all the records to python objects.
+        length_normal = q.count()
+        length_multiple = m.count()
+        length_fill_in = f.count()
+        length_total = length_fill_in + length_normal + length_multiple
+        if length_total > 0:
+            r_number = randint(1, length_total)
+            if r_number <= length_fill_in and length_fill_in > 0:
+                q = f[r_number - 1]
+                template_type = 'blanks'
+            elif r_number <= length_multiple + length_fill_in and length_multiple > 0:
+                template_type = 'multiple'
+                q = m[r_number - length_fill_in - 1]
+            else:
+                q = q[r_number - length_fill_in - length_multiple - 1]
+            break
+        slack += increase
+
+        if slack >= 800:
+            q = Template.objects.all()
+            q = q.latest('id')
+            break
 
     # test
     #b = Level.objects.all()
