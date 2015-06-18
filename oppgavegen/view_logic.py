@@ -5,7 +5,7 @@ Defines reusable functions often called from views.py
 """
 
 
-from oppgavegen.models import Template, Topic, UserLevelProgress
+from oppgavegen.models import Template, Topic, UserLevelProgress, Level
 from oppgavegen import generation
 from datetime import datetime
 from django.contrib.auth.models import User
@@ -161,7 +161,7 @@ def change_elo(template, user, user_won, type):
 def change_level_rating(template, user, user_won, type, level):
     """Changes the elo of both user and task depending on who won."""
     u = User.objects.get(username=user.username)
-    user_progress = UserLevelProgress.objects.get(user=user.username, level=level.pk)
+    user_progress = UserLevelProgress.objects.get(user=user, level=level)
     user_rating = user_progress.level_rating
     # Formula for elo: Rx = Rx(old) + prefactor *(W-Ex) where W=1 if wins and W=0 if x loses
     # and Ex is the expected probability that x will win.
@@ -222,3 +222,16 @@ def latex_exceptions(string):
     """Replaces wrong latex with the proper one"""
     string = string.replace('\\tilde', '\\sim')
     return string
+
+def calculate_progress(user, chapter):
+    levels = chapter.level_order
+    levels = levels.split(',')
+    counter = 0
+    for i in levels:
+        level = Level.objects.get(pk=i)
+        q = UserLevelProgress.objects.get(user=user, level=level)
+        if q.star < 1:
+            break
+        counter += 1
+
+    return counter

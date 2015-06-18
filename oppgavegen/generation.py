@@ -685,7 +685,7 @@ def custom_round(x, d=0):
 
 
 def add_level_to_user(user, level):
-    user_progress = UserLevelProgress.objects.get(user=user.username, level=level.pk)
+    user_progress = UserLevelProgress.objects.get(user=user, level=level)
     if not user_progress:
         user_progress = UserLevelProgress()
         user_progress.user = user
