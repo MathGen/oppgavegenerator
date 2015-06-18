@@ -313,7 +313,6 @@ def manage_chapters(request):
     if request.method == 'POST':
         formset = ChapterNameFormSet(request.post)
         if formset.is_valid():
-            print("ok")
             pass
     else:
         formset = ChapterNameFormSet()
