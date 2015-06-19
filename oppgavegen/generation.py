@@ -104,7 +104,7 @@ def generate_task(user, template_extra, desired_type=''):
                    'number_of_answers': number_of_answers, 'replacing_words': replacing_words}
     return return_dict
 
-
+@debug
 def generate_level(user, level_id):
     """Makes a valid math question at the correct rating from a template in the database.
 
@@ -117,7 +117,7 @@ def generate_level(user, level_id):
     get_question_dict = get_level_question(user, level)  # Gets a template from the DB
     q = get_question_dict['template']
     desired_type = get_question_dict['type']
-
+    print('6: ' + desired_type)
     # The domain of random numbers that can be generated for the question
     random_domain_list = q.random_domain.split('§')
     task = str(q.question_text)
@@ -301,7 +301,7 @@ def get_question(user, template_id, topic=''):
     #print(b.filter(template__topic__topic__contains='Integrasjon'))
     return {'template' : q, 'type' : template_type}
 
-
+@debug
 def get_level_question(user, level):
     """Gets a template from the database at a appropriate rating.
 
@@ -347,6 +347,7 @@ def get_level_question(user, level):
                 template_type = 'multiple'
                 q = m[r_number - length_fill_in - 1]
             else:
+                template_type = 'normal'
                 q = q[r_number - length_fill_in - length_multiple - 1]
             break
         slack += increase
@@ -764,7 +765,6 @@ def custom_round(x, d=0):
 
 
 def add_level_to_user(user, level):
-    print(3)
     print(user.username)
     print(level.name)
     try:
