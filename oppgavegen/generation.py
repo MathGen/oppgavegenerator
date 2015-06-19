@@ -309,13 +309,10 @@ def get_level_question(user, level):
     :param topic: the topic of the template.
     :return: Template object.
     """
-    slack = 60
+    slack = 100
     increase = 15
-    print(0)
     user_progress = add_level_to_user(user, level)
-    print(1)
     user_rating = user_progress.level_rating
-    print(2)
     while True:
         q = level.templates.all()
         q = q.filter(rating__gt=(user_rating-slack))
