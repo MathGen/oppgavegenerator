@@ -12,6 +12,7 @@ from sympy.parsing.sympy_parser import (parse_expr, standard_transformations,
 from oppgavegen.latex_translator import latex_to_sympy
 from .models import Template, Level, UserLevelProgress
 from django.contrib.auth.models import User
+from oppgavegen.decorators import debug
 
 
 def generate_task(user, template_extra, desired_type=''):
