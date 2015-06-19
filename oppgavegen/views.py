@@ -429,6 +429,7 @@ class UserCurrentSetsEdit(LoginRequiredMixin, UpdateView):
     template_name = 'sets/user_current_sets_form.html'
     success_url = '/'
 
+    # todo: get these dang filters to work
     # def get_form(self):
     #     self.fields['current_level'].queryset = Level.objects.filter(creator=self.request.user.id)
     #     # self.fields['current_chapter'].queryset = Chapter.objects.filter(creator=self.request.user.id)
