@@ -107,7 +107,12 @@ $(document).ready(function () {
             "replacing_words" : replacing_words
         };
         if(answer_validation()) {
-            post(/answers/, submit_dict);
+            if($('#submit_answer').hasClass('game_submit')){
+                post_answer(submit_dict);
+            }
+            else{
+                post(/answers/, submit_dict);
+            }
         }
 
     });

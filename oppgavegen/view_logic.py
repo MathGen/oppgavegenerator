@@ -10,6 +10,7 @@ from oppgavegen import generation
 from datetime import datetime
 from django.contrib.auth.models import User
 from oppgavegen.answer_checker import check_answer
+from oppgavegen.decorators import Debugger
 
 
 def make_edit_context_dict(template_id):
@@ -158,11 +159,16 @@ def change_elo(template, user, user_won, type):
     template.save()
     return
 
-def change_level_rating(template, user, user_won, type, level):
+
+@Debugger
+def change_level_rating(template, user, user_won, type, level_id):
     """Changes the elo of both user and task depending on who won."""
+    print(1)
     u = User.objects.get(username=user.username)
-    user_progress = UserLevelProgress.objects.get(user=user.pk, level=level.pk)
+    level = Level.objects.get(pk=level_id)
+    user_progress = UserLevelProgress.objects.get(user=u, level=level)
     user_rating = user_progress.level_rating
+    print(2)
     # Formula for elo: Rx = Rx(old) + prefactor *(W-Ex) where W=1 if wins and W=0 if x loses
     # and Ex is the expected probability that x will win.
     # Ea = (1+10^((Rb-Ra)/400))^-1
@@ -222,6 +228,7 @@ def latex_exceptions(string):
     """Replaces wrong latex with the proper one"""
     string = string.replace('\\tilde', '\\sim')
     return string
+
 
 def calculate_progress(user, chapter):
     levels = chapter.level_order

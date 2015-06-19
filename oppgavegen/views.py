@@ -109,7 +109,7 @@ def submit(request):
 
 
 @login_required
-def answers(request, level=''):
+def answers(request, level=1):
     """Returns a render of answers.html"""
     context = RequestContext(request)
     cheat_message = '\\text{Ulovlig tegn har blitt brukt i svar}'
@@ -123,6 +123,7 @@ def answers(request, level=''):
             context_dict = view_logic.make_answer_context_dict(form_values)
             if request.is_ajax():
                 view_logic.change_level_rating(template, request.user, context_dict['user_won'], form_values['template_type'], level)
+                print(3)
                 return render_to_response('game/answer.html', context_dict, context)
             else:
                 view_logic.change_elo(template, request.user, context_dict['user_won'], form_values['template_type'])

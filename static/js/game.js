@@ -1,3 +1,4 @@
+var current_level = "";
 $(document).ready(function () {
     load_chapters();
     // Load levels for the specific chapter
@@ -12,6 +13,7 @@ $(document).ready(function () {
     $(document).on('click', '.btn_level', function(e){
         e.preventDefault();
         var level_id = $(this).attr('id').match(/\d+/);
+        current_level = level_id;
         load_template(level_id);
     });
 
@@ -56,6 +58,12 @@ function load_template(level_id){
                 });
             });
         });
+    });
+}
+
+function post_answer(submit_dict){
+    $('#game_content').fadeOut(function () {
+        $.post('../' + current_level + '/answer/', submit_dict);
     });
 }
 

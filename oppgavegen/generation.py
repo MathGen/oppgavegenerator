@@ -304,7 +304,7 @@ def get_question(user, template_id, topic=''):
     #b = Level.objects.all()
     #print(b)
     #print(b.filter(template__topic__topic__contains='Integrasjon'))
-    return {'template' : q, 'type' : template_type}
+    return {'template': q, 'type': template_type}
 
 
 @Debugger

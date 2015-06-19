@@ -13,7 +13,7 @@
     <div class="panel-heading"><h3 class="panel-title">Spørsmål</h3></div>
     <div class="panel-body">
         <form id="w_question_display" class="form-horizontal">
-            <div id="mathquill_field" class="input_field"></div>
+            <div id="mathquill_field" class="input_field"></div><hr>
             <div id="w_target" class="row"></div>
             <form>{% csrf_token %} </form>
         </form>
@@ -24,7 +24,7 @@
                 {% include 'keypad/operators.html' %}
             </div>
             <div class="col-lg-3 pull-right">
-                <button id="submit_answer" class="btn btn-primary pull-right" type="submit">Svar</button>
+                <button id="submit_answer" class="btn btn-primary pull-right game_submit" type="submit">Svar</button>
             </div>
         </div>
     </div>
