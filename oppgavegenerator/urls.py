@@ -34,6 +34,10 @@ urlpatterns = patterns('',
     url(r'^useranalysis/', 'oppgavegen.views.user_overview_table', name='user_table'),
 
     # Sets, chapters and level management urls
+    url(r'^game/(\d+)/$', 'oppgavegen.views.game', name='game'),
+    url(r'^game/(\d+)/levels/$', 'oppgavegen.views.levels', name='levels'),
+    url(r'^game/(\d+)/chapters/$', 'oppgavegen.views.chapters', name='chapters'),
+    url(r'^game/(\d+)/template/$', 'oppgavegen.views.get_template', name='get_template'),
     url(r'^set/new/', SetCreateView.as_view(), name='set_create_new'),
     url(r'^set/(\d+)/$', set_detail_view, name='set_detail'),
     url(r'^set/(\d+)/chapters/edit/$', 'oppgavegen.views.manage_chapters_in_set', name='manage_chapters_in_set'),

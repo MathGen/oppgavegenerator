@@ -1,0 +1,34 @@
+<div hidden id="template_type">{{ template_type }}</div>
+<div hidden id="primary_key">{{ primary_key }}</div>
+<div hidden id="template_specific">{{ template_specific }}</div>
+<div hidden id="number_of_answers">{{ number_of_answers }}</div>
+<div hidden id="variable_dictionary">{{ variable_dictionary }}</div>
+<div hidden id="get_question">{{ question }}</div>
+<div hidden id="replacing_words">{{ replacing_words }}</div>
+
+<script src="/static/js/answer_input.js?18"></script>
+<link href="/static/css/stud_style.css" rel="stylesheet">
+
+<section class="panel panel-default">
+    <div class="panel-heading"><h3 class="panel-title">Spørsmål</h3></div>
+    <div class="panel-body">
+        <form id="w_question_display" class="form-horizontal">
+            <div id="mathquill_field" class="input_field"></div>
+            <div id="w_target" class="row"></div>
+            <form>{% csrf_token %} </form>
+        </form>
+    </div>
+    <div class="panel-footer">
+        <div id="keypad_w" class="row keypad">
+            <div class="col-lg-9 keypad_answer">
+                {% include 'keypad/operators.html' %}
+            </div>
+            <div class="col-lg-3 pull-right">
+                <button id="submit_answer" class="btn btn-primary pull-right" type="submit">Svar</button>
+            </div>
+        </div>
+    </div>
+    <div style="display:none">
+        {% include 'keypad/custom_matrix.html' %}
+    </div>
+</section>

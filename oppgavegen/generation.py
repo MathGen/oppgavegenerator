@@ -104,6 +104,86 @@ def generate_task(user, template_extra, desired_type=''):
     return return_dict
 
 
+def generate_level(user, level_id):
+    """Makes a valid math question at the correct rating from a template in the database.
+
+    :param user: The user requesting a template
+    :param template_extra: (optional) A id used for requesting a specific template.
+    :param desired_type: (optional) A string for requesting a specific template type.
+    :return: Returns a complete math question with generated numbers.
+    """
+    level = Level.objects.get(pk=level_id)
+    get_question_dict = get_level_question(user, level)  # Gets a template from the DB
+    q = get_question_dict['template']
+    desired_type = get_question_dict['type']
+
+    # The domain of random numbers that can be generated for the question
+    random_domain_list = q.random_domain.split('§')
+    task = str(q.question_text)
+    task = task.replace('\\\\', '\\') # Replaces double \\ with \
+    template_type = desired_type
+    choices = q.choices.replace('\\\\', '\\')
+    conditions = q.conditions.replace('\\\\', '\\')
+    dictionary = q.dictionary
+    answer = q.answer.replace('\\\\', '\\')
+    primary_key = q.pk
+    fill_in = q.fill_in.replace('\\\\', '\\')
+    template_specific = ""  # A variable that holds the extra values for a given type. ie. choices for multiple.
+    variables_used = ""  # Sends a splitable string since dictionaries can't be passed between layers.
+    replacing_words = ''  # The words that got replaced, and the words that replaced them
+
+    new_choices = ''
+    new_task = ''
+    new_answer = ''
+    variable_dict = ''
+
+    valid_solution = False
+    while valid_solution is False:  # Loop until we get a form of the task that has a valid solution
+        variable_dict = generate_valid_numbers(task, random_domain_list, conditions, False)
+        variables_used = dict_to_string(variable_dict)  # Get a string with the variables used
+        new_task = string_replace(task, variable_dict)
+        new_answer = string_replace(answer, variable_dict)
+        new_choices = string_replace(choices, variable_dict)
+
+        if new_answer == 'error':
+            continue  # Retry if the current template resulted in a error.
+        valid_solution = True
+
+    if template_type.lower() == 'multiple':
+        new_choices = new_choices.split('§')
+        for x in range(len(new_choices)):
+            new_choices[x] = calculate_answer(new_choices[x], q.random_domain)
+        new_choices.append(parse_solution(new_answer, q.random_domain).replace('§', 'og'))
+        shuffle(new_choices)  # Shuffles the choices so that the answer is not always in the same place.
+        new_choices = '§'.join(new_choices)
+        template_specific = new_choices
+    elif template_type == 'blanks':
+        fill_in_dict = fill_in_the_blanks(fill_in)
+        # new_task = new_task + '\n' + fill_in_dict['fill_in'].replace('\\n', '\n')
+        new_task = new_task + '§' + fill_in_dict['fill_in']
+        print(fill_in_dict)
+        new_task = replace_variables_from_array(variables_used.split('§'), new_task)
+        new_task = parse_solution(new_task, q.random_domain)
+        template_specific = fill_in_dict['hole_positions']
+    elif template_type == 'multifill':
+        new_choices = choices + '§' + answer.replace('§', 'og')
+        template_specific = multifill(new_choices, variable_dict)
+
+    if dictionary is not None:
+        replace_words_dict = replace_words(new_task, dictionary)
+        new_task = replace_words_dict['sentence']
+        replacing_words = replace_words_dict['replace_string']
+    number_of_answers = len(new_answer.split('§'))
+
+    new_task = new_task.replace('+-', '-')
+    new_task = new_task.replace('--', '+')
+    new_task = parse_solution(new_task, q.random_domain)
+    return_dict = {'question': new_task, 'variable_dictionary': variables_used, 'template_type': template_type,
+                   'template_specific': template_specific, 'primary_key': primary_key,
+                   'number_of_answers': number_of_answers, 'replacing_words': replacing_words}
+    return return_dict
+
+
 def calculate_answer(s, domain):
     """Calculates a string using sympy.
 
@@ -220,6 +300,7 @@ def get_question(user, template_id, topic=''):
     #print(b.filter(template__topic__topic__contains='Integrasjon'))
     return {'template' : q, 'type' : template_type}
 
+
 def get_level_question(user, level):
     """Gets a template from the database at a appropriate rating.
 
@@ -230,20 +311,25 @@ def get_level_question(user, level):
     """
     slack = 60
     increase = 15
+    print(0)
     user_progress = add_level_to_user(user, level)
+    print(1)
     user_rating = user_progress.level_rating
-
+    print(2)
     while True:
-        q = Template.objects.filter(rating__gt=(user_rating-slack))
+        q = level.templates.all()
+        q = q.filter(rating__gt=(user_rating-slack))
         q = q.filter(rating__lt=(user_rating+slack))
         q = q.filter(valid_flag=True)
 
-        m = Template.objects.filter(choice_rating__gt=(user_rating-slack))
+        m = level.templates.all()
+        m = m.filter(choice_rating__gt=(user_rating-slack))
         m = m.filter(choice_rating__lt=(user_rating+slack))
         m = m.filter(valid_flag=True)
         m = m.filter(multiple_support=True)
 
-        f = Template.objects.filter(fill_rating__gt=(user_rating-slack))
+        f = level.templates.all()
+        f = f.filter(fill_rating__gt=(user_rating-slack))
         f = f.filter(fill_rating__lt=(user_rating+slack))
         f = f.filter(valid_flag=True)
         f = f.filter(fill_in_support=True)
@@ -271,12 +357,7 @@ def get_level_question(user, level):
             q = Template.objects.all()
             q = q.latest('id')
             break
-
-    # test
-    #b = Level.objects.all()
-    #print(b)
-    #print(b.filter(template__topic__topic__contains='Integrasjon'))
-    return {'template' : q, 'type' : template_type}
+    return {'template': q, 'type': template_type}
 
 
 def replace_words(sentence, dictionary):
@@ -685,8 +766,12 @@ def custom_round(x, d=0):
 
 
 def add_level_to_user(user, level):
-    user_progress = UserLevelProgress.objects.get(user=user, level=level)
-    if not user_progress:
+    print(3)
+    print(user.username)
+    print(level.name)
+    try:
+        user_progress = UserLevelProgress.objects.get(user=user, level=level)
+    except UserLevelProgress.DoesNotExist:
         user_progress = UserLevelProgress()
         user_progress.user = user
         user_progress.level = level

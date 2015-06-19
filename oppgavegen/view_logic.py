@@ -161,7 +161,7 @@ def change_elo(template, user, user_won, type):
 def change_level_rating(template, user, user_won, type, level):
     """Changes the elo of both user and task depending on who won."""
     u = User.objects.get(username=user.username)
-    user_progress = UserLevelProgress.objects.get(user=user, level=level)
+    user_progress = UserLevelProgress.objects.get(user=user.pk, level=level.pk)
     user_rating = user_progress.level_rating
     # Formula for elo: Rx = Rx(old) + prefactor *(W-Ex) where W=1 if wins and W=0 if x loses
     # and Ex is the expected probability that x will win.

@@ -189,6 +189,42 @@ def index(request):
     list = Topic.objects.values_list('topic', flat=True)
     return render(request, "index.html", {"list": list})
 
+
+### GAME ###
+@login_required
+def game(request, set_id):
+    context = RequestContext(request)
+    set_title = Set.objects.get(pk=set_id).name
+    return render_to_response('game/screen.html', {'set_id': set_id, 'set_title': set_title}, context)
+
+
+def chapters(request, set_id):
+    game_set = Set.objects.get(pk=set_id)
+    set_chapters = game_set.chapters.all()
+    set_title = game_set.name
+    context = RequestContext(request)
+    return render_to_response('game/chapters.html', {'chapters': set_chapters}, context)
+
+
+def levels(request, chapter_id):
+    game_chapter = Chapter.objects.get(pk=chapter_id)
+    chapter_levels = game_chapter.levels.all()
+    chapter_title = game_chapter.name
+    context = RequestContext(request)
+    return render_to_response('game/levels.html', {'levels': chapter_levels, 'chapter_title': chapter_title}, context)
+
+@login_required
+def get_template(request, level_id):
+    """Gets a template for a given level"""
+    # if request.is_ajax():
+    #   if request.method == 'GET':
+    context = RequestContext(request)
+    context_dict = generation.generate_level(request.user, level_id)
+    context_dict['rating'] = view_logic.get_user_rating(request.user)
+
+    return render_to_response('game/template.html', context_dict, context)
+
+
 ### SET, CHAPTER, LEVEL FORM VIEWS ###
 
 def level_add_template(request, level_id, template_id):

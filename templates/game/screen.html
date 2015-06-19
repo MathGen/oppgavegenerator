@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block panels %}
+<script src="/static/js/game.js?01"></script>
+<link href="/static/css/game.css" rel="stylesheet">
+<div id="game_screen" class="jumbotron">
+    <div id="set_id" hidden>{{ set_id }}</div>
+    <h2 class="set_title">{{ set_title }}<span id="chapter_title"></span></h2> <!-- TODO: Make dynamic set-title -->
+    <div id="game_content" style="display: none"></div>
+    <div id="game_nav" style="display: none">
+        <button class="btn btn-link"><span class="btn_game_back glyphicon glyphicon-arrow-left"></span></button>
+    </div>
+</div>
+{% endblock %}
