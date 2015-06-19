@@ -12,9 +12,10 @@ from sympy.parsing.sympy_parser import (parse_expr, standard_transformations,
 from oppgavegen.latex_translator import latex_to_sympy
 from .models import Template, Level, UserLevelProgress
 from django.contrib.auth.models import User
-from oppgavegen.decorators import debug
+from oppgavegen.decorators import Debugger
 
 
+@Debugger
 def generate_task(user, template_extra, desired_type=''):
     """Makes a valid math question at the correct rating from a template in the database.
 
@@ -104,7 +105,8 @@ def generate_task(user, template_extra, desired_type=''):
                    'number_of_answers': number_of_answers, 'replacing_words': replacing_words}
     return return_dict
 
-@debug
+
+@Debugger
 def generate_level(user, level_id):
     """Makes a valid math question at the correct rating from a template in the database.
 
@@ -185,6 +187,7 @@ def generate_level(user, level_id):
     return return_dict
 
 
+@Debugger
 def calculate_answer(s, domain):
     """Calculates a string using sympy.
 
@@ -204,6 +207,7 @@ def calculate_answer(s, domain):
     return str(s)
 
 
+@Debugger
 def parse_solution(solution, domain):
     """Parses a solution (or other similar string) and calculates where needed. (between @? ?@)
 
@@ -234,6 +238,7 @@ def parse_solution(solution, domain):
     return new_solution
 
 
+@Debugger
 def get_question(user, template_id, topic=''):
     """Gets a template from the database at a appropriate rating.
 
@@ -301,7 +306,8 @@ def get_question(user, template_id, topic=''):
     #print(b.filter(template__topic__topic__contains='Integrasjon'))
     return {'template' : q, 'type' : template_type}
 
-@debug
+
+@Debugger
 def get_level_question(user, level):
     """Gets a template from the database at a appropriate rating.
 
@@ -359,6 +365,7 @@ def get_level_question(user, level):
     return {'template': q, 'type': template_type}
 
 
+@Debugger
 def replace_words(sentence, dictionary):
     """
     Replaces variables in a string with the value of a key in the given dictionary.
@@ -378,6 +385,7 @@ def replace_words(sentence, dictionary):
     return {'sentence': sentence, 'replace_string': replace_string[1:]}
 
 
+@Debugger
 def calculate_array(array, domain):
     """Calculates all the answers in a list.
 
@@ -392,6 +400,7 @@ def calculate_array(array, domain):
     return out_arr
 
 
+@Debugger
 def after_equal_sign(s):
     """Returns everything after the last '=' sign of a string."""
     if '=' in s:
@@ -400,6 +409,7 @@ def after_equal_sign(s):
     return s
 
 
+@Debugger
 def replace_variables_from_array(arr, s):
     """Takes a string and replaces variables in the string with ones from the array
 
@@ -413,6 +423,7 @@ def replace_variables_from_array(arr, s):
     return s
 
 
+@Debugger
 def parse_answer(answer, domain):
     """Parses the answer. works for arrays with multiple answers."""
     answer = answer.split('§')
@@ -426,6 +437,7 @@ def parse_answer(answer, domain):
     return '§'.join(answer)  # join doesn't do anything if the list has 1 element, except converting it to str
 
 
+@Debugger
 def generate_valid_numbers(template, random_domain_list, conditions, test):
     """Generates valid numbers using each variables random domain.
 
@@ -463,6 +475,7 @@ def generate_valid_numbers(template, random_domain_list, conditions, test):
     return variable_dict
 
 
+@Debugger
 def dict_to_string(variable_dict):
     """Returns a separated string of the key and value pairs of a dict"""
     variables_used = ""
@@ -471,6 +484,7 @@ def dict_to_string(variable_dict):
     return variables_used[1:]  # Use [1:] to remove unnecessary § from the start
 
 
+@Debugger
 def array_to_string(array):
     """Turns a array into a string separated by §."""
     string = ''
@@ -479,6 +493,7 @@ def array_to_string(array):
     return string[1:]  # Use [1:] to remove unnecessary § from the start
 
 
+@Debugger
 def remove_unnecessary(string):
     """Removes unnecessary symbols from a string and returns the string."""
     string = string.replace('@?', '')
@@ -486,6 +501,7 @@ def remove_unnecessary(string):
     return string
 
 
+@Debugger
 def check_conditions(conditions, variable_dict, domain_dict):
     """A function that checks if the generated variables pass the conditions and generates new ones until they do.
 
@@ -505,6 +521,7 @@ def check_conditions(conditions, variable_dict, domain_dict):
     return variable_dict
 
 
+@Debugger
 def string_replace(string, variable_dict):
     """Replaces variables in a string with numbers from a dict
 
@@ -517,6 +534,7 @@ def string_replace(string, variable_dict):
     return string
 
 
+@Debugger
 def get_variables_used(string, variable_dict):
     """Returns what variables are used in the given string as a list."""
     used_variables = []
@@ -528,6 +546,7 @@ def get_variables_used(string, variable_dict):
     return used_variables
 
 
+@Debugger
 def new_random_value(value, domain_dict, bonus=0, extra=''):
     """Creates a new random value for a given variable using its domain.
 
@@ -553,6 +572,7 @@ def new_random_value(value, domain_dict, bonus=0, extra=''):
     return new_value
 
 
+@Debugger
 def fill_in_the_blanks(fill_in):
     """Returns a fill in the blank template and the position of the holes."""
     hole_dict = find_holes(fill_in)
@@ -564,6 +584,7 @@ def fill_in_the_blanks(fill_in):
     return return_dict
 
 
+@Debugger
 def find_holes(fill_in):
     """Finds the available holes in the template and their position."""
     #fill_in = fill_in.split('§')  # Makes fill in into a list.
@@ -605,6 +626,7 @@ def find_holes(fill_in):
     return hole_dict
 
 
+@Debugger
 def make_holes(hole_dict, fill_in):
     """Inserts holes at given places in the template for fill in the blanks
 
@@ -620,6 +642,7 @@ def make_holes(hole_dict, fill_in):
     return return_dict
 
 
+@Debugger
 def get_values_from_position(position_string, solution):
     """Takes a string of positions and returns a values from the string with those positions"""
     position_array = position_string.split('§')
@@ -630,6 +653,7 @@ def get_values_from_position(position_string, solution):
     return values[1:]
 
 
+@Debugger
 def multifill(choices, variable_dict):
     """Returns choices with fill in the blanks capability"""
     choices = choices.replace('@?', '')
@@ -651,6 +675,7 @@ def multifill(choices, variable_dict):
     return choices
 
 
+@Debugger
 def template_validation(template_id):
     """tests a template to see if it makes solvable tasks in a reasonable amount of tries. returns a success string"""
     valid = False
@@ -673,6 +698,7 @@ def template_validation(template_id):
     return success_string
 
 
+@Debugger
 def test_template(template):
     """Tests if the creation of a template ends up with a valid template. Returns 1/0 for success/failure."""
     got_trough_test = 0  # 1 if template got through test, and 0 if not.
@@ -707,6 +733,7 @@ def test_template(template):
     return got_trough_test
 
 
+@Debugger
 def is_number(s):
     """Returns whether a string is a number or not."""
     try:
@@ -716,6 +743,7 @@ def is_number(s):
         return False
 
 
+@Debugger
 def make_number(domain):
     """Returns a random number within the range and decimal point of the domain given."""
     number = uniform(float(domain[0]), float(domain[1]))
@@ -728,6 +756,7 @@ def make_number(domain):
     return number
 
 
+@Debugger
 def round_answer(domain, answer):
     """returns a rounded version of the answer given."""
     answer = float(answer)  # Cast it to float. if it is a integer, it will get rounded back to a integer.
@@ -749,6 +778,7 @@ def round_answer(domain, answer):
     return answer
 
 
+@Debugger
 def custom_round(x, d=0):
     """
     Python 3.x rounding function uses bankers rounding, which is note the same as method of rounding
@@ -764,6 +794,7 @@ def custom_round(x, d=0):
     return round_x
 
 
+@Debugger
 def add_level_to_user(user, level):
     print(user.username)
     print(level.name)
