@@ -230,7 +230,7 @@ def get_level_question(user, level):
     """
     slack = 60
     increase = 15
-    user_progress = UserLevelProgress.objects.get(user=user.username, level=level.pk)
+    user_progress = add_level_to_user(user, level)
     user_rating = user_progress.level_rating
 
     while True:
@@ -668,6 +668,7 @@ def round_answer(domain, answer):
         answer = custom_round(answer)
     return answer
 
+
 def custom_round(x, d=0):
     """
     Python 3.x rounding function uses bankers rounding, which is note the same as method of rounding
@@ -683,3 +684,11 @@ def custom_round(x, d=0):
     return round_x
 
 
+def add_level_to_user(user, level):
+    user_progress = UserLevelProgress.objects.get(user=user, level=level)
+    if not user_progress:
+        user_progress = UserLevelProgress()
+        user_progress.user = user
+        user_progress.level = level
+        user_progress.save()
+    return user_progress
