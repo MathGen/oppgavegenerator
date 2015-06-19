@@ -49,7 +49,7 @@ class TemplateIndex(indexes.SearchIndex, indexes.Indexable):
 #     def index_queryset(self, using=None):
 #         return self.get_model().objects.filter(creation_date__lte=datetime.datetime.now())
 #
-# class ChapterIndex(indexes.SearhIndex, indexes.Indexable):
+# class ChapterIndex(indexes.SearchIndex, indexes.Indexable):
 #     text=indexes.CharField(document=True, use_template=True)
 #     creator=indexes.CharField(model_attr='creator')
 #     levels = indexes.MultiValueField()
@@ -59,3 +59,5 @@ class TemplateIndex(indexes.SearchIndex, indexes.Indexable):
 #
 #     def index_queryset(self, using=None):
 #         return self.get_model().objects.filter(creation_date__lte=datetime.datetime.now())
+
+# class LevelIndex()

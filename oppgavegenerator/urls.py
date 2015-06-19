@@ -10,11 +10,11 @@ from oppgavegen.views import *
 from oppgavegen.forms import *
 from haystack.forms import SearchForm
 import datetime
-from haystack.query import SearchQuerySet
+from haystack.query import SearchQuerySet, RelatedSearchQuerySet
 from haystack.views import SearchView
 from django.views.generic import ListView
 
-sqs = SearchQuerySet()#.filter(creation_date__lte=datetime.datetime.now())
+sqs = SearchQuerySet().load_all()#.filter(creation_date__lte=datetime.datetime.now())
 
 urlpatterns = patterns('',
     url(r'^$', 'oppgavegen.views.index', name='home'),

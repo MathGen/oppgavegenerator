@@ -1,6 +1,25 @@
 {% extends 'base.html' %}
-
 {% block panels %}
+
+    <script type="text/javascript" src="http://jqueryjs.googlecode.com/files/jquery-1.2.6.js"></script>
+
+{#    <script type="text/javascript">#}
+{#        $(document).ready(function () {#}
+{#            $('#searchSubmit').click(function () {#}
+{#                q = $('#q').val();#}
+{#                $('#results').html('&nbsp;').load('{% url "ajax_template_search" 1 %}'.replace(1, q))#}
+{#            });#}
+{#        });#}
+{##}
+{#        $(document).ajaxStart(function () {#}
+{#            $('#spinner').show();#}
+{#        }).ajaxStop(function () {#}
+{#            $('#spinner').hide();#}
+{#        });#}
+{#    </script>#}
+
+
+
     <h2>Search</h2>
 
     <form method="get" action=".">
@@ -19,12 +38,16 @@
 
             {% for result in page.object_list %}
                 <p>
-                    <a href="#">{{ result.object.title }}</a>
+                    <span id="template_{{ result.object.id }}">{{ result.object.name }}</span> <div id="preview_{{ result.object.id }}"></div>
                 </p>
             {% empty %}
                 <p>No results found.</p>
             {% endfor %}
-
+    <script>
+    $( "#template_22" ).click(function() {
+        $( "#preview_22").load("/template/22/preview/");
+    })
+    </script>
             {% if page.has_previous or page.has_next %}
                 <div>
                     {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}

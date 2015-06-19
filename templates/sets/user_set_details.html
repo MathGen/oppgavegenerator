@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block panels %}
+
+    <h1>{{ set_title }}</h1>
+
+    <ol type="1">
+    {% for chapter in chapters %}
+        <li>{{ chapter.name }}
+{#            <ul>#}
+{#                {% for levels in set.chapter.levels %}#}
+{#                    <li>{{ level.name }}#}
+{#                    <ul>#}
+{#                    {% for templates in set.chapter.levels.templates %}#}
+{#                         {{ template.name }}#}
+{#                    {% endfor %}#}
+{#                    </ul>#}
+{#                    </li>#}
+{#                {% endfor %}#}
+{##}
+{#            </ul>#}
+        </li>
+    {% endfor %}
+    </ol>
+
+{% endblock %}
