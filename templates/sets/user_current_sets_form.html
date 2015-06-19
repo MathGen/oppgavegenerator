@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block panels %}
+
+    <h3>Jeg vil jobbe med...</h3>
+
+    <form action="?next={{ next }}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Lagre"/>
+    </form>
+
+{% endblock %}

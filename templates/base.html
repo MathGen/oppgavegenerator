@@ -25,8 +25,16 @@
 				<div class="collapse navbar-collapse nav_header_collapse">
 					<ul class="nav navbar-nav navbar-right">
 						<!--MENU ITEMS-->
+                        {% if user|is_teacher %}
+                            <li>
+                                <a href="{% url 'edit_current_user_sets' %}?next={{ request.path }}">
+                                    {{ user.extendeduser.current_set.name }} >
+                                    {{ user.extendeduser.current_chapter.name }} >
+                                    {{ user.extendeduser.current_level.name }}
+                                </a>
+                            </li>
+                        {% endif %}
                     	<li><a href="#">{{  user|get_rating }}</a></li>
-                        <li><a href="#endre">{{ user.extendeduser.current_level.name }}</a></li>
                     	{% if user|is_teacher %}
 						<li><a href="{% url 'newtemplate' %}">Ny Mal</a></li>
                         {%endif%}

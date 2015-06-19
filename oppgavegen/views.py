@@ -14,17 +14,25 @@ from django_tables2 import RequestConfig
 from oppgavegen.templatetags.app_filters import is_teacher
 from oppgavegen import view_logic
 from oppgavegen.view_logic import *
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.views.generic.list import ListView
 from django.views.decorators.cache import cache_control
 from oppgavegen.models import Set, Chapter, Level, Template
 
 # Search Views and Forms
-from .forms import QuestionForm, TemplateForm, SetForm, LevelCreateForm, ChapterNameForm
+from .forms import QuestionForm, TemplateForm, SetForm, LevelCreateForm, ChapterNameForm, UserCurrentSetsForm
 from django.forms.formsets import formset_factory
 from django import http
 from django.forms.models import modelformset_factory, inlineformset_factory
 from django.core.urlresolvers import reverse
+
+
+class LoginRequiredMixin(object):
+    """ Generic @login_required Mixin for class-based views  """
+    @classmethod
+    def as_view(cls, **initkwargs):
+        view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
+        return login_required(view)
 
 
 def is_member(user):
@@ -284,7 +292,7 @@ def preview_template(request, template_id):
                               context_instance=RequestContext(request))
 
 
-class SetCreateView(CreateView):
+class SetCreateView(LoginRequiredMixin,CreateView):
     # form_class = SetForm
     model = Set
     fields = ['name', 'chapters',]
@@ -312,7 +320,7 @@ def set_detail_view(request, set_id):
                                         }, context_instance=RequestContext(request))
 
 
-class UserSetListView(ListView):
+class UserSetListView(LoginRequiredMixin,ListView):
     template_name = 'sets/user_set_list.html'
 
     def get_queryset(self):
@@ -324,7 +332,7 @@ class UserSetListView(ListView):
 
 
 @login_required
-class ChapterCreate(CreateView):
+class ChapterCreate(LoginRequiredMixin,CreateView):
     model = Chapter
     fields = ['name', 'level']
     template_name = 'sets/chapter_create_form.html'
@@ -334,7 +342,7 @@ class ChapterCreate(CreateView):
         return super(ChapterCreate, self).form_valid(form)
 
 
-class SetChapterListView(ListView):
+class SetChapterListView(LoginRequiredMixin,ListView):
     """List Chapters in Set"""
     template_name = 'sets/set_chapter_list.html'
 
@@ -348,7 +356,7 @@ class SetChapterListView(ListView):
         return context
 
 
-class ChapterLevelsListView(ListView):
+class ChapterLevelsListView(LoginRequiredMixin,ListView):
     """List levels in chapter"""
     template_name = 'sets/chapter_level_list.html'
 
@@ -362,7 +370,7 @@ class ChapterLevelsListView(ListView):
         return context
 
 
-class LevelsTemplatesListView(ListView):
+class LevelsTemplatesListView(LoginRequiredMixin, ListView):
     """List templates in level"""
     template_name = 'sets/level_template_list.html'
 
@@ -406,10 +414,29 @@ def manage_chapters_in_set(request, set_id):
 
 
 @login_required
-class LevelCreateView(CreateView):
+class LevelCreateView(LoginRequiredMixin, CreateView):
     form_class = LevelCreateForm
     template_name = 'sets/level_create_form.html'
 
     # def form_valid(self, form):
     #    form.instance.creator = self.request.user
     #    return super(Level)
+
+
+class UserCurrentSetsEdit(LoginRequiredMixin, UpdateView):
+    model = ExtendedUser
+    fields = ['current_level', 'current_chapter', 'current_set']
+    template_name = 'sets/user_current_sets_form.html'
+    success_url = '/'
+
+    # def get_form(self):
+    #     self.fields['current_level'].queryset = Level.objects.filter(creator=self.request.user.id)
+    #     # self.fields['current_chapter'].queryset = Chapter.objects.filter(creator=self.request.user.id)
+    #     # self.fields['current_set'].queryset = Set.objects.filter(creator=self.request.user.id)
+
+    def get_object(self, queryset=None):
+        obj = ExtendedUser.objects.get(user=self.request.user)
+        return obj
+
+
+

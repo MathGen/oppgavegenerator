@@ -3,7 +3,7 @@
 Contains various forms that are used in views
 
 """
-from .models import Set, Chapter, Level, Template
+from .models import Set, Chapter, Level, Template, User, ExtendedUser
 from django.forms import ModelForm
 from django.forms.models import BaseModelFormSet
 from django.forms.formsets import formset_factory, BaseFormSet
@@ -125,3 +125,8 @@ class TemplateForm(ModelForm):
             """Returns a cleaned dictionary of it's own values."""
             cd = {self.cleaned_data['question'], self.cleaned_data['answer']}
             return cd
+
+class UserCurrentSetsForm(ModelForm):
+    class Meta:
+        model = ExtendedUser
+        fields = ('current_set', 'current_chapter', 'current_level',)
