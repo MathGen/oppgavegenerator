@@ -140,6 +140,14 @@ class ExtendedUser(models.Model):
     current_chapter = models.OneToOneField(Chapter, null=True)
     current_set = models.OneToOneField(Set, null=True)
 
+    def current_level_template_ids(self):
+        """ Return list of template id's in users current level for simple comparisons with search results """
+        ids = []
+        templates = self.current_level.templates.all()
+        for e in templates:
+            ids.append(e.id)
+        return ids
+
 
 def create_user_profile(sender, instance, created, **kwargs):
     """Adds a ExtendedUser to a new user when created with one to one relation"""

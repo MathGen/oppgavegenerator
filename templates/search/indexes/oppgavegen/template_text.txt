@@ -1,4 +1,4 @@
-{{ object.title }}
+{{ object.name }}
 {{ object.creator }}
 {% for tag in object.tags.all %}
     {{ tag.name }}
