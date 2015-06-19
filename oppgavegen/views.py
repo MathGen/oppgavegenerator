@@ -253,7 +253,6 @@ def level_add_template(request, level_id, template_id):
         return HttpResponse('You need to be the owner of the level you\'re editing!')
 
 
-
 def add_template_to_current_level(request, template_id):
     """Add a template to the current level a teacher user is working on."""
     level = request.user.extendeduser.current_level
@@ -424,12 +423,14 @@ class LevelCreateView(LoginRequiredMixin, CreateView):
 
 
 class UserCurrentSetsEdit(LoginRequiredMixin, UpdateView):
+    def get_success_url(self):
+        self.request.GET.get('next', '')
+
     model = ExtendedUser
     fields = ['current_level', 'current_chapter', 'current_set']
     template_name = 'sets/user_current_sets_form.html'
-    success_url = '/'
 
-    # todo: get these dang filters to work
+    # todo: get these dang filters to work (and redirect to previous page)ß
     # def get_form(self):
     #     self.fields['current_level'].queryset = Level.objects.filter(creator=self.request.user.id)
     #     # self.fields['current_chapter'].queryset = Chapter.objects.filter(creator=self.request.user.id)
@@ -438,6 +439,3 @@ class UserCurrentSetsEdit(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         obj = ExtendedUser.objects.get(user=self.request.user)
         return obj
-
-
-
