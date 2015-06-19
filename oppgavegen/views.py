@@ -48,7 +48,7 @@ def task(request):
     return render_to_response('taskview.html', context_dict, context)
 
 
-@cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)
+@cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True) # Doesn't cache the page
 @login_required
 def task_by_id_and_type(request, template_extra, desired_type='normal'):
     """Returns a render of taskview with a specific math template with specified type"""
@@ -109,7 +109,7 @@ def submit(request):
 
 
 @login_required
-def answers(request):
+def answers(request, level=''):
     """Returns a render of answers.html"""
     context = RequestContext(request)
     cheat_message = '\\text{Ulovlig tegn har blitt brukt i svar}'
@@ -121,7 +121,11 @@ def answers(request):
             if cheat_check(form_values['user_answer'], template.disallowed):
                 return render_to_response('answers.html', {'answer': cheat_message}, context)
             context_dict = view_logic.make_answer_context_dict(form_values)
-            view_logic.change_elo(template, request.user, context_dict['user_won'], form_values['template_type'])
+            if request.is_ajax():
+                view_logic.change_level_rating(template, request.user, context_dict['user_won'], form_values['template_type'], level)
+                return render_to_response('game/answer.html', context_dict, context)
+            else:
+                view_logic.change_elo(template, request.user, context_dict['user_won'], form_values['template_type'])
             return render_to_response('answers.html', context_dict, context)
         else:
             print(form.errors)
