@@ -151,6 +151,22 @@ class ExtendedUser(models.Model):
             ids.append(e.id)
         return ids
 
+    def current_chapter_level_ids(self):
+        """ Return list of level id's in users current chapter for simple comparisons with search results """
+        ids = []
+        levels = self.current_chapter.levels.all()
+        for e in levels:
+            ids.append(e.id)
+        return ids
+
+    def current_set_chapter_ids(self):
+        """ Return list of chapter id's in users current set for simple comparisons with search results """
+        ids = []
+        chapters = self.current_chapter.levels.all()
+        for e in chapters:
+            ids.append(e.id)
+        return ids
+
 
 def create_user_profile(sender, instance, created, **kwargs):
     """Adds a ExtendedUser to a new user when created with one to one relation"""
