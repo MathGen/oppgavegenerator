@@ -29,7 +29,7 @@ class TemplateSearchForm(SearchForm):
         if not self.is_valid():
             return self.no_query_found()
 
-        # Check for bane input
+        # Check for name input
         if self.cleaned_data['name']:
             sqs = sqs.filter(title__contains=self.cleaned_data['name'])
 
@@ -54,6 +54,27 @@ class TemplateSearchForm(SearchForm):
         if self.cleaned_data['fill_in']:
             #sqs = sqs.filter(fill_in_support=self.cleaned_data['fill_in'])
             sqs = sqs.filter(fill_in='True')
+
+        return sqs
+
+class SetSearchForm(SearchForm):
+    name = forms.CharField(required=False)
+    creator = forms.CharField(required=False)
+
+    def search(self):
+        # First, store the SearchQuerySet received from other processing.
+        sqs = super(TemplateSearchForm, self).search()
+
+        if not self.is_valid():
+            return self.no_query_found()
+
+        # Check for name input
+        if self.cleaned_data['name']:
+            sqs = sqs.filter(title__contains=self.cleaned_data['name'])
+
+        # Check for creator input
+        if self.cleaned_data['creator']:
+            sqs = sqs.filter(creator__username__contains=self.cleaned_data['creator'])
 
         return sqs
 
