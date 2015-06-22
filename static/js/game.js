@@ -27,11 +27,11 @@ function load_chapters(){
     var set_id = $('#set_id').text();
     $('#game_nav').hide();
     $('#chapter_title').text("");
-    $('#game_content').fadeOut(function(){
+    $('#game_content').fadeOut('fast', function(){
         $(this).load('../' + set_id + '/chapters/', function () {
             lock_game_contents();
             append_medal_star();
-            $(this).fadeIn(function(){
+            $(this).fadeIn('fast', function(){
                 update_progress_bar();
             });
         });
@@ -39,10 +39,10 @@ function load_chapters(){
 }
 
 function load_levels(chapter_id){
-    $('#game_content').fadeOut(function () {
+    $('#game_content').fadeOut('fast', function () {
         $(this).load('../' + chapter_id + '/levels/', function () {
             lock_game_contents();
-            $(this).fadeIn(function(){
+            $(this).fadeIn('fast', function(){
                 $('#game_nav').fadeIn();
             });
         });
@@ -50,9 +50,9 @@ function load_levels(chapter_id){
 }
 
 function load_template(level_id){
-    $('#game_content').fadeOut(function () {
+    $('#game_content').fadeOut('fast', function () {
         $(this).load('../' + level_id + '/template/', function () {
-            $(this).fadeIn(function(){
+            $(this).fadeIn('fast', function(){
                 $('#game_nav').fadeIn(function(){
                     redraw_mathquill_elements();
                 });
@@ -62,8 +62,14 @@ function load_template(level_id){
 }
 
 function post_answer(submit_dict){
-    $('#game_content').fadeOut(function () {
-        $.post('../' + current_level + '/answer/', submit_dict);
+    $('#game_content').fadeOut('fast', function () {
+        $.post('../' + current_level + '/answer/', submit_dict, function(result){
+            $('#game_content').html(result).fadeIn('fast', function(){
+                $('#game_nav').fadeIn(function(){
+                    redraw_mathquill_elements();
+                });
+            });
+        });
     });
 }
 
