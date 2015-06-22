@@ -159,6 +159,7 @@ sub{							/* between bootstrap*/
 .chapter_progress,
 .level_progress{
 	position: absolute;
+	/*background: red url('') repeat top left;*/
 	bottom: 10px;
 	/*left: 26px;*/
 	z-index: 10;
