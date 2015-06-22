@@ -423,19 +423,21 @@ class LevelCreateView(LoginRequiredMixin, CreateView):
 
 
 class UserCurrentSetsEdit(LoginRequiredMixin, UpdateView):
-    def get_success_url(self):
-        self.request.GET.get('next', '')
-
     model = ExtendedUser
-    fields = ['current_level', 'current_chapter', 'current_set']
+    form_class = UserCurrentSetsForm
+    #fields = ['current_set', 'current_chapter', 'current_level',]
     template_name = 'sets/user_current_sets_form.html'
 
-    # todo: get these dang filters to work (and redirect to previous page)ß
-    # def get_form(self):
-    #     self.fields['current_level'].queryset = Level.objects.filter(creator=self.request.user.id)
-    #     # self.fields['current_chapter'].queryset = Chapter.objects.filter(creator=self.request.user.id)
-    #     # self.fields['current_set'].queryset = Set.objects.filter(creator=self.request.user.id)
+    # todo: get these dang filters to work
+    # def get_form_class(self, form_class=form_class):
+    #    self.fields['current_level'].queryset = Level.objects.filter(creator=self.request.user.id)
+    #    self.fields['current_chapter'].queryset = Chapter.objects.filter(creator=self.request.user.id)
+    #    self.fields['current_set'].queryset = Set.objects.filter(creator=self.request.user.id)
 
     def get_object(self, queryset=None):
         obj = ExtendedUser.objects.get(user=self.request.user)
         return obj
+
+    def get_success_url(self):
+        success_url = self.request.GET.get('next', '')
+        return success_url

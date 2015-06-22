@@ -14,12 +14,12 @@ from haystack.query import SearchQuerySet, RelatedSearchQuerySet
 from haystack.views import SearchView
 from django.views.generic import ListView
 
-sqs = SearchQuerySet().load_all()#.filter(creation_date__lte=datetime.datetime.now())
+#sqs =
 
 urlpatterns = patterns('',
     url(r'^$', 'oppgavegen.views.index', name='home'),
     url(r'^answers/', 'oppgavegen.views.answers', name='answers'),
-    url(r'^templates/', 'oppgavegen.views.templates', name='templates'),
+    url(r'^templates/$', 'oppgavegen.views.templates', name='templates'),
     url(r'^newtemplate/', 'oppgavegen.views.new_template', name='newtemplate'),
     url(r'^gen/', 'oppgavegen.views.gen', name='gen'),
     url(r'^submit/', 'oppgavegen.views.submit', name='submit'),
@@ -51,11 +51,17 @@ urlpatterns = patterns('',
 
     # Messy haystack search urls. Should maybe put these in own file and import here.
     url(r'^search/', include('haystack.urls')),
-    url(r'^search/templates/$', SearchView(
+    url(r'^templates/search/$', SearchView(
         template='search/template_search.html',
-        searchqueryset=sqs,
+        searchqueryset=SearchQuerySet().models(Template),
         form_class=TemplateSearchForm
     ), name='template_search'),
+    url(r'^sets/search/$', SearchView(
+        template='search/template_search.html',
+        searchqueryset=SearchQuerySet().models(Set),
+        form_class=TemplateSearchForm
+    ), name='template_search'),
+
 
 
     # AJAX FUNCTION URLS

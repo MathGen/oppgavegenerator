@@ -34,30 +34,43 @@ class TemplateIndex(indexes.SearchIndex, indexes.Indexable):
         """Used when the entire index for the model is updated."""
         return self.get_model().objects.filter(creation_date__lte=datetime.datetime.now())
 
-# class SetIndex(indexes.SearchIndex, indexes.Indexable):
-#     text=indexes.CharField(document=True, use_template=True)
-#     name=indexes.CharField(model_attr='name')
-#     creator=indexes.CharField(model_attr='creator')
-#     chapters=indexes.MultiValueField()
-#
-#     def prepare_chapters(self, object):
-#         return [chapter.name for chapter in object.chapters.all()]
-#
-#     def get_model(self):
-#         return Set
-#
-#     def index_queryset(self, using=None):
-#         return self.get_model().objects.filter(creation_date__lte=datetime.datetime.now())
-#
-# class ChapterIndex(indexes.SearchIndex, indexes.Indexable):
-#     text=indexes.CharField(document=True, use_template=True)
-#     creator=indexes.CharField(model_attr='creator')
-#     levels = indexes.MultiValueField()
-#
-#     def prepare_levels(self, object):
-#         return [level.name for level in object.levels.all()]
-#
-#     def index_queryset(self, using=None):
-#         return self.get_model().objects.filter(creation_date__lte=datetime.datetime.now())
+class SetIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.CharField(document=True, use_template=True)
+    name = indexes.CharField(model_attr='name')
+    creator = indexes.CharField(model_attr='creator')
+    # chapters=indexes.MultiValueField()
 
-# class LevelIndex()
+    # def prepare_chapters(self, object):
+    #     return [chapter.name for chapter in object.chapters.all()]
+
+    def get_model(self):
+        return Set
+
+    def index_queryset(self, using=None):
+        return self.get_model().objects.all()
+
+class ChapterIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.CharField(document=True, use_template=True)
+    name = indexes.CharField(model_attr='name')
+    creator = indexes.CharField(model_attr='creator')
+    # levels = indexes.MultiValueField()
+
+    # def prepare_levels(self, object):
+    #   return [level.name for level in object.levels.all()]
+
+    def get_model(self):
+        return Chapter
+
+    def index_queryset(self, using=None):
+        return self.get_model().objects.all()
+
+class LevelIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.CharField(document=True, use_template=True)
+    name = indexes.CharField(model_attr='name')
+    creator = indexes.CharField(model_attr='creator')
+
+    def get_model(self):
+        return Level
+
+    def index_queryset(self, using=None):
+        return self.get_model().objects.all()
