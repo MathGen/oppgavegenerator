@@ -9,14 +9,16 @@ $(document).ready(function () {
         var chapter_id = $(this).attr('id').match(/\d+/);
         load_levels(chapter_id);
     });
-
+    // Load a task from the specific level
     $(document).on('click', '.btn_level', function(e){
         e.preventDefault();
+        var level_title = $(this).find('.level_title').text();
+        $('#level_title').text(" - " + level_title);
         var level_id = $(this).attr('id').match(/\d+/);
         current_level = level_id;
         load_template(level_id);
     });
-
+    // Go back to main-page (chapter-picker)
     $('.btn_game_back').click(function(e){
         e.preventDefault();
         load_chapters();
@@ -27,6 +29,7 @@ function load_chapters(){
     var set_id = $('#set_id').text();
     $('#game_nav').hide();
     $('#chapter_title').text("");
+    $('#level_title').text("");
     $('#game_content').fadeOut('fast', function(){
         $(this).load('../' + set_id + '/chapters/', function () {
             lock_game_contents();
