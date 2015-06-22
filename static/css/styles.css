@@ -69,7 +69,7 @@ sub{							/* between bootstrap*/
 .s_input_field{
 	margin-top: 15px;
 }
-.mq-math-mode:not(.mq-editable-field):not(.input_mathquill){
+.mq-math-mode:not(.mq-editable-field):not(.input_mathquill):not(.output_mathquill){
 	height: 34px;
 	width: 34px;
 }
