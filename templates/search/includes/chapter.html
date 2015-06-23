@@ -1,0 +1,9 @@
+{# SET SEARCH RESULT #}
+<div class="chapter_result">
+    {{ result.object.name|capfirst }}, kapittel laget av {{ result.object.creator|capfirst }}.
+    {% if result.object.id in user.extendeduser.current_set_chapter_ids %}
+    Fjern fra "{{ user.extendeduser.current_set.name }}"
+        {% else %}
+    Legg til "{{ user.extendeduser.current_set.name }}"
+    {% endif %}
+</div>

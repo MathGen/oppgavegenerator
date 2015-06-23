@@ -8,13 +8,12 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from oppgavegen.views import *
 from oppgavegen.forms import *
+from oppgavegen.views import SetSearch#, ChapterSearch, LevelSearch, SetsSearchView
 from haystack.forms import SearchForm
 import datetime
 from haystack.query import SearchQuerySet, RelatedSearchQuerySet
 from haystack.views import SearchView
 from django.views.generic import ListView
-
-#sqs =
 
 urlpatterns = patterns('',
     url(r'^$', 'oppgavegen.views.index', name='home'),
@@ -50,17 +49,31 @@ urlpatterns = patterns('',
     url(r'^level/(\d+)/templates/$', LevelsTemplatesListView.as_view(), name='templates_by_level'),
 
     # Messy haystack search urls. Should maybe put these in own file and import here.
-    url(r'^search/', include('haystack.urls')),
+    # Search all content
+    url(r'^search/$', include('haystack.urls')),
+    # Search templates
     url(r'^templates/search/$', SearchView(
         template='search/template_search.html',
         searchqueryset=SearchQuerySet().models(Template),
         form_class=TemplateSearchForm
     ), name='template_search'),
-    url(r'^sets/search/$', SearchView(
-        template='search/template_search.html',
-        searchqueryset=SearchQuerySet().models(Set),
-        form_class=TemplateSearchForm
-    ), name='template_search'),
+    # Search in sets, chapters or levels
+
+    #url(r'^sets/search/$', SetSearch(
+        #template='search/search.html',
+    #    searchqueryset=SearchQuerySet().models(Set),
+    #    form_class=SetsSearchForm
+    #), name='set_search'),
+    # url(r'^chapters/search/$', SearchView(
+    #     #template='search/search.html',
+    #     searchqueryset=SearchQuerySet().models(Chapter),
+    #     form_class=SetsSearchForm
+    # ), name='chapter_search'),
+    # url(r'^levels/search/$', LevelSearch(
+    #     #template='search/search.html',
+    #     searchqueryset=SearchQuerySet().models(Level),
+    #     form_class=SetsSearchForm,
+    # ), name='level_search'),
 
 
 

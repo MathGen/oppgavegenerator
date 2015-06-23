@@ -8,10 +8,11 @@
     <ul>
         {% for set in object_list %}
             <li>
+                {{ set.name|capfirst }} -
                 <a href="{% url 'chapters_by_set' set.id %}">
-                    {{ set.name }}
-                </a> -
-                {{ set.chapters.all.count }} kapitler</li>
+                    {{ set.chapters.all.count }} kapitler
+                </a>
+            </li>
         {% empty %}
             <li>Du har ingen oppgavesett enda.</li>
         {% endfor %}

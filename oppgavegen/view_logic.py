@@ -5,7 +5,7 @@ Defines reusable functions often called from views.py
 """
 
 
-from oppgavegen.models import Template, Topic, UserLevelProgress, Level
+from oppgavegen.models import Template, Topic, UserLevelProgress, Level, Tag
 from oppgavegen import generation
 from datetime import datetime
 from django.contrib.auth.models import User
@@ -90,6 +90,7 @@ def make_answer_context_dict(form_values):
 
 def submit_template(template, user, update):
     """Submits or updates a template to the database (depending on if update is true or not)"""
+    #taglist = validate_tags(template.tags)
     if update:
         q = Template.objects.get(pk=template.pk)
         template.rating = q.rating
@@ -99,7 +100,7 @@ def submit_template(template, user, update):
         template.times_solved = q.times_solved
         template.creation_date = q.creation_date
         template.creator = q.creator
-        template.tags = q.tags.all()
+        #template.tags = q.tags.all()
         template.name = q.name
         template.difficulty = q.difficulty
     else:
@@ -243,3 +244,14 @@ def calculate_progress(user, chapter):
         counter += 1
 
     return counter
+
+def validate_tags(tags):
+    # template = Template.objects.get(pk=template_id)
+    taglist = []
+    for e in tags:
+        if e in Tag.objects.all():
+            taglist.append(e)
+        else:
+            tag = Tag.objects.new(name=e)
+            taglist.append(tag)
+    return taglist
