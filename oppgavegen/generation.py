@@ -13,6 +13,7 @@ from oppgavegen.latex_translator import latex_to_sympy
 from .models import Template, Level, UserLevelProgress
 from django.contrib.auth.models import User
 from oppgavegen.decorators import Debugger
+from collections import OrderedDict
 
 
 @Debugger
@@ -87,6 +88,8 @@ def generate_task(user, template_extra, desired_type=''):
         new_task = replace_variables_from_array(variables_used.split('§'), new_task)
         new_task = parse_solution(new_task, q.random_domain)
         template_specific = fill_in_dict['hole_positions']
+        print('this')
+        print(template_specific)
     elif template_type == 'multifill':
         new_choices = choices + '§' + answer.replace('§', 'og')
         template_specific = multifill(new_choices, variable_dict)
@@ -103,6 +106,7 @@ def generate_task(user, template_extra, desired_type=''):
     return_dict = {'question': new_task, 'variable_dictionary': variables_used, 'template_type': template_type,
                    'template_specific': template_specific, 'primary_key': primary_key,
                    'number_of_answers': number_of_answers, 'replacing_words': replacing_words}
+    print('u woot m8')
     return return_dict
 
 
@@ -119,7 +123,6 @@ def generate_level(user, level_id):
     get_question_dict = get_level_question(user, level)  # Gets a template from the DB
     q = get_question_dict['template']
     desired_type = get_question_dict['type']
-    print('6: ' + desired_type)
     # The domain of random numbers that can be generated for the question
     random_domain_list = q.random_domain.split('§')
     task = str(q.question_text)
@@ -578,6 +581,7 @@ def fill_in_the_blanks(fill_in):
     hole_dict = find_holes(fill_in)
     make_holes_dict = make_holes(hole_dict, fill_in)
     hole_positions = list(hole_dict.keys())
+    hole_positions.sort(reverse=True)
     hole_positions = array_to_string(hole_positions)
     fill_in = make_holes_dict['fill_in']
     return_dict = {'fill_in': fill_in, 'hole_positions': hole_positions}

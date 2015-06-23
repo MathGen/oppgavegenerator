@@ -101,6 +101,7 @@ def submit_template(template, user, update):
         template.creator = q.creator
         template.tags = q.tags.all()
         template.name = q.name
+        template.difficulty = q.difficulty
     else:
         template.rating = 1200
         template.fill_rating = 1150
