@@ -688,7 +688,7 @@ function submit_template(){
 		tmp_solution.push(convert_variables(get_latex_from_mathfield('#s_input_mathquill_' + i)));
 		tmp_solution_latex.push(get_latex_from_mathfield('#s_input_mathquill_' + i));
 	}
-	form_submit['solution'] = tmp_solution.join('\\n');
+	form_submit['solution'] = tmp_solution.join('§');
 	form_submit['solution_latex'] = tmp_solution_latex.join('§');
 
 	// ANSWER
