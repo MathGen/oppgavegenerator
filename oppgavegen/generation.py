@@ -585,6 +585,8 @@ def get_values_from_position(position_string, solution):
     for s in position_array:
         positions = s.split()
         values += '§' + (solution[int(positions[0]):int(positions[1])])
+    print('values after values are gotten from position')
+    print(values)
     return values[1:]
 
 

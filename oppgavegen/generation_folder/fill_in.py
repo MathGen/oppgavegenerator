@@ -1,5 +1,4 @@
 from oppgavegen.decorators import Debugger
-from oppgavegen.generation import array_to_string
 
 @Debugger
 def fill_in_the_blanks(fill_in):
@@ -69,3 +68,11 @@ def make_holes(hole_dict, fill_in):
     fill_in = fill_in.replace('@xxxx@', '')
     return_dict = {'fill_in': fill_in, 'holes_replaced': holes_to_replace}
     return return_dict
+
+@Debugger
+def array_to_string(array):
+    """Turns a array into a string separated by §."""
+    string = ''
+    for s in array:
+        string += '§' + s
+    return string[1:]  # Use [1:] to remove unnecessary § from the start
