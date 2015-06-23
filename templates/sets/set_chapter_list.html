@@ -2,7 +2,7 @@
 {% extends 'sets/setbase.html' %}
 
 {% block panels %}
-    <h1>Kapitler i oppgavesettet "{{ set.name|title }}"</h1>
+    <h1>Kapitler i oppgavesettet "{{ set.name|capfirst }}"</h1>
 
     {% if user == set.creator %}
 
@@ -16,9 +16,12 @@
 
     <ul>
         {% for chapter in object_list %}
-            <a href="{% url 'levels_by_chapter' chapter.id %}">
-            <li>{{ chapter.name }}</a>
-            - {{ chapter.levels.all.count }} tema</li>
+
+            <li>{{ chapter.name }} -
+                <a href="{% url 'levels_by_chapter' chapter.id %}">
+                    {{ chapter.levels.all.count }} tema
+                </a>
+            </li>
         {% empty %}
             <li>Ingen kapitler i settet enda.</li>
         {% endfor %}

@@ -1,0 +1,19 @@
+<div class="template_result">
+    {{ result.object.name|title }} - {{ result.object.rating }} -
+    {% ifequal result.creator user.username %}
+        Laget av: Deg!
+    {% else %}
+        Laget av: {{ result.object.creator }}
+    {% endifequal %}
+
+    - Multiple: {{ result.object.multiple_support }} - FillIn: {{ result.object.fill_in_support }} -
+
+    {% if result.object.id in user.extendeduser.current_level_template_ids %}
+        <a href="{% url 'current_level_remove' result.object.id %}">Fjern fra
+            "{{ user.extendeduser.current_level.name }}"</a>
+    {% else %}
+        <a href="{% url 'current_level_add' result.object.id %}">Legg til i
+            "{{ user.extendeduser.current_level.name }}"</a>
+    {% endif %}
+
+</div>

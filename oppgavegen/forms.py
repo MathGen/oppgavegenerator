@@ -3,8 +3,8 @@
 Contains various forms that are used in views
 
 """
-from .models import Set, Chapter, Level, Template, User, ExtendedUser
-from django.forms import ModelForm
+from .models import Set, Chapter, Level, Template, User, ExtendedUser, Tag
+from django.forms import ModelForm, Textarea
 from django.forms.models import BaseModelFormSet
 from django.forms.formsets import formset_factory, BaseFormSet
 from django.forms import forms
@@ -12,6 +12,19 @@ from django import forms
 from haystack.forms import SearchForm, ModelSearchForm, FacetedSearchForm
 from selectable.forms import AutoCompleteWidget, AutoCompleteSelectMultipleWidget
 from .lookups import TemplateLookup
+
+class TagField(forms.Field):
+
+    def prepare_value(self, value):
+        value = value.split('§')
+        tag_obj = ['',]
+        for e in value:
+            if e in Tag.objects.all():
+                tag_obj.append(e)
+            else:
+                tag = Tag.objects.new(name=e)
+                tag_obj.append(tag)
+        return tag_obj
 
 
 class TemplateSearchForm(SearchForm):
@@ -57,13 +70,15 @@ class TemplateSearchForm(SearchForm):
 
         return sqs
 
-class SetSearchForm(SearchForm):
+class SetsSearchForm(SearchForm):
+    """ Generic search form for Set, Chapter and Level """
+
     name = forms.CharField(required=False)
     creator = forms.CharField(required=False)
 
     def search(self):
         # First, store the SearchQuerySet received from other processing.
-        sqs = super(TemplateSearchForm, self).search()
+        sqs = super(SetsSearchForm, self).search()
 
         if not self.is_valid():
             return self.no_query_found()
@@ -138,6 +153,8 @@ class QuestionForm(forms.Form):
         return cd
 
 class TemplateForm(ModelForm):
+    tags = TagField()
+
     class Meta:
         model = Template
         fields = '__all__'
@@ -146,6 +163,7 @@ class TemplateForm(ModelForm):
             """Returns a cleaned dictionary of it's own values."""
             cd = {self.cleaned_data['question'], self.cleaned_data['answer']}
             return cd
+
 
 class UserCurrentSetsForm(ModelForm):
     class Meta:

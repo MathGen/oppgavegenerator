@@ -2,7 +2,7 @@
 {% extends 'sets/setbase.html' %}
 
 {% block panels %}
-    <h1>Tema i kapittel "{{ chapter.name|title }}"</h1>
+    <h1>Tema i kapittel "{{ chapter.name|capfirst }}"</h1>
     {% if user == chapter.creator %}
         <a href="{% url 'level_create' %}">
             Legg til tema
@@ -10,11 +10,16 @@
     {% else %}
         Dette kapittelet er laget av {{ chapter.creator }}.
     {% endif %}
+
+
     <ul>
         {% for level in object_list %}
-            <a href="{% url 'templates_by_level' level.id %}">
-            <li>{{ level.name }}</a> -
-            {{ level.templates.all.count }} oppgaver</li>
+
+            <li>{{ level.name }} -
+                <a href="{% url 'templates_by_level' level.id %}">
+                    {{ level.templates.all.count }} oppgaver
+                </a>
+            </li>
         {% empty %}
             <li>Ingen tema i settet enda.</li>
         {% endfor %}

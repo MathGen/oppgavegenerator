@@ -27,7 +27,7 @@
 						<!--MENU ITEMS-->
                         {% if user|is_teacher %}
                             <li>
-                                <a href="{% url 'edit_current_user_sets' %}?next={{ request.path }}">
+                                <a href="{% url 'edit_current_user_sets' %}?next={{ request.get_full_path }}">
                                     {{ user.extendeduser.current_set.name }} >
                                     {{ user.extendeduser.current_chapter.name }} >
                                     {{ user.extendeduser.current_level.name }}

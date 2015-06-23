@@ -21,7 +21,8 @@ from django.views.decorators.cache import cache_control
 from oppgavegen.models import Set, Chapter, Level, Template
 
 # Search Views and Forms
-from .forms import QuestionForm, TemplateForm, SetForm, LevelCreateForm, ChapterNameForm, UserCurrentSetsForm
+from haystack.generic_views import SearchView
+from .forms import QuestionForm, TemplateForm, SetForm, LevelCreateForm, ChapterNameForm, UserCurrentSetsForm, SetsSearchForm
 from django.forms.formsets import formset_factory
 from django import http
 from django.forms.models import modelformset_factory, inlineformset_factory
@@ -104,6 +105,7 @@ def submit(request):
         form = TemplateForm(request.POST)
         if form.is_valid():
             template = form.save(commit=False)
+            template.difficulty = 1
             if request.REQUEST['pk'] != '':  # Can this be written as v = req != ''?
                 template.pk = request.REQUEST['pk']  # Workaround, template doesn't automatically get template.pk
                 update = True
@@ -244,7 +246,21 @@ def get_template(request, level_id):
     return render_to_response('game/template.html', context_dict, context)
 
 
-### SET, CHAPTER, LEVEL FORM VIEWS ###
+### SET, CHAPTER, LEVEL MANAGEMENT VIEWS ###
+
+class SetsSearchView(SearchView):
+    """ Search view for all set-type content """
+
+    template_name = 'search/search.html'
+    form_class = SetsSearchForm
+
+    def get_queryset(self):
+        queryset = super(SetsSearchView, self).get_queryset()
+        return queryset
+
+class SetSearch(SetsSearchView):
+    title = 'set'
+    extra_content = {'title':title }
 
 def level_add_template(request, level_id, template_id):
     """Add a template fo a specified level"""
@@ -446,4 +462,5 @@ class UserCurrentSetsEdit(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         success_url = self.request.GET.get('next', '')
+        #success_url = self.request.get_full_path()
         return success_url
