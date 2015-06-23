@@ -69,6 +69,11 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
+# Real-time indexing of new database objects. This might cause Whoosh! to crash under heavy load.
+# http://django-haystack.readthedocs.org/en/v2.4.0/debugging.html#lockerror-errno-17-file-exists-path-to-whoosh-index-main-lock
+# Consider using Solr-backend if problems occur.
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 

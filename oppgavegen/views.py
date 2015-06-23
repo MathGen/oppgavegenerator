@@ -7,6 +7,7 @@ Defines views, and renders data to html templates.
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.template import RequestContext
 from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
+from django.http import HttpResponseForbidden
 from django.http import JsonResponse
 from django.shortcuts import render
 from oppgavegen.tables import *
@@ -212,19 +213,24 @@ def game(request, set_id):
 
 
 def chapters(request, set_id):
-    game_set = Set.objects.get(pk=set_id)
-    set_chapters = game_set.chapters.all()
-    set_title = game_set.name
-    context = RequestContext(request)
-    return render_to_response('game/chapters.html', {'chapters': set_chapters}, context)
+    if request.is_ajax():
+        game_set = Set.objects.get(pk=set_id)
+        set_chapters = game_set.chapters.all()
+        context = RequestContext(request)
+        return render_to_response('game/chapters.html', {'chapters': set_chapters}, context)
+    else:
+        return HttpResponseForbidden()
 
 
 def levels(request, chapter_id):
-    game_chapter = Chapter.objects.get(pk=chapter_id)
-    chapter_levels = game_chapter.levels.all()
-    chapter_title = game_chapter.name
-    context = RequestContext(request)
-    return render_to_response('game/levels.html', {'levels': chapter_levels, 'chapter_title': chapter_title}, context)
+    if request.is_ajax():
+        game_chapter = Chapter.objects.get(pk=chapter_id)
+        chapter_levels = game_chapter.levels.all()
+        chapter_title = game_chapter.name
+        context = RequestContext(request)
+        return render_to_response('game/levels.html', {'levels': chapter_levels, 'chapter_title': chapter_title}, context)
+    else:
+        return HttpResponseForbidden()
 
 @login_required
 def get_template(request, level_id):

@@ -1693,6 +1693,7 @@ function insert_editable_data(){
 		refresh_fill_in_content();
 	}
 	VAR_INIT = false;
+	redraw_mathquill_elements();
 }
 
 /**

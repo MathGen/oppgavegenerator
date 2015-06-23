@@ -90,6 +90,7 @@ class Level(models.Model):
     name = models.CharField(max_length=200)  # Name of the topic.
     templates = models.ManyToManyField(Template, related_name='levels',blank=True) # List of templates in level
     creator = models.ForeignKey(User, blank=True, null=True)
+    creation_date = models.DateTimeField('date created', blank=True, null=True)  # Date and time of creation
 
     def __str__(self):  # return self.name instead of level-object
         """Returns the level name"""
@@ -100,6 +101,7 @@ class Chapter(models.Model):
     name = models.CharField(max_length=200)  # Name of the topic.
     levels = models.ManyToManyField(Level, related_name='chapters', blank=True)
     creator = models.ForeignKey(User, blank=True, null=True)
+    creation_date = models.DateTimeField('date created', blank=True, null=True)  # Date and time of creation
     level_order = models.CharField(max_length=400, default='') #CSV list of the order of levels.
 
     def __str__(self):  # Makes it so that self.name shows up instead of set(object)
@@ -111,6 +113,7 @@ class Set(models.Model):
     name = models.CharField(max_length=200)  # Name of the topic.
     chapters = models.ManyToManyField(Chapter, related_name='sets', blank=True)
     creator = models.ForeignKey(User, blank=True, null=True)
+    creation_date = models.DateTimeField('date created', blank=True, null=True)  # Date and time of creation
     chapter_order = models.CharField(max_length=400, default='')
 
     def __str__(self):  # Makes it so that self.name shows up instead of set(object)
@@ -150,6 +153,22 @@ class ExtendedUser(models.Model):
         ids = []
         templates = self.current_level.templates.all()
         for e in templates:
+            ids.append(e.id)
+        return ids
+
+    def current_chapter_level_ids(self):
+        """ Return list of level id's in users current chapter for simple comparisons with search results """
+        ids = []
+        levels = self.current_chapter.levels.all()
+        for e in levels:
+            ids.append(e.id)
+        return ids
+
+    def current_set_chapter_ids(self):
+        """ Return list of chapter id's in users current set for simple comparisons with search results """
+        ids = []
+        chapters = self.current_chapter.levels.all()
+        for e in chapters:
             ids.append(e.id)
         return ids
 
