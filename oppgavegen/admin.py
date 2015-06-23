@@ -47,7 +47,7 @@ class UserLevelProgressAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'level')
 
 class OffsetAdmin(admin.ModelAdmin):
-    list_display = ('id', 'offset', 'difficulty')
+    list_display = ('id', 'offset', 'difficulty_number')
 
 
 admin.site.unregister(User)
