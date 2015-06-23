@@ -586,6 +586,23 @@ $(document).ready(function() {
 		MathQuill.MathField($(C_INPUT)[0]).focus();
 	});
 
+	// Adding new tag from the value in the input-field.
+	$('#tags').find('input').on('focusout', function(){ //TODO: implement tags
+		var tag = $(this).val().replace(/[^a-zA-Z0-9\+\-\.#ÆØÅæøåA]/g,''); // Allowed characters
+		if(tag){
+			$(this).before('<span class="tag">'+ tag.toLowerCase() +'<a class="btn btn_tag_del">x</a></span>');
+		}
+		$(this).val("");
+	}).on('keyup', function(e){
+		if(/(188|13)/.test(e.which)) $(this).focusout(); // Add tag if one of these keys are pressed.
+	});
+
+	// Delete a tag
+	$(document).on('click', '.btn_tag_del', function(e){
+		e.preventDefault();
+		$(this).parent().remove();
+	});
+
 	// Retrieve and insert calculation to solution TODO: improve
 	$('#c_btn_ok').click(function(e){
 		e.preventDefault();
@@ -772,6 +789,13 @@ function submit_template(){
 		variables.push(VARIABLES[vars]);
 	}
 	form_submit['used_variables'] = variables.join(' ');
+
+	// TAGS
+	var tags = [];
+	$('.tag').each(function(){
+		tags.push($(this).text().slice(0,-1));
+	});
+	form_submit['tags'] = tags.join('§');
 
 	// CSRF_TOKEN
 	form_submit["csrfmiddlewaretoken"] = getCookie('csrftoken');
