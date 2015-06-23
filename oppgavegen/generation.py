@@ -85,12 +85,9 @@ def generate_task(user, template_extra, desired_type=''):
         fill_in_dict = fill_in_the_blanks(fill_in)
         # new_task = new_task + '\n' + fill_in_dict['fill_in'].replace('\\n', '\n')
         new_task = new_task + '§' + fill_in_dict['fill_in']
-        print(fill_in_dict)
         new_task = replace_variables_from_array(variables_used.split('§'), new_task)
         new_task = parse_solution(new_task, q.random_domain)
         template_specific = fill_in_dict['hole_positions']
-        print('this')
-        print(template_specific)
     elif template_type == 'multifill':
         new_choices = choices + '§' + answer.replace('§', 'og')
         template_specific = multifill(new_choices, variable_dict)
@@ -107,7 +104,6 @@ def generate_task(user, template_extra, desired_type=''):
     return_dict = {'question': new_task, 'variable_dictionary': variables_used, 'template_type': template_type,
                    'template_specific': template_specific, 'primary_key': primary_key,
                    'number_of_answers': number_of_answers, 'replacing_words': replacing_words}
-    print('u woot m8')
     return return_dict
 
 
@@ -168,7 +164,6 @@ def generate_level(user, level_id):
         fill_in_dict = fill_in_the_blanks(fill_in)
         # new_task = new_task + '\n' + fill_in_dict['fill_in'].replace('\\n', '\n')
         new_task = new_task + '§' + fill_in_dict['fill_in']
-        print(fill_in_dict)
         new_task = replace_variables_from_array(variables_used.split('§'), new_task)
         new_task = parse_solution(new_task, q.random_domain)
         template_specific = fill_in_dict['hole_positions']
@@ -238,7 +233,6 @@ def parse_solution(solution, domain):
         new_arr.append(calculate_answer(str((arr[x])), domain))
         r = '@?' + arr[x] + '?@'
         new_solution = new_solution.replace(r, new_arr[x])
-    print(new_solution)
     return new_solution
 
 

@@ -54,10 +54,6 @@ def make_answer_context_dict(form_values):
     if template_type != 'blanks':
         answer = generation.replace_variables_from_array(variable_dictionary, q.answer.replace('\\\\', '\\'))
     else:
-        print('This is Sparta?')
-        print(template_specific)
-        print('*kick*')
-        print('doubrekicku')
         answer = generation.get_values_from_position(template_specific, q.solution.replace('\\\\', '\\'))
         answer = generation.replace_variables_from_array(variable_dictionary, answer)
 
@@ -168,12 +164,10 @@ def change_elo(template, user, user_won, type):
 @Debugger
 def change_level_rating(template, user, user_won, type, level_id):
     """Changes the elo of both user and task depending on who won."""
-    print(1)
     u = User.objects.get(username=user.username)
     level = Level.objects.get(pk=level_id)
     user_progress = UserLevelProgress.objects.get(user=u, level=level)
     user_rating = user_progress.level_rating
-    print(2)
     # Formula for elo: Rx = Rx(old) + prefactor *(W-Ex) where W=1 if wins and W=0 if x loses
     # and Ex is the expected probability that x will win.
     # Ea = (1+10^((Rb-Ra)/400))^-1
