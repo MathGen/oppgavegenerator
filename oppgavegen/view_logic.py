@@ -54,6 +54,10 @@ def make_answer_context_dict(form_values):
     if template_type != 'blanks':
         answer = generation.replace_variables_from_array(variable_dictionary, q.answer.replace('\\\\', '\\'))
     else:
+        print('This is Sparta?')
+        print(template_specific)
+        print('*kick*')
+        print('doubrekicku')
         answer = generation.get_values_from_position(template_specific, q.solution.replace('\\\\', '\\'))
         answer = generation.replace_variables_from_array(variable_dictionary, answer)
 
@@ -181,7 +185,6 @@ def change_level_rating(template, user, user_won, type, level_id):
         template_rating = template.choice_rating
     else:
         template_rating = template.rating
-
 
     expected_user = (1+10**((template_rating-user_rating)/400))**(-1)
     expected_template = (1+10**((template_rating-user_rating)/400))**(-1)

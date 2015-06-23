@@ -688,7 +688,7 @@ function submit_template(){
 		tmp_solution.push(convert_variables(get_latex_from_mathfield('#s_input_mathquill_' + i)));
 		tmp_solution_latex.push(get_latex_from_mathfield('#s_input_mathquill_' + i));
 	}
-	form_submit['solution'] = tmp_solution.join('\\n');
+	form_submit['solution'] = tmp_solution.join('§');
 	form_submit['solution_latex'] = tmp_solution_latex.join('§');
 
 	// ANSWER
@@ -880,116 +880,115 @@ function convert_variables(latex){
 						'Q' : dict_calc[16],'R' : dict_calc[17],'S' : dict_calc[18],'T' : dict_calc[19],'U' : dict_calc[20], 'V' : dict_calc[21]};
 	var la2 = '';
 	// Iteration for adding required {} to single exponents and subscripts.
-
 	for(var j = 0; j < la.length; j++){
 		if(la[j] == '^' || la[j] == '_'){
 			if(la[j+1] != '{' && la[j+1] != '@'){
 				la = la.substring(0, j+1) + '{' + la[j+1] + '}' + la.substring(j+2, la.length);
 			} // Workaround for fill in. this fixes x^2 -> x^{@}xxxx@ to x^{@xxxx@}.
-			else if(la[j+1] == '@' && la[j+2] == 'x' && la[j+8] == '7') {  //find the opening @xxxx@, insert { before.
-				la = la.substring(0, j+1) + '{' + la.substring(j+1, la.length);
-				for(var jj = j; jj < la.length; jj++){ //find the closing @xxxx@ and insert a } after.
-					if(la[jj+1] == '}' && la[jj+2] == '@' && la[jj+3] == 'x') {
-						la = la.substring(0, jj+8) + '}' + la.substring(jj+8, la.length);
-						break;
-					}
-				}
+			else if(la[j+1] == '@' && la[j+2] == 'x' && la[j+8] == '@') {  //find the opening @xxxx@, insert { before.
+				la = la.substring(0, j+1) + '{' + la.substring(j+1, j+14) + '}'+ la.substring(j+14, la.length);
 			}
 		}
 	}
 	// Iteration for converting variables to computable values, and fixing conflicts with latex-commands.
 	for(var i = 0; i < la.length; i++) {
-		if (la[i] == '\\') {
-			if ((la[i + 1] == 't' && la[i + 2] == 'e' && la[i + 3] == 'x' && la[i + 4] == 't') ||
-				(la[i + 1] == 'b' && la[i + 2] == 'e' && la[i + 3] == 'g' && la[i + 4] == 'i' && la[i + 5] == 'n') ||
-				(la[i + 1] == 'e' && la[i + 2] == 'n' && la[i + 3] == 'd')) { //FIXME: some variables is not converted inside the matrix.
-				while (true) {
-					if (la[i] == '}' && counter == 0) {
-						break
-					}
-					if (la[i] == '{') {
-						counter++;
-					}
-					else if (la[i + 1] == '}') {
-						counter--;
-					}
-					la2 += la[i];
-					i++;
-				}
-			}
-			else if (la[i+1] == '\\'){
-				la2 += '\\\\';
-				i++;
-				continue
-			}
-			else if (la[i + 1] == 'l' && la[i + 2] == 'e' && la[i + 3] == 'f' && la[i + 4] == 't') {
-				la2 += '\\left';
-				i += 5;
-			}
-			else if (la[i + 1] == 'r' && la[i + 2] == 'i' && la[i + 3] == 'g' && la[i + 4] == 'h' && la[i + 5] == 't') {
-				la2 += '\\right';
-				i += 6;
-			}
-			else if (la[i + 1] == 'c' && la[i + 2] == 'd' && la[i + 3] == 'o' && la[i + 4] == 't') {
-				la2 += '\\cdot ';
-				i += 5;
-			}
-			else if (la[i + 1] == 'n') {
-				la2 += '\\n';
-				i++;
-				continue
-			}
-			else {
-				// Iterating through the string after backslash '\' for inserting LaTeX-text that is not meant to
-				// be parsed as computable values. Checking for 'undefined' at the end of line if the LaTeX-command
-				// is the last thing in the string to prevent an endless loop.
-				// 		- alternative: add a whitespace at the end of string.
-				while (la[i] != '{' && la[i] != ' ' && la[i] != '_' && la[i] != '^' && la[i] != undefined) {
-					la2 += la[i];
-					i++;
-					if (la[i] == '\\' ) {
-						break
+		try {
+			if (la[i] == '\\') {
+				if ((la[i + 1] == 't' && la[i + 2] == 'e' && la[i + 3] == 'x' && la[i + 4] == 't') ||
+					(la[i + 1] == 'b' && la[i + 2] == 'e' && la[i + 3] == 'g' && la[i + 4] == 'i' && la[i + 5] == 'n') ||
+					(la[i + 1] == 'e' && la[i + 2] == 'n' && la[i + 3] == 'd')) { //FIXME: some variables is not converted inside the matrix.
+					while (true) {
+						if (la[i] == '}' && counter == 0) {
+							break
+						}
+						if (la[i] == '{') {
+							counter++;
+						}
+						else if (la[i + 1] == '}') {
+							counter--;
+						}
+						la2 += la[i];
+						i++;
 					}
 				}
-				if(la[i] == '\\' || la[i] == undefined){
-					i--;
+				else if (la[i + 1] == '\\') {
+					la2 += '\\\\';
+					i++;
 					continue
 				}
-			}
-		}
-		if(la[i] in dict_letters && (VARIABLES[parseInt(dict_letters[la[i]].replace(/R/g, ''))] || la[i].match(/^[A-Z]*$/))){
-			if((la[i-1] in dict_letters || la[i-1] == ')' || !isNaN(la[i-1])) && la[i-2] != '\^' && la[i-2] != '\\'){
-				if(la[i-1] != ' ' && la[i-2] != 't' && la[i-3] != 'o' && la[i-4] != 'd' && la[i-5] != 'c'){
-					la2 += '\\cdot ' + dict_letters[la[i]];
+				else if (la[i + 1] == 'l' && la[i + 2] == 'e' && la[i + 3] == 'f' && la[i + 4] == 't') {
+					la2 += '\\left';
+					i += 5;
 				}
-				else{
-					la2 += dict_letters[la[i]];
+				else if (la[i + 1] == 'r' && la[i + 2] == 'i' && la[i + 3] == 'g' && la[i + 4] == 'h' && la[i + 5] == 't') {
+					la2 += '\\right';
+					i += 6;
+				}
+				else if (la[i + 1] == 'c' && la[i + 2] == 'd' && la[i + 3] == 'o' && la[i + 4] == 't') {
+					la2 += '\\cdot ';
+					i += 5;
+				}
+				else if (la[i + 1] == 'n') {
+					la2 += '\\n';
+					i++;
+					continue
+				}
+				else {
+					// Iterating through the string after backslash '\' for inserting LaTeX-text that is not meant to
+					// be parsed as computable values. Checking for 'undefined' at the end of line if the LaTeX-command
+					// is the last thing in the string to prevent an endless loop.
+					// 		- alternative: add a whitespace at the end of string.
+					while (la[i] != '{' && la[i] != ' ' && la[i] != '_' && la[i] != '^' && la[i] != undefined) {
+						la2 += la[i];
+						i++;
+						if (la[i] == '\\') {
+							break
+						}
+					}
+					if (la[i] == '\\' || la[i] == undefined) {
+						i--;
+						continue
+					}
 				}
 			}
-			else{
-				if(la[i-1] == '\@' && la[i-2] == 'x' && la[i-3] == 'x' && la[i-4] == 'x' && la[i-5] == 'x' && la[i-6] == '\@'){
-					if((la[i-7] in dict_letters || la[i-7] == ')' || !isNaN(la[i-7])) && la[i-8] != '\^' && la[i-8] != '\\'){
+			if (la[i] in dict_letters && (VARIABLES[parseInt(dict_letters[la[i]].replace(/R/g, ''))] || la[i].match(/^[A-Z]*$/))) {
+				if ((la[i - 1] in dict_letters || la[i - 1] == ')' || !isNaN(la[i - 1])) && la[i - 2] != '\^' && la[i - 2] != '\\') {
+					if (la[i - 1] != ' ' && la[i - 2] != 't' && la[i - 3] != 'o' && la[i - 4] != 'd' && la[i - 5] != 'c') {
 						la2 += '\\cdot ' + dict_letters[la[i]];
 					}
-					else{
+					else {
 						la2 += dict_letters[la[i]];
 					}
 				}
-				else if(la[i-1] == '\\' && la[i-2] == '\\'){
-					la2 += '\\' + dict_letters[la[i]]; //FIXME: matrix, problem with variables after '\\'
-				}
-				else{
-					if(la[i-1] != '\\'){
-						la2 += dict_letters[la[i]];
+				else {
+					if (la[i - 1] == '\@' && la[i - 2] == 'x' && la[i - 3] == 'x' && la[i - 4] == 'x' && la[i - 5] == 'x' && la[i - 6] == '\@') {
+						if ((la[i - 7] in dict_letters || la[i - 7] == ')' || !isNaN(la[i - 7])) && la[i - 8] != '\^' && la[i - 8] != '\\') {
+							la2 += '\\cdot ' + dict_letters[la[i]];
+						}
+						else {
+							la2 += dict_letters[la[i]];
+						}
+					}
+					else if (la[i - 1] == '\\' && la[i - 2] == '\\') { //Quick-Fix to solve the LaTeX parsing error with Matrices.
+						la2 += '\\' + dict_letters[la[i]];		 //Adding additional '\' in the LaTeX string.
+					}
+					else {
+						if (la[i - 1] != '\\') {
+							la2 += dict_letters[la[i]];
+						}
 					}
 				}
+				if (la[i + 1] == '(') {
+					la2 += '\\cdot ';
+				}
 			}
-			if(la[i+1] == '('){
-				la2 += '\\cdot ';
+			else {
+				la2 += la[i];
 			}
-		}
-		else{
-			la2 += la[i];
+		} catch(e){
+			window.console.log(e);
+			window.console.log('LaTeX-string: ' + la);
+			window.console.log('Error at char-index '+i+': ' + la[i]);
 		}
 	}
 	la = la2;
