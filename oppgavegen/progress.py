@@ -28,12 +28,12 @@ def chapter_progress(user, set, medals, completed):
     :param completed: a list that holds how many levels are completed in the chapters
     :return: No return as the return is the lists getting changed.
     """
-    for i in set.chapter_order:
+    for i in set.chapter_order.split(','):
         level_star_count = 0
         levels_completed = 0
         level_counter = 0
         chapter = Chapter.objects.get(pk=i)
-        for level in chapter.levels:
+        for level in chapter.levels.all():
             level_counter += 1
             try:
                 q = UserLevelProgress.objects.get(user=user, level=level)

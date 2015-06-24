@@ -21,6 +21,7 @@ from oppgavegen.models import Set, Chapter, Level, Template
 from oppgavegen.rating import change_elo, change_level_rating, get_user_rating
 from oppgavegen.generation import generate_task, generate_level
 from oppgavegen.progress import calculate_progress, chapter_progress, get_stars_per_level
+import json
 
 # Search Views and Forms
 from haystack.generic_views import SearchView
@@ -225,7 +226,12 @@ def chapters(request, set_id):
         game_set = Set.objects.get(pk=set_id)
         set_chapters = game_set.chapters.all()
         context = RequestContext(request)
-        return render_to_response('game/chapters.html', {'chapters': set_chapters}, context)
+        medals = []
+        completed = []
+        chapter_progress(request.user, set_chapters, medals, completed)
+        return render_to_response('game/chapters.html',
+                                  {'chapters': set_chapters, 'medals': json.dumps(medals),
+                                   'completed': json.dumps(completed)}, context)
     else:
         return HttpResponseForbidden()
 
