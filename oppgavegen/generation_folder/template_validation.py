@@ -1,7 +1,6 @@
 from oppgavegen.latex_translator import latex_to_sympy
 from oppgavegen.models import Template
 from oppgavegen.decorators import Debugger
-from oppgavegen.generation_folder.calculate_parse_solution import parse_solution
 from oppgavegen.generation_folder.utility import remove_unnecessary, string_replace
 from oppgavegen.generation_folder.calculate_parse_solution import parse_solution, parse_answer
 from sympy import *
