@@ -107,18 +107,19 @@ def submit(request):
         message = 'Det har skjedd noe feil ved innsending av form'
         form = TemplateForm(request.POST)
         if form.is_valid():
+            newtags = form.cleaned_data['tags_list']
             template = form.save(commit=False)
             # newtags = template.tags_list
             # template.tags = newtags
             #template.fields['tags'] = form.cleaned_data['tags_list']
             #template.tags.add(templatetags)
-            template.difficulty = 1 # todo: remove this when implemented in GUI
+            template.difficulty = 1 # todo: remove this when implemented in GUI. Default value doesn't work somehow.
             if request.REQUEST['pk'] != '':  # Can this be written as v = req != ''?
                 template.pk = request.REQUEST['pk']  # Workaround, template doesn't automatically get template.pk
                 update = True
             else:
                 update = False
-            message = submit_template(template, request.user, update)
+            message = submit_template(template, request.user, update, newtags)
 
         else:
             print(form.errors)
@@ -228,7 +229,8 @@ def chapters(request, set_id):
         context = RequestContext(request)
         medals = []
         completed = []
-        chapter_progress(request.user, set_chapters, medals, completed)
+        chapter_progress(request.user, game_set, medals, completed)
+        print('before return')
         return render_to_response('game/chapters.html',
                                   {'chapters': set_chapters, 'medals': json.dumps(medals),
                                    'completed': json.dumps(completed)}, context)
