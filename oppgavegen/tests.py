@@ -144,7 +144,7 @@ class TemplateGenerationTest(TestCase):
     def test_fill_in_the_blanks(self):
         correct_dict = {'hole_positions': '30 33',
                         'fill_in': '\\text{Legger sammen slik} R0R+\\MathQuillMathField{}=@?(R0R+R1R)?@'}
-        test2 = "f'\left(x\\right)=\\frac{d}{dx}\left(R0Rx^{R1R}+R2Rx^@xxxx@1@xxxx@-R6R\\right)=@xxxx@R1R@xxxx@" \
+        test2 = "f'\left(x\\right)=\\frac{d}{dx}\left(R0Rx^{R1R}+R2Rx^{@xxxx@1@xxxx@}-R6R\\right)=@xxxx@R1R@xxxx@" \
                 "\cdot R0Rx^{R1R-@xxxx@1@xxxx@}+@xxxx@1@xxxx@\cdot R2Rx^{1-@xxxx@1@xxxx@}-@xxxx@0@xxxx@" \
                 "§f'\left(x\\right)=@xxxx@@?(R0R\cdot   R1R)?@@xxxx@x^@xxxx@{@?(R1R-1)?@}@xxxx@+@xxxx@R2R@xxxx@"
 

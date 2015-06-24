@@ -1,4 +1,5 @@
 from oppgavegen.decorators import Debugger
+from oppgavegen.human_sort import human_sort
 
 @Debugger
 def fill_in_the_blanks(fill_in):
@@ -31,14 +32,19 @@ def find_holes(fill_in):
                 counter -= 6  # Sets the counter back 6 to compensate for @xxxx@ which is not in the original string
                 start_point = counter+1
                 if counter < len(fill_in):
-                    if fill_in[counter] == '{' or fill_in[counter] == '(':  # This is to avoid a specific bug
+                    if fill_in[counter] == '{' or fill_in[counter] == '(':
+                        # This is to avoid a bug where } gets added, but not {
+                        # However it creates another bug where ^{@xxxx@1@xxxx@} -> {1 which is fixed later
                         start_point = counter
             elif not recorder:
                 end_point = counter-5
                 # Swapping
                 # Hole_dict[s[:-5]] = str(start_point) + ' ' + str(end_point-5)
-                print(start_point)
-                hole_dict[str(start_point) + ' ' + str(end_point)] = s[:-5]
+                dict_value = s[:-5]
+                if (end_point - start_point) == len(dict_value)+1:
+                    start_point = start_point + 1 # Fix for the {1 bug mentioned in a earlier comment.
+                dict_key = str(start_point) + ' ' + str(end_point)
+                hole_dict[dict_key] = dict_value
 
                 counter -= 6  # Sets the counter back 6 to compensate for @xxxx@ which is not in the original string
             s = ''
@@ -69,6 +75,7 @@ def make_holes(hole_dict, fill_in):
     return_dict = {'fill_in': fill_in, 'holes_replaced': holes_to_replace}
     return return_dict
 
+
 @Debugger
 def array_to_string(array):
     """Turns a array into a string separated by §."""
@@ -76,3 +83,16 @@ def array_to_string(array):
     for s in array:
         string += '§' + s
     return string[1:]  # Use [1:] to remove unnecessary § from the start
+
+@Debugger
+def get_values_from_position(position_string, solution):
+    """Takes a string of positions and returns a values from the string with those positions"""
+    position_array = position_string.split('§')
+    values = ''
+    human_sort(position_array)
+    for s in position_array:
+        positions = s.split()
+        values += '§' + (solution[int(positions[0]):int(positions[1])])
+    print('values after values are gotten from position')
+    print(values)
+    return values[1:]

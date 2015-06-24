@@ -13,7 +13,7 @@ from oppgavegen.latex_translator import latex_to_sympy
 from .models import Template, Level, UserLevelProgress
 from django.contrib.auth.models import User
 from oppgavegen.decorators import Debugger
-from oppgavegen.human_sort import human_sort
+from oppgavegen.generation_folder.multifill import multifill
 from oppgavegen.generation_folder.fill_in import fill_in_the_blanks
 
 
@@ -399,15 +399,6 @@ def calculate_array(array, domain):
 
 
 @Debugger
-def after_equal_sign(s):
-    """Returns everything after the last '=' sign of a string."""
-    if '=' in s:
-        s = s.split("=")
-        s = s[len(s)-1]
-    return s
-
-
-@Debugger
 def replace_variables_from_array(arr, s):
     """Takes a string and replaces variables in the string with ones from the array
 
@@ -568,42 +559,6 @@ def new_random_value(value, domain_dict, bonus=0, extra=''):
     else:
         new_value = randint(int(domain[0]), int(domain[1]))
     return new_value
-
-
-@Debugger
-def get_values_from_position(position_string, solution):
-    """Takes a string of positions and returns a values from the string with those positions"""
-    position_array = position_string.split('§')
-    values = ''
-    human_sort(position_array)
-    for s in position_array:
-        positions = s.split()
-        values += '§' + (solution[int(positions[0]):int(positions[1])])
-    print('values after values are gotten from position')
-    print(values)
-    return values[1:]
-
-
-@Debugger
-def multifill(choices, variable_dict):
-    """Returns choices with fill in the blanks capability"""
-    choices = choices.replace('@?', '')
-    choices = choices.replace('?@', '')
-    possible_holes = list(variable_dict.keys())
-    shuffle(possible_holes)
-    choices = choices.split('§')
-    shuffle(choices)
-    for x in range(len(choices)):
-        if choices[x].count(possible_holes[0]) > 0:
-            choices[x] = choices[x].replace(possible_holes[0], '\\MathQuillMathField{}')
-        else:
-            for z in range(1, len(possible_holes)):
-                if choices[x].count(possible_holes[z]) > 0:
-                    choices[x] = choices[x].replace(possible_holes[z], '\\MathQuillMathField{}')
-                    break
-    choices = '§'.join(choices)
-    choices = string_replace(choices, variable_dict)
-    return choices
 
 
 @Debugger
