@@ -105,7 +105,11 @@ def submit(request):
         form = TemplateForm(request.POST)
         if form.is_valid():
             template = form.save(commit=False)
-            template.difficulty = 1
+            # newtags = template.tags_list
+            # template.tags = newtags
+            #template.fields['tags'] = form.cleaned_data['tags_list']
+            #template.tags.add(templatetags)
+            template.difficulty = 1 # todo: remove this when implemented in GUI
             if request.REQUEST['pk'] != '':  # Can this be written as v = req != ''?
                 template.pk = request.REQUEST['pk']  # Workaround, template doesn't automatically get template.pk
                 update = True

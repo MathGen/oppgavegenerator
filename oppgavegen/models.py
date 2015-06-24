@@ -29,7 +29,7 @@ class Topic(models.Model):
 
 class Tag(models.Model):
     """Searchable tags for problem templates."""
-    name = models.CharField(max_length=200)  # Name of the tag.
+    name = models.CharField(max_length=200, unique=True)  # Name of the tag.
 
     def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
         """Returns the objects topic"""
