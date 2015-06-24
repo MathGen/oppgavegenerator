@@ -106,19 +106,20 @@ def submit(request):
     if request.method == 'POST':
         message = 'Det har skjedd noe feil ved innsending av form'
         form = TemplateForm(request.POST)
+        newtags = form.cleaned_data['tags_list']
         if form.is_valid():
             template = form.save(commit=False)
             # newtags = template.tags_list
             # template.tags = newtags
             #template.fields['tags'] = form.cleaned_data['tags_list']
             #template.tags.add(templatetags)
-            template.difficulty = 1 # todo: remove this when implemented in GUI
+            template.difficulty = 1 # todo: remove this when implemented in GUI. Default value doesn't work somehow.
             if request.REQUEST['pk'] != '':  # Can this be written as v = req != ''?
                 template.pk = request.REQUEST['pk']  # Workaround, template doesn't automatically get template.pk
                 update = True
             else:
                 update = False
-            message = submit_template(template, request.user, update)
+            message = submit_template(template, request.user, update, newtags)
 
         else:
             print(form.errors)

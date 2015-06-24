@@ -5,12 +5,14 @@ Defines reusable functions often called from views.py
 """
 from oppgavegen.models import Template, Topic, Tag
 from datetime import datetime
+from django.contrib.auth.models import User
 from oppgavegen.answer_checker import check_answer
 from oppgavegen.decorators import Debugger
 from oppgavegen.generation_folder.calculate_parse_solution import parse_solution, calculate_array, parse_answer
 from oppgavegen.generation_folder.fill_in import get_values_from_position
 from oppgavegen.generation_folder.utility import after_equal_sign, replace_words, replace_variables_from_array
 from oppgavegen.generation_folder.template_validation import template_validation
+import json
 
 
 def make_edit_context_dict(template_id):
@@ -29,6 +31,7 @@ def make_edit_context_dict(template_id):
     dictionary = q.dictionary
     used_variables = q.used_variables
     topics = ""
+    tags = json.dumps(q.tags)
     for e in Topic.objects.all():
         topics += '§' + str(e.pk) + '§'
         topics += e.topic
@@ -37,7 +40,8 @@ def make_edit_context_dict(template_id):
                     'question_text': question_text, 'calculation_references': calculation_references,
                     'choices': choices, 'conditions': conditions, 'fill_in': fill_in,
                     'topic': topic, 'random_domain': random_domain, 'unchanged_ref': unchanged_ref,
-                    'topics': topics, 'dictionary': dictionary, 'used_variables': used_variables}
+                    'topics': topics, 'dictionary': dictionary, 'used_variables': used_variables,
+                    'tags': tags}
     return context_dict
 
 
@@ -89,7 +93,7 @@ def make_answer_context_dict(form_values):
     return context_dict
 
 
-def submit_template(template, user, update):
+def submit_template(template, user, update, newtags=None):
     """Submits or updates a template to the database (depending on if update is true or not)"""
     # taglist = validate_tags(template.tags)
     if update:
@@ -117,6 +121,8 @@ def submit_template(template, user, update):
     if len(template.choices) > 1:
         template.multiple_support = True
     template.save()
+    template.tags.clear()
+    template.tags = newtags
     message = template_validation(template.pk)
     return message
 

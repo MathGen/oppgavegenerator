@@ -25,11 +25,11 @@ class TagField(forms.CharField):
         for e in values:
             if Tag.objects.filter(name=e).exists():
                 existing_tag = Tag.objects.get(name=e)
-                tag_obj.append(existing_tag.id)
+                tag_obj.append(existing_tag)
             else:
                 newtag = Tag(name=e)
                 newtag.save()
-                tag_obj.append(newtag.id)
+                tag_obj.append(newtag)
         try:
             return tag_obj
         except ValueError:
