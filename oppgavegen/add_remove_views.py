@@ -1,0 +1,1 @@
+"""For views that either add or remove something from the database"""
