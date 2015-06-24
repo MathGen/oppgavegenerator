@@ -228,7 +228,8 @@ def chapters(request, set_id):
         context = RequestContext(request)
         medals = []
         completed = []
-        chapter_progress(request.user, set_chapters, medals, completed)
+        chapter_progress(request.user, game_set, medals, completed)
+        print('before return')
         return render_to_response('game/chapters.html',
                                   {'chapters': set_chapters, 'medals': json.dumps(medals),
                                    'completed': json.dumps(completed)}, context)
