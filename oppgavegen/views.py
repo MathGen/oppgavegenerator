@@ -13,12 +13,13 @@ from django.shortcuts import render
 from oppgavegen.tables import *
 from django_tables2 import RequestConfig
 from oppgavegen.templatetags.app_filters import is_teacher
-from oppgavegen import view_logic
 from oppgavegen.view_logic import *
 from django.views.generic.edit import CreateView, UpdateView, FormView
 from django.views.generic.list import ListView
 from django.views.decorators.cache import cache_control
 from oppgavegen.models import Set, Chapter, Level, Template
+from oppgavegen.rating import change_elo, change_level_rating, get_user_rating
+from oppgavegen.generation import generate_task, generate_level
 
 # Search Views and Forms
 from haystack.generic_views import SearchView
@@ -26,7 +27,7 @@ from .forms import QuestionForm, TemplateForm, SetForm, LevelCreateForm, Chapter
 from django.forms.formsets import formset_factory
 from django import http
 from django.forms.models import modelformset_factory, inlineformset_factory
-from django.core.urlresolvers import reverse
+
 
 
 class LoginRequiredMixin(object):
@@ -51,10 +52,10 @@ def task(request):
     context = RequestContext(request)
     question_type = request.GET.get('q', '')
     if question_type != "":
-        context_dict = generation.generate_task(request.user, question_type)
+        context_dict = generate_task(request.user, question_type)
     else:
-        context_dict = generation.generate_task(request.user, "")
-    context_dict['rating'] = view_logic.get_user_rating(request.user)
+        context_dict = generate_task(request.user, "")
+    context_dict['rating'] = get_user_rating(request.user)
     return render_to_response('taskview.html', context_dict, context)
 
 
@@ -63,8 +64,8 @@ def task(request):
 def task_by_id_and_type(request, template_extra, desired_type='normal'):
     """Returns a render of taskview with a specific math template with specified type"""
     context = RequestContext(request)
-    context_dict = generation.generate_task(request.user, template_extra, desired_type)
-    context_dict['rating'] = view_logic.get_user_rating(request.user)
+    context_dict = generate_task(request.user, template_extra, desired_type)
+    context_dict['rating'] = get_user_rating(request.user)
     if context_dict['question'] == 'error':
         message = {'message': 'Denne oppgavetypen har ikke blitt laget for denne oppgaven'}
         return render_to_response('error.html', message, context)
@@ -76,8 +77,8 @@ def task_by_id_and_type(request, template_extra, desired_type='normal'):
 def task_by_extra(request, template_extra):
     """Returns a render of taskview with a specific math template"""
     context = RequestContext(request)
-    context_dict = generation.generate_task(request.user, template_extra)
-    context_dict['rating'] = view_logic.get_user_rating(request.user)
+    context_dict = generate_task(request.user, template_extra)
+    context_dict['rating'] = get_user_rating(request.user)
     return render_to_response('taskview.html', context_dict, context)
 
 
@@ -111,7 +112,7 @@ def submit(request):
                 update = True
             else:
                 update = False
-            message = view_logic.submit_template(template, request.user, update)
+            message = submit_template(template, request.user, update)
 
         else:
             print(form.errors)
@@ -131,13 +132,13 @@ def answers(request, level=1):
             template = Template.objects.get(pk=form_values['primary_key'])
             if cheat_check(form_values['user_answer'], template.disallowed):
                 return render_to_response('answers.html', {'answer': cheat_message}, context)
-            context_dict = view_logic.make_answer_context_dict(form_values)
+            context_dict = make_answer_context_dict(form_values)
             if request.is_ajax():
-                view_logic.change_level_rating(template, request.user, context_dict['user_won'], form_values['template_type'], level)
+                change_level_rating(template, request.user, context_dict['user_won'], form_values['template_type'], level)
                 print(3)
                 return render_to_response('game/answer.html', context_dict, context)
             else:
-                view_logic.change_elo(template, request.user, context_dict['user_won'], form_values['template_type'])
+                change_elo(template, request.user, context_dict['user_won'], form_values['template_type'])
             return render_to_response('answers.html', context_dict, context)
         else:
             print(form.errors)
@@ -195,7 +196,7 @@ def new_template(request):
 def edit_template(request, template_id):
     """Returns a render of edit.html used for editing existing templates"""
     context = RequestContext(request)
-    context_dict = view_logic.make_edit_context_dict(template_id)
+    context_dict = make_edit_context_dict(template_id)
     return render_to_response('edit.html', context_dict, context)
 
 
@@ -240,8 +241,8 @@ def get_template(request, level_id):
     # if request.is_ajax():
     #   if request.method == 'GET':
     context = RequestContext(request)
-    context_dict = generation.generate_level(request.user, level_id)
-    context_dict['rating'] = view_logic.get_user_rating(request.user)
+    context_dict = generate_level(request.user, level_id)
+    context_dict['rating'] = get_user_rating(request.user)
 
     return render_to_response('game/template.html', context_dict, context)
 

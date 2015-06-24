@@ -8,12 +8,11 @@ from random import randint, uniform, shuffle, choice
 from sympy.parsing.sympy_parser import (parse_expr, standard_transformations,
                                         implicit_multiplication_application, convert_xor)
 from oppgavegen.latex_translator import latex_to_sympy
-from .models import Template, Level, UserLevelProgress
-from django.contrib.auth.models import User
+from .models import  Level
 from oppgavegen.decorators import Debugger
 from oppgavegen.generation_folder.multifill import multifill
 from oppgavegen.generation_folder.fill_in import fill_in_the_blanks
-from oppgavegen.generation_folder.utility import replace_words, dict_to_string, string_replace
+from oppgavegen.generation_folder.utility import*
 from oppgavegen.generation_folder.calculate_parse_solution import parse_solution, calculate_answer
 from oppgavegen.generation_folder.get_question import get_question, get_level_question
 
@@ -187,23 +186,6 @@ def generate_level(user, level_id):
     return return_dict
 
 
-
-
-
-@Debugger
-def replace_variables_from_array(arr, s):
-    """Takes a string and replaces variables in the string with ones from the array
-
-    #Example: (['R10', '5', 'R1', '7'], 'example string R1 and R10') -> 'example string 7 and 5'
-    :param arr: Array of variables
-    :param s: String to replace variables in
-    :return: String with replaced variables
-    """
-    for x in range(0, len(arr)-1, 2):  # Set increment size to 2.
-        s = s.replace(arr[x], arr[x+1])
-    return s
-
-
 @Debugger
 def generate_valid_numbers(template, random_domain_list, conditions, test):
     """Generates valid numbers using each variables random domain.
@@ -263,19 +245,6 @@ def check_conditions(conditions, variable_dict, domain_dict):
 
 
 @Debugger
-def string_replace(string, variable_dict):
-    """Replaces variables in a string with numbers from a dict
-
-    :param string: String with variables in it.
-    :param variable_dict: a dictionary with variable names as keys and the number to replace them which as values.
-    :return: String with numbers instead of variable names.
-    """
-    for key in variable_dict:
-        string = string.replace(key, str(variable_dict[key]))
-    return string
-
-
-@Debugger
 def get_variables_used(string, variable_dict):
     """Returns what variables are used in the given string as a list."""
     used_variables = []
@@ -324,8 +293,3 @@ def make_number(domain):
     except IndexError:
         number = round(number)
     return number
-
-
-
-
-
