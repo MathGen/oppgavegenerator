@@ -28,7 +28,12 @@ def chapter_progress(user, set, medals, completed):
     :param completed: a list that holds how many levels are completed in the chapters
     :return: No return as the return is the lists getting changed.
     """
-    for i in set.chapter_order.split(','):
+    try:
+        chapters = set.chapter_order
+    except set.chapter_order.DoesNotExist:
+        print('no chapter order exists for this set')
+    chapters = chapters.split(',')
+    for i in chapters:
         level_star_count = 0
         levels_completed = 0
         level_counter = 0

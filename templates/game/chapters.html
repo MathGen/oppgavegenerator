@@ -29,12 +29,15 @@
 {#    </div>#}
 {#</div>#}
 
+<div id="medals" hidden>{{ medals }}</div>
+<div id="completed" hidden>{{ completed }}</div>
+
 {% for chapter in chapters %}
 <div id="chapter_{{ chapter.id }}" class="btn btn_chapter">
-<div class="chapter_ribbon medal_gold"></div>
+    <div class="chapter_ribbon medal_gold"></div>
     <h3 class="chapter_title">{{ chapter.name }}</h3>
     <div class="progress chapter_progress">
-        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">1 / {{ chapter.levels.count }}</div>
+        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"> <span class="chapter_completion"></span> / {{ chapter.levels.count }}</div>
     </div>
 </div>
 {% endfor %}
