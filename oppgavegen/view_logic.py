@@ -168,6 +168,7 @@ def get_stars_per_level(user, chapter):
     star_list = json.dumps(star_list)
     return star_list
 
+
 def validate_tags(tags):
     # template = Template.objects.get(pk=template_id)
     taglist = []
@@ -178,3 +179,4 @@ def validate_tags(tags):
             tag = Tag.objects.new(name=e)
             taglist.append(tag)
     return taglist
+

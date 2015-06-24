@@ -107,3 +107,8 @@ def check_for_new_star(user, level_id):
 def add_star(user_progress):
     user_progress.stars += 1
     user_progress.save()
+
+
+def calculate_offset():
+    """Calculates the offset that is used for rating balance"""
+    pass
