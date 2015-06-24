@@ -25,15 +25,18 @@ $(document).ready(function () {
     });
 });
 
+/**
+ * Loads all chapters within the current set.
+ */
 function load_chapters(){
     var set_id = $('#set_id').text();
     $('#game_nav').hide();
     $('#chapter_title').text("");
     $('#level_title').text("");
     $('#game_content').fadeOut('fast', function(){
-        $(this).load('../' + set_id + '/chapters/', function () {
+        $(this).load('../' + set_id + '/chapters/', function () { //AJAX load
             append_medal_star();
-            lock_game_contents();
+            disable_game_contents();
             $(this).fadeIn('fast', function(){
                 update_progress_bar();
             });
@@ -41,12 +44,17 @@ function load_chapters(){
     });
 }
 
+/**
+ * Loads all levels within the specific chapter. Unlocks levels the user has reached.
+ * @param {number} chapter_id - The id of the selected chapter.
+ * @param {number} progress_number - The progress-number which indicates how many levels is unlocked.
+ */
 function load_levels(chapter_id, progress_number){
     $('#game_content').fadeOut('fast', function () {
-        $(this).load('../' + chapter_id + '/levels/', function () {
+        $(this).load('../' + chapter_id + '/levels/', function () { //AJAX load
             unlock_levels(progress_number);
             get_stars_per_level(progress_number);
-            lock_game_contents();
+            disable_game_contents();
             $(this).fadeIn('fast', function(){
                 $('#game_nav').fadeIn();
             });
@@ -54,9 +62,13 @@ function load_levels(chapter_id, progress_number){
     });
 }
 
+/**
+ * Loads a template given by the selected level.
+ * @param {number} level_id - The id of the selected level.
+ */
 function load_template(level_id){
     $('#game_content').fadeOut('fast', function () {
-        $(this).load('../' + level_id + '/template/', function () {
+        $(this).load('../' + level_id + '/template/', function () { //AJAX load
             $(this).fadeIn('fast', function(){
                 $('#game_nav').fadeIn(function(){
                     redraw_mathquill_elements();
@@ -66,9 +78,13 @@ function load_template(level_id){
     });
 }
 
+/**
+ * Submits the user-answer form and retrieves the solution from the server.
+ * @param {dictionary|Object} submit_dict - The dictionary which holds the user-answer form.
+ */
 function post_answer(submit_dict){
     $('#game_content').fadeOut('fast', function () {
-        $.post('../' + current_level + '/answer/', submit_dict, function(result){
+        $.post('../' + current_level + '/answer/', submit_dict, function(result){ //AJAX post
             $('#game_content').html(result).fadeIn('fast', function(){
                 $('#game_nav').fadeIn(function(){
                     redraw_mathquill_elements();
@@ -78,13 +94,19 @@ function post_answer(submit_dict){
     });
 }
 
-function lock_game_contents(){
+/**
+ * Removes the inner-content of all locked chapters/levels.
+ */
+function disable_game_contents(){
     // Set the disable attribute to all locked chapters/levels
     $('.btn_locked').each(function () {
         $(this).attr('disabled', true).children().remove(); //TODO: hide/remove locked content (cheat-proof?)
     });
 }
 
+/**
+ * Updates the progress-bar for each chapter. Updates the value and the color of the progress-bar.
+ */
 function update_progress_bar(){
     $('.progress-bar').each(function(){
         var value = $(this).text().split('/');
@@ -103,19 +125,30 @@ function update_progress_bar(){
     });
 }
 
+/**
+ * Draws and appends the star inside the ribbon.
+ */
 function append_medal_star(){
     $('.chapter_ribbon').each(function(){
         $(this).append('<div class="star-5-points"></div>');
     });
 }
 
+/**
+ * Unlocks all levels the user has reached. Removes the lock.
+ * @param {number} progress_number - The progress-number which indicates how many levels is unlocked.
+ */
 function unlock_levels(progress_number){
     $('.btn_level').each(function(index){
         $(this).removeClass('btn_locked').attr('disabled', false);
-        return index < progress_number;
+        return index < progress_number; // To end the iteration when finished with all unlocked levels.
     });
 }
 
+/**
+ * Draws the amount of stars the user has reached on each levels.
+ * @param {number} progress_number - The progress-number which indicates how many levels is unlocked.
+ */
 function get_stars_per_level(progress_number){
     var stars_per_level = JSON.parse($('#spl').text());
     $('.level_progress').each(function(index){
@@ -124,6 +157,6 @@ function get_stars_per_level(progress_number){
                 $(this).toggleClass('glyphicon-star-empty glyphicon-star');
             }
         });
-        return index < progress_number;
+        return index < progress_number; // To end the iteration when finished with all unlocked levels.
     });
 }
