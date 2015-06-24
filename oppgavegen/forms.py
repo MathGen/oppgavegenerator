@@ -13,18 +13,27 @@ from haystack.forms import SearchForm, ModelSearchForm, FacetedSearchForm
 from selectable.forms import AutoCompleteWidget, AutoCompleteSelectMultipleWidget
 from .lookups import TemplateLookup
 
-class TagField(forms.Field):
-
-    def prepare_value(self, value):
-        value = value.split('§')
-        tag_obj = ['',]
-        for e in value:
-            if e in Tag.objects.all():
-                tag_obj.append(e)
+class TagField(forms.CharField):
+    """
+    Return a list of Tag-object id's.
+    """
+    # def prepare_value(self, value):
+    def clean(self, value):
+        value = super(TagField, self).clean(value)
+        values = value.split('§')
+        tag_obj = []
+        for e in values:
+            if Tag.objects.filter(name=e).exists():
+                existing_tag = Tag.objects.get(name=e)
+                tag_obj.append(existing_tag.id)
             else:
-                tag = Tag.objects.new(name=e)
-                tag_obj.append(tag)
-        return tag_obj
+                newtag = Tag(name=e)
+                newtag.save()
+                tag_obj.append(newtag.id)
+        try:
+            return tag_obj
+        except ValueError:
+            raise forms.ValidationError(_("Please provide a paragraph-separated list of tags."))
 
 
 class TemplateSearchForm(SearchForm):
@@ -153,17 +162,23 @@ class QuestionForm(forms.Form):
         return cd
 
 class TemplateForm(ModelForm):
-    tags = TagField()
+    tags_list = TagField(required=False)
 
     class Meta:
         model = Template
         fields = '__all__'
 
-        def process(self):
-            """Returns a cleaned dictionary of it's own values."""
-            cd = {self.cleaned_data['question'], self.cleaned_data['answer']}
-            return cd
+    def process(self):
+        """Returns a cleaned dictionary of it's own values."""
+        cd = {'question' : self.cleaned_data['question'],
+              'answer' : self.cleaned_data['answer'],
+              'tags' : self.cleaned_data['tags_list'],
+              'difficulty' : 1 }
+        return cd
 
+    def save(self, commit=True):
+        self.fields['tags'] = self.cleaned_data['tags_list']
+        return super(TemplateForm, self).save(commit=commit)
 
 class UserCurrentSetsForm(ModelForm):
     class Meta:
