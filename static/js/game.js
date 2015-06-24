@@ -44,6 +44,7 @@ function load_chapters(){
 function load_levels(chapter_id){
     $('#game_content').fadeOut('fast', function () {
         $(this).load('../' + chapter_id + '/levels/', function () {
+            unlock_levels($('#progress_number').text());
             lock_game_contents();
             $(this).fadeIn('fast', function(){
                 $('#game_nav').fadeIn();
@@ -105,4 +106,8 @@ function append_medal_star(){
     $('.chapter_ribbon').each(function(){
         $(this).append('<div class="star-5-points"></div>');
     });
+}
+
+function unlock_levels(progress_number){
+
 }

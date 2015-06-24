@@ -4,14 +4,13 @@ Defines reusable functions often called from views.py
 
 """
 from oppgavegen.models import Template, Topic, UserLevelProgress, Level, Tag
-from oppgavegen.generation import replace_variables_from_array
 from datetime import datetime
 from django.contrib.auth.models import User
 from oppgavegen.answer_checker import check_answer
 from oppgavegen.decorators import Debugger
 from oppgavegen.generation_folder.calculate_parse_solution import parse_solution, calculate_array, parse_answer
 from oppgavegen.generation_folder.fill_in import get_values_from_position
-from oppgavegen.generation_folder.utility import after_equal_sign, replace_words
+from oppgavegen.generation_folder.utility import after_equal_sign, replace_words, replace_variables_from_array
 from oppgavegen.generation_folder.template_validation import template_validation
 
 
@@ -121,90 +120,6 @@ def submit_template(template, user, update):
     return message
 
 
-def change_elo(template, user, user_won, type):
-    """Changes the elo of both user and task depending on who won."""
-    u = User.objects.get(username=user.username)
-    user_rating = u.extendeduser.rating
-    # Formula for elo: Rx = Rx(old) + prefactor *(W-Ex) where W=1 if wins and W=0 if x loses
-    # and Ex is the expected probability that x will win.
-    # Ea = (1+10^((Rb-Ra)/400))^-1
-    # Eb = (1+10^((Ra-Rb)/400))^-1
-    if type == 'blanks':
-        template_rating = template.fill_rating
-    elif type == 'multiple':
-        template_rating = template.choice_rating
-    else:
-        template_rating = template.rating
-
-    expected_user = (1+10**((template_rating-user_rating)/400))**(-1)
-    expected_template = (1+10**((template_rating-user_rating)/400))**(-1)
-    prefactor_user = 30  # This value should be adjusted according to elo of the user (lower for higher ratings..)
-    prefactor_template = 16  # This value should be adjusted according to elo of the user (lower for higher ratings..)
-
-    if user_won:
-        new_user_rating = user_rating + prefactor_user*(1-expected_user)
-        new_template_rating = template_rating + prefactor_template*(0-expected_template)
-        template.times_solved += 1
-    else:
-        new_user_rating = user_rating + prefactor_user*(0-expected_user)
-        new_template_rating = template_rating + prefactor_template*(1-expected_template)
-        template.times_failed += 1
-    user.extendeduser.rating = new_user_rating
-    user.extendeduser.save()
-    if type == 'blanks':
-        template.fill_rating = new_template_rating
-    elif type == 'multiple':
-        template.choice_rating = new_template_rating
-    else:
-        template.rating = new_template_rating
-    template.save()
-    return
-
-
-@Debugger
-def change_level_rating(template, user, user_won, type, level_id):
-    """Changes the elo of both user and task depending on who won."""
-    u = User.objects.get(username=user.username)
-    level = Level.objects.get(pk=level_id)
-    user_progress = UserLevelProgress.objects.get(user=u, level=level)
-    user_rating = user_progress.level_rating
-    # Formula for elo: Rx = Rx(old) + prefactor *(W-Ex) where W=1 if wins and W=0 if x loses
-    # and Ex is the expected probability that x will win.
-    # Ea = (1+10^((Rb-Ra)/400))^-1
-    # Eb = (1+10^((Ra-Rb)/400))^-1
-    if type == 'blanks':
-        template_rating = template.fill_rating
-    elif type == 'multiple':
-        template_rating = template.choice_rating
-    else:
-        template_rating = template.rating
-
-    expected_user = (1+10**((template_rating-user_rating)/400))**(-1)
-    expected_template = (1+10**((template_rating-user_rating)/400))**(-1)
-    prefactor_user = 30  # This value should be adjusted according to elo of the user (lower for higher ratings..)
-    prefactor_template = 16  # This value should be adjusted according to elo of the user (lower for higher ratings..)
-
-    if user_won:
-        new_user_rating = user_rating + prefactor_user*(1-expected_user)
-        new_template_rating = template_rating + prefactor_template*(0-expected_template)
-        template.times_solved += 1
-    else:
-        new_user_rating = user_rating + prefactor_user*(0-expected_user)
-        new_template_rating = template_rating + prefactor_template*(1-expected_template)
-        template.times_failed += 1
-    user_progress.level_rating = new_user_rating
-    user_progress.save()
-
-    if type == 'blanks':
-        template.fill_rating = new_template_rating
-    elif type == 'multiple':
-        template.choice_rating = new_template_rating
-    else:
-        template.rating = new_template_rating
-    template.save()
-    return
-
-
 def cheat_check(user_answer, disallowed):
     """Checks whether the user has used symbols/functions that are not allowed"""
     standard_disallowed = ['int', 'test', "'", '@']
@@ -214,13 +129,6 @@ def cheat_check(user_answer, disallowed):
         if s in user_answer:
             return True
     return False
-
-
-def get_user_rating(user):
-    """Returns the rating of the give user"""
-    u = User.objects.get(username=user.username)
-    rating = u.extendeduser.rating
-    return rating
 
 
 def latex_exceptions(string):
@@ -235,13 +143,30 @@ def calculate_progress(user, chapter):
     counter = 0
     for i in levels:
         level = Level.objects.get(pk=i)
-        q = UserLevelProgress.objects.get(user=user, level=level)
-        if q.star < 1:
+        print(1)
+        try:
+            q = UserLevelProgress.objects.get(user=user, level=level)
+        except UserLevelProgress.DoesNotExist:
+            break
+        if q.stars < 1:
             break
         counter += 1
-
     return counter
 
+
+def get_stars_per_level(user, chapter):
+    levels = chapter.level_order
+    levels = levels.split(',')
+    star_list = []
+    for i in levels:
+        level = Level.objects.get(pk=i)
+        try:
+            q = UserLevelProgress.objects.get(user=user, level=level)
+            star_list.append(q.stars)
+        except UserLevelProgress.DoesNotExist:
+            star_list.append(0)
+
+    return star_list
 
 def validate_tags(tags):
     # template = Template.objects.get(pk=template_id)

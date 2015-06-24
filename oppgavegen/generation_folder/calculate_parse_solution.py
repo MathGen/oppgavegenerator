@@ -56,6 +56,7 @@ def parse_solution(solution, domain):
         new_solution = new_solution.replace(r, new_arr[x])
     return new_solution
 
+
 @Debugger
 def parse_answer(answer, domain):
     """Parses the answer. works for arrays with multiple answers."""

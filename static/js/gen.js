@@ -951,35 +951,42 @@ function convert_variables(latex){
 					}
 				}
 			}
-			////FIXME: be able to write capital-letters that is not stored as calculated references.
-			//var variable_valid = VARIABLES[parseInt(dict_letters[la[i]])
-			////if(la[i] in dict_letters && la[i].match(/^[A-Z]*$/)){
-			////	.replace(/R/g, '')
-			////}
-			if (la[i] in dict_letters && (VARIABLES[parseInt(dict_letters[la[i]])] || la[i].match(/^[A-Z]*$/))) {
+			//FIXME: be able to write capital-letters that is not stored as calculated references.
+			// Check if following char is a valid variable. (If the variable is stored in VARIABLES dictionary.)
+			var variable_valid = false;
+			if(dict_letters[la[i]] != undefined){
+				variable_valid = VARIABLES[parseInt(dict_letters[la[i]].replace(/R/g, ''))] != undefined;
+			}
+			if (la[i] in dict_letters && (variable_valid || la[i].match(/^[A-Z]*$/))) {
+				// If the char is a capital-letter and doesn't have a calculated variable, set the char as is.
+				var get_dict_letters = dict_letters[la[i]];
+				if(la[i].match(/^[A-Z]*$/) && get_dict_letters == undefined){
+					get_dict_letters = la[i];
+				}
+
 				if ((la[i - 1] in dict_letters || la[i - 1] == ')' || !isNaN(la[i - 1])) && la[i - 2] != '\^' && la[i - 2] != '\\') {
 					if (la[i - 1] != ' ' && la[i - 2] != 't' && la[i - 3] != 'o' && la[i - 4] != 'd' && la[i - 5] != 'c') {
-						la2 += '\\cdot ' + dict_letters[la[i]];
+						la2 += '\\cdot ' + get_dict_letters;
 					}
 					else {
-						la2 += dict_letters[la[i]];
+						la2 += get_dict_letters;
 					}
 				}
 				else {
 					if (la[i - 1] == '\@' && la[i - 2] == 'x' && la[i - 3] == 'x' && la[i - 4] == 'x' && la[i - 5] == 'x' && la[i - 6] == '\@') {
 						if ((la[i - 7] in dict_letters || la[i - 7] == ')' || !isNaN(la[i - 7])) && la[i - 8] != '\^' && la[i - 8] != '\\') {
-							la2 += '\\cdot ' + dict_letters[la[i]];
+							la2 += '\\cdot ' + get_dict_letters;
 						}
 						else {
-							la2 += dict_letters[la[i]];
+							la2 += get_dict_letters;
 						}
 					}
-					else if (la[i - 1] == '\\' && la[i - 2] == '\\') { //Quick-Fix to solve the LaTeX parsing error with Matrices.
-						la2 += '\\' + dict_letters[la[i]];		 //Adding additional '\' in the LaTeX string.
+					else if (la[i - 1] == '\\' && la[i - 2] == '\\') { 	//Quick-Fix to solve the LaTeX parsing error with Matrices.
+						la2 += '\\' + get_dict_letters;		 		//Adding additional '\' in the LaTeX string.
 					}
 					else {
 						if (la[i - 1] != '\\') {
-							la2 += dict_letters[la[i]];
+							la2 += get_dict_letters;
 						}
 					}
 				}

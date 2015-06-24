@@ -139,10 +139,12 @@ def pmatrix_to_matrix(m, start_string='\\begin(pmatrix)', end_string='\\end(pmat
         index_start = find_indexes(m, start_string)
     return m
 
+
 def find_indexes(s, index):
     """Finds all the given indexes of a given string"""
     index_list = [n for n in range(len(s)) if s.find(index, n) == n]
     return index_list
+
 
 def sort_nesting(list1, list2):
     """Takes a list of start points and end points and sorts the second list according to nesting"""
@@ -153,6 +155,7 @@ def sort_nesting(list1, list2):
             if list2[i] > list2[i-1] and list1[i] < list2[i-1]:
                 list2[i-1], list2[i] = list2[i], list2[i-1]
     return list2
+
 
 def sympy_to_mathquill(expr): # Might not be needed
     expr = expr.replace('\\begin{equation*}', '')
