@@ -7,7 +7,7 @@ $(document).ready(function () {
         var chapter_title = $(this).find('.chapter_title').text();
         $('#chapter_title').text(" - " + chapter_title);
         var chapter_id = $(this).attr('id').match(/\d+/);
-        load_levels(chapter_id, $('#progress_number').text());
+        load_levels(chapter_id);
     });
     // Load a task from the specific level
     $(document).on('click', '.btn_level', function(e){
@@ -35,6 +35,8 @@ function load_chapters(){
     $('#level_title').text("");
     $('#game_content').fadeOut('fast', function(){
         $(this).load('../' + set_id + '/chapters/', function () { //AJAX load
+            //append_medal_star(); //TODO: call from a better place.
+            update_medals();
             append_medal_star();
             disable_game_contents();
             $(this).fadeIn('fast', function(){
@@ -47,11 +49,11 @@ function load_chapters(){
 /**
  * Loads all levels within the specific chapter. Unlocks levels the user has reached.
  * @param {number} chapter_id - The id of the selected chapter.
- * @param {number} progress_number - The progress-number which indicates how many levels is unlocked.
  */
-function load_levels(chapter_id, progress_number){
+function load_levels(chapter_id){
     $('#game_content').fadeOut('fast', function () {
         $(this).load('../' + chapter_id + '/levels/', function () { //AJAX load
+            var progress_number = $('#progress_number').text();
             unlock_levels(progress_number);
             get_stars_per_level(progress_number);
             disable_game_contents();
@@ -104,11 +106,34 @@ function disable_game_contents(){
     });
 }
 
+function update_medals(){
+    var medals = JSON.parse($('#medals').text());
+    $('.ribbon').each(function(index){
+        var medal_value = medals[index];
+        switch (medal_value){
+            case 0:
+                $(this).removeClass('medal_bronze').removeClass('medal_silver').removeClass('medal_gold').removeClass('chapter_ribbon').children().remove();
+                break;
+            case 1:
+                $(this).removeClass('medal_silver').removeClass('medal_gold').addClass('medal_bronze').addClass('chapter_ribbon');
+                break;
+            case 2:
+                $(this).removeClass('medal_bronze').removeClass('medal_gold').addClass('medal_silver').addClass('chapter_ribbon');
+                break;
+            case 3:
+                $(this).removeClass('medal_bronze').removeClass('medal_silver').addClass('medal_gold').addClass('chapter_ribbon');
+                break;
+        }
+    });
+}
+
 /**
  * Updates the progress-bar for each chapter. Updates the value and the color of the progress-bar.
  */
 function update_progress_bar(){
-    $('.progress-bar').each(function(){
+    var chapter_completion = JSON.parse($('#chapters_completed').text());
+    $('.progress-bar').each(function(index){
+        $(this).find('.chapter_completion').text(chapter_completion[index]);
         var value = $(this).text().split('/');
         value = (value[0]/value[1])*100;
         $(this).width(value + '%').attr('aria-valuenow', value);
@@ -121,6 +146,7 @@ function update_progress_bar(){
                 break;
             case value <= 100:
                 $(this).addClass('progress-bar-success').removeClass('progress-bar-danger').removeClass('progress-bar-warning');
+                break;
         }
     });
 }
@@ -152,7 +178,7 @@ function unlock_levels(progress_number){
 function get_stars_per_level(progress_number){
     var stars_per_level = JSON.parse($('#spl').text());
     $('.level_progress').each(function(index){
-        $('.progress_star').each(function(i){
+        $(this).find('.progress_star').each(function(i){
             if(i < stars_per_level[index]){
                 $(this).toggleClass('glyphicon-star-empty glyphicon-star');
             }
