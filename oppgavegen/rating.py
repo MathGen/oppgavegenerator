@@ -1,4 +1,5 @@
 from oppgavegen.models import User, UserLevelProgress, Level
+from oppgavegen.decorators import Debugger
 
 def change_elo(template, user, user_won, type):
     """Changes the elo of both user and task depending on who won."""
