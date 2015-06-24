@@ -89,10 +89,9 @@ def make_answer_context_dict(form_values):
     return context_dict
 
 
-
 def submit_template(template, user, update):
     """Submits or updates a template to the database (depending on if update is true or not)"""
-    #taglist = validate_tags(template.tags)
+    # taglist = validate_tags(template.tags)
     if update:
         q = Template.objects.get(pk=template.pk)
         template.rating = q.rating
@@ -137,12 +136,10 @@ def change_elo(template, user, user_won, type):
     else:
         template_rating = template.rating
 
-
     expected_user = (1+10**((template_rating-user_rating)/400))**(-1)
     expected_template = (1+10**((template_rating-user_rating)/400))**(-1)
     prefactor_user = 30  # This value should be adjusted according to elo of the user (lower for higher ratings..)
     prefactor_template = 16  # This value should be adjusted according to elo of the user (lower for higher ratings..)
-
 
     if user_won:
         new_user_rating = user_rating + prefactor_user*(1-expected_user)
@@ -206,6 +203,7 @@ def change_level_rating(template, user, user_won, type, level_id):
         template.rating = new_template_rating
     template.save()
     return
+
 
 def cheat_check(user_answer, disallowed):
     """Checks whether the user has used symbols/functions that are not allowed"""
