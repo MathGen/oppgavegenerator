@@ -3,14 +3,16 @@
 Defines reusable functions often called from views.py
 
 """
-
-
 from oppgavegen.models import Template, Topic, UserLevelProgress, Level, Tag
-from oppgavegen import generation
+#from oppgavegen import generation
+from oppgavegen.generation import replace_variables_from_array, parse_answer, parse_solution, replace_words, \
+    calculate_array, template_validation
 from datetime import datetime
 from django.contrib.auth.models import User
 from oppgavegen.answer_checker import check_answer
 from oppgavegen.decorators import Debugger
+from oppgavegen.generation_folder.fill_in import get_values_from_position
+from oppgavegen.generation_folder.utility import after_equal_sign
 
 
 def make_edit_context_dict(template_id):
@@ -52,25 +54,25 @@ def make_answer_context_dict(form_values):
     random_domain = q.random_domain
 
     if template_type != 'blanks':
-        answer = generation.replace_variables_from_array(variable_dictionary, q.answer.replace('\\\\', '\\'))
+        answer = replace_variables_from_array(variable_dictionary, q.answer.replace('\\\\', '\\'))
     else:
-        answer = generation.get_values_from_position(template_specific, q.solution.replace('\\\\', '\\'))
-        answer = generation.replace_variables_from_array(variable_dictionary, answer)
+        answer = get_values_from_position(template_specific, q.solution.replace('\\\\', '\\'))
+        answer = replace_variables_from_array(variable_dictionary, answer)
 
-    answer = generation.parse_answer(answer, random_domain)
+    answer = parse_answer(answer, random_domain)
     answer = answer.replace('`', '')
     answer = answer.split('§')
     solution = str(q.question_text.replace('\\\\', '\\')) + "\\n" + str(q.solution.replace('\\\\', '\\'))
-    solution = generation.replace_variables_from_array(variable_dictionary, solution)
-    solution = generation.parse_solution(solution, random_domain)
+    solution = replace_variables_from_array(variable_dictionary, solution)
+    solution = parse_solution(solution, random_domain)
     if len(replacing_words) > 0:
-        solution = generation.replace_words(solution, replacing_words)['sentence']
+        solution = replace_words(solution, replacing_words)['sentence']
     user_answer = user_answer.split('§')  # If a string doesn't contain the character it returns a list with 1 element
     # We format both the user answer and the answer the same way.
-    user_answer = [generation.after_equal_sign(x) for x in user_answer]  # Only get the values after last equal sign.
-    user_answer = generation.calculate_array(user_answer, random_domain)
-    answer = [generation.after_equal_sign(x) for x in answer]
-    answer = generation.calculate_array(answer, random_domain)
+    user_answer = [after_equal_sign(x) for x in user_answer]  # Only get the values after last equal sign.
+    user_answer = calculate_array(user_answer, random_domain)
+    answer = [after_equal_sign(x) for x in answer]
+    answer = calculate_array(answer, random_domain)
     answer_text = "\\text{Du har svart }" + '\\text{ og }'.join(user_answer) + \
                       "\\text{. Det er feil! Svaret er: }" + '\\text{ og }'.join(answer)
 
@@ -116,7 +118,7 @@ def submit_template(template, user, update):
     if len(template.choices) > 1:
         template.multiple_support = True
     template.save()
-    message = generation.template_validation(template.pk)
+    message = template_validation(template.pk)
     return message
 
 
@@ -241,6 +243,7 @@ def calculate_progress(user, chapter):
         counter += 1
 
     return counter
+
 
 def validate_tags(tags):
     # template = Template.objects.get(pk=template_id)

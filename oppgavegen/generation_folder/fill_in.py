@@ -1,4 +1,5 @@
 from oppgavegen.decorators import Debugger
+from oppgavegen.human_sort import human_sort
 
 @Debugger
 def fill_in_the_blanks(fill_in):
@@ -82,3 +83,16 @@ def array_to_string(array):
     for s in array:
         string += '§' + s
     return string[1:]  # Use [1:] to remove unnecessary § from the start
+
+@Debugger
+def get_values_from_position(position_string, solution):
+    """Takes a string of positions and returns a values from the string with those positions"""
+    position_array = position_string.split('§')
+    values = ''
+    human_sort(position_array)
+    for s in position_array:
+        positions = s.split()
+        values += '§' + (solution[int(positions[0]):int(positions[1])])
+    print('values after values are gotten from position')
+    print(values)
+    return values[1:]
