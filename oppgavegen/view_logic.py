@@ -4,15 +4,15 @@ Defines reusable functions often called from views.py
 
 """
 from oppgavegen.models import Template, Topic, UserLevelProgress, Level, Tag
-#from oppgavegen import generation
-from oppgavegen.generation import replace_variables_from_array, parse_answer, parse_solution, replace_words, \
-    calculate_array, template_validation
+from oppgavegen.generation import replace_variables_from_array
 from datetime import datetime
 from django.contrib.auth.models import User
 from oppgavegen.answer_checker import check_answer
 from oppgavegen.decorators import Debugger
+from oppgavegen.generation_folder.calculate_parse_solution import parse_solution, calculate_array, parse_answer
 from oppgavegen.generation_folder.fill_in import get_values_from_position
-from oppgavegen.generation_folder.utility import after_equal_sign
+from oppgavegen.generation_folder.utility import after_equal_sign, replace_words
+from oppgavegen.generation_folder.template_validation import template_validation
 
 
 def make_edit_context_dict(template_id):

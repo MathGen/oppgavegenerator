@@ -5,8 +5,6 @@ Handles task generation from templates.
 """
 
 from random import randint, uniform, shuffle, choice
-from math import floor, copysign
-from sympy import *
 from sympy.parsing.sympy_parser import (parse_expr, standard_transformations,
                                         implicit_multiplication_application, convert_xor)
 from oppgavegen.latex_translator import latex_to_sympy
@@ -15,6 +13,8 @@ from django.contrib.auth.models import User
 from oppgavegen.decorators import Debugger
 from oppgavegen.generation_folder.multifill import multifill
 from oppgavegen.generation_folder.fill_in import fill_in_the_blanks
+from oppgavegen.generation_folder.utility import replace_words, dict_to_string, string_replace
+from oppgavegen.generation_folder.calculate_parse_solution import parse_solution, calculate_answer
 
 
 @Debugger
@@ -187,56 +187,6 @@ def generate_level(user, level_id):
 
 
 @Debugger
-def calculate_answer(s, domain):
-    """Calculates a string using sympy.
-
-    :param s: String to be calculated
-    :param domain: The domain of the variables.
-    :return: A latex version of the calculated string.
-    """
-    if not is_number(s):  # Small optimization
-        s = remove_unnecessary(s)
-        s = str(latex_to_sympy(s))
-        s = parse_expr(s, transformations=standard_transformations +
-                       (convert_xor, implicit_multiplication_application,), global_dict=None, evaluate=False)
-        s = latex(sympify(str(s)))
-        # Sometimes sympify returns the value 'zoo'
-    else:
-        s = round_answer(domain, float(s))
-    return str(s)
-
-
-@Debugger
-def parse_solution(solution, domain):
-    """Parses a solution (or other similar string) and calculates where needed. (between @? ?@)
-
-    :param solution: The string to be parsed.
-    :param domain: The domain of the different variables.
-    :return: A parsed version of the input string (solution)
-    """
-    arr = []
-    new_arr = []
-    recorder = False
-    new_solution = solution
-    b = s = ''
-    for c in solution:
-        if b == '@' and c == '?':
-            recorder = True
-            s = ''
-        elif b == '?' and c == '@':
-            recorder = False
-            arr.append(s[:-1])
-        elif recorder is True:
-            s += c
-        b = c
-    for x in range(len(arr)):
-        new_arr.append(calculate_answer(str((arr[x])), domain))
-        r = '@?' + arr[x] + '?@'
-        new_solution = new_solution.replace(r, new_arr[x])
-    return new_solution
-
-
-@Debugger
 def get_question(user, template_id, topic=''):
     """Gets a template from the database at a appropriate rating.
 
@@ -364,41 +314,6 @@ def get_level_question(user, level):
 
 
 @Debugger
-def replace_words(sentence, dictionary):
-    """
-    Replaces variables in a string with the value of a key in the given dictionary.
-    Example: ('example sentence', 'example § apple, grape') ->
-             {'sentence': 'apple sentence', 'replace_string' 'example § apple'}}
-    :param sentence: String to replace words in.
-    :param dictionary: A splittable (§) string with word alternatives.
-    :return: dictionary with the new sentence and a splittable string with what words were replaced
-    """
-    dictionary = dictionary.split('§')
-    replace_string = ''
-    for i in range(0, len(dictionary)-1, 2):
-        replace_strings = dictionary[i+1].split(',')
-        replace_word = replace_strings[randint(0, len(replace_strings)-1)]
-        sentence = sentence.replace(dictionary[i], replace_word)
-        replace_string += '§' + dictionary[i] + '§' + replace_word
-    return {'sentence': sentence, 'replace_string': replace_string[1:]}
-
-
-@Debugger
-def calculate_array(array, domain):
-    """Calculates all the answers in a list.
-
-    Example: ['2+2','3+3'] -> [4,6]
-    :param array: List of things to calculate.
-    :param domain: Domain for variables.
-    :return: Calculated list.
-    """
-    out_arr = []
-    for s in array:
-        out_arr.append(calculate_answer(s, domain))
-    return out_arr
-
-
-@Debugger
 def replace_variables_from_array(arr, s):
     """Takes a string and replaces variables in the string with ones from the array
 
@@ -410,20 +325,6 @@ def replace_variables_from_array(arr, s):
     for x in range(0, len(arr)-1, 2):  # Set increment size to 2.
         s = s.replace(arr[x], arr[x+1])
     return s
-
-
-@Debugger
-def parse_answer(answer, domain):
-    """Parses the answer. works for arrays with multiple answers."""
-    answer = answer.split('§')
-    counter = 0
-    for s in answer:
-        answer[counter] = parse_solution(s, domain)
-        if answer[counter] == 'zoo':
-            answer = ['error']  # This is an array so that join doesn't return e§r§r§o§r
-            continue
-        counter += 1
-    return '§'.join(answer)  # join doesn't do anything if the list has 1 element, except converting it to str
 
 
 @Debugger
@@ -462,32 +363,6 @@ def generate_valid_numbers(template, random_domain_list, conditions, test):
     if test:
         return domain_dict
     return variable_dict
-
-
-@Debugger
-def dict_to_string(variable_dict):
-    """Returns a separated string of the key and value pairs of a dict"""
-    variables_used = ""
-    for key in variable_dict:
-        variables_used += '§' + str(key) + '§' + str(variable_dict[key])
-    return variables_used[1:]  # Use [1:] to remove unnecessary § from the start
-
-
-@Debugger
-def array_to_string(array):
-    """Turns a array into a string separated by §."""
-    string = ''
-    for s in array:
-        string += '§' + s
-    return string[1:]  # Use [1:] to remove unnecessary § from the start
-
-
-@Debugger
-def remove_unnecessary(string):
-    """Removes unnecessary symbols from a string and returns the string."""
-    string = string.replace('@?', '')
-    string = string.replace('?@', '')
-    return string
 
 
 @Debugger
@@ -562,74 +437,6 @@ def new_random_value(value, domain_dict, bonus=0, extra=''):
 
 
 @Debugger
-def template_validation(template_id):
-    """tests a template to see if it makes solvable tasks in a reasonable amount of tries. returns a success string"""
-    valid = False
-    template = Template.objects.get(pk=template_id)
-    counter = 0
-    q = Template.objects.get(pk=template_id)
-    for x in range(0, 10000):
-        counter += test_template(q)
-        if counter > 99:
-            valid = True
-            break
-    if valid:
-        template.valid_flag = True
-        template.save()
-        success_string = "Mal lagret og validert!"
-    else:
-        template.valid_flag = False
-        template.save()
-        success_string = "Mal lagret, men kunne ikke valideres. Rediger malen din å prøv på nytt."
-    return success_string
-
-
-@Debugger
-def test_template(template):
-    """Tests if the creation of a template ends up with a valid template. Returns 1/0 for success/failure."""
-    got_trough_test = 0  # 1 if template got through test, and 0 if not.
-    # Make numbers, check condition, check calculations
-    random_domain = template.random_domain
-    random_domain_list = random_domain.split('§')
-    # Efficiency note: it might be faster to pass the domain list, instead of getting them from template every time.
-    answer = template.answer
-    question = template.question_text
-    solution = template.solution
-    conditions = template.conditions
-    conditions = remove_unnecessary(conditions)
-
-    variable_dict = generate_valid_numbers(question, random_domain_list, "", False)
-    inserted_conditions = string_replace(conditions, variable_dict)
-    if len(conditions) > 1:
-        conditions_pass = sympify(latex_to_sympy(inserted_conditions))
-    else:
-        conditions_pass = True
-    if conditions_pass:
-        answer = string_replace(answer, variable_dict)
-        solution = string_replace(solution, variable_dict)
-
-        try:
-            answer = parse_answer(answer, random_domain)
-            parse_solution(solution, random_domain)  # Checks if solution can be parsed
-            got_trough_test = 1
-        except Exception:
-            pass
-        if answer == 'error':
-            got_trough_test = 0
-    return got_trough_test
-
-
-@Debugger
-def is_number(s):
-    """Returns whether a string is a number or not."""
-    try:
-        float(s)
-        return True
-    except ValueError:
-        return False
-
-
-@Debugger
 def make_number(domain):
     """Returns a random number within the range and decimal point of the domain given."""
     number = uniform(float(domain[0]), float(domain[1]))
@@ -640,44 +447,6 @@ def make_number(domain):
     except IndexError:
         number = round(number)
     return number
-
-
-@Debugger
-def round_answer(domain, answer):
-    """returns a rounded version of the answer given."""
-    answer = float(answer)  # Cast it to float. if it is a integer, it will get rounded back to a integer.
-    domain = domain.split('§')
-    rounding_number = 0
-    for s in domain:
-        s = s.split()
-        try:
-            if rounding_number < int(s[2]):
-                rounding_number = int(s[2])
-        except IndexError:
-            pass
-    if rounding_number > 0:
-        answer = custom_round(answer, rounding_number)
-        if answer.is_integer():
-            answer = custom_round(answer)
-    else:
-        answer = custom_round(answer)
-    return answer
-
-
-@Debugger
-def custom_round(x, d=0):
-    """
-    Python 3.x rounding function uses bankers rounding, which is note the same as method of rounding
-    A math student would expect. This round function rounds in the expected way. ie. 2.5 = 3 and 1.5 = 2.
-    :param x: the number to be rounded.
-    :param d: number of decimals.
-    :return the rounded version of x.
-    """
-    p = 10 ** d
-    round_x = float(floor((x * p) + copysign(0.5, x)))/p
-    if d == 0:
-        round_x = int(round(x))
-    return round_x
 
 
 @Debugger
