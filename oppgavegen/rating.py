@@ -109,6 +109,8 @@ def add_star(user_progress):
     user_progress.save()
 
 
-def calculate_offset():
+def calculate_offset(template, rating_change):
     """Calculates the offset that is used for rating balance"""
+
+
     pass

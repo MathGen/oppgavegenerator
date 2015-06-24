@@ -42,6 +42,8 @@ def chapter_progress(user, set, medals, completed):
                     levels_completed += 1
             except UserLevelProgress.DoesNotExist:
                 pass
+        if levels_completed != level_counter:
+            level_star_count = 0
         medals.append(level_star_count//level_counter)
         completed.append(levels_completed)
 
