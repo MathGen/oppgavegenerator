@@ -795,7 +795,7 @@ function submit_template(){
 	$('.tag').each(function(){
 		tags.push($(this).text().slice(0,-1));
 	});
-	form_submit['tags'] = tags.join('§');
+	form_submit['tags_list'] = tags.join('§');
 
 	// CSRF_TOKEN
 	form_submit["csrfmiddlewaretoken"] = getCookie('csrftoken');
@@ -951,7 +951,12 @@ function convert_variables(latex){
 					}
 				}
 			}
-			if (la[i] in dict_letters && (VARIABLES[parseInt(dict_letters[la[i]].replace(/R/g, ''))] || la[i].match(/^[A-Z]*$/))) {
+			////FIXME: be able to write capital-letters that is not stored as calculated references.
+			//var variable_valid = VARIABLES[parseInt(dict_letters[la[i]])
+			////if(la[i] in dict_letters && la[i].match(/^[A-Z]*$/)){
+			////	.replace(/R/g, '')
+			////}
+			if (la[i] in dict_letters && (VARIABLES[parseInt(dict_letters[la[i]])] || la[i].match(/^[A-Z]*$/))) {
 				if ((la[i - 1] in dict_letters || la[i - 1] == ')' || !isNaN(la[i - 1])) && la[i - 2] != '\^' && la[i - 2] != '\\') {
 					if (la[i - 1] != ' ' && la[i - 2] != 't' && la[i - 3] != 'o' && la[i - 4] != 'd' && la[i - 5] != 'c') {
 						la2 += '\\cdot ' + dict_letters[la[i]];
@@ -1027,7 +1032,7 @@ function close_panel(panel){
 		$(Q_INPUT).find('textarea').focus();
 	}
 	else if(panel == 'c'){
-		$(C_INPUT).mathquill('revert').mathquill('editable');
+		MathQuill.MathField($(C_INPUT)[0]).revert();
 	}
 	else if(panel == 'a'){
 		$('#o_panel').fadeOut();
