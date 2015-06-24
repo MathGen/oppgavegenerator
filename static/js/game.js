@@ -7,7 +7,7 @@ $(document).ready(function () {
         var chapter_title = $(this).find('.chapter_title').text();
         $('#chapter_title').text(" - " + chapter_title);
         var chapter_id = $(this).attr('id').match(/\d+/);
-        load_levels(chapter_id);
+        load_levels(chapter_id, $('#progress_number').text());
     });
     // Load a task from the specific level
     $(document).on('click', '.btn_level', function(e){
@@ -32,8 +32,8 @@ function load_chapters(){
     $('#level_title').text("");
     $('#game_content').fadeOut('fast', function(){
         $(this).load('../' + set_id + '/chapters/', function () {
-            lock_game_contents();
             append_medal_star();
+            lock_game_contents();
             $(this).fadeIn('fast', function(){
                 update_progress_bar();
             });
@@ -41,10 +41,11 @@ function load_chapters(){
     });
 }
 
-function load_levels(chapter_id){
+function load_levels(chapter_id, progress_number){
     $('#game_content').fadeOut('fast', function () {
         $(this).load('../' + chapter_id + '/levels/', function () {
-            unlock_levels($('#progress_number').text());
+            unlock_levels(progress_number);
+            get_stars_per_level(progress_number);
             lock_game_contents();
             $(this).fadeIn('fast', function(){
                 $('#game_nav').fadeIn();
@@ -109,5 +110,20 @@ function append_medal_star(){
 }
 
 function unlock_levels(progress_number){
+    $('.btn_level').each(function(index){
+        $(this).removeClass('btn_locked').attr('disabled', false);
+        return index < progress_number;
+    });
+}
 
+function get_stars_per_level(progress_number){
+    var stars_per_level = JSON.parse($('#spl').text());
+    $('.level_progress').each(function(index){
+        $('.progress_star').each(function(i){
+            if(i < stars_per_level[index]){
+                $(this).toggleClass('glyphicon-star-empty glyphicon-star');
+            }
+        });
+        return index < progress_number;
+    });
 }

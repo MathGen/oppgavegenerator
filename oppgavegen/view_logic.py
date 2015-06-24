@@ -12,7 +12,7 @@ from oppgavegen.generation_folder.calculate_parse_solution import parse_solution
 from oppgavegen.generation_folder.fill_in import get_values_from_position
 from oppgavegen.generation_folder.utility import after_equal_sign, replace_words, replace_variables_from_array
 from oppgavegen.generation_folder.template_validation import template_validation
-
+import json
 
 def make_edit_context_dict(template_id):
     """Returns context dict for use on the edit page"""
@@ -165,7 +165,7 @@ def get_stars_per_level(user, chapter):
             star_list.append(q.stars)
         except UserLevelProgress.DoesNotExist:
             star_list.append(0)
-
+    star_list = json.dumps(star_list)
     return star_list
 
 def validate_tags(tags):
