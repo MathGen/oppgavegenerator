@@ -1,4 +1,4 @@
-from oppgavegen.models import Template, UserLevelProgress
+from oppgavegen.models import Template, UserLevelProgress, User
 from random import randint
 from oppgavegen.decorators import Debugger
 
