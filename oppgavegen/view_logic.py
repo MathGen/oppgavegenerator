@@ -17,7 +17,10 @@ import json
 
 def make_edit_context_dict(template_id):
     """Returns context dict for use on the edit page"""
+    templatetags = []
     q = Template.objects.get(pk=template_id)
+    for t in q.tags.all():
+        templatetags.append(t.name)
     calculation_references = q.calculation_ref
     question_text = q.question_text_latex
     solution = q.solution_latex
@@ -31,7 +34,7 @@ def make_edit_context_dict(template_id):
     dictionary = q.dictionary
     used_variables = q.used_variables
     topics = ""
-    tags = json.dumps(q.tags)
+    tags = json.dumps(templatetags)
     for e in Topic.objects.all():
         topics += '§' + str(e.pk) + '§'
         topics += e.topic
