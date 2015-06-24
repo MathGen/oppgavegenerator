@@ -231,7 +231,9 @@ def levels(request, chapter_id):
         chapter_levels = game_chapter.levels.all()
         chapter_title = game_chapter.name
         context = RequestContext(request)
-        return render_to_response('game/levels.html', {'levels': chapter_levels, 'chapter_title': chapter_title}, context)
+        progress_number = calculate_progress(request.user, game_chapter)
+        return render_to_response('game/levels.html', {'levels': chapter_levels, 'chapter_title': chapter_title,
+                                                       'progress_number': progress_number}, context)
     else:
         return HttpResponseForbidden()
 

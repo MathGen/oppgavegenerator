@@ -150,6 +150,9 @@ def calculate_progress(user, chapter):
 
     return counter
 
+def get_stars_per_level(user, chapter):
+
+    pass
 
 def validate_tags(tags):
     # template = Template.objects.get(pk=template_id)
@@ -161,18 +164,3 @@ def validate_tags(tags):
             tag = Tag.objects.new(name=e)
             taglist.append(tag)
     return taglist
-
-def check_for_new_star(user, level_id):
-    u = User.objects.get(username=user.username)
-    level = Level.objects.get(pk=level_id)
-    user_progress = UserLevelProgress.objects.get(user=u, level=level)
-    rating = user_progress.level_rating
-    stars = user_progress.stars
-    r = [1500, 1800, 2100]
-    if (rating > r[0] and stars == 0) or (rating > r[1] and stars == 1) or (rating > r[2] and stars == 2):
-        add_star(user_progress)
-    pass
-
-def add_star(user_progress):
-    user_progress.stars = user_progress.stars + 1
-    user_progress.save()
