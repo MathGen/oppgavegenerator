@@ -106,8 +106,8 @@ def submit(request):
     if request.method == 'POST':
         message = 'Det har skjedd noe feil ved innsending av form'
         form = TemplateForm(request.POST)
-        newtags = form.cleaned_data['tags_list']
         if form.is_valid():
+            newtags = form.cleaned_data['tags_list']
             template = form.save(commit=False)
             # newtags = template.tags_list
             # template.tags = newtags
