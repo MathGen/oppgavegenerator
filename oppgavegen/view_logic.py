@@ -143,12 +143,16 @@ def calculate_progress(user, chapter):
     counter = 0
     for i in levels:
         level = Level.objects.get(pk=i)
-        q = UserLevelProgress.objects.get(user=user, level=level)
-        if q.star < 1:
+        print(1)
+        try:
+            q = UserLevelProgress.objects.get(user=user, level=level)
+        except UserLevelProgress.DoesNotExist:
+            break
+        if q.stars < 1:
             break
         counter += 1
-
     return counter
+
 
 def get_stars_per_level(user, chapter):
     levels = chapter.level_order
@@ -156,8 +160,11 @@ def get_stars_per_level(user, chapter):
     star_list = []
     for i in levels:
         level = Level.objects.get(pk=i)
-        q = UserLevelProgress.objects.get(user=user, level=level)
-        star_list.append(q.stars)
+        try:
+            q = UserLevelProgress.objects.get(user=user, level=level)
+            star_list.append(q.stars)
+        except UserLevelProgress.DoesNotExist:
+            star_list.append(0)
 
     return star_list
 
