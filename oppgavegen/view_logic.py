@@ -3,16 +3,15 @@
 Defines reusable functions often called from views.py
 
 """
-from oppgavegen.models import Template, Topic, UserLevelProgress, Level, Tag
+from oppgavegen.models import Template, Topic, Tag
 from datetime import datetime
-from django.contrib.auth.models import User
 from oppgavegen.answer_checker import check_answer
 from oppgavegen.decorators import Debugger
 from oppgavegen.generation_folder.calculate_parse_solution import parse_solution, calculate_array, parse_answer
 from oppgavegen.generation_folder.fill_in import get_values_from_position
 from oppgavegen.generation_folder.utility import after_equal_sign, replace_words, replace_variables_from_array
 from oppgavegen.generation_folder.template_validation import template_validation
-import json
+
 
 def make_edit_context_dict(template_id):
     """Returns context dict for use on the edit page"""
@@ -61,7 +60,7 @@ def make_answer_context_dict(form_values):
     answer = parse_answer(answer, random_domain)
     answer = answer.replace('`', '')
     answer = answer.split('§')
-    solution = str(q.question_text.replace('\\\\', '\\')) + "\\n" + str(q.solution.replace('\\\\', '\\'))
+    solution = str(q.question_text.replace('\\\\', '\\')) + "§" + str(q.solution.replace('\\\\', '\\'))
     solution = replace_variables_from_array(variable_dictionary, solution)
     solution = parse_solution(solution, random_domain)
     if len(replacing_words) > 0:
@@ -82,6 +81,8 @@ def make_answer_context_dict(form_values):
 
     solution = solution.replace('+-', '-')
     solution = solution.replace('--', '+')
+    solution = solution.replace('- -', '+')
+    solution = solution.replace('+ -', '-')
     answer_text = latex_exceptions(answer_text)
     context_dict = {'title': "Oppgavegen", 'answer': str(answer_text),
                     'solution': solution, 'user_won': correct_answer}
@@ -135,38 +136,6 @@ def latex_exceptions(string):
     """Replaces wrong latex with the proper one"""
     string = string.replace('\\tilde', '\\sim')
     return string
-
-
-def calculate_progress(user, chapter):
-    levels = chapter.level_order
-    levels = levels.split(',')
-    counter = 0
-    for i in levels:
-        level = Level.objects.get(pk=i)
-        print(1)
-        try:
-            q = UserLevelProgress.objects.get(user=user, level=level)
-        except UserLevelProgress.DoesNotExist:
-            break
-        if q.stars < 1:
-            break
-        counter += 1
-    return counter
-
-
-def get_stars_per_level(user, chapter):
-    levels = chapter.level_order
-    levels = levels.split(',')
-    star_list = []
-    for i in levels:
-        level = Level.objects.get(pk=i)
-        try:
-            q = UserLevelProgress.objects.get(user=user, level=level)
-            star_list.append(q.stars)
-        except UserLevelProgress.DoesNotExist:
-            star_list.append(0)
-    star_list = json.dumps(star_list)
-    return star_list
 
 
 def validate_tags(tags):
