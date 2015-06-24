@@ -236,9 +236,10 @@ def levels(request, chapter_id):
         chapter_title = game_chapter.name
         context = RequestContext(request)
         progress_number = calculate_progress(request.user, game_chapter)
-        print(progress_number)
-        return render_to_response('game/levels.html', {'levels': chapter_levels, 'chapter_title': chapter_title,
-                                                       'progress_number': progress_number}, context)
+        star_per_level = get_stars_per_level(request.user, game_chapter)
+        return render_to_response('game/levels.html',
+                                  {'levels': chapter_levels, 'chapter_title': chapter_title,
+                                   'progress_number': progress_number, 'spl': star_per_level}, context)
     else:
         return HttpResponseForbidden()
 

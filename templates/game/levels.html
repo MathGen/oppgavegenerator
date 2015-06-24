@@ -32,14 +32,15 @@
 {#</div>#}
 
 <div id="progress_number" hidden>{{ progress_number }}</div>
+<div id="spl" hidden>{{ spl }}</div>
 
 {% for level in levels %}
 <div id="level_{{ level.id }}" class="btn btn_level btn_locked" disabled>
     <h4 class="level_title">{{ level.name }}</h4>
     <h2 class="level_progress">
-        <span class="glyphicon glyphicon-star"></span>
-        <span class="glyphicon glyphicon-star-empty"></span>
-        <span class="glyphicon glyphicon-star-empty"></span>
+        <span class="progress_star glyphicon glyphicon-star-empty"></span>
+        <span class="progress_star glyphicon glyphicon-star-empty"></span>
+        <span class="progress_star glyphicon glyphicon-star-empty"></span>
     </h2>
 </div>
 {% endfor %}
