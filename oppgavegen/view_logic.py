@@ -151,8 +151,15 @@ def calculate_progress(user, chapter):
     return counter
 
 def get_stars_per_level(user, chapter):
+    levels = chapter.level_order
+    levels = levels.split(',')
+    star_list = []
+    for i in levels:
+        level = Level.objects.get(pk=i)
+        q = UserLevelProgress.objects.get(user=user, level=level)
+        star_list.append(q.stars)
 
-    pass
+    return star_list
 
 def validate_tags(tags):
     # template = Template.objects.get(pk=template_id)
