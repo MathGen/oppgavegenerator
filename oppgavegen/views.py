@@ -316,8 +316,24 @@ def remove_template_from_current_level(request, template_id):
                         + level.name +
                         '". (This will be a background process eventually.)')
     else:
-        return HttpResponse('You need to be the owner of the level you\'re editing!')
+        return HttpResponse('Du må være eier a levelet for å legge til level')
 
+
+def add_level_to_current_chapter(request, level_id):
+    """Add a template to the current level a teacher user is working on."""
+    chapter = request.user.extendeduser.current_chapter
+    level = Template.objects.get(pk=level_id)
+    if level.creator == request.user:
+        chapter.levels.add(level)
+        add_to_level_order = ''
+        if chapter.level_order != '':
+            add_to_level_order = ','
+        chapter.level_order += add_to_level_order + level.pk
+        return HttpResponse('Template added to level "'
+                            + level.name +
+                            '". (This will be a background process eventually.)')
+    else:
+        return HttpResponse('Du må være eier a kapitellet for å legge til level')
 
 
 def preview_template(request, template_id):
