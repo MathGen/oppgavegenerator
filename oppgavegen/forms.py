@@ -3,15 +3,13 @@
 Contains various forms that are used in views
 
 """
-from .models import Set, Chapter, Level, Template, User, ExtendedUser, Tag
-from django.forms import ModelForm, Textarea
-from django.forms.models import BaseModelFormSet
-from django.forms.formsets import formset_factory, BaseFormSet
-from django.forms import forms
+from django.forms import ModelForm
+from django.forms.formsets import BaseFormSet
 from django import forms
-from haystack.forms import SearchForm, ModelSearchForm, FacetedSearchForm
-from selectable.forms import AutoCompleteWidget, AutoCompleteSelectMultipleWidget
-from .lookups import TemplateLookup
+from haystack.forms import SearchForm
+
+from .models import Set, Chapter, Level, Template, ExtendedUser, Tag
+
 
 class TagField(forms.CharField):
     """
@@ -33,7 +31,8 @@ class TagField(forms.CharField):
         try:
             return tag_obj
         except ValueError:
-            raise forms.ValidationError(_("Please provide a paragraph-separated list of tags."))
+            raise forms.ValidationError("Please provide a paragraph-separated list of tags.")
+
 
 
 class TemplateSearchForm(SearchForm):

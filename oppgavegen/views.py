@@ -4,31 +4,32 @@ Defines views, and renders data to html templates.
 
 """
 
+import json
+
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.template import RequestContext
 from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
 from django.http import HttpResponseForbidden
-from django.http import JsonResponse
 from django.shortcuts import render
-from oppgavegen.tables import *
 from django_tables2 import RequestConfig
-from oppgavegen.templatetags.app_filters import is_teacher
-from oppgavegen.view_logic import *
-from django.views.generic.edit import CreateView, UpdateView, FormView
+from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from django.views.decorators.cache import cache_control
+
+from oppgavegen.tables import *
+from oppgavegen.templatetags.app_filters import is_teacher
 from oppgavegen.models import Set, Chapter, Level, Template
-from oppgavegen.rating import change_elo, change_level_rating, get_user_rating
+from oppgavegen.view_logic.rating import change_elo, change_level_rating, get_user_rating
 from oppgavegen.generation import generate_task, generate_level
 from oppgavegen.progress import calculate_progress, chapter_progress, get_stars_per_level
-import json
+
 
 # Search Views and Forms
 from haystack.generic_views import SearchView
-from .forms import QuestionForm, TemplateForm, SetForm, LevelCreateForm, ChapterNameForm, UserCurrentSetsForm, SetsSearchForm
+from .forms import QuestionForm, TemplateForm, LevelCreateForm, ChapterNameForm, UserCurrentSetsForm, SetsSearchForm
 from django.forms.formsets import formset_factory
 from django import http
-from django.forms.models import modelformset_factory, inlineformset_factory
+from django.forms.models import inlineformset_factory
 
 
 

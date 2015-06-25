@@ -1,4 +1,4 @@
-from .models import Template
+from oppgavegen.models import Template
 from selectable.base import ModelLookup
 from selectable.registry import registry
 

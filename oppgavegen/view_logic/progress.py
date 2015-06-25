@@ -1,6 +1,7 @@
 from oppgavegen.models import User, Level, UserLevelProgress, Chapter
 import json
 
+
 def calculate_progress(user, chapter):
     levels = chapter.level_order
     levels = levels.split(',')

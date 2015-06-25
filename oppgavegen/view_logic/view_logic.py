@@ -3,16 +3,15 @@
 Defines reusable functions often called from views.py
 
 """
-from oppgavegen.models import Template, Topic, Tag
 from datetime import datetime
-from django.contrib.auth.models import User
-from oppgavegen.answer_checker import check_answer
-from oppgavegen.decorators import Debugger
+import json
+
+from oppgavegen.models import Template, Topic, Tag
+from oppgavegen.view_logic.answer_checker import check_answer
 from oppgavegen.generation_folder.calculate_parse_solution import parse_solution, calculate_array, parse_answer
 from oppgavegen.generation_folder.fill_in import get_values_from_position
 from oppgavegen.generation_folder.utility import after_equal_sign, replace_words, replace_variables_from_array
 from oppgavegen.generation_folder.template_validation import template_validation
-import json
 
 
 def make_edit_context_dict(template_id):
@@ -157,4 +156,3 @@ def validate_tags(tags):
             tag = Tag.objects.new(name=e)
             taglist.append(tag)
     return taglist
-
