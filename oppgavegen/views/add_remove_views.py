@@ -1,5 +1,7 @@
 """For views that either add or remove something from the database"""
 from django.http import HttpResponse
+from django.shortcuts import render_to_response
+from django.template import RequestContext
 from oppgavegen.models import Level, Template, Set, Chapter
 from oppgavegen.view_logic.add_remove import *
 
@@ -19,7 +21,11 @@ def add_level_to_current_chapter(request, level_id):
 def new_chapter_for_set(request, set_id, chapter_name):
     """Add a template fo a specified level"""
     response_data = {} # ajax response data
-    set = Set.objects.get(pk=set_id)
-    chapter = new_chapter(chapter_name, request.user)
-    add_chapter_to_set(chapter, set)
-    return HttpResponse("new chapter added to set!", {'chapter_pk': chapter.pk})
+    if request.is_ajax():
+        context = RequestContext(request)
+        set = Set.objects.get(pk=set_id)
+        chapter = new_chapter(chapter_name, request.user)
+        add_chapter_to_set(chapter, set)
+        print('end')
+
+        return HttpResponse(chapter.pk)

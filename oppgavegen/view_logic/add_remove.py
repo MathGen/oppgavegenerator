@@ -2,7 +2,9 @@ from django.http import HttpResponse
 from oppgavegen.models import Level, Template, Set, Chapter
 
 def new_chapter(chapter_name, user):
-    chapter = Chapter(name=chapter_name, user=user)
+    print('new chapter: 1')
+    chapter = Chapter(name=chapter_name, creator=user)  # todo: add data time now pls
+    print('new chapter: 2')
     chapter.save()
     return chapter
 
@@ -28,14 +30,15 @@ def add_level_to_chapter(level, chapter):
     add_to_level_order = ''
     if chapter.order != '':
         add_to_level_order = ','
-    chapter.order += add_to_level_order + level.pk
+    chapter.order += add_to_level_order + str(level.pk)
     chapter.levels.add(level)
     chapter.save()
+
 
 def add_chapter_to_set(chapter, set):
     add_to_level_order = ''
     if set.order != '':
         add_to_level_order = ','
-    set.order += add_to_level_order + chapter.pk
+    set.order += add_to_level_order + str(chapter.pk)
     set.chapters.add(chapter)
     set.save()
