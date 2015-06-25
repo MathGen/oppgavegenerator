@@ -1,4 +1,5 @@
 var current_level = "";
+var level_progress = 0;
 $(document).ready(function () {
     load_chapters();
     // Load levels for the specific chapter
@@ -15,8 +16,10 @@ $(document).ready(function () {
         var level_title = $(this).find('.level_title').text();
         $('#level_title').text(" - " + level_title);
         var level_id = $(this).attr('id').match(/\d+/);
-        current_level = level_id;
-        load_template(level_id);
+        if(level_id <= level_progress + 1){
+            current_level = level_id;
+            load_template(level_id);
+        }
     });
     // Go back to main-page (chapter-picker)
     $('.btn_game_back').click(function(e){
@@ -35,7 +38,6 @@ function load_chapters(){
     $('#level_title').text("");
     $('#game_content').fadeOut('fast', function(){
         $(this).load('../' + set_id + '/chapters/', function () { //AJAX load
-            //append_medal_star(); //TODO: call from a better place.
             update_medals();
             append_medal_star();
             disable_game_contents();
@@ -53,9 +55,11 @@ function load_chapters(){
 function load_levels(chapter_id){
     $('#game_content').fadeOut('fast', function () {
         $(this).load('../' + chapter_id + '/levels/', function () { //AJAX load
-            var progress_number = $('#progress_number').text();
-            unlock_levels(progress_number);
-            get_stars_per_level(progress_number);
+            var progress_number = $('#progress_number');
+            level_progress = progress_number.text();
+            progress_number.remove();
+            unlock_levels(level_progress);
+            get_stars_per_level(level_progress);
             disable_game_contents();
             $(this).fadeIn('fast', function(){
                 $('#game_nav').fadeIn();
@@ -157,6 +161,17 @@ function update_progress_bar(){
 function append_medal_star(){
     $('.chapter_ribbon').each(function(){
         $(this).append('<div class="star-5-points"></div>');
+    });
+}
+
+/**
+ * Unlocks all chapters the user has reached. Removes the lock.
+ * @param {number} progress_number - The progress-number which indicates how many chapters is unlocked.
+ */
+function unlock_chapters(progress_number){ //TODO: call this when retrieving the progress_number from back-end.
+    $('.btn_chapter').each(function(index){
+        $(this).removeClass('btn_locked').attr('disabled', false);
+        return index < progress_number; // To end the iteration when finished with all unlocked chapters.
     });
 }
 

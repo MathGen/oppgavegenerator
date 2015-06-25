@@ -267,6 +267,15 @@ def get_template(request, level_id):
 
 
 ### SET, CHAPTER, LEVEL MANAGEMENT VIEWS ###
+@login_required
+def set_edit(request, set_id=""):
+    context = RequestContext(request)
+    get_chapters = ""
+    if set_id:
+        edit_set = Set.objects.get(pk=set_id)
+        get_chapters = edit_set.chapters.all()
+    return render_to_response('sets/container.html', {'set_id': set_id, 'chapters': get_chapters}, context)
+
 
 class SetsSearchView(SearchView):
     """ Search view for all set-type content """
