@@ -274,7 +274,18 @@ def set_edit(request, set_id=""):
     if set_id:
         edit_set = Set.objects.get(pk=set_id)
         get_chapters = edit_set.chapters.all()
-    return render_to_response('sets/container.html', {'set_id': set_id, 'chapters': get_chapters}, context)
+    return render_to_response('sets/container.html', {'set_id': set_id, 'chapters': get_chapters,
+                                                      'set_edit': True}, context)
+
+
+def chapter_edit(request, chapter_id=""):
+    context = RequestContext(request)
+    get_levels = ""
+    if chapter_id:
+        edit_chapter = Chapter.objects.get(pk=chapter_id)
+        get_levels = edit_chapter.levels.all()
+    return render_to_response('sets/container.html', {'chapter_id': chapter_id, 'levels': get_levels,
+                                                      'chapter_edit': True}, context)
 
 
 class SetsSearchView(SearchView):
