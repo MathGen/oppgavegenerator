@@ -1,5 +1,6 @@
-from oppgavegen.decorators import Debugger
 from random import randint
+
+from oppgavegen.utility.decorators import Debugger
 
 
 @Debugger

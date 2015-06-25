@@ -1,10 +1,12 @@
+from sympy import *
+
 from oppgavegen.latex_translator import latex_to_sympy
 from oppgavegen.models import Template
-from oppgavegen.decorators import Debugger
-from oppgavegen.generation_folder.utility import remove_unnecessary, string_replace
+from oppgavegen.utility.decorators import Debugger
+from oppgavegen.utility.utility import remove_unnecessary, string_replace
 from oppgavegen.generation_folder.calculate_parse_solution import parse_solution, parse_answer
-from sympy import *
-from oppgavegen.generation import generate_valid_numbers
+from oppgavegen.generation_folder.generation import generate_valid_numbers
+
 
 @Debugger
 def template_validation(template_id):

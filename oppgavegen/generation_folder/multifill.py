@@ -1,6 +1,8 @@
-from oppgavegen.decorators import Debugger
 from random import shuffle
-from oppgavegen.generation_folder.utility import string_replace
+
+from oppgavegen.utility.decorators import Debugger
+from oppgavegen.utility.utility import string_replace
+
 
 @Debugger
 def multifill(choices, variable_dict):

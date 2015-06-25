@@ -4,15 +4,16 @@ Handles task generation from templates.
 
 """
 
-from random import randint, uniform, shuffle, choice
+from random import uniform, shuffle, choice
+
 from sympy.parsing.sympy_parser import (parse_expr, standard_transformations,
                                         implicit_multiplication_application, convert_xor)
+
 from oppgavegen.latex_translator import latex_to_sympy
-from .models import  Level
-from oppgavegen.decorators import Debugger
+from oppgavegen.models import  Level
 from oppgavegen.generation_folder.multifill import multifill
 from oppgavegen.generation_folder.fill_in import fill_in_the_blanks
-from oppgavegen.generation_folder.utility import*
+from oppgavegen.utility.utility import*
 from oppgavegen.generation_folder.calculate_parse_solution import parse_solution, calculate_answer
 from oppgavegen.generation_folder.get_question import get_question, get_level_question
 

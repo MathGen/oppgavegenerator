@@ -10,7 +10,7 @@ from oppgavegen.models import Template, Topic, Tag
 from oppgavegen.view_logic.answer_checker import check_answer
 from oppgavegen.generation_folder.calculate_parse_solution import parse_solution, calculate_array, parse_answer
 from oppgavegen.generation_folder.fill_in import get_values_from_position
-from oppgavegen.generation_folder.utility import after_equal_sign, replace_words, replace_variables_from_array
+from oppgavegen.utility.utility import after_equal_sign, replace_words, replace_variables_from_array
 from oppgavegen.generation_folder.template_validation import template_validation
 
 

@@ -1,5 +1,6 @@
-from oppgavegen.decorators import Debugger
-from oppgavegen.human_sort import human_sort
+from oppgavegen.utility.decorators import Debugger
+from oppgavegen.utility import human_sort
+
 
 @Debugger
 def fill_in_the_blanks(fill_in):

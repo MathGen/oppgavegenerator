@@ -1,5 +1,5 @@
 from oppgavegen.models import User, UserLevelProgress, Level
-from oppgavegen.decorators import Debugger
+from oppgavegen.utility.decorators import Debugger
 
 
 def change_elo(template, user, user_won, type):

@@ -14,13 +14,14 @@ from django.shortcuts import render
 from django_tables2 import RequestConfig
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
+
 from django.views.decorators.cache import cache_control
 
 from oppgavegen.tables import *
 from oppgavegen.templatetags.app_filters import is_teacher
 from oppgavegen.models import Set, Chapter, Level, Template
 from oppgavegen.view_logic.rating import change_elo, change_level_rating, get_user_rating
-from oppgavegen.generation import generate_task, generate_level
+from oppgavegen.generation_folder.generation import generate_task, generate_level
 from oppgavegen.progress import calculate_progress, chapter_progress, get_stars_per_level
 
 

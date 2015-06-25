@@ -1,6 +1,8 @@
-from oppgavegen.models import Template, UserLevelProgress, User
 from random import randint
-from oppgavegen.decorators import Debugger
+
+from oppgavegen.models import Template, UserLevelProgress, User
+from oppgavegen.utility.decorators import Debugger
+
 
 @Debugger
 def get_question(user, template_id, topic=''):

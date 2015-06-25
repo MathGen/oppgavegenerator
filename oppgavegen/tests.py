@@ -1,9 +1,10 @@
 # Tests
 from django.test import TestCase
-from oppgavegen.generation import *
-from oppgavegen.latex_translator import *
-from oppgavegen.view_logic import *
 from django.core import management
+
+from oppgavegen.generation_folder.generation import *
+from oppgavegen.latex_translator import *
+
 
 def setup():
         management.call_command('loaddata', 'initial_data.json', verbosity=0)
