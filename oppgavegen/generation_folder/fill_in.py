@@ -1,5 +1,5 @@
 from oppgavegen.utility.decorators import Debugger
-from oppgavegen.utility import human_sort
+from oppgavegen.utility.human_sort import human_sort
 
 
 @Debugger
