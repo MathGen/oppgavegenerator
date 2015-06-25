@@ -27,7 +27,7 @@ from oppgavegen.progress import calculate_progress, chapter_progress, get_stars_
 
 # Search Views and Forms
 from haystack.generic_views import SearchView
-from .forms import QuestionForm, TemplateForm, LevelCreateForm, ChapterNameForm, UserCurrentSetsForm, SetsSearchForm
+from oppgavegen.forms import QuestionForm, TemplateForm, LevelCreateForm, ChapterNameForm, UserCurrentSetsForm, SetsSearchForm
 from django.forms.formsets import formset_factory
 from django import http
 from django.forms.models import inlineformset_factory
