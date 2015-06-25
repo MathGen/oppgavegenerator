@@ -14,6 +14,7 @@ import datetime
 from haystack.query import SearchQuerySet, RelatedSearchQuerySet
 from haystack.views import SearchView
 from django.views.generic import ListView, CreateView
+from oppgavegen.views.add_remove_views import *
 
 urlpatterns = patterns('',
     url(r'^$', 'oppgavegen.views.views.index', name='home'),
@@ -87,7 +88,9 @@ urlpatterns = patterns('',
     # Add / remove template to current user level
     url(r'^user/level/template/(\d+)/add/$', add_template_to_current_level, name='current_level_add'),
     url(r'^user/level/template/(\d+)/remove/$', remove_template_from_current_level, name='current_level_remove'),
-
+    url(r'^set/(\d+)/new_chapter/$', new_chapter_for_set, name='new_chapter_for_set'),
+    url(r'^set/(\d+)/add_chapter/$', add_chapter_to_set, name='new_chapter_for_set'),
+    #url(r'^set/(\d+)/add_chapter/$', remove_chapter_from_set, name='remove_chapter_from_set'),
     # DJANGO SELECTABLE
     url(r'^selectable/', include('selectable.urls')),
 
