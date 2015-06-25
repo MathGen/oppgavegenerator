@@ -29,7 +29,7 @@ sub{							/* between bootstrap*/
 	vertical-align: middle;
 }
 .output_mathquill{
-	display: table-cell;
+	/*display: table-cell;*/
 	vertical-align: middle;
 }
 .multi_field{

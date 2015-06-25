@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block panels %}
+<script src="/static/js/sets.js?001"></script>
+<div id="set_editor" class="jumbotron">
+    {% if set_id %}
+    <div id="set_id" hidden>{{ set_id }}</div>
+    {% endif %}
+{#    <h2 class="set_title">{{ set_title }}<span id="chapter_title"></span><span id="level_title"></span></h2>#}
+
+    {% include 'sets/edit_set.html' %}
+    <div id="set_content" style="display: none">
+
+    </div>
+</div>
+{% endblock %}

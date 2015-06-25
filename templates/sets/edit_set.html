@@ -1,0 +1,21 @@
+<input class="form-control" placeholder="Tittel på oppgavesett...">
+
+<section class="row">
+    <div class="col-md-8">
+        <section class="panel panel-default">
+            {% if chapters %}
+                {% for chapter in chapters %}
+                    <div>{{ chapter.name }}</div>
+                {% endfor %}
+            {% else %}
+                Ingen kapitler
+            {% endif %}
+
+        </section>
+    </div>
+    <div class="col-md-4">
+        <section class="panel panel-default">
+
+        </section>
+    </div>
+</section>
