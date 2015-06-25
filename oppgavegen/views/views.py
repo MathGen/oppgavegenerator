@@ -286,6 +286,7 @@ def chapter_edit(request, chapter_id=""):
     return render_to_response('sets/container.html', {'chapter_id': chapter_id, 'levels': get_levels,
                                                       'chapter_edit': True}, context)
 
+
 class SetsSearchView(SearchView):
     """ Search view for all set-type content """
 
@@ -296,21 +297,10 @@ class SetsSearchView(SearchView):
         queryset = super(SetsSearchView, self).get_queryset()
         return queryset
 
+
 class SetSearch(SetsSearchView):
     title = 'set'
     extra_content = {'title':title }
-
-def level_add_template(request, level_id, template_id):
-    """Add a template fo a specified level"""
-    response_data = {} # ajax response data
-    level = Level.objects.get(pk=level_id)
-    template = Template.objects.get(pk=template_id)
-    if level.creator == request.user:
-        level.templates.add(template)
-        response_data['result'] = 'Template added to Level!'
-        return HttpResponse("Template added to level!")
-    else:
-        return HttpResponse('You need to be the owner of the level you\'re editing!')
 
 
 def add_template_to_current_level(request, template_id):
@@ -337,8 +327,6 @@ def remove_template_from_current_level(request, template_id):
                         '". (This will be a background process eventually.)')
     else:
         return HttpResponse('Du må være eier a levelet for å legge til level')
-
-
 
 
 
