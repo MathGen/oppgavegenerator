@@ -1,21 +1,21 @@
-<input class="form-control" placeholder="Tittel på oppgavesett...">
+<input id="set_title" class="form-control" placeholder="Tittel på oppgavesett...">
 
 <section class="row">
-    <div class="col-md-8">
-        <section class="panel panel-default">
-            {% if chapters %}
-                {% for chapter in chapters %}
-                    <div>{{ chapter.name }}</div>
-                {% endfor %}
-            {% else %}
-                Ingen kapitler
-            {% endif %}
+    <ul id="chapter_container" class="col-md-8">
+        {% if chapters %}
+            {% for chapter in chapters %}
+                <li id="chapter_{{ chapter.id }}" class="btn list_chapter">
+                    <h4 class="chapter_title">{{ chapter.name }}</h4>
+                </li>
+            {% endfor %}
+        {% else %}
+            Ingen kapitler
+        {% endif %}
 
-        </section>
-    </div>
+    </ul>
     <div class="col-md-4">
         <section class="panel panel-default">
-
+            Search...
         </section>
     </div>
 </section>
