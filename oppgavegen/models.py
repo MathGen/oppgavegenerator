@@ -131,7 +131,7 @@ class UserLevelProgress(models.Model):
         return str(self.pk)
 
 class Offset(models.Model):
-    offset = models.SmallIntegerField
+    offset = models.FloatField(default=0)
     difficulty_number = models.PositiveSmallIntegerField
 
 
