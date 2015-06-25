@@ -22,7 +22,7 @@ from oppgavegen.templatetags.app_filters import is_teacher
 from oppgavegen.models import Set, Chapter, Level, Template
 from oppgavegen.view_logic.rating import change_elo, change_level_rating, get_user_rating
 from oppgavegen.generation_folder.generation import generate_task, generate_level
-from oppgavegen.progress import calculate_progress, chapter_progress, get_stars_per_level
+from oppgavegen.view_logic.progress import calculate_progress, chapter_progress, get_stars_per_level
 
 
 # Search Views and Forms
