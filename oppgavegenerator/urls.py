@@ -79,9 +79,9 @@ urlpatterns = patterns('',
 
     # AJAX FUNCTION URLS
     # Return template preview html
-    url(r'^template/([\w ]+)/preview/$', 'oppgavegen.views.preview_template', name='preview_template'),
+    url(r'^template/([\w ]+)/preview/$', 'oppgavegen.views.views.preview_template', name='preview_template'),
     # Add template to a spesific level ( i.e:  /level/[level id]/template/[template id]/add )
-    url(r'^level/(\d+)/template/(\d+)/add/$', 'oppgavegen.views.level_add_template', name='level_add_template' ),
+    url(r'^level/(\d+)/template/(\d+)/add/$', 'oppgavegen.views.views.level_add_template', name='level_add_template' ),
     # Add / remove template to current user level
     url(r'^user/level/template/(\d+)/add/$', add_template_to_current_level, name='current_level_add'),
     url(r'^user/level/template/(\d+)/remove/$', remove_template_from_current_level, name='current_level_remove'),
