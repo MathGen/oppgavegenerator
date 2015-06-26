@@ -92,7 +92,7 @@ urlpatterns = patterns('',
     url(r'^user/level/template/(\d+)/remove/$', remove_template_from_current_level, name='current_level_remove'),
     url(r'^set/(\d+)/([\w ]+)/new_chapter/$', new_chapter_for_set, name='new_chapter_for_set'),
     url(r'^set/(\d+)/([\w ]+)/add_chapter/$', add_chapter_to_set, name='new_chapter_for_set'),
-    #url(r'^set/(\d+)/add_chapter/$', remove_chapter_from_set, name='remove_chapter_from_set'),
+    url(r'^set/(\d+)/chapter/(\d+)/remove_chapter/$', remove_chapter_from_set, name='remove_chapter_from_set'),
     # DJANGO SELECTABLE
     url(r'^selectable/', include('selectable.urls')),
 

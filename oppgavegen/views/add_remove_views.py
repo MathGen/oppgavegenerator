@@ -18,14 +18,21 @@ def add_level_to_current_chapter(request, level_id):
     else:
         return HttpResponse('Du må være eier a kapitellet for å legge til level')
 
+
 def new_chapter_for_set(request, set_id, chapter_name):
     """Add a template fo a specified level"""
-    response_data = {} # ajax response data
     if request.is_ajax():
-        context = RequestContext(request)
         set = Set.objects.get(pk=set_id)
         chapter = new_chapter(chapter_name, request.user)
         add_chapter_to_set(chapter, set)
         print('end')
 
         return HttpResponse(chapter.pk)
+
+
+def remove_chapter_from_set(request, set_id, chapter_id):
+    """Deletes a chapter from a set"""
+    msg = remove_from_set(set_id, chapter_id, request.user)
+    remove_chapter(chapter_id, request.user)
+
+    return HttpResponse(msg)
