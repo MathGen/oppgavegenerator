@@ -68,11 +68,8 @@ def remove_chapter_from_set_view(request, set_id, chapter_id):
 
 def remove_level_from_chapter_view(request, chapter_id, level_id):
     """Deletes a chapter from a set"""
-    try:
-        msg = remove_level_from_chapter(chapter_id, level_id, request.user)   # Todo: only remove if original creator.
-        remove_level(level_id, request.user)
-    except Exception as e:
-        print(e)
+    msg = remove_level_from_chapter(chapter_id, level_id, request.user)   # Todo: only remove if original creator.
+    remove_level(level_id, request.user)
     return HttpResponse(msg)
 
 
