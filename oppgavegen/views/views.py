@@ -229,7 +229,7 @@ def chapters(request, set_id):
         game_set = Set.objects.get(pk=set_id)
         set_chapters = game_set.chapters.all()
         context = RequestContext(request)
-        medals = []
+        medals = [] # Both lists get updated in chapter_progress
         completed = []
         progress_number = chapter_progress(request.user, game_set, medals, completed)
         print('before return')
