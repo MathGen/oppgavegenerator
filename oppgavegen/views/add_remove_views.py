@@ -52,9 +52,17 @@ def remove_chapter_from_set(request, set_id, chapter_id):
 
     return HttpResponse(msg)
 
+
 def remove_level_from_chapter(request, chapter_id, level_id):
     """Deletes a chapter from a set"""
     msg = remove_from_chapter(chapter_id, level_id, request.user)   # Todo: only remove if original creator.
     remove_level(level_id, request.user)
 
     return HttpResponse(msg)
+
+
+def add_template_to_level():
+    pass
+
+def remove_template_from_level():
+    pass
