@@ -277,6 +277,7 @@ def set_edit(request, set_id=""):
     return render_to_response('sets/container.html', {'set_id': set_id, 'chapters': get_chapters,
                                                       'set_edit': True}, context)
 
+
 def chapter_edit(request, chapter_id=""):
     context = RequestContext(request)
     get_levels = ""

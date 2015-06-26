@@ -4,19 +4,34 @@ $(document).ready(function () {
     //$('#chapter_container').sortable({containment:"#chapter_container"}).disableSelection();
     //$('.list_chapter').draggable({containment:"#chapter_container", axis:"y"});
 
-    $('.new_content').on('focusout', function(){ //TODO: make grid element if in grid-view.
+    // Delete the specific content.
+    $(document).on('click', '.btn_content_del', function(){
+        delete_content($(this).closest('li'));
+    });
+
+    // Edit the specific content.
+    $(document).on('click', '.btn_content_edit', function(){
+        edit_content($(this).closest('li'));
+    });
+
+    $(document).on('focusout', '.new_content', function(){ //TODO: make grid element if in grid-view.
 		add_new_content($(this));
-	}).on('keyup', function(e){
+	}).on('keyup', '.new_content', function(e){
 		if(/(188|13)/.test(e.which)) $(this).focusout(); // Add chapter if one of these keys are pressed.
 	});
 });
 
+// TODO: make it work with levels as well.
 function add_new_content(input){
     var text = input.val().replace(/[^a-zA-Z0-9\+\-\.#ÆØÅæøåA]/g, ''); // Allowed characters
     if (text) {
-        $.post('../' + text + '/new_chapter/', {'csrfmiddlewaretoken': getCookie('csrftoken')}, function(result){
+        var content_path = '../'+ text +'/new_chapter/';
+        if($('#edit_container').hasClass('edit_levels')) {
+            content_path = '../../../chapter/'+ $('#chapter_id').text() +'/'+ text +'/new_level/';
+        }
+        $.post(content_path, {'csrfmiddlewaretoken': getCookie('csrftoken')}, function(result){
             $('#edit_container').append(
-                '<li id="chapter_'+result+'" class="btn list_content">' +
+                '<li id="content_'+result+'" class="btn list_content">' +
                 '<h4 class="content_title">' + text + '<small>  ny</small></h4>' +
                 '<a class="btn btn_content_edit">Edit</a>' +
                 '<a class="btn btn_content_del"><span class="glyphicon glyphicon-trash"></span></a>' +
@@ -24,6 +39,36 @@ function add_new_content(input){
         });
     }
     input.val("");
+}
+
+// TODO: make it work with levels as well. set/(\d+)/chapter/(\d+)/remove_chapter
+function delete_content(content){
+    var content_id = content.attr('id').match(/\d+/);
+    if(content_id){
+        var content_type = "level";
+        if($('#edit_container').hasClass('edit_chapters')) {
+            content_type = "chapter";
+        }
+        $.post('../'+content_type+'/'+content_id+'/remove_'+content_type+'/', {'csrfmiddlewaretoken': getCookie('csrftoken')}, function(result){
+            if(result[0] == 's'){ // if success, delete the visual content.
+                content.remove();
+            }
+            window.console.log(result);
+        });
+    }
+}
+
+function edit_content(content){
+    var content_id = content.attr('id').match(/\d+/);
+    if(content_id){
+        var content_type = "level";
+        if($('#edit_container').hasClass('edit_chapters')) {
+            content_type = "chapter";
+        }
+        $('#set_editor').fadeOut('fast', function(){
+            $(this).load('../../../'+content_type+'/'+content_id+'/edit/ #set_editor > *').fadeIn('fast');
+        });
+    }
 }
 
 /**

@@ -3,34 +3,35 @@
 <section class="row">
     <div class="col-md-8">
     {% if set_edit %}
+        <ul id="edit_container" class="edit_chapters">
         {% if chapters %}
-            <ul id="edit_container">
             {% for chapter in chapters %}
-                <li id="chapter_{{ chapter.id }}" class="btn list_content">
+                <li id="content_{{ chapter.id }}" class="btn list_content">
                     <h4 class="content_title">{{ chapter.name }}</h4>
                     <a class="btn btn_content_edit">Edit</a>
                     <a class="btn btn_content_del"><span class="glyphicon glyphicon-trash"></span></a>
                 </li>
             {% endfor %}
-            </ul>
         {% else %}
 
         {% endif %}
+        </ul>
         <input id="input_new_chapter" type="text" class="list_input form-control new_content" placeholder="Opprett nytt kapittel...">
     {% elif chapter_edit %}
+        <div id="chapter_id" hidden>{{ chapter_id }}</div>
+        <ul id="edit_container" class="edit_levels">
         {% if levels %}
-            <ul id="edit_container">
             {% for level in levels %}
-                <li id="level_{{ level.id }}" class="btn list_content">
+                <li id="content_{{ level.id }}" class="btn list_content">
                     <h4 class="content_title">{{ level.name }}</h4>
                     <a class="btn btn_content_edit">Edit</a>
                     <a class="btn btn_content_del"><span class="glyphicon glyphicon-trash"></span></a>
                 </li>
             {% endfor %}
-            </ul>
         {% else %}
 
         {% endif %}
+        </ul>
         <input id="input_new_level" type="text" class="list_input form-control new_content" placeholder="Opprett nytt level...">
     {% endif %}
     </div>
