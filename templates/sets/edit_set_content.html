@@ -35,6 +35,10 @@
         {% endif %}
         </ul>
         <input id="input_new_level" type="text" class="list_input form-control new_content" placeholder="Opprett nytt level...">
+    {% else %}
+        <div id="get_content_title" hidden>{{ level_title }}</div>
+        <div id="level_id" hidden>{{ level_id }}</div>
+
     {% endif %}
     </div>
     <div class="col-md-4">

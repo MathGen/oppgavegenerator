@@ -225,19 +225,22 @@ def game(request, set_id):
 
 
 def chapters(request, set_id):
-    if request.is_ajax():
-        game_set = Set.objects.get(pk=set_id)
-        set_chapters = game_set.chapters.all()
-        context = RequestContext(request)
-        medals = []
-        completed = []
-        chapter_progress(request.user, game_set, medals, completed)
-        print('before return')
-        return render_to_response('game/chapters.html',
-                                  {'chapters': set_chapters, 'medals': json.dumps(medals),
-                                   'completed': json.dumps(completed)}, context)
-    else:
-        return HttpResponseForbidden()
+    try:
+        if request.is_ajax():
+            game_set = Set.objects.get(pk=set_id)
+            set_chapters = game_set.chapters.all()
+            context = RequestContext(request)
+            medals = []
+            completed = []
+            chapter_progress(request.user, game_set, medals, completed)
+            print('before return')
+            return render_to_response('game/chapters.html',
+                                      {'chapters': set_chapters, 'medals': json.dumps(medals),
+                                       'completed': json.dumps(completed)}, context)
+        else:
+            return HttpResponseForbidden()
+    except Exception as e:
+        print(e)
 
 
 def levels(request, chapter_id):
