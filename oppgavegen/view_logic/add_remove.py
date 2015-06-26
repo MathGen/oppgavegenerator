@@ -10,13 +10,16 @@ def new_chapter(chapter_name, user):
 
 
 def new_level(level_name, user):
-    level = Level(name=level_name, user=user, creation_date=datetime.now())
-    level.save()
+    try:
+        level = Level(name=level_name, creator=user, creation_date=datetime.now())
+        level.save()
+    except Exception as e:
+        print(e)
     return level
 
 
 def new_set(set_name, user):
-    set = Set(name=set_name, user=user, creation_date=datetime.now())
+    set = Set(name=set_name, creator=user, creation_date=datetime.now())
     set.save()
     return set
 

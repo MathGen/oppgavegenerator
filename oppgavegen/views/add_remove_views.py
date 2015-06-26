@@ -35,16 +35,13 @@ def new_chapter_for_set(request, set_id, chapter_name):
 def new_level_for_chapter(request, chapter_id, level_name):
     """Add a template fo a specified level"""
     if request.is_ajax():
-        try:
-            chapter = Chapter.objects.get(pk=chapter_id)
-            msg = 'Failed to add chapter'
-            if chapter.creator == request.user:
-                level = new_level(level_name, request.user)
-                add_level_to_chapter(level, chapter)
-                msg = level.pk
-        except Exception as e:
-            print(e)
 
+        chapter = Chapter.objects.get(pk=chapter_id)
+        msg = 'Failed to add chapter'
+        if chapter.creator == request.user:
+            level = new_level(level_name, request.user)
+            add_level_to_chapter(level, chapter)
+            msg = level.pk
         return HttpResponse(msg)
 
 
