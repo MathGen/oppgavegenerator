@@ -306,25 +306,8 @@ class SetSearch(SetsSearchView):
 
 class MiniSearchView(SearchView):
     template_name = 'search/mini_search.html'
-    searchqueryset = SearchQuerySet()
-    def get_queryset(self):
-        sqs = self.args[0]
-        super(MiniSearchView, self).get_queryset()
-        if sqs.lower() == "level":
-            sqs = SearchQuerySet.models(Level)
-        elif sqs.lower() == "chapter":
-            sqs = SearchQuerySet.models(Chapter)
-        elif sqs.lower() == "set":
-            sqs = SearchQuerySet.models(Set)
-        else:
-            sqs = Template
 
-        return sqs
 
-    def get_context_data(self, **kwargs):
-        context = super(MiniSearchView, self).get_context_data(**kwargs)
-        context['used_model'] = self.used_model
-        return context
 
 def level_add_template(request, level_id, template_id):
     """Add a template fo a specified level"""

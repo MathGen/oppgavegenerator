@@ -62,7 +62,20 @@ urlpatterns = patterns('',
        searchqueryset=SearchQuerySet().models(Template),
        form_class=TemplateSearchForm
        ), name='template_search'),
-    # url(r'^minisearch/([\w ]+)/$', MiniSearchView.as_view(), name='simple_search'),
+    # Mini search views (for jquery.load-situations)
+    url(r'^minisearch/chapters/', SearchView(
+        template='search/mini_search.html',
+        searchqueryset=SearchQuerySet().models(Chapter),
+        )),
+   url(r'^minisearch/levels/', SearchView(
+        template='search/mini_search.html',
+        searchqueryset=SearchQuerySet().models(Level),
+        )),
+    url(r'^minisearch/templates/', SearchView(
+        template='search/mini_search.html',
+        searchqueryset=SearchQuerySet().models(Template),
+        )),
+    #url(r'^minisearch/([\w ]+)/$', MiniSearchView().as_view(), name='simple_search'),
     # Search in sets, chapters or levels
 
     #url(r'^sets/search/$', SetSearch(

@@ -92,7 +92,7 @@ def remove_template_from_level(level_id, template_id, user):
     return success_message
 
 
-def add_template_to_level(template, level, user):  # Todo: make a copy and add that isntead.
+def add_template_to_level(template, level, user):  # Todo: make a copy and add that instead.
     success_message = 'Failed to add template to level'
     if level.creator == user:
         level.templates.add(template)
@@ -142,7 +142,7 @@ def update_chapter_or_set(set_or_chapter, title, order, user):
         set_or_chapter.title = title
         set_or_chapter.order = order
         set_or_chapter.save()
-        msg = 'Sucessfull update'
+        msg = 'Successful update'
     return msg
 
 def update_level(level, title, user):
@@ -150,5 +150,5 @@ def update_level(level, title, user):
     if level.creator == user:
         level.title = title
         level.save()
-        msg = 'Sucessfull update'
+        msg = 'Successful update'
     return msg
