@@ -3,7 +3,7 @@ import json
 
 
 def calculate_progress(user, chapter):
-    levels = chapter.level_order
+    levels = chapter.order
     levels = levels.split(',')
     counter = 0
     for i in levels:
@@ -30,8 +30,8 @@ def chapter_progress(user, set, medals, completed):
     :return: No return as the return is the lists getting changed.
     """
     try:
-        chapters = set.chapter_order
-    except set.chapter_order.DoesNotExist:
+        chapters = set.order
+    except set.order.DoesNotExist:
         print('no chapter order exists for this set')
     chapters = chapters.split(',') # Todo error handling
     for i in chapters:
@@ -50,7 +50,10 @@ def chapter_progress(user, set, medals, completed):
                 pass
         if levels_completed != level_counter:
             level_star_count = 0
-        medals.append(level_star_count//level_counter)
+        try:
+            medals.append(level_star_count//level_counter)
+        except ZeroDivisionError:
+            medals.append(0)
         completed.append(levels_completed)
 
     counter = 0
@@ -62,7 +65,7 @@ def chapter_progress(user, set, medals, completed):
 
 
 def get_stars_per_level(user, chapter):
-    levels = chapter.level_order
+    levels = chapter.order
     levels = levels.split(',')
     star_list = []
     for i in levels:
