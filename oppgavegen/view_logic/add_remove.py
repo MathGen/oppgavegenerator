@@ -53,7 +53,36 @@ def remove_from_set(set_id, chapter_id, user):
 
     return success_message
 
+def remove_from_chapter(chapter_id, level_id, user):
+    chapter = Set.objects.get(pk=chapter_id)
+    level = Chapter.objects.get(pk=level_id)
+    success_message = 'Failed to remove ' + level.name + ' from set.'
+    if user == chapter.creator:
+        chapter.chapters.remove(level)
+        order = chapter.order.split(',')
+        order.remove(level_id)
+        order = ','.join(order)
+        chapter.order = order
+        chapter.save()
+        success_message = 'successfully removed ' + level.name + ' from set.'
 
+    return success_message
+
+
+def remove_from_level(level_id, template_id, user):
+    chapter = Set.objects.get(pk=level_id)
+    level = Chapter.objects.get(pk=template_id)
+    success_message = 'Failed to remove ' + level.name + ' from set.'
+    if user == chapter.creator:
+        chapter.chapters.remove(level)
+        order = chapter.order.split(',')
+        order.remove(template_id)
+        order = ','.join(order)
+        chapter.order = order
+        chapter.save()
+        success_message = 'successfully removed ' + level.name + ' from set.'
+
+    return success_message
 
 
 def remove_set(set_id, user):

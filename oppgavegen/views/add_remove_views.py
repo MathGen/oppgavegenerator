@@ -40,7 +40,7 @@ def new_level_for_chapter(request, chapter_id, level_name):
         if chapter.creator == request.user:
             level = new_level(level_name, request.user)
             add_level_to_chapter(level, chapter)
-            level = level.pk
+            msg = level.pk
 
         return HttpResponse(msg)
 
@@ -49,5 +49,12 @@ def remove_chapter_from_set(request, set_id, chapter_id):
     """Deletes a chapter from a set"""
     msg = remove_from_set(set_id, chapter_id, request.user)
     remove_chapter(chapter_id, request.user)
+
+    return HttpResponse(msg)
+
+def remove_level_from_chapter(request, chapter_id, level_id):
+    """Deletes a chapter from a set"""
+    msg = remove_from_chapter(chapter_id, level_id, request.user)   # Todo: only remove if original creator.
+    remove_level(level_id, request.user)
 
     return HttpResponse(msg)
