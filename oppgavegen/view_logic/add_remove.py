@@ -10,11 +10,8 @@ def new_chapter(chapter_name, user):
 
 
 def new_level(level_name, user):
-    try:
-        level = Level(name=level_name, creator=user, creation_date=datetime.now())
-        level.save()
-    except Exception as e:
-        print(e)
+    level = Level(name=level_name, creator=user, creation_date=datetime.now())
+    level.save()
     return level
 
 
