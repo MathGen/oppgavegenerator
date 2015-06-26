@@ -47,6 +47,7 @@ def remove_set(set_id, user):
         set.delete()
     return success_string
 
+
 def remove_chapter_from_set(set_id, chapter_id, user):
     set = Set.objects.get(pk=set_id)
     chapter = Chapter.objects.get(pk=chapter_id)
@@ -61,6 +62,7 @@ def remove_chapter_from_set(set_id, chapter_id, user):
         success_message = 'successfully removed ' + chapter.name + ' from set.'
 
     return success_message
+
 
 def remove_level_from_chapter(chapter_id, level_id, user):
     chapter = Chapter.objects.get(pk=chapter_id)
@@ -125,9 +127,28 @@ def add_chapter_to_set(chapter, set):
     set.chapters.add(chapter)
     set.save()
 
+
 def make_copy(original, user):
     copy = original
     copy.pk = None
     copy.editor = user.name
     copy.save()
     return copy
+
+
+def update_chapter_or_set(set_or_chapter, title, order, user):
+    msg = 'Failed update.'
+    if set_or_chapter.creator == user:
+        set_or_chapter.title = title
+        set_or_chapter.order = order
+        set_or_chapter.save()
+        msg = 'Sucessfull update'
+    return msg
+
+def update_level(level, title, user):
+    msg = 'Failed update.'
+    if level.creator == user:
+        level.title = title
+        level.save()
+        msg = 'Sucessfull update'
+    return msg

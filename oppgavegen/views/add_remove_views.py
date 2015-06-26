@@ -101,3 +101,18 @@ def add_chapter_to_set_view(request, set_id, chapter_id):
             msg = chapter.pk
 
         return HttpResponse(msg)
+
+def update_chapter_view(request, chapter_id, title, order):
+    chapter = Chapter.objects.get(chapter_id)
+    msg = update_chapter_or_set(chapter, title, order, request.user)
+    return HttpResponse(msg)
+
+def update_set_view(request, set_id, title, order):
+    set = Set.objects.get(set_id)
+    msg = update_chapter_or_set(set, title, order, request.user)
+    return HttpResponse(msg)
+
+def update_level_view(request, set_id, title):
+    set = Set.objects.get(set_id)
+    msg = update_level(set, title, request.user)
+    return HttpResponse(msg)
