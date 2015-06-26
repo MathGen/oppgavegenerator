@@ -1,8 +1,9 @@
 <input id="content_title" class="form-control" placeholder="Skriv inn tittel...">
 
 <section class="row">
-    <div class="col-md-8">
+{#    <div class="col-md-8">#}
     {% if set_edit %}
+        <div class="col-md-8">
         <div id="get_content_title" hidden>{{ set_title }}</div>
         <ul id="edit_container" class="edit_chapters">
         {% if chapters %}
@@ -18,7 +19,12 @@
         {% endif %}
         </ul>
         <input id="input_new_chapter" type="text" class="list_input form-control new_content" placeholder="Opprett nytt kapittel...">
+        </div>
+        <div class="col-md-4">
+            <section id="search_chapters" class="panel panel-default search_container"></section>
+        </div>
     {% elif chapter_edit %}
+        <div class="col-md-8">
         <div id="get_content_title" hidden>{{ chapter_title }}</div>
         <div id="chapter_id" hidden>{{ chapter_id }}</div>
         <ul id="edit_container" class="edit_levels">
@@ -35,19 +41,34 @@
         {% endif %}
         </ul>
         <input id="input_new_level" type="text" class="list_input form-control new_content" placeholder="Opprett nytt level...">
-    {% else %}
+        </div>
+        <div class="col-md-4">
+            <section id="search_levels" class="panel panel-default search_container"></section>
+        </div>
+    {% elif level_edit %}
+        <div class="col-md-8">
         <div id="get_content_title" hidden>{{ level_title }}</div>
         <div id="level_id" hidden>{{ level_id }}</div>
         {% if templates %}
-
+            {% for template in templates %}
+                <li id="content_{{ template.id }}" class="btn list_content">
+                    <h4 class="content_title static-math output_mathquill pull-left" style="font-size: 1em">{{ template.question_text_latex }}</h4>
+                    <a class="btn btn_content_edit">Edit</a>
+                    <a class="btn btn_content_del"><span class="glyphicon glyphicon-trash"></span></a>
+                </li>
+            {% endfor %}
         {% endif %}
+        </div>
+        <div class="col-md-4">
+            <section id="search_templates" class="panel panel-default search_container"></section>
+        </div>
     {% endif %}
-    </div>
-    <div class="col-md-4">
-        <section class="panel panel-default">
-            Search...
-        </section>
-    </div>
+{#    </div>#}
+{#    <div class="col-md-4">#}
+{#        <section class="panel panel-default">#}
+{#            Search...#}
+{#        </section>#}
+{#    </div>#}
 </section>
 
 <div class="row">

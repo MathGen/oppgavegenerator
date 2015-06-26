@@ -1,4 +1,4 @@
-var current_level = "";
+var current_level = 0;
 var level_progress = 0;
 $(document).ready(function () {
     load_chapters();
@@ -25,6 +25,9 @@ $(document).ready(function () {
     $('.btn_game_back').click(function(e){
         e.preventDefault();
         load_chapters();
+    });
+    $(document).on('click', '#v_new_question', function(){
+        load_template(current_level);
     });
 });
 
