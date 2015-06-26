@@ -6,7 +6,7 @@ from oppgavegen.models import Level, Template, Set, Chapter
 from oppgavegen.view_logic.add_remove import *
 
 
-def add_level_to_current_chapter(request, level_id):
+def add_level_to_current_chapter_view(request, level_id):
     """Add a template to the current level a teacher user is working on."""
     chapter = request.user.extendeduser.current_chapter
     level = Template.objects.get(pk=level_id)
@@ -45,24 +45,60 @@ def new_level_for_chapter(request, chapter_id, level_name):
         return HttpResponse(msg)
 
 
-def remove_chapter_from_set(request, set_id, chapter_id):
+def add_template_to_level_view(request, level_id, template_id):
+    level = Level.objects.get(pk=level_id)
+    template = Template.objects.get(pk=template_id)
+    msg = add_template_to_level(template, level, request.user)
+
+    return HttpResponse(msg)
+
+
+def remove_template_from_level_view(request, level_id, template_id):
+    msg = remove_template_from_level(level_id, template_id, request.user)
+    return HttpResponse(msg)
+
+
+def remove_chapter_from_set_view(request, set_id, chapter_id):
     """Deletes a chapter from a set"""
-    msg = remove_from_set(set_id, chapter_id, request.user)
+    msg = remove_chapter_from_set(set_id, chapter_id, request.user)
     remove_chapter(chapter_id, request.user)
 
     return HttpResponse(msg)
 
 
-def remove_level_from_chapter(request, chapter_id, level_id):
+def remove_level_from_chapter_view(request, chapter_id, level_id):
     """Deletes a chapter from a set"""
-    msg = remove_from_chapter(chapter_id, level_id, request.user)   # Todo: only remove if original creator.
+    msg = remove_level_from_chapter(chapter_id, level_id, request.user)   # Todo: only remove if original creator.
     remove_level(level_id, request.user)
 
     return HttpResponse(msg)
 
 
-def add_template_to_level():
-    pass
+def add_level_to_chapter_view(request, chapter_id, level_id):
+    """Add a template fo a specified level"""
+    if request.is_ajax():
+        chapter = Set.objects.get(pk=chapter_id)
+        msg = 'Failed to add chapter'
+        user = request.user
+        level = Level.objects.get(pk=level_id)
+        if chapter.creator == user or chapter.editor == user.name:
+            level = make_copy(level, user)
+            add_level_to_chapter(level, chapter)
+            msg = level.pk
 
-def remove_template_from_level():
-    pass
+        return HttpResponse(msg)
+
+
+def add_chapter_to_set_view(request, set_id, chapter_id):
+    """Add a template fo a specified level"""
+    if request.is_ajax():
+        set = Set.objects.get(pk=set_id)
+        msg = 'Failed to add chapter'
+        user = request.user
+        chapter = Chapter.objects.get(pk=chapter_id)
+        if set.creator == user or set.editor == user.name:
+            chapter = make_copy(chapter, user)
+            add_level_to_chapter(chapter, set)
+            msg = chapter.pk
+
+        return HttpResponse(msg)

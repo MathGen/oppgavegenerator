@@ -92,6 +92,7 @@ class Level(models.Model):
     name = models.CharField(max_length=200)  # Name of the topic.
     templates = models.ManyToManyField(Template, related_name='levels',blank=True) # List of templates in level
     creator = models.ForeignKey(User, blank=True, null=True)
+    editor = models.CharField(max_length=200, blank=True, null=True)  # Editor of template
     creation_date = models.DateTimeField('date created', blank=True, null=True)  # Date and time of creation
 
     def __str__(self):  # return self.name instead of level-object
@@ -103,6 +104,7 @@ class Chapter(models.Model):
     name = models.CharField(max_length=200)  # Name of the topic.
     levels = models.ManyToManyField(Level, related_name='chapters', blank=True)
     creator = models.ForeignKey(User, blank=True, null=True)
+    editor = models.CharField(max_length=200, blank=True, null=True)  # Editor of template
     creation_date = models.DateTimeField('date created', blank=True, null=True)  # Date and time of creation
     order = models.CharField(max_length=400, default='', blank=True) #CSV list of the order of levels.
 
@@ -115,6 +117,7 @@ class Set(models.Model):
     name = models.CharField(max_length=200)  # Name of the topic.
     chapters = models.ManyToManyField(Chapter, related_name='sets', blank=True)
     creator = models.ForeignKey(User, blank=True, null=True)
+    editor = models.CharField(max_length=200, blank=True, null=True)  # Editor of template
     creation_date = models.DateTimeField('date created', blank=True, null=True)  # Date and time of creation
     order = models.CharField(max_length=400, default='')
 
