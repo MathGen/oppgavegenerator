@@ -44,7 +44,7 @@ urlpatterns = patterns('',
     url(r'^set/new/$', 'oppgavegen.views.views.set_edit', name='add_new_set'),
     url(r'^set/(\d+)/edit/$', 'oppgavegen.views.views.set_edit', name='edit_set'),
     url(r'^chapter/new/$', 'oppgavegen.views.views.chapter_edit', name='add_new_chapter'),
-    url(r'^chapter/(\d+)/edit', 'oppgavegen.views.views.chapter_edit', name='edit_chapter'),
+    url(r'^chapter/(\d+)/edit', chapter_edit, name='edit_chapter'),
     url(r'^set/(\d+)/$', set_detail_view, name='set_detail'),
     url(r'^set/(\d+)/chapters/edit/$', 'oppgavegen.views.views.manage_chapters_in_set', name='manage_chapters_in_set'),
     url(r'^set/(\d+)/chapters/$', SetChapterListView.as_view(), name='chapters_by_set'),
@@ -85,13 +85,11 @@ urlpatterns = patterns('',
     # AJAX FUNCTION URLS
     # Return template preview html
     url(r'^template/([\w ]+)/preview/$', 'oppgavegen.views.views.preview_template', name='preview_template'),
-    # Add template to a spesific level ( i.e:  /level/[level id]/template/[template id]/add )
-    url(r'^level/(\d+)/template/(\d+)/add/$', 'oppgavegen.views.views.level_add_template', name='level_add_template' ),
     # Add / remove template to current user level
     url(r'^user/level/template/(\d+)/add/$', add_template_to_current_level, name='current_level_add'),
     url(r'^user/level/template/(\d+)/remove/$', remove_template_from_current_level, name='current_level_remove'),
     url(r'^set/(\d+)/([\w ]+)/new_chapter/$', new_chapter_for_set, name='new_chapter_for_set'),
-    url(r'^set/(\d+)/([\w ]+)/add_chapter/$', add_chapter_to_set, name='new_chapter_for_set'),
+    url(r'^set/(\d+)/chapter/(\d+)/add_chapter/$', add_chapter_to_set, name='new_chapter_for_set'),
     url(r'^set/(\d+)/chapter/(\d+)/remove_chapter/$', remove_chapter_from_set, name='remove_chapter_from_set'),
     # DJANGO SELECTABLE
     url(r'^selectable/', include('selectable.urls')),
