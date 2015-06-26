@@ -1,22 +1,23 @@
 from django.http import HttpResponse
 from oppgavegen.models import Level, Template, Set, Chapter
+from datetime import datetime
 
 def new_chapter(chapter_name, user):
     print('new chapter: 1')
-    chapter = Chapter(name=chapter_name, creator=user)  # todo: add data time now pls
+    chapter = Chapter(name=chapter_name, creator=user, creation_date=datetime.now())
     print('new chapter: 2')
     chapter.save()
     return chapter
 
 
 def new_level(level_name, user):
-    level = Level(name=level_name, user=user)
+    level = Level(name=level_name, user=user, creation_date=datetime.now())
     level.save()
     return level
 
 
 def new_set(set_name, user):
-    set = Set(name=set_name, user=user)
+    set = Set(name=set_name, user=user, creation_date=datetime.now())
     set.save()
     return set
 
