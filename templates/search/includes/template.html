@@ -1,3 +1,5 @@
+{# TEMPLATE SEARCH RESULT #}
+
 <div class="template_result">
     {{ result.object.name|title }} - {{ result.object.rating }} -
     {% ifequal result.creator user.username %}
@@ -7,13 +9,22 @@
     {% endifequal %}
 
     - Multiple: {{ result.object.multiple_support }} - FillIn: {{ result.object.fill_in_support }} -
+                {{ user.extendeduser.current_level.name }}:
 
-    {% if result.object.id in user.extendeduser.current_level_template_ids %}
+    <span id="toggle_template_add_id_{{ result.object.id }}" class="span__toggle_template_add_button"
+            data-template_id="{{ result.object.id }}">
+        {% include "search/includes/template_toggle_button_template.txt" %}
+    </span>
+
+{% comment %}
+REQUEST TYPE adder functions
+{% if result.object.id in user.extendeduser.current_level_template_ids %}
         <a href="{% url 'current_level_remove' result.object.id %}">Fjern fra
             "{{ user.extendeduser.current_level.name }}"</a>
     {% else %}
         <a href="{% url 'current_level_add' result.object.id %}">Legg til i
             "{{ user.extendeduser.current_level.name }}"</a>
     {% endif %}
+{% endcomment %}
 
 </div>

@@ -27,6 +27,7 @@ from oppgavegen.view_logic.view_logic import *
 
 # Search Views and Forms
 from haystack.generic_views import SearchView
+from haystack.query import SearchQuerySet
 from oppgavegen.forms import QuestionForm, TemplateForm, LevelCreateForm, ChapterNameForm, UserCurrentSetsForm, SetsSearchForm
 from django.forms.formsets import formset_factory
 from django import http
@@ -111,10 +112,6 @@ def submit(request):
         if form.is_valid():
             newtags = form.cleaned_data['tags_list']
             template = form.save(commit=False)
-            # newtags = template.tags_list
-            # template.tags = newtags
-            #template.fields['tags'] = form.cleaned_data['tags_list']
-            #template.tags.add(templatetags)
             template.difficulty = 1 # todo: remove this when implemented in GUI. Default value doesn't work somehow.
             if request.REQUEST['pk'] != '':  # Can this be written as v = req != ''?
                 template.pk = request.REQUEST['pk']  # Workaround, template doesn't automatically get template.pk
@@ -307,6 +304,39 @@ class SetSearch(SetsSearchView):
     title = 'set'
     extra_content = {'title':title }
 
+class MiniSearchView(SearchView):
+    template_name = 'search/mini_search.html'
+    searchqueryset = SearchQuerySet()
+    def get_queryset(self):
+        sqs = self.args[0]
+        super(MiniSearchView, self).get_queryset()
+        if sqs.lower() == "level":
+            sqs = SearchQuerySet.models(Level)
+        elif sqs.lower() == "chapter":
+            sqs = SearchQuerySet.models(Chapter)
+        elif sqs.lower() == "set":
+            sqs = SearchQuerySet.models(Set)
+        else:
+            sqs = Template
+
+        return sqs
+
+    def get_context_data(self, **kwargs):
+        context = super(MiniSearchView, self).get_context_data(**kwargs)
+        context['used_model'] = self.used_model
+        return context
+
+def level_add_template(request, level_id, template_id):
+    """Add a template fo a specified level"""
+    response_data = {} # ajax response data
+    level = Level.objects.get(pk=level_id)
+    template = Template.objects.get(pk=template_id)
+    if level.creator == request.user:
+        level.templates.add(template)
+        response_data['result'] = 'Template added to Level!'
+        return HttpResponse("Template added to level!")
+    else:
+        return HttpResponse('You need to be the owner of the level you\'re editing!')
 
 def add_template_to_current_level(request, template_id):
     """Add a template to the current level a teacher user is working on."""
@@ -320,6 +350,21 @@ def add_template_to_current_level(request, template_id):
     else:
         return HttpResponse('You need to be the owner of the level you\'re editing!')
 
+def toggle_template_level(request, template_id):
+    "Render a button to either add or remove a template to/from a level"
+    level = request.user.extendeduser.current_level
+    try:
+        template = Template.objects.get(pk=template_id)
+    except Template.DoesNotExist as e:
+        raise ValueError("Unknown template.id=" + str(template_id) + "or level.id=" +
+                         str(level.id) + ". Original error: " + str(e))
+    if template in level.templates.all():
+        level.templates.remove(template)
+        level.save()
+        return render_to_response('search/includes/add_button_ajax.txt')
+    else:
+        level.templates.add(template)
+        return render_to_response('search/includes/remove_button_ajax.txt')
 
 def remove_template_from_current_level(request, template_id):
     """Remove a template from the current level a teacher user is working on."""
@@ -452,7 +497,7 @@ def manage_chapters(request):
 
 
 def manage_chapters_in_set(request, set_id):
-    # Mass-edit chapters in a set. (( Testing formsets )) # todo: rework this to manage chapters by a logged in user
+    # Mass-edit chapters in a set. (( Testing formsets ))
     # Should take a set PK to batch-edit chapter content in set or mass add inital empty chapters to a new set
     q = Set.objects.get(pk=set_id)
     ChapterNameInlineFormSet = inlineformset_factory(Set, Chapter, fields = ('name','levels'))
@@ -483,12 +528,6 @@ class UserCurrentSetsEdit(LoginRequiredMixin, UpdateView):
     #fields = ['current_set', 'current_chapter', 'current_level',]
     template_name = 'sets/user_current_sets_form.html'
 
-    # todo: get these dang filters to work
-    # def get_form_class(self, form_class=form_class):
-    #    self.fields['current_level'].queryset = Level.objects.filter(creator=self.request.user.id)
-    #    self.fields['current_chapter'].queryset = Chapter.objects.filter(creator=self.request.user.id)
-    #    self.fields['current_set'].queryset = Set.objects.filter(creator=self.request.user.id)
-
     def get_object(self, queryset=None):
         obj = ExtendedUser.objects.get(user=self.request.user)
         return obj
@@ -497,3 +536,12 @@ class UserCurrentSetsEdit(LoginRequiredMixin, UpdateView):
         success_url = self.request.GET.get('next', '')
         #success_url = self.request.get_full_path()
         return success_url
+
+    # todo: filter dropdowns for objects made by current user
+    # class based views are weird about this
+    # def get_form_class(self, form_class=form_class):
+    #     form_class.fields['current_level'].queryset = Level.objects.filter(creator=self.request.user)
+    #     form_class.fields['current_chapter'].queryset = Chapter.objects.filter(creator=self.request.user)
+    #     #self.fields['current_chapter'].queryset = Chapter.objects.filter(creator=self.request.user)
+    #     #self.fields['current_set'].queryset = Set.objects.filter(creator=self.request.user)
+    #     return form_class

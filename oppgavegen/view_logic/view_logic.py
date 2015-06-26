@@ -107,7 +107,6 @@ def submit_template(template, user, update, newtags=None):
         template.times_solved = q.times_solved
         template.creation_date = q.creation_date
         template.creator = q.creator
-        #template.tags = q.tags.all() todo: remove this as well ( or fix)
         template.name = q.name
         template.difficulty = q.difficulty
     else:

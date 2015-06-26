@@ -13,7 +13,8 @@ from .models import Set, Chapter, Level, Template, ExtendedUser, Tag
 
 class TagField(forms.CharField):
     """
-    Return a list of Tag-object id's.
+    Return a list of Tag-objects.
+    Creates new Tag-objects if they don't exist.
     """
     # def prepare_value(self, value):
     def clean(self, value):

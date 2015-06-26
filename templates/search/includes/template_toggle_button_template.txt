@@ -1,0 +1,10 @@
+{% if result.object.id in user.extendeduser.current_level_template_ids %}
+
+    <button class="btn btn-danger ">Fjern</button>
+
+{% else %}
+
+
+    <button class="btn btn-primary">Legg til</button>
+
+{% endif %}

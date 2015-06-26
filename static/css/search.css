@@ -1,0 +1,9 @@
+.added {
+    text-align: center;
+    background-color: #31b0d5
+}
+
+.not_added {
+    text-align: center;
+    background-color: #0044DD;
+}
