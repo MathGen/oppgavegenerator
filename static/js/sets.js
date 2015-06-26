@@ -1,9 +1,6 @@
 $(document).ready(function () {
-    //TODO: make it switchable (from list to grid)
-    $('#edit_container').sortable({placeholder:"list_content_highlight", containment:"#set_editor", axis:"y"}).disableSelection();
-    //$('#chapter_container').sortable({containment:"#chapter_container"}).disableSelection();
-    //$('.list_chapter').draggable({containment:"#chapter_container", axis:"y"});
-
+    set_title('#content_title', $('#get_content_title').text());
+    init_sortable();
     // Delete the specific content.
     $(document).on('click', '.btn_content_del', function(){
         delete_content($(this).closest('li'));
@@ -20,6 +17,10 @@ $(document).ready(function () {
 		if(/(188|13)/.test(e.which)) $(this).focusout(); // Add chapter if one of these keys are pressed.
 	});
 });
+
+function set_title(input, title){
+    $(input).val(title);
+}
 
 // TODO: make it work with levels as well.
 function add_new_content(input){
@@ -66,9 +67,20 @@ function edit_content(content){
             content_type = "chapter";
         }
         $('#set_editor').fadeOut('fast', function(){
-            $(this).load('../../../'+content_type+'/'+content_id+'/edit/ #set_editor > *').fadeIn('fast');
+            $(this).load('../../../'+content_type+'/'+content_id+'/edit/ #set_editor > *').fadeIn('fast', function(){
+                set_title('#content_title', $('#get_content_title').text());
+                init_sortable();
+                scroll_to($('#set_editor'));
+            });
         });
     }
+}
+
+function init_sortable(){
+    //TODO: make it switchable (from list to grid)
+    $('#edit_container').sortable({placeholder:"list_content_highlight", containment:"#set_editor", axis:"y"}).disableSelection();
+    //$('#chapter_container').sortable({containment:"#chapter_container"}).disableSelection();
+    //$('.list_chapter').draggable({containment:"#chapter_container", axis:"y"});
 }
 
 /**

@@ -1,8 +1,9 @@
-<input id="set_title" class="form-control" placeholder="Tittel...">
+<input id="content_title" class="form-control" placeholder="Skriv inn tittel...">
 
 <section class="row">
     <div class="col-md-8">
     {% if set_edit %}
+        <div id="get_content_title" hidden>{{ set_title }}</div>
         <ul id="edit_container" class="edit_chapters">
         {% if chapters %}
             {% for chapter in chapters %}
@@ -18,6 +19,7 @@
         </ul>
         <input id="input_new_chapter" type="text" class="list_input form-control new_content" placeholder="Opprett nytt kapittel...">
     {% elif chapter_edit %}
+        <div id="get_content_title" hidden>{{ chapter_title }}</div>
         <div id="chapter_id" hidden>{{ chapter_id }}</div>
         <ul id="edit_container" class="edit_levels">
         {% if levels %}
@@ -41,3 +43,11 @@
         </section>
     </div>
 </section>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="btn-group pull-right">
+            <button id="btn_save_set" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Lagre</button>
+        </div>
+    </div>
+</div>
