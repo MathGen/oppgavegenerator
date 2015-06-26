@@ -23,11 +23,26 @@ def new_chapter_for_set(request, set_id, chapter_name):
     """Add a template fo a specified level"""
     if request.is_ajax():
         set = Set.objects.get(pk=set_id)
-        chapter = new_chapter(chapter_name, request.user)
-        add_chapter_to_set(chapter, set)
-        print('end')
+        msg = 'Failed to add chapter'
+        if set.creator == request.user:
+            chapter = new_chapter(chapter_name, request.user)
+            add_chapter_to_set(chapter, set)
+            msg = chapter.pk
 
-        return HttpResponse(chapter.pk)
+        return HttpResponse(msg)
+
+
+def new_level_for_chapter(request, chapter_id, level_name):
+    """Add a template fo a specified level"""
+    if request.is_ajax():
+        chapter = Set.objects.get(pk=chapter_id)
+        msg = 'Failed to add chapter'
+        if chapter.creator == request.user:
+            level = new_level(level_name, request.user)
+            add_level_to_chapter(level, chapter)
+            level = level.pk
+
+        return HttpResponse(msg)
 
 
 def remove_chapter_from_set(request, set_id, chapter_id):
