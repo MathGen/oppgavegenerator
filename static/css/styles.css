@@ -272,3 +272,15 @@ sub{							/* between bootstrap*/
 .btn_content_edit:hover{
 	background-color: #D1C3A6;
 }
+#content_title{
+	margin-bottom: 10px;
+	font-size: 2em;
+	height: 57px;
+	border: none;
+	box-shadow: none;
+	color: #D1C3A6;
+	text-shadow: -1px 0 #222222, 0 1px #222222, 1px 0 #222222, 0 -1px #222222;
+	/*border-width: 3px;*/
+	/*border-color: #907C54;*/
+	background-color: transparent;
+}

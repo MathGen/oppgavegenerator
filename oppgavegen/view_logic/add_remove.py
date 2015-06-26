@@ -10,13 +10,13 @@ def new_chapter(chapter_name, user):
 
 
 def new_level(level_name, user):
-    level = Level(name=level_name, user=user, creation_date=datetime.now())
+    level = Level(name=level_name, creator=user, creation_date=datetime.now())
     level.save()
     return level
 
 
 def new_set(set_name, user):
-    set = Set(name=set_name, user=user, creation_date=datetime.now())
+    set = Set(name=set_name, creator=user, creation_date=datetime.now())
     set.save()
     return set
 
@@ -40,7 +40,7 @@ def remove_level(level_id, user):
 
 
 def remove_set(set_id, user):
-    set = Level.objects.get(pk=set_id)
+    set = Set.objects.get(pk=set_id)
     success_string = 'Failed to delete chapter ' + set.name + '.'
     if set.creator == user:
         success_string = 'Chapter sucessfully deleted' + set.name + '.'
@@ -65,11 +65,11 @@ def remove_chapter_from_set(set_id, chapter_id, user):
 
 
 def remove_level_from_chapter(chapter_id, level_id, user):
-    chapter = Set.objects.get(pk=chapter_id)
-    level = Chapter.objects.get(pk=level_id)
+    chapter = Chapter.objects.get(pk=chapter_id)
+    level = Level.objects.get(pk=level_id)
     success_message = 'Failed to remove ' + level.name + ' from set.'
     if user == chapter.creator:
-        chapter.chapters.remove(level)
+        chapter.levels.remove(level)
         order = chapter.order.split(',')
         order.remove(level_id)
         order = ','.join(order)
@@ -95,14 +95,14 @@ def remove_template_from_level(level_id, template_id, user):
 def add_template_to_level(template, level, user):  # Todo: make a copy and add that isntead.
     success_message = 'Failed to add template to level'
     if level.creator == user:
-        level.levels.add(template)
+        level.templates.add(template)
         level.save()
         success_message = 'successfully added template to level'
     return success_message
 
 
 def remove_template(template_id, user):
-    template = Set.objects.get(pk=template_id)
+    template = Template.objects.get(pk=template_id)
     success_string = 'Failed to delete template ' + template.name + '.'
     if template.creator == user:
         success_string = 'Successfully deleted template' + template.name + '.'
