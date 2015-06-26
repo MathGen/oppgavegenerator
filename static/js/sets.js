@@ -22,7 +22,6 @@ function set_title(input, title){
     $(input).val(title);
 }
 
-// TODO: make it work with levels as well.
 function add_new_content(input){
     var text = input.val().replace(/[^a-zA-Z0-9\+\-\.#ÆØÅæøåA]/g, ''); // Allowed characters
     if (text) {
@@ -42,7 +41,6 @@ function add_new_content(input){
     input.val("");
 }
 
-// TODO: make it work with levels as well. set/(\d+)/chapter/(\d+)/remove_chapter
 function delete_content(content){
     var content_id = content.attr('id').match(/\d+/);
     if(content_id){
@@ -76,6 +74,9 @@ function edit_content(content){
     }
 }
 
+/**
+ * Initialize the drag-and-drop functionality for the listed contents. Sortable.
+ */
 function init_sortable(){
     //TODO: make it switchable (from list to grid)
     $('#edit_container').sortable({placeholder:"list_content_highlight", containment:"#set_editor", axis:"y"}).disableSelection();
