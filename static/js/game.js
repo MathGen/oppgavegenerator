@@ -38,6 +38,10 @@ function load_chapters(){
     $('#level_title').text("");
     $('#game_content').fadeOut('fast', function(){
         $(this).load('../' + set_id + '/chapters/', function () { //AJAX load
+            var progress_number = $('#progress_number');
+            level_progress = progress_number.text();
+            progress_number.remove();
+            unlock_contents('.btn_chapter', level_progress);
             update_medals();
             append_medal_star();
             disable_game_contents();
@@ -58,7 +62,7 @@ function load_levels(chapter_id){
             var progress_number = $('#progress_number');
             level_progress = progress_number.text();
             progress_number.remove();
-            unlock_levels(level_progress);
+            unlock_contents('.btn_level', level_progress);
             get_stars_per_level(level_progress);
             disable_game_contents();
             $(this).fadeIn('fast', function(){
@@ -179,8 +183,8 @@ function unlock_chapters(progress_number){ //TODO: call this when retrieving the
  * Unlocks all levels the user has reached. Removes the lock.
  * @param {number} progress_number - The progress-number which indicates how many levels is unlocked.
  */
-function unlock_levels(progress_number){
-    $('.btn_level').each(function(index){
+function unlock_contents(selector, progress_number){
+    $(selector).each(function(index){
         $(this).removeClass('btn_locked').attr('disabled', false);
         return index < progress_number; // To end the iteration when finished with all unlocked levels.
     });
