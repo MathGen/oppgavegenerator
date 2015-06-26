@@ -45,11 +45,11 @@ function add_new_content(input){
 function delete_content(content){
     var content_id = content.attr('id').match(/\d+/);
     if(content_id){
-        var content_type = "level";
-        if($('#edit_container').hasClass('edit_chapters')) {
-            content_type = "chapter";
+        var content_path = '../chapter/'+ content_id +'/remove_chapter/';
+        if($('#edit_container').hasClass('edit_levels')) {
+            content_path = '../../../chapter/'+ $('#chapter_id').text() +'/level/'+ content_id +'/remove_level/';
         }
-        $.post('../'+content_type+'/'+content_id+'/remove_'+content_type+'/', {'csrfmiddlewaretoken': getCookie('csrftoken')}, function(result){
+        $.post(content_path, {'csrfmiddlewaretoken': getCookie('csrftoken')}, function(result){
             if(result[0] == 's'){ // if success, delete the visual content.
                 content.remove();
             }

@@ -67,7 +67,7 @@ def remove_level_from_chapter(chapter_id, level_id, user):
     level = Level.objects.get(pk=level_id)
     success_message = 'Failed to remove ' + level.name + ' from set.'
     if user == chapter.creator:
-        chapter.chapters.remove(level)
+        chapter.levels.remove(level)
         order = chapter.order.split(',')
         order.remove(level_id)
         order = ','.join(order)
@@ -93,7 +93,7 @@ def remove_template_from_level(level_id, template_id, user):
 def add_template_to_level(template, level, user):  # Todo: make a copy and add that isntead.
     success_message = 'Failed to add template to level'
     if level.creator == user:
-        level.levels.add(template)
+        level.templates.add(template)
         level.save()
         success_message = 'successfully added template to level'
     return success_message
