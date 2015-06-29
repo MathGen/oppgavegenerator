@@ -34,8 +34,8 @@
                                     <span id=nav_level_name">{{ user.extendeduser.current_level.name }}</span>
                                 </a>
                             </li>
-                        {% endif %}
                     	<li><a href="#">{{  user|get_rating }}</a></li>
+                        {% endif %}
                     	{% if user|is_teacher %}
 						<li><a href="{% url 'newtemplate' %}">Ny Mal</a></li>
                         {%endif%}
