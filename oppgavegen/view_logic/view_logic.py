@@ -80,7 +80,7 @@ def make_answer_context_dict(form_values):
     answer_text = "\\text{Du har svart }" + '\\text{ og }'.join(user_answer) + \
                       "\\text{. Det er feil! Svaret er: }" + '\\text{ og }'.join(answer)
 
-    correct_answer = check_answer(user_answer, answer, template_type)  # Check if the user answered correctly.
+    correct_answer = check_answer(user_answer, answer, template_type, q.margin_of_error)  # Check if the user answered correctly.
 
     if correct_answer:
         answer_text = "\\text{Du har svart riktig!}"
