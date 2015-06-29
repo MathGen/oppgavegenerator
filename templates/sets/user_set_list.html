@@ -4,14 +4,14 @@
 
 {% block panels %}
     <h1>Dine Oppgavesett</h1>
-    <a href="{% url 'set_create_new' %}">Opprett nytt oppgavesett</a>
+    <a href="{% url 'add_new_set' %}">Opprett nytt oppgavesett</a>
     <ul>
         {% for set in object_list %}
             <li>
                 {{ set.name|capfirst }} -
                 <a href="{% url 'chapters_by_set' set.id %}">
                     {{ set.chapters.all.count }} kapitler
-                </a>
+                </a> - <a href="{% url 'edit_set' set.id %}">Rediger</a>
             </li>
         {% empty %}
             <li>Du har ingen oppgavesett enda.</li>
