@@ -1,5 +1,4 @@
-from oppgavegen.models import ExtendedUser
-from django.contrib.auth.models import User
+
 
 def set_current_set(user, set):
     if user.ExtendedUser.current_set != set:
