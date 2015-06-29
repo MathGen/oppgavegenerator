@@ -292,6 +292,18 @@ def chapter_edit(request, chapter_id=""):
                                                       'chapter_edit': True, 'chapter_title': chapter_title}, context)
 
 
+def level_edit(request, level_id=""):
+    context = RequestContext(request)
+    get_templates = ""
+    level_title = ""
+    if level_id:
+        edit_level = Level.objects.get(pk=level_id)
+        level_title = edit_level.name
+        get_templates = edit_level.templates.all()
+    return render_to_response('sets/container.html', {'level_id': level_id, 'templates': get_templates,
+                                                      'level_edit': True, 'level_title': level_title}, context)
+
+
 class SetsSearchView(SearchView):
     """ Search view for all set-type content """
 

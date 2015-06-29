@@ -1,6 +1,7 @@
 $(document).ready(function () {
     set_title('#content_title', $('#get_content_title').text());
     init_sortable();
+    load_search_view($('.search_container').attr('id').replace(/search_/g, ""));
     // Delete the specific content.
     $(document).on('click', '.btn_content_del', function(){
         delete_content($(this).closest('li'));
@@ -57,6 +58,27 @@ function delete_content(content){
     }
 }
 
+function load_search_view(type){
+    var search_container = $('.search_container');
+    switch (type) {
+        case 'chapters':
+            search_container.load('../../../minisearch/chapters', function(){
+                //callback function
+            });
+            break;
+        case 'levels':
+            search_container.load('../../../minisearch/levels', function(){
+                //callback function
+            });
+            break;
+        case 'templates':
+            search_container.load('../../../minisearch/templates', function(){
+                //callback function
+            });
+            break;
+    }
+}
+
 function edit_content(content){
     var content_id = content.attr('id').match(/\d+/);
     if(content_id){
@@ -69,6 +91,7 @@ function edit_content(content){
                 set_title('#content_title', $('#get_content_title').text());
                 init_sortable();
                 scroll_to($('#set_editor'));
+                redraw_mathquill_elements(); //TODO: redraw after the content is displayed. BUG: delayed content.
             });
         });
     }
