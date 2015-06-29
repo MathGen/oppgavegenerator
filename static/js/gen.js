@@ -919,10 +919,19 @@ function convert_variables(latex){
 				else if (la[i + 1] == 'l' && la[i + 2] == 'e' && la[i + 3] == 'f' && la[i + 4] == 't') {
 					la2 += '\\left';
 					i += 5;
+					if (la[i + 5] == 'a' && la[i + 6] == 'r' && la[i + 7] == 'r' && la[i + 8] == 'o'){
+						la2 += 'arrow';
+						i += 5;
+					}
+
 				}
 				else if (la[i + 1] == 'r' && la[i + 2] == 'i' && la[i + 3] == 'g' && la[i + 4] == 'h' && la[i + 5] == 't') {
 					la2 += '\\right';
 					i += 6;
+					if (la[i + 6] == 'a' && la[i + 7] == 'r' && la[i + 8] == 'r' && la[i + 9] == 'o'){
+						la2 += 'arrow';
+						i += 5;
+					}
 				}
 				else if (la[i + 1] == 'c' && la[i + 2] == 'd' && la[i + 3] == 'o' && la[i + 4] == 't') {
 					la2 += '\\cdot ';
