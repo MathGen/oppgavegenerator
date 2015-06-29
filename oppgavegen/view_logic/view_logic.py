@@ -111,9 +111,10 @@ def submit_template(template, user, update, newtags=None):
         template.difficulty = q.difficulty
         template.margin_of_error = q.margin_of_error
     else:
-        template.rating = 1200 + (template.difficulty * 200)
-        template.fill_rating = 1150 + (template.difficulty * 180)
-        template.choice_rating = 1100 + (template.difficulty * 160)
+
+        template.rating = 1200  # + (template.difficulty * 200)
+        template.fill_rating = 1150  # + (template.difficulty * 180)
+        template.choice_rating = 1100  # + (template.difficulty * 160)
         template.times_failed = 0
         template.times_solved = 0
         template.creation_date = datetime.now()
