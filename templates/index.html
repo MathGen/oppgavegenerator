@@ -10,11 +10,15 @@
 {% block panels %}
     <div class="jumbotron">
         <h2 class="front_header" style="color: #EAD7AF">Velkommen til MathGen</h2>
-        <h4 class="front_description" style="color: #EAD7AF"> Velg en kategori:</h4>
+        <h4 class="front_description" style="color: #EAD7AF"> Velg et oppgavesett:</h4>
         <ul class='list-ul' style="padding-left: 0">
-            {% for item in list %}
-                <li class="list-group-item" style="background: none; border:none;"><a href="task/{{item}}">{{ item }}</a></li>
-            {% endfor %}
+{#            {% for item in list %}#}
+                <li class="list-group-item" style="background: none; border:none;">
+                    <a href="game/1">
+                        R1
+                    </a>
+                </li>
+{#            {% endfor %}#}
         </ul>
     </div>
 {% endblock %}
