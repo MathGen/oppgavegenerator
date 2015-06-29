@@ -28,19 +28,13 @@
 						<!--MENU ITEMS-->
                         {% if user|is_teacher %}
                             <li>
-
-                                <a href="{% url 'edit_set' user.extendeduser.current_set.id %}">
+                                <a href="{% url 'edit_current_user_sets' %}?next={{ request.get_full_path }}">
                                     {{ user.extendeduser.current_set.name }} >
-                                </a>
-                                <a href="{% url 'edit_chapter' user.extendeduser.current_chapter.id %}">
                                     {{ user.extendeduser.current_chapter.name }} >
-                                </a>
-                                <a href="{% url 'edit_level' user.extendeduser.current_level.id %}">
                                     <span id=nav_level_name">{{ user.extendeduser.current_level.name }}</span>
                                 </a>
-
                             </li>
-                    	<li><a href="#">{{  user|get_rating }}</a></li>
+                    	<li><a href="#">{{ user|get_rating }}</a></li>
                         {% endif %}
                     	{% if user|is_teacher %}
 						<li><a href="{% url 'newtemplate' %}">Ny Mal</a></li>

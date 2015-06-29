@@ -20,7 +20,7 @@ var processAdd = function() {
     };
 
     $.ajax(config);
-    $( '#nav_level_id').effect( "shake" )
+    $( '#nav_level_name' ).effect( "highlight" )
 };
 
 $(document).ready(function() {
