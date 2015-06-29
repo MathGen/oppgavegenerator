@@ -17,8 +17,8 @@ def fill_in_the_blanks(fill_in):
 @Debugger
 def find_holes(fill_in):
     """Finds the available holes in the template and their position."""
-    #fill_in = fill_in.split('§')  # Makes fill in into a list.
-    #fill_in = fill_in[len(fill_in)-1]
+    # fill_in = fill_in.split('§')  # Makes fill in into a list.
+    # fill_in = fill_in[len(fill_in)-1]
     hole_dict = {}  # Keeps track of what is getting replaced and the position of that in the string.
     recorder = False
     counter = 0  # Keeps track of how far in the string the loop is
@@ -43,7 +43,7 @@ def find_holes(fill_in):
                 # Hole_dict[s[:-5]] = str(start_point) + ' ' + str(end_point-5)
                 dict_value = s[:-5]
                 if (end_point - start_point) == len(dict_value)+1:
-                    start_point = start_point + 1 # Fix for the {1 bug mentioned in a earlier comment.
+                    start_point += 1  # Fix for the {1 bug mentioned in a earlier comment.
                 dict_key = str(start_point) + ' ' + str(end_point)
                 hole_dict[dict_key] = dict_value
 
@@ -84,6 +84,7 @@ def array_to_string(array):
     for s in array:
         string += '§' + s
     return string[1:]  # Use [1:] to remove unnecessary § from the start
+
 
 @Debugger
 def get_values_from_position(position_string, solution):
