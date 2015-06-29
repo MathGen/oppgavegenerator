@@ -149,9 +149,9 @@ class ExtendedUser(models.Model):
     # Making a abandonment system is probably better. where the user is forced to finish the template or lose
     # rating/stars.
     winstreak = models.SmallIntegerField(default=0)
-    current_level = models.OneToOneField(Level, null=True)
-    current_chapter = models.OneToOneField(Chapter, null=True)
-    current_set = models.OneToOneField(Set, null=True)
+    current_level = models.OneToOneField(Level, null=True, blank=True)
+    current_chapter = models.OneToOneField(Chapter, null=True, blank=True)
+    current_set = models.OneToOneField(Set, null=True, blank=True)
 
     def current_level_template_ids(self):
         """ Return list of template id's in users current level for simple comparisons with search results """
