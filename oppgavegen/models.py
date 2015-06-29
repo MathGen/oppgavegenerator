@@ -27,6 +27,7 @@ class Topic(models.Model):
         if self.topic:
             self.topic = self.topic.strip()
 
+
 class Tag(models.Model):
     """Searchable tags for problem templates."""
     name = models.CharField(max_length=200, unique=True)  # Name of the tag.
@@ -45,12 +46,12 @@ valid_choices = (
 class Template(models.Model):
     """Stores information for Templates"""
     name = models.CharField(max_length=50, blank=True, default='Uten Tittel') # The template name. Main identifier for teacher users.
-    tags = models.ManyToManyField(Tag, blank=True) # Template tags. Tags should describe content of math problems i.e "arithmetic"
+    tags = models.ManyToManyField(Tag, blank=True)  # Template tags. Tags should describe content of math problems i.e "arithmetic"
     question_text = models.CharField(max_length=2000)  # Math expression or text question ex. "Solve: ax = b + cx"
     solution = models.CharField(max_length=10000)  # Step by step solution to the answer
     answer = models.CharField(max_length=200)  # The answer of the question.
     creator = models.ForeignKey(User, blank=True, null=True, related_name='templates_created')  # User ID of creator of template
-    editor = models.ForeignKey(User,blank=True, null=True, related_name='templates_edited')  # Editor of template
+    editor = models.ForeignKey(User, blank=True, null=True, related_name='templates_edited')  # Editor of template
 
     creation_date = models.DateTimeField('date created', blank=True, null=True)  # Date and time of creation
     rating = models.PositiveSmallIntegerField(blank=True, null=True, default=1200)  # Difficulty rating.
@@ -87,6 +88,7 @@ class Template(models.Model):
         """Returns the question_text field of the object"""
         return self.question_text
 
+
 class Level(models.Model):
     """Stores sets of templates"""
     name = models.CharField(max_length=200)  # Name of the topic.
@@ -98,6 +100,7 @@ class Level(models.Model):
     def __str__(self):  # return self.name instead of level-object
         """Returns the level name"""
         return self.name
+
 
 class Chapter(models.Model):
     """Stores sets of levels"""
@@ -112,6 +115,7 @@ class Chapter(models.Model):
         """Returns the chapter name"""
         return self.name
 
+
 class Set(models.Model):
     """Stores sets of chapters"""
     name = models.CharField(max_length=200)  # Name of the topic.
@@ -125,6 +129,7 @@ class Set(models.Model):
         """Returns the set name"""
         return self.name
 
+
 class UserLevelProgress(models.Model):
     """Stores the users progress on a level"""
     user = models.ForeignKey(User, blank=True, null=True)
@@ -134,6 +139,7 @@ class UserLevelProgress(models.Model):
 
     def __str__(self):  #  Returns the pk
         return str(self.pk)
+
 
 class Offset(models.Model):
     offset = models.FloatField(default=0)
@@ -149,9 +155,9 @@ class ExtendedUser(models.Model):
     # Making a abandonment system is probably better. where the user is forced to finish the template or lose
     # rating/stars.
     winstreak = models.SmallIntegerField(default=0)
-    current_level = models.OneToOneField(Level, null=True)
-    current_chapter = models.OneToOneField(Chapter, null=True)
-    current_set = models.OneToOneField(Set, null=True)
+    current_level = models.OneToOneField(Level, null=True, blank=True)
+    current_chapter = models.OneToOneField(Chapter, null=True, blank=True)
+    current_set = models.OneToOneField(Set, null=True, blank=True)
 
     def current_level_template_ids(self):
         """ Return list of template id's in users current level for simple comparisons with search results """
