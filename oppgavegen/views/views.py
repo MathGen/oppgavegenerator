@@ -24,10 +24,10 @@ from oppgavegen.view_logic.rating import change_elo, change_level_rating, get_us
 from oppgavegen.generation_folder.generation import generate_task, generate_level
 from oppgavegen.view_logic.progress import calculate_progress, chapter_progress, get_stars_per_level
 from oppgavegen.view_logic.view_logic import *
+from oppgavegen.view_logic.current_work import *
 
 # Search Views and Forms
 from haystack.generic_views import SearchView
-from haystack.query import SearchQuerySet
 from oppgavegen.forms import QuestionForm, TemplateForm, LevelCreateForm, ChapterNameForm, UserCurrentSetsForm, SetsSearchForm
 from django.forms.formsets import formset_factory
 from django import http
@@ -274,6 +274,7 @@ def set_edit(request, set_id=""):
     set_title = ""
     if set_id:
         edit_set = Set.objects.get(pk=set_id)
+        set_current_set(request.user, edit_set)
         set_title = edit_set.name
         get_chapters = edit_set.chapters.all()
     return render_to_response('sets/container.html', {'set_id': set_id, 'chapters': get_chapters,
@@ -286,6 +287,7 @@ def chapter_edit(request, chapter_id=""):
     chapter_title = ""
     if chapter_id:
         edit_chapter = Chapter.objects.get(pk=chapter_id)
+        set_current_chapter(request.user, edit_chapter)
         chapter_title = edit_chapter.name
         get_levels = edit_chapter.levels.all()
     return render_to_response('sets/container.html', {'chapter_id': chapter_id, 'levels': get_levels,
@@ -298,6 +300,7 @@ def level_edit(request, level_id=""):
     level_title = ""
     if level_id:
         edit_level = Level.objects.get(pk=level_id)
+        set_current_level(request.user, edit_level)
         level_title = edit_level.name
         get_templates = edit_level.templates.all()
     return render_to_response('sets/container.html', {'level_id': level_id, 'templates': get_templates,
