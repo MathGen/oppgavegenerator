@@ -4,9 +4,10 @@
 {% block panels %}
     <h1>Tema i kapittel "{{ chapter.name|capfirst }}"</h1>
     {% if user == chapter.creator %}
-        <a href="{% url 'level_create' %}">
-            Legg til tema
-        </a>
+        Dette er ditt kapittel.
+{#        <a href="{% url 'chapter' %}">#}
+{#            Legg til tema#}
+{#        </a>#}
     {% else %}
         Dette kapittelet er laget av {{ chapter.creator }}.
     {% endif %}

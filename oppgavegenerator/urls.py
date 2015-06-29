@@ -54,7 +54,7 @@ urlpatterns = patterns('',
     # url(r'^chapter/new/', 'oppgavegen.views.views.manage_chapters', name='manage_chapters' ),
     url(r'^chapter/(\d+)/levels/$', ChapterLevelsListView.as_view(), name='levels_by_chapter'),
     # url(r'^level/new/', CreateView.as_view(form_class=LevelCreateForm, template_name='sets/level_create_form.html'), name='level_create',),
-    # url(r'^level/(\d+)/templates/$', LevelsTemplatesListView.as_view(), name='templates_by_level'),
+    url(r'^level/(\d+)/templates/$', LevelsTemplatesListView.as_view(), name='templates_by_level'),
 
     # Messy haystack search urls. Should maybe put these in own file and import here.
     # Search all content
