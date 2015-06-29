@@ -1,20 +1,20 @@
 
 
 def set_current_set(user, set):
-    if user.ExtendedUser.current_set != set:
-        user.ExtendedUser.current_set = set
-        user.ExtendedUser.current_chapter = None
-        user.ExtendedUser.current_level = None
-        user.ExtendedUser.save()
+    if user.extendeduser.current_set != set:
+        user.extendeduser.current_set = set
+        user.extendeduser.current_chapter = None
+        user.extendeduser.current_level = None
+        user.extendeduser.save()
     pass
 
 def set_current_chapter(user, chapter):
-    if user.ExtendedUser.current_chapter != chapter:
-        user.ExtendedUser.current_chapter = chapter
-        user.ExtendedUser.current_level = None
-        user.ExtendedUser.save()
+    if user.extendeduser.current_chapter != chapter:
+        user.extendeduser.current_chapter = chapter
+        user.extendeduser.current_level = None
+        user.extendeduser.save()
 
 def set_current_level(user, level):
-    if user.ExtendedUser.current_level != level:
-        user.ExtendedUser.current_level = level
-        user.ExtendedUser.save()
+    if user.extendeduser.current_level != level:
+        user.extendeduser.current_level = level
+        user.extendeduser.save()
