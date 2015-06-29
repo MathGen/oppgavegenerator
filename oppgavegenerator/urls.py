@@ -17,11 +17,11 @@ from django.views.generic import ListView, CreateView
 from oppgavegen.views.add_remove_views import *
 
 urlpatterns = patterns('',
-    url(r'^$', 'oppgavegen.views.views.index', name='index'),
-    url(r'^answers/', 'oppgavegen.views.views.answers', name='answers'),
-    url(r'^templates/$', 'oppgavegen.views.views.templates', name='templates'),
-    url(r'^newtemplate/', 'oppgavegen.views.views.new_template', name='newtemplate'),
-    url(r'^gen/', 'oppgavegen.views.views.gen', name='gen'),
+    url(r'^$', index, name='index'),
+    url(r'^answers/', answers, name='answers'),
+    url(r'^templates/$', templates, name='templates'),
+    url(r'^newtemplate/', new_template, name='newtemplate'),
+    #url(r'^gen/', 'oppgavegen.views.views.gen', name='gen'),
     url(r'^submit/', 'oppgavegen.views.views.submit', name='submit'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^user/', include('registration.backends.default.urls')),
@@ -54,7 +54,7 @@ urlpatterns = patterns('',
     # url(r'^chapter/new/', 'oppgavegen.views.views.manage_chapters', name='manage_chapters' ),
     url(r'^chapter/(\d+)/levels/$', ChapterLevelsListView.as_view(), name='levels_by_chapter'),
     # url(r'^level/new/', CreateView.as_view(form_class=LevelCreateForm, template_name='sets/level_create_form.html'), name='level_create',),
-    # url(r'^level/(\d+)/templates/$', LevelsTemplatesListView.as_view(), name='templates_by_level'),
+    url(r'^level/(\d+)/templates/$', LevelsTemplatesListView.as_view(), name='templates_by_level'),
 
     # Messy haystack search urls. Should maybe put these in own file and import here.
     # Search all content
@@ -66,19 +66,18 @@ urlpatterns = patterns('',
        form_class=TemplateSearchForm
        ), name='template_search'),
     # Mini search views (for jquery.load-situations)
-    url(r'^minisearch/chapters/', SearchView(
+    url(r'^minisearch/chapters/$', SearchView(
         template='search/mini_search.html',
         searchqueryset=SearchQuerySet().models(Chapter),
         )),
-   url(r'^minisearch/levels/', SearchView(
+   url(r'^minisearch/levels/$', SearchView(
         template='search/mini_search.html',
         searchqueryset=SearchQuerySet().models(Level),
         )),
-    url(r'^minisearch/templates/', SearchView(
+    url(r'^minisearch/templates/$', SearchView(
         template='search/mini_search.html',
         searchqueryset=SearchQuerySet().models(Template),
         )),
-    #url(r'^minisearch/([\w ]+)/$', MiniSearchView().as_view(), name='simple_search'),
     # Search in sets, chapters or levels
 
     #url(r'^sets/search/$', SetSearch(
@@ -102,10 +101,7 @@ urlpatterns = patterns('',
     # AJAX FUNCTION URLS
     # Return template preview html
     url(r'^template/([\w ]+)/preview/$', 'oppgavegen.views.views.preview_template', name='preview_template'),
-    # Add / remove template to current user level
-    # url(r'^user/level/template/(\d+)/add/$', add_template_to_current_level, name='current_level_add'),
     url(r'^user/level/template/(\d+)/toggle/$', toggle_template_level, name='current_level_toggle'),
-    #url(r'^user/level/template/(\d+)/remove/$', remove_template_from_current_level, name='current_level_remove'),
     url(r'^user/level/template/(\d+)/add/$', add_template_to_current_level, name='current_level_add'),
     url(r'^user/level/template/(\d+)/remove/$', remove_template_from_current_level, name='current_level_remove'),
     url(r'^set/(\d+)/([\w ]+)/new_chapter/$', new_chapter_for_set, name='new_chapter_for_set'),

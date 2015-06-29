@@ -4,9 +4,10 @@
 {% block panels %}
     <h1>Oppgaver i tema "{{ level.name|title }}"</h1>
     {% if user == level.creator %}
-        <a href="{% url 'level_create' %}">
-            Legg til oppgaver
-        </a>
+        Dette er ditt level.
+{#        <a href="{% url 'level_create' %}">#}
+{#            Legg til oppgaver#}
+{#        </a>#}
     {% else %}
         Dette temaet er laget av {{ level.creator }}.
     {% endif %}

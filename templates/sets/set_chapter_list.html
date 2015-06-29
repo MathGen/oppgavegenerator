@@ -6,8 +6,8 @@
 
     {% if user == set.creator %}
 
-        <a href="{% url 'manage_chapters_in_set' set.id %}">
-            Legg til kapittel
+        <a href="{% url 'edit_set' set.id %}">
+            Rediger oppgavesettet
         </a>
 
     {% else %}

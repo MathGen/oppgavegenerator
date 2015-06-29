@@ -33,6 +33,9 @@ from django.forms.formsets import formset_factory
 from django import http
 from django.forms.models import inlineformset_factory
 
+# Pre-defined renders of add/remove-buttons for toggle-action views
+add_button = render_to_response('search/includes/add_button_ajax.txt')
+remove_button = render_to_response('search/includes/remove_button_ajax.txt')
 
 
 class LoginRequiredMixin(object):
@@ -320,7 +323,6 @@ class MiniSearchView(SearchView):
     template_name = 'search/mini_search.html'
 
 
-
 def level_add_template(request, level_id, template_id):
     """Add a template fo a specified level"""
     response_data = {} # ajax response data
@@ -346,7 +348,10 @@ def add_template_to_current_level(request, template_id):
         return HttpResponse('You need to be the owner of the level you\'re editing!')
 
 def toggle_template_level(request, template_id):
-    "Render a button to either add or remove a template to/from a level"
+    """"
+    Render a button to either add or remove a template to/from a level.
+    For Haystack Search-results.
+    """
     level = request.user.extendeduser.current_level
     try:
         template = Template.objects.get(pk=template_id)
@@ -356,10 +361,31 @@ def toggle_template_level(request, template_id):
     if template in level.templates.all():
         level.templates.remove(template)
         level.save()
-        return render_to_response('search/includes/add_button_ajax.txt')
+        button = add_button
     else:
         level.templates.add(template)
-        return render_to_response('search/includes/remove_button_ajax.txt')
+        button = remove_button
+    return button
+
+def toggle_chapter_level(request, level_id):
+    """"
+    Render a button to either add or remove a level to/from a chapter.
+    For Haystack Search-results.
+    """
+    chapter = request.user.extendeduser.current_chapter
+    try:
+        level = Template.objects.get(pk=level_id)
+    except Template.DoesNotExist as e:
+        raise ValueError("Unknown level.id=" + str(level_id) + "or chapter.id=" +
+                         str(chapter.id) + ". Original error: " + str(e))
+    if level in chapter.levels.all():
+        level.templates.remove(level)
+        chapter.save()
+        button = add_button
+    else:
+        chapter.levels.add(level)
+        button = remove_button
+    return button
 
 def remove_template_from_current_level(request, template_id):
     """Remove a template from the current level a teacher user is working on."""
