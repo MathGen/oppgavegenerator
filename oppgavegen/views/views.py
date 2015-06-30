@@ -143,8 +143,8 @@ def answers(request, level=1):
                 return render_to_response('answers.html', {'answer': cheat_message}, context)
             context_dict = make_answer_context_dict(form_values)
             if request.is_ajax():
-                change_level_rating(template, request.user, context_dict['user_won'], form_values['template_type'], level)
-                print(3)
+                new_user_rating = change_level_rating(template, request.user, context_dict['user_won'], form_values['template_type'], level)
+                context_dict['ulp'] = new_user_rating
                 return render_to_response('game/answer.html', context_dict, context)
             else:
                 change_elo(template, request.user, context_dict['user_won'], form_values['template_type'])
