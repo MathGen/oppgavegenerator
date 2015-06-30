@@ -232,9 +232,14 @@ def chapters(request, set_id):
         medals = [] # Both lists get updated in chapter_progress
         completed = []
         progress_number = chapter_progress(request.user, game_set, medals, completed)
-        print('before return')
+        order = game_set.order
+        set_chapters_ordered = ''
+        for x in order.split(','):
+            for chapter in set_chapters:
+                if chapter.pk == int(x):
+                    set_chapters_ordered += chapter
         return render_to_response('game/chapters.html',
-                                  {'chapters': set_chapters, 'medals': json.dumps(medals),
+                                  {'chapters': set_chapters_ordered, 'medals': json.dumps(medals),
                                    'completed': json.dumps(completed), 'progress_number': progress_number}, context)
     else:
         return HttpResponseForbidden()
@@ -322,6 +327,7 @@ class SetSearch(SetsSearchView):
     title = 'set'
     extra_content = {'title':title }
 
+
 class MiniSearchView(SearchView):
     template_name = 'search/mini_search.html'
 
@@ -338,6 +344,7 @@ def level_add_template(request, level_id, template_id):
     else:
         return HttpResponse('You need to be the owner of the level you\'re editing!')
 
+
 def add_template_to_current_level(request, template_id):
     """Add a template to the current level a teacher user is working on."""
     level = request.user.extendeduser.current_level
@@ -349,6 +356,7 @@ def add_template_to_current_level(request, template_id):
                             '". (This will be a background process eventually.)')
     else:
         return HttpResponse('You need to be the owner of the level you\'re editing!')
+
 
 def toggle_template_level(request, template_id):
     """"
@@ -370,6 +378,7 @@ def toggle_template_level(request, template_id):
         button = remove_button
     return button
 
+
 def toggle_chapter_level(request, level_id):
     """"
     Render a button to either add or remove a level to/from a chapter.
@@ -389,6 +398,7 @@ def toggle_chapter_level(request, level_id):
         chapter.levels.add(level)
         button = remove_button
     return button
+
 
 def remove_template_from_current_level(request, template_id):
     """Remove a template from the current level a teacher user is working on."""
