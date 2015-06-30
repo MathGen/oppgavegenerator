@@ -98,8 +98,8 @@ def generate_task(user, template_extra, desired_type=''):
         replacing_words = replace_words_dict['replace_string']
     number_of_answers = len(new_answer.split('§'))
 
-    new_task = remove_pm_and_add_parenthesis(new_task)
     new_task = parse_solution(new_task, q.random_domain)
+    new_task = remove_pm_and_add_parenthesis(new_task)
     return_dict = {'question': new_task,
                    'variable_dictionary': variables_used, 'template_type': template_type,
                    'template_specific': template_specific, 'primary_key': primary_key,
