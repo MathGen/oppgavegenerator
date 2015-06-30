@@ -8,10 +8,8 @@
         Laget av: {{ result.object.creator }}
     {% endifequal %}
 
-    - Multiple: {{ result.object.multiple_support }} - FillIn: {{ result.object.fill_in_support }} -
-                {{ user.extendeduser.current_level.name }}:
-
-    <span id="toggle_template_add_id_{{ result.object.id }}" class="span__toggle_template_add_button"
+    - Multiple: {{ result.object.multiple_support }} - FillIn: {{ result.object.fill_in_support }}
+    <span id="toggle_template_add_id_{{ result.object.id }}" class="span__toggle_template_add_button pull-right"
             data-template_id="{{ result.object.id }}">
         {% include "search/includes/template_toggle_button_template.txt" %}
     </span>

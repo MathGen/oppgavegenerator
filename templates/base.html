@@ -27,18 +27,23 @@
 					<ul class="nav navbar-nav navbar-right">
 						<!--MENU ITEMS-->
                         {% if user|is_teacher %}
-                            <li>
-
+                            <ol class="breadcrumb inverse" style="float:left; margin: 7px 10px; background: #222;">
+                                <li>
                                 <a href="{% url 'edit_set' user.extendeduser.current_set.id %}">
-                                    {{ user.extendeduser.current_set.name }} >
+                                    {{ user.extendeduser.current_set.name }}
+{#                                    <span class="glyphicon glyphicon-chevron-right">&nbsp;</span>#}
                                 </a>
+                                </li><li>
                                 <a href="{% url 'edit_chapter' user.extendeduser.current_chapter.id %}">
-                                    {{ user.extendeduser.current_chapter.name }} >
+                                    {{ user.extendeduser.current_chapter.name }}
+{#                                    <span class="glyphicon glyphicon-chevron-right">&nbsp;</span>#}
                                 </a>
+                                </li><li>
                                 <a href="{% url 'edit_level' user.extendeduser.current_level.id %}">
                                     <span id=nav_level_name">{{ user.extendeduser.current_level.name }}</span>
                                 </a>
-                            </li>
+                                </li>
+                            </ol>
                     	<li><a href="#">{{  user|get_rating }}</a></li>
                         {% endif %}
                     	{% if user|is_teacher %}

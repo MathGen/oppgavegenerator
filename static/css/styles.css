@@ -8,6 +8,15 @@ body{
 	padding-top: 65px; /*la til denne for at body ikke skal bli gjemt bak navbar (funker bare hvis navbar er fixed)*/
 	margin-bottom: 80px;
 }
+
+.breadcrumb > li + li:before {
+    color: #ccc;
+    content: "> "; /* breadcrumb separator */
+    padding: 0 5px;
+}
+
+.breadcrumb a {color: #ccc}
+
 /**********************************/
 sup{							/**/
     top: 0em;					/* Due to a */

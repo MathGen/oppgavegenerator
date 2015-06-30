@@ -8,52 +8,59 @@
 
 {% block panels %}
 
-    <section id="table_panel" class="panel panel-default">
+    <section class="panel panel-default">
         <div class="panel-heading"><h3 class="panel-title">Søk</h3></div>
         <div class="panel-body">
 
-            <div class="form-group">
-            <form method="get" action=".">
+            <div class="form-group inline">
+                <form method="get" action=".">
 
-                {% bootstrap_field form.q %}
-                {% buttons %}
-                    <button type="submit" class="btn btn-primary">
-                        {% bootstrap_icon "search" %} Search
-                    </button>
-                {% endbuttons %}
-            </form>
+                    {% bootstrap_field form.q %}
+
+                        <button type="submit" class="btn btn-primary inline">
+                            {% bootstrap_icon "search" %} Search
+                        </button>
+
+                </form>
+            </div>
         </div>
-        </div>
+
+                {% if query %}
+
+{#                    <h3 class="title">Resultater</h3>#}
+
+                    <ul class="list-group">
+                        <li class="list-group-item clearfix"><span class="pull-right">{{ user.extendeduser.current_level.name }}</span></li>
+                    {% for result in page.object_list %}
+                        <li class="list-group-item clearfix">{% include 'search/includes/template.html' %}</li>
+                    {% empty %}
+                        <p>Fant ingen oppgavemaler.</p>
+                    {% endfor %}
+                    </ul>
+                    {% if page.has_previous or page.has_next %}
+                        <div>
+                            {% if page.has_previous %}
+                                <a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo;
+                            Previous
+                            {% if page.has_previous %}</a>{% endif %}
+                            |
+                            {% if page.has_next %}
+                                <a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}
+                            Next &raquo;{% if page.has_next %}</a>{% endif %}
+                        </div>
+                    {% endif %}
+
+
+                {% else %}
+                    {# Show some example queries to run, maybe query syntax, something else? #}
+                {% endif %}
+
     </section>
 
 
 
 
-    {% if query %}
 
-        <h3>Resultater</h3>
-
-        {% for result in page.object_list %}
-            {% include 'search/includes/template.html' %}
-        {% empty %}
-            <p>Fant ingen oppgavemaler.</p>
-        {% endfor %}
-
-        {% if page.has_previous or page.has_next %}
-            <div>
-                {% if page.has_previous %}
-                    <a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous
-                {% if page.has_previous %}</a>{% endif %}
-                |
-                {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}
-                Next &raquo;{% if page.has_next %}</a>{% endif %}
-            </div>
-        {% endif %}
-
-
-    {% else %}
-        {# Show some example queries to run, maybe query syntax, something else? #}
-    {% endif %}
 
 
 {% endblock %}
