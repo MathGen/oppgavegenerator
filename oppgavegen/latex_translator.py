@@ -108,6 +108,12 @@ def parenthesis_around_minus(expression):
             count += 1
     return new_exp
 
+def remove_pm_and_add_parenthesis(expr):
+    expr = expr.replace('+-', '-')
+    expr = expr.replace('--', '+')
+    expr = parenthesis_around_minus(expr)
+    expr = expr.replace('+-', '-')
+    expr = expr.replace('--', '+')
 
 # Note: Remember that {} is swapped for () in latex_to_sympy
 def pmatrix_to_matrix(m, start_string='\\begin(pmatrix)', end_string='\\end(pmatrix)',

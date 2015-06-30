@@ -5,11 +5,10 @@ Handles task generation from templates.
 """
 
 from random import uniform, shuffle, choice
-from sympy import sympify, latex
 from sympy.parsing.sympy_parser import (parse_expr, standard_transformations,
                                         implicit_multiplication_application, convert_xor)
 
-from oppgavegen.latex_translator import latex_to_sympy, parenthesis_around_minus
+from oppgavegen.latex_translator import latex_to_sympy, parenthesis_around_minus, remove_pm_and_add_parenthesis
 from oppgavegen.models import  Level
 from oppgavegen.generation_folder.multifill import multifill
 from oppgavegen.generation_folder.fill_in import fill_in_the_blanks
@@ -99,10 +98,10 @@ def generate_task(user, template_extra, desired_type=''):
         replacing_words = replace_words_dict['replace_string']
     number_of_answers = len(new_answer.split('§'))
 
-    new_task = new_task.replace('+-', '-')
-    new_task = new_task.replace('--', '+')
+
     new_task = parse_solution(new_task, q.random_domain)
-    return_dict = {'question': parenthesis_around_minus(new_task),
+    new_task = remove_pm_and_add_parenthesis(new_task)
+    return_dict = {'question': new_task,
                    'variable_dictionary': variables_used, 'template_type': template_type,
                    'template_specific': template_specific, 'primary_key': primary_key,
                    'number_of_answers': number_of_answers, 'replacing_words': replacing_words}
@@ -179,10 +178,9 @@ def generate_level(user, level_id):
         replacing_words = replace_words_dict['replace_string']
     number_of_answers = len(new_answer.split('§'))
 
-    new_task = new_task.replace('+-', '-')
-    new_task = new_task.replace('--', '+')
+
     new_task = parse_solution(new_task, q.random_domain)
-    new_task = parenthesis_around_minus(new_task)
+    new_task = remove_pm_and_add_parenthesis(new_task)
     return_dict = {'question': new_task, 'variable_dictionary': variables_used, 'template_type': template_type,
                    'template_specific': template_specific, 'primary_key': primary_key,
                    'number_of_answers': number_of_answers, 'replacing_words': replacing_words}
