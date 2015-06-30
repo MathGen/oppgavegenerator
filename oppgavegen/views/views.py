@@ -258,8 +258,17 @@ def levels(request, chapter_id):
         context = RequestContext(request)
         progress_number = calculate_progress(request.user, game_chapter)
         star_per_level = get_stars_per_level(request.user, game_chapter)
+
+        order = game_chapter.order
+        chapter_levels_ordered = []
+
+        for x in order.split(','):
+            for chapter in chapter_levels:
+                if chapter.pk == int(x):
+                    chapter_levels_ordered.append(chapter)
+
         return render_to_response('game/levels.html',
-                                  {'levels': chapter_levels, 'chapter_title': chapter_title,
+                                  {'levels': chapter_levels_ordered, 'chapter_title': chapter_title,
                                    'progress_number': progress_number, 'spl': star_per_level}, context)
     else:
         return HttpResponseForbidden()
