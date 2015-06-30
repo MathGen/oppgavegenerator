@@ -2,10 +2,14 @@
 <script src="/static/js/solution.js?02"></script>
 <link href="/static/css/stud_style.css" rel="stylesheet">
 <section class="panel panel-default">
-    {% if user|is_teacher %}
-    <h1>rating på dette levlet: {{ ulp }} }</h1>
-    {% endif %}
-    <div class="panel-heading"><h3 class="panel-title">Svar</h3></div>
+
+    <div class="panel-heading">
+        <h3 class="panel-title">
+                {% if user|is_teacher %}<h1>rating på dette levlet: {{ ulp }} }</h1>
+            {% endif %}
+            Svar
+        </h3>
+    </div>
     <div class="panel-body">
         <form class="form-horizontal">
             <div class="input_field"><div class="input_mathquill static-math">{{ answer }}</div></div>
