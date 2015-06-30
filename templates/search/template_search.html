@@ -4,50 +4,56 @@
 {% block head %}
     <link href="/static/css/search.css" rel="stylesheet">
 {% endblock %}
-{% block title %}
-
-
-{% endblock %}
+{% block title %}{% endblock %}
 
 {% block panels %}
 
-    <h2>Søk etter oppgavemaler</h2>
+    <section id="table_panel" class="panel panel-default">
+        <div class="panel-heading"><h3 class="panel-title">Søk</h3></div>
+        <div class="panel-body">
 
-    <form method="get" action=".">
+            <div class="form-group">
+            <form method="get" action=".">
 
-        {% bootstrap_form form %}
-        {% buttons %}
-            <button type="submit" class="btn btn-primary">
-                {% bootstrap_icon "search" %} Search
-            </button>
-        {% endbuttons %}
-    </form>
-
-        {% if query %}
-
-            <h3>Resultater</h3>
-
-            {% for result in page.object_list %}
-                {% include 'search/includes/template.html' %}
-            {% empty %}
-                <p>Fant ingen oppgavemaler.</p>
-            {% endfor %}
-
-            {% if page.has_previous or page.has_next %}
-                <div>
-                    {% if page.has_previous %}
-                        <a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous
-                    {% if page.has_previous %}</a>{% endif %}
-                    |
-                    {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}
-                    Next &raquo;{% if page.has_next %}</a>{% endif %}
-                </div>
-            {% endif %}
+                {% bootstrap_field form.q %}
+                {% buttons %}
+                    <button type="submit" class="btn btn-primary">
+                        {% bootstrap_icon "search" %} Search
+                    </button>
+                {% endbuttons %}
+            </form>
+        </div>
+        </div>
+    </section>
 
 
-        {% else %}
-            {# Show some example queries to run, maybe query syntax, something else? #}
+
+
+    {% if query %}
+
+        <h3>Resultater</h3>
+
+        {% for result in page.object_list %}
+            {% include 'search/includes/template.html' %}
+        {% empty %}
+            <p>Fant ingen oppgavemaler.</p>
+        {% endfor %}
+
+        {% if page.has_previous or page.has_next %}
+            <div>
+                {% if page.has_previous %}
+                    <a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous
+                {% if page.has_previous %}</a>{% endif %}
+                |
+                {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}
+                Next &raquo;{% if page.has_next %}</a>{% endif %}
+            </div>
         {% endif %}
+
+
+    {% else %}
+        {# Show some example queries to run, maybe query syntax, something else? #}
+    {% endif %}
 
 
 {% endblock %}
