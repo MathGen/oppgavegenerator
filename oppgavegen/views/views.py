@@ -239,7 +239,7 @@ def chapters(request, set_id):
                 if chapter.pk == int(x):
                     set_chapters_ordered += chapter
         return render_to_response('game/chapters.html',
-                                  {'chapters': set_chapters_ordered, 'medals': json.dumps(medals),
+                                  {'chapters': set_chapters, 'medals': json.dumps(medals),
                                    'completed': json.dumps(completed), 'progress_number': progress_number}, context)
     else:
         return HttpResponseForbidden()
