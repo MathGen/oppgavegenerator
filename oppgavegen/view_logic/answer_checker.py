@@ -18,18 +18,22 @@ def check_answer(user_answer, answer, template_type, margin_for_error=0):
     :return: Boolean of whether the answer is correct
     """
 
-
     if template_type != 'normal':
         # Reverse iteration to avoid index out of bounds when elements get deleted.
         for s in range(len(answer)-1, -1, -1):
                 if parse_using_sympy(latex_to_sympy(answer[s]) + '==' + latex_to_sympy(user_answer[s])):
                     del user_answer[s]
 
-    #  Todo: add margin for error logic
+    #  Todo: try catch? could also do different things depending on errors, for instance typeError for equalities
     else:
         for s in answer:
             for us in user_answer:
-                if parse_using_sympy(latex_to_sympy(s) + '==' + latex_to_sympy(us)):
+                if margin_for_error != 0:
+                    if parse_using_sympy(latex_to_sympy(us+margin_for_error) + '<=' + latex_to_sympy(s) +
+                                         '<=' + latex_to_sympy(us+margin_for_error)):
+                        user_answer.remove(us)
+                        break
+                elif parse_using_sympy(latex_to_sympy(s) + '==' + latex_to_sympy(us)):
                     user_answer.remove(us)
                     break
 
