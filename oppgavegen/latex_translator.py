@@ -114,6 +114,7 @@ def remove_pm_and_add_parenthesis(expr):
     expr = parenthesis_around_minus(expr)
     expr = expr.replace('+-', '-')
     expr = expr.replace('--', '+')
+    return expr
 
 # Note: Remember that {} is swapped for () in latex_to_sympy
 def pmatrix_to_matrix(m, start_string='\\begin(pmatrix)', end_string='\\end(pmatrix)',
