@@ -100,7 +100,7 @@ class Level(models.Model):
 
     def __str__(self):  # return self.name instead of level-object
         """Returns the level name"""
-        return self.name
+        return str(self.pk) + ':   ' + self.name
 
 
 class Chapter(models.Model):
@@ -114,7 +114,7 @@ class Chapter(models.Model):
 
     def __str__(self):  # Makes it so that self.name shows up instead of set(object)
         """Returns the chapter name"""
-        return self.name
+        return str(self.pk) + ':   ' + self.name
 
 
 class Set(models.Model):

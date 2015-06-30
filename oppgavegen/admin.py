@@ -28,9 +28,8 @@ class LevelAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
 
 
-
 class ChapterAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name')
+    list_display = ('id', 'name', 'order')
 
 
 class SetAdmin(admin.ModelAdmin):
