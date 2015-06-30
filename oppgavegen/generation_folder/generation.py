@@ -5,11 +5,11 @@ Handles task generation from templates.
 """
 
 from random import uniform, shuffle, choice
-
+from sympy import sympify, latex
 from sympy.parsing.sympy_parser import (parse_expr, standard_transformations,
                                         implicit_multiplication_application, convert_xor)
 
-from oppgavegen.latex_translator import latex_to_sympy
+from oppgavegen.latex_translator import latex_to_sympy, parenthesis_around_minus
 from oppgavegen.models import  Level
 from oppgavegen.generation_folder.multifill import multifill
 from oppgavegen.generation_folder.fill_in import fill_in_the_blanks
@@ -102,7 +102,8 @@ def generate_task(user, template_extra, desired_type=''):
     new_task = new_task.replace('+-', '-')
     new_task = new_task.replace('--', '+')
     new_task = parse_solution(new_task, q.random_domain)
-    return_dict = {'question': new_task, 'variable_dictionary': variables_used, 'template_type': template_type,
+    return_dict = {'question': parenthesis_around_minus(new_task),
+                   'variable_dictionary': variables_used, 'template_type': template_type,
                    'template_specific': template_specific, 'primary_key': primary_key,
                    'number_of_answers': number_of_answers, 'replacing_words': replacing_words}
     return return_dict
