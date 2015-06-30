@@ -293,4 +293,6 @@ def make_number(domain):
             number = round(number)
     except IndexError:
         number = round(number)
+    if number < 0:
+        number = '(' + str(number) + ')'
     return number
