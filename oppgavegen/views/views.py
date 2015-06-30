@@ -234,10 +234,7 @@ def chapters(request, set_id):
         progress_number = chapter_progress(request.user, game_set, medals, completed)
         order = game_set.order
         set_chapters_ordered = ''
-        for x in order.split(','):
-            for chapter in set_chapters:
-                if chapter.pk == int(x):
-                    set_chapters_ordered += chapter
+
         return render_to_response('game/chapters.html',
                                   {'chapters': set_chapters, 'medals': json.dumps(medals),
                                    'completed': json.dumps(completed), 'progress_number': progress_number}, context)
