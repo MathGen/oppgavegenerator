@@ -225,18 +225,26 @@ def game(request, set_id):
 
 
 def chapters(request, set_id):
+    print('okay?')
     if request.is_ajax():
+        print('yess?')
         game_set = Set.objects.get(pk=set_id)
         set_chapters = game_set.chapters.all()
+        print(set_chapters)
         context = RequestContext(request)
         medals = [] # Both lists get updated in chapter_progress
         completed = []
         progress_number = chapter_progress(request.user, game_set, medals, completed)
         order = game_set.order
-        set_chapters_ordered = ''
+        set_chapters_ordered = []
+
+        for x in order.split(','):
+            for chapter in set_chapters:
+                if chapter.pk == int(x):
+                    set_chapters_ordered.append(chapter)
 
         return render_to_response('game/chapters.html',
-                                  {'chapters': set_chapters, 'medals': json.dumps(medals),
+                                  {'chapters': set_chapters_ordered, 'medals': json.dumps(medals),
                                    'completed': json.dumps(completed), 'progress_number': progress_number}, context)
     else:
         return HttpResponseForbidden()
