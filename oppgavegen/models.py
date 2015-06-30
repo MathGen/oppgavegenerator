@@ -87,7 +87,7 @@ class Template(models.Model):
 
     def __str__(self):  # Makes it so that self.question_text shows up instead of topic(object)
         """Returns the question_text field of the object"""
-        return self.question_text
+        return str(self.pk) + ':   ' + self.question_text
 
 
 class Level(models.Model):
