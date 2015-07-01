@@ -63,7 +63,7 @@ def make_answer_context_dict(form_values):
         answer = get_values_from_position(template_specific, q.solution.replace('\\\\', '\\'))
         answer = replace_variables_from_array(variable_dictionary, answer)
 
-    original_user_answer = user_answer
+    original_user_answer = user_answer.replace('§', ' og ')
     answer = parse_answer(answer, random_domain)
     answer = answer.replace('`', '')
     answer = answer.split('§')
@@ -78,7 +78,7 @@ def make_answer_context_dict(form_values):
     user_answer = calculate_array(user_answer, random_domain)
     answer = [after_equal_sign(x) for x in answer]
     answer = calculate_array(answer, random_domain)
-    answer_text = "\\text{Du har svart }" + '\\text{ og }'.join(original_user_answer) + \
+    answer_text = "\\text{Du har svart }" + original_user_answer + \
                       "\\text{. Det er feil. Svaret er: }" + '\\text{ og }'.join(answer)
 
     correct_answer = check_answer(user_answer, answer, template_type, q.margin_of_error)  # Check if the user answered correctly.
