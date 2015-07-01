@@ -89,6 +89,7 @@ def parenthesis_around_minus(expression):
     """Takes a expression and returns it with parenthesis around numbers with - where needed."""
     exceptions = '0123456789.)({}xyz=+-?/'  # Having xyz in exceptions might introduce a bug in some situations
     expression += ' ' #add a empty space at the end of the string to avoid error.
+    end_symbols = '0123456789.)({}xyz?/*'
     new_exp = expression
     count = 0
     record = False
@@ -96,7 +97,7 @@ def parenthesis_around_minus(expression):
     for i in range(1, len(expression)):
         if expression[i] == '-' and expression[i-1] not in exceptions:
             record = True
-        elif record and expression[i] not in exceptions:
+        elif record and expression[i] not in end_symbols:
             record = False
             if count > 0:
                 insert_start = i-count+difference-1
