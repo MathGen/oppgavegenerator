@@ -20,7 +20,13 @@ def calculate_answer(s, domain):
     """
     if not is_number(s):  # Small optimization
         s = remove_unnecessary(s)
+        print('in calculate_answer in gen')
+        print(s)
         s = str(latex_to_sympy(s))
+        print(s)
+        s = s.replace('*)', ')*')
+        print(s)
+        print('end calculate_answer')
         s = parse_expr(s, transformations=standard_transformations +
                        (convert_xor, implicit_multiplication_application,), global_dict=None, evaluate=False)
         s = latex(sympify(str(s)))
