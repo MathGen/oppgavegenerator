@@ -19,7 +19,7 @@ $(document).ready(function () {
         choices = choices.split('§');
         for (var i = 0; i < choices.length; i++) {
             w_target.append('<div class="col-lg-12 input_field"><input name="answer_button" type="radio" id="radio'+i+'" value="'+choices[i]+'">' +
-                            '<span id="mathquill_output_'+i+'" class="output_mathquill" style="margin-left: 6px"></span></div>');
+                            '<span id="mathquill_output_'+i+'" class="static-math output_mathquill" style="margin-left: 6px"></span></div>');
             MathQuill.StaticMath($('#mathquill_output_' + i)[0]).latex(choices[i]);
         }
         redraw_mathquill_elements();
