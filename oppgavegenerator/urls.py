@@ -12,9 +12,12 @@ from oppgavegen.views.views import SetSearch#, ChapterSearch, LevelSearch, SetsS
 from haystack.forms import SearchForm
 import datetime
 from haystack.query import SearchQuerySet, RelatedSearchQuerySet
-from haystack.views import SearchView
+#from haystack.views import SearchView
+from haystack.views import search_view_factory, SearchView
+#from haystack.generic_views import SearchView
 from django.views.generic import ListView, CreateView
 from oppgavegen.views.add_remove_views import *
+
 
 urlpatterns = patterns('',
     url(r'^$', index, name='index'),
@@ -60,23 +63,24 @@ urlpatterns = patterns('',
     # Search all content
    url(r'^search/$', include('haystack.urls')),
    # Search templates
-   url(r'^templates/search/$', SearchView(
+   url(r'^templates/search/$', search_view_factory(
        template='search/template_search.html',
-       searchqueryset=SearchQuerySet().models(Template),
-       form_class=TemplateSearchForm
+       searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.template'),
+       form_class=TemplateSearchForm,
+       results_per_page=20 #default
        ), name='template_search'),
     # Mini search views (for jquery.load-situations)
     url(r'^minisearch/chapters/$', SearchView(
         template='search/mini_search.html',
-        searchqueryset=SearchQuerySet().models(Chapter),
+        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.chapter'),
         )),
    url(r'^minisearch/levels/$', SearchView(
         template='search/mini_search.html',
-        searchqueryset=SearchQuerySet().models(Level),
+        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.level'),
         )),
     url(r'^minisearch/templates/$', SearchView(
         template='search/mini_search.html',
-        searchqueryset=SearchQuerySet().models(Template),
+        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.template'),
         )),
     # Search in sets, chapters or levels
 

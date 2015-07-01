@@ -51,11 +51,9 @@
                             </ol>
                             {% endif %}
                     	<li><a href="#">{{  user|get_rating }}</a></li>
-                        {% endif %}
-                    	{% if user|is_teacher %}
 						<li><a href="{% url 'newtemplate' %}">Ny Mal</a></li>
-                        {%endif%}
                     	<li><a href="{% url 'templates' %}">Maler</a></li>
+                        {%endif%}
 						<!--USER AUTH ITEMS-->
                         {% if user.is_authenticated %}
                         <li class="dropdown">

@@ -1,1 +1,1 @@
-<button class="btn btn-primary">Legg til</button>
+<button class="btn btn-sm btn-primary">Legg til</button>

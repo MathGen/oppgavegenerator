@@ -14,3 +14,24 @@ margin: 0 9px;
 border-left: 1px solid #F2F2F2;
 border-right: 1px solid #FFF;
 }
+
+ol li.list-group-item {
+    list-style: decimal inside;
+    display: list-item;
+}
+
+.btn-sm {
+ width: 63px;
+}
+
+li.list-group-item:hover {
+    background: #F3F3F3;
+}
+
+.rating {
+    text-decoration: underline dotted;
+}
+
+.template-result .rating {
+    text-decoration: underline dotted;
+}

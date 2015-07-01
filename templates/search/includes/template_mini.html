@@ -1,10 +1,15 @@
-{# TEMPLATE SEARCH RESULT #}
+{# TEMPLATE MINISEARCH RESULT SNIPPET #}
 
 <div class="template-result">
+
+{% comment ###button stuff (needs search_functions.js to work)## %}
+
     <span id="toggle_template_add_id_{{ result.object.id }}" class="span__toggle_template_add_button pull-right"
           data-template_id="{{ result.object.id }}">
         {% include "search/includes/template_toggle_button_template.txt" %}
     </span>
+
+{% endcomment %}
 
     <ul style="list-style: inline; list-style-type: none">
         <li>

@@ -17,6 +17,7 @@ def is_superuser(user):
         return True
     return False
 
+
 @register.filter
 def get_rating(user):
     """Returns the users rating"""
