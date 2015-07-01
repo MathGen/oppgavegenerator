@@ -76,7 +76,7 @@ def generate_task(user, template_extra, desired_type=''):
     if template_type.lower() == 'multiple':
         new_choices = new_choices.split('§')
         for x in range(len(new_choices)):
-            new_choices[x] = calculate_answer(new_choices[x], q.random_domain)
+            new_choices[x] = parse_solution(new_choices[x], q.random_domain)
         new_choices.append(parse_solution(new_answer, q.random_domain).replace('§', 'og'))
         shuffle(new_choices)  # Shuffles the choices so that the answer is not always in the same place.
         new_choices = '§'.join(new_choices)
