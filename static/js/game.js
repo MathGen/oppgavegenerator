@@ -20,6 +20,7 @@ $(document).ready(function () {
         if(level_index <= level_progress + 1){
             current_level = level_id;
             load_template(level_id);
+            redraw_mathquill_elements();
         }
     });
     // Go back to main-page (chapter-picker)
@@ -29,6 +30,7 @@ $(document).ready(function () {
     });
     $(document).on('click', '#v_new_question', function(){
         load_template(current_level);
+        redraw_mathquill_elements();
     });
 });
 
@@ -87,8 +89,11 @@ function load_template(level_id){
                 $('#game_nav').fadeIn(function(){
                     redraw_mathquill_elements();
                 });
+                redraw_mathquill_elements();
             });
+            redraw_mathquill_elements();
         });
+        redraw_mathquill_elements();
     });
 }
 
@@ -103,6 +108,7 @@ function post_answer(submit_dict){
                 $('#game_nav').fadeIn(function(){
                     redraw_mathquill_elements();
                 });
+                redraw_mathquill_elements();
             });
         });
     });
