@@ -64,7 +64,7 @@ def change_level_rating(template, user, user_won, type, level_id):
     expected_template = (1+10**((template_rating-user_rating)/400))**(-1)
     prefactor_user = 30  # This value should be adjusted according to elo of the user (lower for higher ratings..)
     prefactor_template = 16  # This value should be adjusted according to elo of the user (lower for higher ratings..)
-
+    minimum_answered_questions = 15  # Amount of questions the user needs to have answered for template rating to change
     if user_won:
         new_user_rating = user_rating + prefactor_user*(1-expected_user)
         new_template_rating = template_rating + prefactor_template*(0-expected_template)
@@ -74,8 +74,10 @@ def change_level_rating(template, user, user_won, type, level_id):
         new_template_rating = template_rating + prefactor_template*(1-expected_template)
         template.times_failed += 1
     user_progress.level_rating = new_user_rating
+    user_progress.questions_answered += 1
     user_progress.save()
-
+    if user_progress.questions_answered <= minimum_answered_questions:
+        new_template_rating = template_rating
     if type == 'blanks':
         template.fill_rating = new_template_rating
     elif type == 'multiple':

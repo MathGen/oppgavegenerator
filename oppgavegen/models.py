@@ -137,6 +137,7 @@ class UserLevelProgress(models.Model):
     level = models.ForeignKey(Level, blank=True, null=True)
     level_rating = models.IntegerField(default=1200)
     stars = models.IntegerField(default=0)
+    questions_answered = models.PositiveIntegerField(default=0)
 
     def __str__(self):  #  Returns the pk
         return str(self.pk)

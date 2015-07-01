@@ -141,5 +141,6 @@ def add_level_to_user(user, level):
         user_progress = UserLevelProgress()
         user_progress.user = user
         user_progress.level = level
+        user_progress.questions_answered = 0
         user_progress.save()
     return user_progress
