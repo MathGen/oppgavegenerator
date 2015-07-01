@@ -2,10 +2,9 @@
 <script src="/static/js/solution.js?02"></script>
 <link href="/static/css/stud_style.css" rel="stylesheet">
 <section class="panel panel-default">
-{% if user|is_teacher %}<p>rating på dette levlet: {{ ulp }} </p>{% endif %}
     <div class="panel-heading">
         <h3 class="panel-title">
-            Svar
+            Svar <small>(rating på dette levlet: {{ ulp }})</small>
         </h3>
     </div>
     <div class="panel-body">
