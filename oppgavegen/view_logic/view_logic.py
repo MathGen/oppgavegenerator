@@ -43,7 +43,7 @@ def make_edit_context_dict(template_id):
                     'choices': choices, 'conditions': conditions, 'fill_in': fill_in,
                     'topic': topic, 'random_domain': random_domain, 'unchanged_ref': unchanged_ref,
                     'topics': topics, 'dictionary': dictionary, 'used_variables': used_variables,
-                    'tags': tags}
+                    'tags': tags, 'margin_of_error': q.margin_of_error}
     return context_dict
 
 
