@@ -31,6 +31,7 @@ def latex_to_sympy(expr):
     expr = expr.replace('\\begin{equation*}', '')
     expr = expr.replace('\\end{equation*}', '')
     expr = expr.replace('§~', '§-')
+    expr = expr.replace('~(-', '-(-')
     if expr[0] == '~':
         expr = expr[:0] + '-' + expr[1:]
 
@@ -169,6 +170,7 @@ def remove_pm_and_add_parenthesis(expr):
     expr = expr.replace('--', '+')
     expr = parenthesis_around_minus(expr)
     expr = expr.replace('§~', '§-')
+    expr = expr.replace('~(-', '-(-')
     if expr[0] == '~':
         expr = expr[:0] + '-' + expr[1:]
     expr = expr.replace('+-', '-')
