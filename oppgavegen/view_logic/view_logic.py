@@ -63,7 +63,7 @@ def make_answer_context_dict(form_values):
         answer = get_values_from_position(template_specific, q.solution.replace('\\\\', '\\'))
         answer = replace_variables_from_array(variable_dictionary, answer)
 
-    original_user_answer = user_answer.replace('§', ' og ')
+    original_user_answer = user_answer.replace('§', '\\text{ og }')
     answer = parse_answer(answer, random_domain)
     answer = answer.replace('`', '')
     answer = answer.split('§')
