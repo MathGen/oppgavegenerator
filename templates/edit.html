@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block title %}{{ title }}{% endblock %}
 {% load app_filters %}
+{% block head %}<link href="/static/css/jquery-ui.min.css" rel="stylesheet">{% endblock %}
+{% block js %}<script src="/static/js/jquery-ui.min.js"></script>{% endblock %}
 
 {% block panels %}
 
@@ -205,9 +207,28 @@
                 <td></td><td></td><td></td>
             </tr>
             <tr>
+                <td style="vertical-align: middle; text-align: right; height: 41px">Vansklighetsgrad:</td>
+                <td colspan="3" style="vertical-align: middle"><div id="difficulty_slider"></div></td>
+                <td style="vertical-align: middle"><span id="difficulty_amount"></span></td>
+            </tr>
+            <tr>
+                <td style="vertical-align: middle; text-align: right; height: 41px">Ulovlige tegn:</td>
+                <td id="tags_illegal" colspan="3" style="vertical-align: middle">
+                    <input class="form-control input-sm" type="text" placeholder="Legg til...">
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td style="vertical-align: middle; text-align: right; height: 41px">Påbudte tegn:</td>
+                <td id="tags_required" colspan="3" style="vertical-align: middle">
+                    <input class="form-control input-sm" type="text" placeholder="Legg til...">
+                </td>
+                <td></td>
+            </tr>
+            <tr>
                 <td style="vertical-align: middle; text-align: right; height: 41px">Merkelapper:</td>
                 <td id="tags" colspan="3" style="vertical-align: middle">
-                    <input id="opt_fill_blanks" class="form-control input-sm" type="text" placeholder="Legg til merkelapp...">
+                    <input class="form-control input-sm" type="text" placeholder="Legg til merkelapp...">
                 </td>
                 <td></td>
             </tr>

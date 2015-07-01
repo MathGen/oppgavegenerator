@@ -103,6 +103,7 @@ function post_answer(submit_dict){
                 $('#game_nav').fadeIn(function(){
                     redraw_mathquill_elements();
                 });
+                $('#achievement_modal').modal('show');
             });
         });
     });

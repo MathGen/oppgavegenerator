@@ -588,8 +588,42 @@ $(document).ready(function() {
 		MathQuill.MathField($(C_INPUT)[0]).focus();
 	});
 
+	// Slider which sets the templates difficulty.
+	$('#difficulty_slider').slider({
+		value: 4,
+		min: 1,
+		max: 8,
+		step: 1,
+		slide: function(event, ui){
+			$('#difficulty_amount').text(ui.value);
+		}
+	});
+	$('#difficulty_amount').text($('#difficulty_slider').slider('value'));
+
+	// Adding new required input tag.
+	$('#tags_required').find('input').on('focusout', function(){
+		var tag = $(this).val();
+		if(tag){
+			$(this).before('<span class="tag_r">'+tag+'<a class="btn btn_tag_del">x</a></span>');
+		}
+		$(this).val("");
+	}).on('keyup', function(e){
+		if(/(13)/.test(e.which)) $(this).focusout(); // Add tag if one of these keys are pressed.
+	});
+
+	// Adding new illegal input tag.
+	$('#tags_illegal').find('input').on('focusout', function(){
+		var tag = $(this).val();
+		if(tag){
+			$(this).before('<span class="tag_i">'+tag+'<a class="btn btn_tag_del">x</a></span>');
+		}
+		$(this).val("");
+	}).on('keyup', function(e){
+		if(/(13)/.test(e.which)) $(this).focusout(); // Add tag if one of these keys are pressed.
+	});
+
 	// Adding new tag from the value in the input-field.
-	$('#tags').find('input').on('focusout', function(){ //TODO: implement tags
+	$('#tags').find('input').on('focusout', function(){
 		var tag = $(this).val().replace(/[^a-zA-Z0-9\+\-\.#ÆØÅæøåA]/g,''); // Allowed characters
 		if(tag){
 			$(this).before('<span class="tag">'+ tag.toLowerCase() +'<a class="btn btn_tag_del">x</a></span>');
@@ -799,6 +833,23 @@ function submit_template(){
 		variables.push(VARIABLES[vars]);
 	}
 	form_submit['used_variables'] = variables.join(' ');
+
+	// DIFFICULTY
+	form_submit['difficulty'] = $('#difficulty_amount').text();
+
+	// ILLEGAL SIGNS
+	var disallowed = [];
+	$('.tag_i').each(function(){
+		disallowed.push($(this).text().slice(0,-1));
+	});
+	form_submit['disallowed'] = JSON.stringify(disallowed);
+
+	// REQUIRED SIGNS
+	var required = [];
+	$('.tag_r').each(function(){
+		required.push($(this).text().slice(0,-1));
+	});
+	form_submit['required'] = JSON.stringify(required);
 
 	// TAGS
 	var tags = [];

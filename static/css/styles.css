@@ -231,7 +231,11 @@ sub{							/* between bootstrap*/
 	min-width: 25px;
 	max-width: 100%;
 }
-.tag{
+
+/**** TAGS/ILLEGAL-TAGS/REQUIRED-TAGS ****/
+.tag,
+.tag_i,
+.tag_r{
 	display:block;
   	float:left;
   	color:#fff;
@@ -241,7 +245,17 @@ sub{							/* between bootstrap*/
 	padding: 4px 20px 4px 5px;
 	margin: 0 4px 4px 0;
 }
-.tag>.btn_tag_del{
+.tag_i{
+	background-color: #222;
+	border-color: #5a5a5a;
+}
+.tag_r{
+	background-color: #004444;
+	border-color: #006060;
+}
+.tag>.btn_tag_del,
+.tag_i>.btn_tag_del,
+.tag_r>.btn_tag_del{
 	position: absolute;
 	color: #fff;
 	background:#689;
@@ -250,18 +264,34 @@ sub{							/* between bootstrap*/
 	padding: 0 4px;
 	margin: -5px 0 0 4px;
 }
+.tag_i>.btn_tag_del{
+	background-color: #222; !important;
+	border-color: #5a5a5a;
+}
+.tag_r>.btn_tag_del{
+	background-color: #004444;
+	border-color: #006060;
+}
 .tag>.btn_tag_del:hover {
 	cursor:pointer;
 	background-color: #7f9aab;
 }
-#tags>.form-control{
+.tag_i>.btn_tag_del:hover{
+	background-color: #5a5a5a;
+}
+.tag_r>.btn_tag_del:hover{
+	background-color: #006060;
+}
+#tags>.form-control,
+#tags_illegal>.form-control,
+#tags_required>.form-control{
 	width: 30%; !important;
 }
+
+/**** ****/
 .btn_content_del{
 	position: absolute;
 	background-color: transparent;
-	/*border: 1px solid #D1C3A6;*/
-	/*border-radius: 3px;*/
 	color: #222;
 	top: 8px;
 	right: 8px;
@@ -272,8 +302,6 @@ sub{							/* between bootstrap*/
 .btn_content_edit{
 	position: absolute;
 	background-color: transparent;
-	/*border: 1px solid #D1C3A6;*/
-	/*border-radius: 3px;*/
 	color: #222;
 	top: 8px;
 	right: 40px;
@@ -289,7 +317,11 @@ sub{							/* between bootstrap*/
 	box-shadow: none;
 	color: #D1C3A6;
 	text-shadow: -1px 0 #222222, 0 1px #222222, 1px 0 #222222, 0 -1px #222222;
-	/*border-width: 3px;*/
-	/*border-color: #907C54;*/
 	background-color: transparent;
+}
+.ui-slider{
+	background-color: lightgrey;
+}
+.ui-slider-handle{
+	background-color: gray;
 }
