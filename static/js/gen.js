@@ -842,14 +842,14 @@ function submit_template(){
 	$('.tag_i').each(function(){
 		disallowed.push($(this).text().slice(0,-1));
 	});
-	form_submit['disallowed'] = disallowed;
+	form_submit['disallowed'] = JSON.stringify(disallowed);
 
 	// REQUIRED SIGNS
 	var required = [];
 	$('.tag_r').each(function(){
 		required.push($(this).text().slice(0,-1));
 	});
-	form_submit['required'] = required;
+	form_submit['required'] = JSON.stringify(required);
 
 	// TAGS
 	var tags = [];
