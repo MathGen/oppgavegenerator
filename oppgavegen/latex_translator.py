@@ -28,6 +28,7 @@ def latex_to_sympy(expr):
     expr = expr.replace('arccot', 'acot')
     expr = expr.replace('cosec', 'csc')
     expr = expr.replace('int', 'integrate')
+    expr = expr.replace('*)', ')*')
     expr = expr.replace('\\begin{equation*}', '')
     expr = expr.replace('\\end{equation*}', '')
     expr = expr.replace('§~', '§-')
@@ -91,6 +92,7 @@ def latex_to_sympy(expr):
 
 def parenthesis_around_minus(expression):
     """Takes a expression and returns it with parenthesis around numbers with - where needed."""
+    print(expression)
     exceptions = '0123456789.)({}xyz=+-?/§'  # Having xyz in exceptions might introduce a bug in some situations
     expression += ' ' #add a empty space at the end of the string to avoid error.
     end_symbols = '0123456789.)({}xyz?/*^' #Symbols the check doesn't end at.
@@ -111,6 +113,7 @@ def parenthesis_around_minus(expression):
                 count = 0
         elif record:
             count += 1
+    print(new_exp)
     return new_exp
 
 def minus_exponent(expr):
