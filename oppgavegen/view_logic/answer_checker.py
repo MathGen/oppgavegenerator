@@ -33,7 +33,7 @@ def check_answer(user_answer, answer, template_type, margin_for_error=0):
                                          '<=' + latex_to_sympy(us+margin_for_error)):
                         user_answer.remove(us)
                         break
-                elif parse_using_sympy(latex_to_sympy(s) + '==' + latex_to_sympy(us)):
+                elif parse_using_sympy_simplify(latex_to_sympy(s) + '==' + latex_to_sympy(us)):
                     user_answer.remove(us)
                     break
 
@@ -51,8 +51,10 @@ def parse_using_sympy(s):
 def parse_using_sympy_simplify(s):
     transformations = standard_transformations + (convert_xor, implicit_multiplication_application,)
     s = s.split('==')
+    print(s)
     new_s = []
     for x in s:
-        new_s.append(simplify(parse_expr(x, transformations=transformations, global_dict=None, evaluate=True)))
+        new_s.append(str(simplify(parse_expr(x, transformations=transformations, global_dict=None, evaluate=True))))
+    print(new_s)
     new_s = '=='.join(new_s)
     return parse_expr(new_s, transformations=transformations, global_dict=None, evaluate=True)
