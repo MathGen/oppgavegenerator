@@ -51,8 +51,10 @@ def parse_using_sympy(s):
 def parse_using_sympy_simplify(s):
     transformations = standard_transformations + (convert_xor, implicit_multiplication_application,)
     s = s.split('==')
+    print(s)
     new_s = []
     for x in s:
-        new_s.append(simplify(parse_expr(x, transformations=transformations, global_dict=None, evaluate=True)))
+        new_s.append(str(simplify(parse_expr(x, transformations=transformations, global_dict=None, evaluate=True))))
+    print(new_s)
     new_s = '=='.join(new_s)
     return parse_expr(new_s, transformations=transformations, global_dict=None, evaluate=True)
