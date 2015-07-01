@@ -5,7 +5,7 @@ $(document).ready(function () {
     // Load levels for the specific chapter
     $(document).on('click', '.btn_chapter', function(e){
         e.preventDefault();
-        var chapter_title = $(this).find('.chapter_title').text();
+        var chapter_title = $(this).find('.content_title').text();
         $('#chapter_title').text(" - " + chapter_title);
         var chapter_id = $(this).attr('id').match(/\d+/);
         load_levels(chapter_id);
