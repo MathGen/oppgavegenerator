@@ -359,10 +359,12 @@
                 </div>
                 <div class="panel-footer">
                     <div id="keypad_m" class="row keypad">
-                        <div class="col-md-9">
-
+                        <div class="col-md-8">
+                            {% include 'keypad/calculation_ref.html' %}
+                            {% include 'keypad/variables.html' %}
+                            {% include 'keypad/operators.html' %}
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="btn-group pull-right">
                                 <button id="m_btn_clear" class="btn btn-default btn_clear">
                                     <span class="glyphicon glyphicon-trash" style="horizontal-align:middle"></span>

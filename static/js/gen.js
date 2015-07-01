@@ -539,7 +539,8 @@ $(document).ready(function() {
 			'<div id="m_field_'+MULTI_CHOICE+'" class="input_field multi_field">' +
 				'<span id="m_input_mathquill_'+MULTI_CHOICE+'" class="math-field form-control input_mathquill"></span>'+
 				'<a id="m_btn_del_'+MULTI_CHOICE+'" class="glyphicon glyphicon-remove pull-right del_multi"></a>' +
-			'</div>'
+			'</div>' +
+			'<label for="m_checkbox_'+MULTI_CHOICE+'">Forenkle:<input id="m_checkbox_'+MULTI_CHOICE+'" type="checkbox"></label>'
 		);
 		redraw_mathquill_elements();
 	});
@@ -548,6 +549,7 @@ $(document).ready(function() {
 	$(document).on('click', '.del_multi', function(e){
 		e.preventDefault();
 		$('#m_field_' + MULTI_CHOICE).remove();
+		$('#m_checkbox_' + MULTI_CHOICE).parent().remove();
 		MULTI_CHOICE--;
 		$('#m_btn_del_' + MULTI_CHOICE).show();
 	});
@@ -1296,12 +1298,22 @@ function get_multiple_choices(latex_bool){
 	var multiple_choices = [];
 	if(!latex_bool){
 		for(var m = 1; m <= MULTI_CHOICE; m++){
-			multiple_choices.push(convert_variables(get_latex_from_mathfield('#m_input_mathquill_' + m)));
+			if($('#m_checkbox_' + m).is(':checked')){
+				multiple_choices.push('@?' + convert_variables(get_latex_from_mathfield('#m_input_mathquill_' + m)) + '?@');
+			}
+			else{
+				multiple_choices.push(convert_variables(get_latex_from_mathfield('#m_input_mathquill_' + m)));
+			}
 		}
 	}
 	else{
 		for(var ml = 1; ml <= MULTI_CHOICE; ml++){
-			multiple_choices.push(get_latex_from_mathfield('#m_input_mathquill_' + ml))
+			if($('#m_checkbox_' + ml).is(':checked')){
+				multiple_choices.push('✓' + get_latex_from_mathfield('#m_input_mathquill_' + ml));
+			}
+			else{
+				multiple_choices.push(get_latex_from_mathfield('#m_input_mathquill_' + ml));
+			}
 		}
 	}
 	return multiple_choices.join('§');
@@ -1382,7 +1394,11 @@ function refresh_multiple_choice_template(){
 function refresh_multiple_choice(){
 	if(MULTI_CHOICE == 0 && MODIFY == false) {
 		MULTI_CHOICE++;
-		$('#m_dyn_multi_input').append('<div class="input_field"><span id="m_input_mathquill_1" class="math-field form-control input_mathquill"></span></div>');
+		$('#m_dyn_multi_input').append(
+			'<div class="input_field">' +
+				'<span id="m_input_mathquill_1" class="math-field form-control input_mathquill" style="max-width: 50%"></span>' +
+			'</div>' +
+			'<label for="m_checkbox_1">Forenkle:<input id="m_checkbox_1" type="checkbox"></label>');
 		MathQuill.MathField($('#m_input_mathquill_1')[0]).revert();
 		MathQuill.MathField($('#m_input_mathquill_1'));
 	}
@@ -1392,8 +1408,8 @@ function refresh_multiple_choice(){
 		$('#m_dyn_multi_input').append(
 			'<div class="input_field">' +
 				'<span id="m_input_mathquill_1" class="math-field form-control input_mathquill"></span>' +
-			'</div>'
-		);
+			'</div>' +
+			'<label for="m_checkbox_1">Forenkle:<input id="m_checkbox_1" type="checkbox"></label>');
 		MathQuill.MathField($('#m_input_mathquill_1')[0]).revert();
 		MathQuill.MathField($('#m_input_mathquill_1'));
 		MULTI_CHOICE = m_choice.length;
@@ -1404,12 +1420,17 @@ function refresh_multiple_choice(){
 					'<div id="m_field_'+m+'" class="input_field multi_field">' +
 						'<span id="m_input_mathquill_'+m+'" class="math-field form-control input_mathquill"></span>' +
 						'<a id="m_btn_del_'+m+'" class="glyphicon glyphicon-remove pull-right del_multi"></a>' +
-					'</div>'
+					'</div>' +
+					'<label for="m_checkbox_'+m+'">Forenkle:<input id="m_checkbox_'+m+'" type="checkbox"></label>'
 				);
 				redraw_mathquill_elements();
 			}
 		}
 		for(var n = 1; n <= MULTI_CHOICE; n++){
+			if(m_choice[(n-1)][0] == '✓'){
+				$('#m_checkbox_' + n).prop('checked', true);
+				m_choice[n-1] = m_choice[n-1].substring(1, m_choice[n-1].length);
+			}
 			MathQuill.MathField($('#m_input_mathquill_' + n)[0]).write(m_choice[(n-1)]);
 		}
 	}
