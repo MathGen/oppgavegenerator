@@ -87,9 +87,9 @@ def latex_to_sympy(expr):
 
 def parenthesis_around_minus(expression):
     """Takes a expression and returns it with parenthesis around numbers with - where needed."""
-    exceptions = '0123456789.)({}xyz=+-?/'  # Having xyz in exceptions might introduce a bug in some situations
+    exceptions = '0123456789.)({}xyz=+-?/§'  # Having xyz in exceptions might introduce a bug in some situations
     expression += ' ' #add a empty space at the end of the string to avoid error.
-    end_symbols = '0123456789.)({}xyz?/*'
+    end_symbols = '0123456789.)({}xyz?/*' #Symbols the check doesn't end at.
     new_exp = expression
     count = 0
     record = False
