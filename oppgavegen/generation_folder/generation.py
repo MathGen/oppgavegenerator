@@ -8,12 +8,12 @@ from random import uniform, shuffle, choice
 from sympy.parsing.sympy_parser import (parse_expr, standard_transformations,
                                         implicit_multiplication_application, convert_xor)
 
-from oppgavegen.latex_translator import latex_to_sympy, parenthesis_around_minus, remove_pm_and_add_parenthesis
+from oppgavegen.latex_translator import latex_to_sympy, add_phantom_minus, remove_pm_and_add_parenthesis
 from oppgavegen.models import  Level
 from oppgavegen.generation_folder.multifill import multifill
 from oppgavegen.generation_folder.fill_in import fill_in_the_blanks
-from oppgavegen.utility.utility import*
-from oppgavegen.generation_folder.calculate_parse_solution import parse_solution, calculate_answer
+from oppgavegen.utility.utility import *
+from oppgavegen.generation_folder.calculate_parse_solution import parse_solution
 from oppgavegen.generation_folder.get_question import get_question, get_level_question
 
 
@@ -56,6 +56,9 @@ def generate_task(user, template_extra, desired_type=''):
     variables_used = ""  # Sends a splitable string since dictionaries can't be passed between layers.
     replacing_words = ''  # The words that got replaced, and the words that replaced them
 
+    task = add_phantom_minus(task)
+    answer = add_phantom_minus(answer)
+    choices = add_phantom_minus(choices)
     new_choices = ''
     new_task = ''
     new_answer = ''
@@ -135,6 +138,10 @@ def generate_level(user, level_id):
     template_specific = ""  # A variable that holds the extra values for a given type. ie. choices for multiple.
     variables_used = ""  # Sends a splitable string since dictionaries can't be passed between layers.
     replacing_words = ''  # The words that got replaced, and the words that replaced them
+
+    task = add_phantom_minus(task)
+    answer = add_phantom_minus(answer)
+    choices = add_phantom_minus(choices)
 
     new_choices = ''
     new_task = ''
