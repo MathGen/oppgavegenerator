@@ -77,7 +77,7 @@ class TemplateSearchForm(SearchForm):
             #sqs = sqs.filter(fill_in_support=self.cleaned_data['fill_in'])
             sqs = sqs.filter(fill_in='True')
 
-        return sqs
+        return sqs.models(Template)
 
 class SetsSearchForm(SearchForm):
     """ Generic search form for Set, Chapter and Level """

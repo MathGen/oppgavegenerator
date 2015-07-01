@@ -12,56 +12,125 @@
         <div class="panel-heading"><h3 class="panel-title">Søk</h3></div>
         <div class="panel-body">
 
-            <div class="form-group inline">
+            <div class="form-group">
                 <form method="get" action=".">
 
                     {% bootstrap_field form.q %}
+                    <a data-toggle="collapse" href="#advanced" aria-expanded="false"
+                       aria-controls="advanced">
+                        Avansert søk
+                    </a>
 
-                        <button type="submit" class="btn btn-primary inline">
+                    <div id="advanced" class="collapse">
+                        <div class="well">
+                            {% bootstrap_field form.creator %}
+                        <span id="rating-search" class="form-inline">
+                        {% bootstrap_field form.min_rating %}
+                        {% bootstrap_field form.max_rating %}
+                        </span>
+                            <br>
+                        <span id="type-search" class="form-inline">
+                        {% bootstrap_field form.multiple %}
+                        {% bootstrap_field form.fill_in %}
+                        </span>
+                        </div>
+                    </div>
+
+                    <p>
+                        <button type="submit" class="btn btn-primary">
                             {% bootstrap_icon "search" %} Search
                         </button>
-
+                    </p>
                 </form>
             </div>
         </div>
 
-                {% if query %}
+        {% if query %}
 
-{#                    <h3 class="title">Resultater</h3>#}
 
-                    <ul class="list-group">
-                        <li class="list-group-item clearfix"><span class="pull-right">{{ user.extendeduser.current_level.name }}</span></li>
-                    {% for result in page.object_list %}
-                        <li class="list-group-item clearfix">{% include 'search/includes/template.html' %}</li>
-                    {% empty %}
-                        <p>Fant ingen oppgavemaler.</p>
-                    {% endfor %}
-                    </ul>
-                    {% if page.has_previous or page.has_next %}
-                        <div>
-                            {% if page.has_previous %}
-                                <a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo;
-                            Previous
-                            {% if page.has_previous %}</a>{% endif %}
-                            |
-                            {% if page.has_next %}
-                                <a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}
-                            Next &raquo;{% if page.has_next %}</a>{% endif %}
-                        </div>
+
+            <ul class="list-group">
+                <li class="list-group-item clearfix">
+                    <strong style="margin: 5px 0">Resultater</strong>
+                            <span class="pull-right">
+                                <button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                    {{ user.extendeduser.current_level.name }} <span class="caret"></span>
+                                </button>
+                            </span>
+                </li>
+                {% for result in page.object_list %}
+                    <li class="list-group-item clearfix">
+                        {% include 'search/includes/template.html' %}
+                    </li>
+                {% empty %}
+                    <p>Fant ingen oppgavemaler.</p>
+                {% endfor %}
+            </ul>
+        {% else %}
+            {# Show some example queries to run, maybe query syntax, something else? #}
+        {% endif %}
+
+        {% if page.has_previous or page.has_next %}
+            <nav class="text-center">
+
+
+            <ul class="pagination pagination-centered">
+                {% if page.has_previous %}
+                    <li><a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                    </li>
+                {% endif %}
+
+                {% for i in paginator.page_range %}
+                    <li {% if page.number == i %} class="active" {% endif %}>
+                        <a href="?q={{ query }}&amp;page={{ i }}">
+                            {{ i }}
+                        </a>
+                    </li>
+                {% endfor %}
+
+                {% if page.has_next %}
+                    <li>
+                        <a href="?q={{ query }}&amp;page={{ page.next_page_number }}">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+            </nav>
+        {% endif %}
+
+
+        {% comment boring pagination %}
+        {% if page.has_previous or page.has_next %}
+            <nav>
+                <ul class="pager">
+                    {% if page.has_previous %}
+                        <li>
+                            <a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">
+                                <span aria-hidden="true">&laquo;</span>
+                                Forrige
+                            </a></li>
                     {% endif %}
 
 
-                {% else %}
-                    {# Show some example queries to run, maybe query syntax, something else? #}
-                {% endif %}
+
+                    {% if page.has_next %}
+                        <li>
+                            <a href="?q={{ query }}&amp;page={{ page.next_page_number }}">
+                                Neste
+                                <span aria-hidden="true">&raquo;</span>
+                            </a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+{% endcomment %}
+
 
     </section>
-
-
-
-
-
-
 
 {% endblock %}
 
@@ -70,4 +139,3 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
     <script src="/static/js/search_functions.js"></script>
 {% endblock %}
-

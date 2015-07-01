@@ -51,11 +51,9 @@
                             </ol>
                             {% endif %}
                     	<li><a href="#">{{  user|get_rating }}</a></li>
-                        {% endif %}
-                    	{% if user|is_teacher %}
 						<li><a href="{% url 'newtemplate' %}">Ny Mal</a></li>
-                        {%endif%}
                     	<li><a href="{% url 'templates' %}">Maler</a></li>
+                        {%endif%}
 						<!--USER AUTH ITEMS-->
                         {% if user.is_authenticated %}
                         <li class="dropdown">
@@ -128,7 +126,7 @@
 		<script src="/static/js/jquery-1.11.2.min.js"></script>
 		<script src="/static/js/bootstrap.js"></script>
 		<script src="/static/js/mathquill.min.js"></script>
-        <script src="/static/js/gen.js?065"></script>
+        <script src="/static/js/gen.js?066"></script>
     	{% block js %}{% endblock %}
     	</body>
 </html>
