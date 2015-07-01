@@ -43,7 +43,8 @@ def make_edit_context_dict(template_id):
                     'choices': choices, 'conditions': conditions, 'fill_in': fill_in,
                     'topic': topic, 'random_domain': random_domain, 'unchanged_ref': unchanged_ref,
                     'topics': topics, 'dictionary': dictionary, 'used_variables': used_variables,
-                    'tags': tags, 'margin_of_error': q.margin_of_error}
+                    'tags': tags, 'margin_of_error': q.margin_of_error, 'disallowed': q.disallowed,
+                    'required': q.required, 'difficulty': q.difficulty}
     return context_dict
 
 
@@ -108,8 +109,8 @@ def submit_template(template, user, update, newtags=None):
         template.times_solved = q.times_solved
         template.creation_date = q.creation_date
         template.creator = q.creator
-        template.name = q.name
-        template.difficulty = q.difficulty
+        if template.name == '':
+            template.name = q.name
         template.margin_of_error = q.margin_of_error
     else:
         # todo: add this back in when the view sends difficulty

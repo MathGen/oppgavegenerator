@@ -69,7 +69,8 @@ class Template(models.Model):
     conditions = models.CharField(max_length=10000, blank=True, null=True, default="")
     fill_in = models.CharField(max_length=10000, blank=True, null=True, default="")
     valid_flag = models.BooleanField(default=False, choices=valid_choices)
-    disallowed = models.CharField(max_length=1000, blank=True, null=True, default="")
+    disallowed = models.CharField(max_length=5000, blank=True, null=True, default="")
+    required = models.CharField(max_length=5000, blank=True, null=True, default="")
     multiple_support = models.BooleanField(default=False)  # Denotes whether the template supports multiple choice
     fill_in_support = models.BooleanField(default=False)  # Denotes whether the template supports fill in the blanks
     margin_of_error = models.PositiveIntegerField(default=0, null=True, blank=True)
