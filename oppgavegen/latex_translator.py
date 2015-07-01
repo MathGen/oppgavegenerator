@@ -35,7 +35,7 @@ def latex_to_sympy(expr):
     if expr[0] == '~':
         expr = expr[:0] + '-' + expr[1:]
 
-    expr = expr.replace('x', ' x') # Add space before variables to prvenet sympy fuckups
+    expr = expr.replace('x', ' x') # Add space before variables to prevent sympy fuckups
     expr = expr.replace('y', ' y')
     expr = expr.replace('z', ' z')
     expr = expr.replace('  ', ' ')  # Remove double whitespace
