@@ -81,6 +81,7 @@ def generate_task(user, template_extra, desired_type=''):
         shuffle(new_choices)  # Shuffles the choices so that the answer is not always in the same place.
         new_choices = '§'.join(new_choices)
         template_specific = new_choices
+        template_specific = remove_pm_and_add_parenthesis(template_specific)
     elif template_type == 'blanks':
         fill_in_dict = fill_in_the_blanks(fill_in)
         # new_task = new_task + '\n' + fill_in_dict['fill_in'].replace('\\n', '\n')
