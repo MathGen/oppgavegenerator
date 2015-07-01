@@ -1736,6 +1736,12 @@ function insert_editable_data(){
 		$('#opt_fill_blanks').prop('checked', true);
 		refresh_fill_in_content();
 	}
+
+	// Get and insert tags
+	var tags = JSON.parse($('#get_tags').text());
+	for(var t = 0; t < tags.length; t++){
+		$('#tags').prepend('<span class="tag">'+tags[t]+'<a class="btn btn_tag_del">x</a></span>');
+	}
 	VAR_INIT = false;
 	redraw_mathquill_elements();
 }
