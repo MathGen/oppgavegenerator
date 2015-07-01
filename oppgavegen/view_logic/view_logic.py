@@ -37,7 +37,7 @@ def make_edit_context_dict(template_id):
     for e in Topic.objects.all():
         topics += '§' + str(e.pk) + '§'
         topics += e.topic
-    topics = topics[1:]
+    topics = topics[1:] #Remove the redundant §
     context_dict = {'template_id': template_id, 'answer': answer, 'solution': solution,
                     'question_text': question_text, 'calculation_references': calculation_references,
                     'choices': choices, 'conditions': conditions, 'fill_in': fill_in,
