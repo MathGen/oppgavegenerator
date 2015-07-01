@@ -87,6 +87,7 @@ function load_template(level_id){
                 $('#game_nav').fadeIn(function(){
                     redraw_mathquill_elements();
                 });
+                redraw_mathquill_elements();
             });
         });
     });
@@ -103,6 +104,7 @@ function post_answer(submit_dict){
                 $('#game_nav').fadeIn(function(){
                     redraw_mathquill_elements();
                 });
+                redraw_mathquill_elements();
             });
         });
     });
