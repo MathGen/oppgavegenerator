@@ -21,7 +21,7 @@ def check_answer(user_answer, answer, template_type, margin_for_error=0):
     if template_type != 'normal':
         # Reverse iteration to avoid index out of bounds when elements get deleted.
         for s in range(len(answer)-1, -1, -1):
-                if parse_using_sympy(latex_to_sympy(answer[s]) + '==' + latex_to_sympy(user_answer[s])):
+                if parse_using_sympy_simplify(latex_to_sympy(answer[s]) + '==' + latex_to_sympy(user_answer[s])):
                     del user_answer[s]
 
     #  Todo: try catch? could also do different things depending on errors, for instance typeError for equalities
