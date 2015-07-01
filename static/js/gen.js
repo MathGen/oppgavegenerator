@@ -718,6 +718,14 @@ function submit_template(){
 		form_submit['random_domain'] = "";
 	}
 
+	// MARGIN OF ERROR
+	var margin = $('#opt_margin_of_error');
+	if(margin.val() != ""){
+		form_submit['margin_of_error'] = margin.val();
+	} else {
+		form_submit['margin_of_error'] = 0;
+	}
+
 	// DICTIONARY
 	var array_dict = [];
 	var e_empty = true;
