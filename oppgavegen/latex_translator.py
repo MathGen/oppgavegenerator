@@ -152,15 +152,14 @@ def add_phantom_minus(expr):
     Replaces the minus where the string starts with minus and a exponent.
     This is done to find out if a string intentionally starts with minus or if it is a - from the number generator.
     """
-    print(expr)
     numbers = ['123456789']
     for i in range(0, len(expr)):
         if i >= len(expr) - 5:
             break
-        if ((i == 1 or expr[i-1] == '§') and expr[i] == '-' and expr[i+1] == 'R' and expr[i+2] in numbers and
-        expr[i+3] == '^' or expr[i+4] == '^'):
-            expr = expr[:i] + '~' + expr[i+1:]
-    print(expr)
+        if i == 0 or expr[i-1] == '§':
+            if expr[i] == '-' and expr[i+1] == 'R' and expr[i+2] in numbers and expr[i+3] == '^' or expr[i+4] == '^':
+                print(i)
+                expr = expr[:i] + '~' + expr[i+1:]
     return expr
 
 
