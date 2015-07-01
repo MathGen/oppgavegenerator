@@ -22,6 +22,7 @@ $(document).ready(function () {
                             '<span id="mathquill_output_'+i+'" class="output_mathquill" style="margin-left: 6px"></span></div>');
             MathQuill.StaticMath($('#mathquill_output_' + i)[0]).latex(choices[i]);
         }
+        redraw_mathquill_elements();
     }
     else if (template_type == 'normal') {
         var output = $('#get_question').text();
@@ -33,6 +34,7 @@ $(document).ready(function () {
             }
             w_target.append('<div id="ans_'+i+'" class="col-md-12 input_field"><span id="w_input_mathquill_'+i+'" class="math-field form-control input_mathquill input_blanks"></span></div>');
         }
+        redraw_mathquill_elements();
     }
     else if (template_type == 'blanks') {
         var output = $('#get_question').text();
