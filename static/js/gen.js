@@ -872,12 +872,12 @@ function submit_template(){
 		form_submit['pk'] = "";
 	}
 
-	// Testing output TODO: When finished testing, switch to submit method.
-	var test_output = [];
-	for(var s in form_submit){
-		test_output.push(s + '\n' + form_submit[s]);
-	}
-	alert(test_output.join('\n'));
+	//// Testing output TODO: When finished testing, switch to submit method.
+	//var test_output = [];
+	//for(var s in form_submit){
+	//	test_output.push(s + '\n' + form_submit[s]);
+	//}
+	//alert(test_output.join('\n'));
 
 	// SUBMIT
 	post(/submit/, form_submit);
