@@ -14,7 +14,7 @@ from .models import Set, Chapter, Level, Template, ExtendedUser, Tag
 class TagField(forms.CharField):
     """
     Return a list of Tag-objects.
-    Creates new Tag-objects if they don't exist.
+    Creates new Tag-objects if they don't already exist in the database.
     """
     # def prepare_value(self, value):
     def clean(self, value):
@@ -37,12 +37,18 @@ class TagField(forms.CharField):
 
 
 class TemplateSearchForm(SearchForm):
-    name = forms.CharField(required=False)
-    creator = forms.CharField(required=False)
-    min_rating = forms.IntegerField(required=False)
-    max_rating = forms.IntegerField(required=False)
-    multiple = forms.BooleanField(required=False)
-    fill_in = forms.BooleanField(required=False)
+    q = forms.CharField(required=True, label='Søk',
+                        widget=forms.TextInput(attrs={'type': 'search', 'placeholder' : 'Søk i oppgavemaler'}))
+    name = forms.CharField(required=False, label='Tittel',
+                           widget=forms.TextInput(attrs={'type': 'search', 'placeholder' : 'Oppgavetittel'}))
+    creator = forms.CharField(required=False, label='Forfatter',
+                              widget=forms.TextInput(attrs={'type': 'search', 'placeholder' : 'Forfatter'}))
+    min_rating = forms.IntegerField(required=False, label='Lavest Rating',
+                                    widget=forms.NumberInput(attrs={'type': 'number', 'placeholder' : 'Minimum'}))
+    max_rating = forms.IntegerField(required=False, label='Høyest Rating',
+                                    widget=forms.NumberInput(attrs={'type': 'number', 'placeholder' : 'Maximum'}))
+    multiple = forms.BooleanField(required=False, label='Flervalg')
+    fill_in = forms.BooleanField(required=False, label='Utfylling')
 
     def search(self):
         # First, store the SearchQuerySet received from other processing.
@@ -53,7 +59,7 @@ class TemplateSearchForm(SearchForm):
 
         # Check for name input
         if self.cleaned_data['name']:
-            sqs = sqs.filter(title__contains=self.cleaned_data['name'])
+            sqs = sqs.filter(name__contains=self.cleaned_data['name'])
 
         # Check for creator input
         if self.cleaned_data['creator']:
@@ -78,6 +84,7 @@ class TemplateSearchForm(SearchForm):
             sqs = sqs.filter(fill_in='True')
 
         return sqs.models(Template)
+
 
 class SetsSearchForm(SearchForm):
     """ Generic search form for Set, Chapter and Level """

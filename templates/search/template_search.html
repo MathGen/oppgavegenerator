@@ -16,31 +16,35 @@
                 <form method="get" action=".">
 
                     {% bootstrap_field form.q %}
+
+                    <button type="submit" class="btn btn-primary">
+                        {% bootstrap_icon "search" %} Søk
+                    </button>
+
                     <a data-toggle="collapse" href="#advanced" aria-expanded="false"
                        aria-controls="advanced">
-                        Avansert søk
+                        <span aria-hidden="true">&raquo;</span>Avansert søk
                     </a>
 
+
                     <div id="advanced" class="collapse">
+                        {# todo: pretty forms pls #}
+                        <div class="input-group pull-right">
                         <div class="well">
+                            {% bootstrap_field form.name %}
                             {% bootstrap_field form.creator %}
-                        <span id="rating-search" class="form-inline">
+                        <div id="rating-search" class="form-inline">
                         {% bootstrap_field form.min_rating %}
                         {% bootstrap_field form.max_rating %}
-                        </span>
+                        </div>
                             <br>
-                        <span id="type-search" class="form-inline">
+                        <div id="type-search" class="form-inline">
                         {% bootstrap_field form.multiple %}
                         {% bootstrap_field form.fill_in %}
-                        </span>
+                        </div>
+                        </div>
                         </div>
                     </div>
-
-                    <p>
-                        <button type="submit" class="btn btn-primary">
-                            {% bootstrap_icon "search" %} Search
-                        </button>
-                    </p>
                 </form>
             </div>
         </div>
