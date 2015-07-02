@@ -1,3 +1,5 @@
+""" Functions related to user progress on levels/chapters/set"""
+
 from oppgavegen.models import User, Level, UserLevelProgress, Chapter
 import json
 
