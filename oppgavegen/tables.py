@@ -34,8 +34,8 @@ class TemplateTable(tables.Table):
         template = ("bstable.html")
         # attrs = {"class": "paleblue"} # add class="paleblue" (table theme) to <table> tag
         # fields to include in table (displayed in this order)
-        fields = ("id", "creator", "topic", "multiple_support", "fill_in_support", "rating")
-        sequence = ("id", "content", "creator", "topic", "multiple_support", "fill_in_support", "rating", "view")
+        fields = ("id", "creator", "name", "multiple_support", "fill_in_support", "rating")
+        sequence = ("id", "content", "creator", "name", "multiple_support", "fill_in_support", "rating", "view")
         order_by = "-id"
 
 
@@ -69,8 +69,8 @@ class UserTemplatesTable(tables.Table):
         template = ("bstable.html")
         # attrs = {"class": "paleblue"} # add class="paleblue" (table theme) to <table> tag
         # fields to include in table (displayed in this order)
-        fields = ("id", "topic", "multiple_support", "fill_in_support", "rating")
-        sequence = ("id", "content", "topic", "multiple_support", "fill_in_support", "rating", "action")
+        fields = ("id", "name", "multiple_support", "fill_in_support", "rating")
+        sequence = ("id", "content", "name", "multiple_support", "fill_in_support", "rating", "action")
         order_by = ("-id")
 
 class UserTable(tables.Table):
