@@ -117,9 +117,9 @@ urlpatterns = patterns('',
     url(r'^level/(\d+)/template/(\d+)/add_template/$', add_template_to_level_view, name='new_chapter_for_set'),
     url(r'^level/(\d+)/template/(\d+)/remove_template/$', remove_template_from_level_view, name='remove_template_from_level'),
 
-    url(r'^set/update/$', update_set_view, name='update_set_view'), # Set id, title, order
-    url(r'^chapter/update/$', update_chapter_view, name='update_chapter_view'), # Chapter id, title, order
-    url(r'^level/update/$', update_level_view, name='update_level_view'), # Level id, title, k_factor
+    url(r'^set/update/$', update_set_view, name='update_set_view'),
+    url(r'^chapter/update/$', update_chapter_view, name='update_chapter_view'),
+    url(r'^level/update/$', update_level_view, name='update_level_view'),
 
     # DJANGO SELECTABLE
     url(r'^selectable/', include('selectable.urls')),

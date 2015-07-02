@@ -102,17 +102,35 @@ def add_chapter_to_set_view(request, set_id, chapter_id):
 
         return HttpResponse(msg)
 
-def update_chapter_view(request, chapter_id, title, order):
-    chapter = Chapter.objects.get(chapter_id)
-    msg = update_chapter_or_set(chapter, title, order, request.user)
+def update_chapter_view(request):
+    msg = 'Noe gikk galt'
+    if request.method == 'POST':
+        form = request.POST
+        title = form['title']
+        order = form['order']
+        chapter_id = form['chapter_id']
+        chapter = Chapter.objects.get(chapter_id)
+        msg = update_chapter_or_set(chapter, title, order, request.user)
     return HttpResponse(msg)
 
-def update_set_view(request, set_id, title, order):
-    set = Set.objects.get(set_id)
-    msg = update_chapter_or_set(set, title, order, request.user)
+def update_set_view(request):
+    msg = 'Noe gikk galt'
+    if request.method == 'POST':
+        form = request.POST
+        title = form['title']
+        order = form['order']
+        set_id = form['set_id']
+        set = Set.objects.get(set_id)
+        msg = update_chapter_or_set(set, title, order, request.user)
     return HttpResponse(msg)
 
-def update_level_view(request, set_id, title, k_factor):
-    set = Set.objects.get(set_id)
-    msg = update_level(set, title, request.user, k_factor)
+def update_level_view(request):
+    msg = 'Noe gikk galt'
+    if request.method == 'POST':
+        form = request.POST
+        title = form['title']
+        k_factor = form['k_factor']
+        level_id = form['set_id']
+        level = Level.objects.get(level_id)
+        msg = update_level(level, title, request.user, k_factor)
     return HttpResponse(msg)
