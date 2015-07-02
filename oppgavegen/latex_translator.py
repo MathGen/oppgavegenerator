@@ -33,8 +33,11 @@ def latex_to_sympy(expr):
     expr = expr.replace('\\end{equation*}', '')
     expr = expr.replace('§~', '§-')
     expr = expr.replace('~(-', '-(-')
-    if expr[0] == '~':
-        expr = expr[:0] + '-' + expr[1:]
+    try:
+        if expr[0] == '~':
+            expr = expr[:0] + '-' + expr[1:]
+    except IndexError:
+        pass
 
     expr = expr.replace('x', ' x') # Add space before variables to prevent sympy fuckups
     expr = expr.replace('y', ' y')
