@@ -25,6 +25,7 @@ def calculate_answer(s, domain):
         s = str(latex_to_sympy(s))
         print(s)
         s = s.replace('*)', ')*')
+        s = s.replace('?)@', ')?@')
         print(s)
         print('end calculate_answer')
         s = parse_expr(s, transformations=standard_transformations +
