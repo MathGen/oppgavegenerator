@@ -56,9 +56,7 @@ function save_changes(){
         form_submit["csrfmiddlewaretoken"] = getCookie('csrftoken');
         $.post('../../../' + content + '/update/', form_submit, function(result){
             if(result[0] == 'S'){
-                $('#update_success').show(100).delay(5000).hide(100).queue(function () {
-                    $(this).remove();
-                });
+                $('#update_success').show(100).delay(5000).hide(100);
             }
         });
     }
