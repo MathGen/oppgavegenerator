@@ -28,7 +28,6 @@ def make_edit_context_dict(template_id):
     choices = q.choices_latex
     conditions = q.conditions_latex
     fill_in = q.fill_in_latex
-    topic = q.topic
     random_domain = q.random_domain
     unchanged_ref = q.unchanged_ref
     dictionary = q.dictionary
