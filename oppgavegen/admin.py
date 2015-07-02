@@ -5,11 +5,9 @@ Configuration for the admin page
 """
 
 from django.contrib import admin
-from oppgavegen.models import Template, ExtendedUser, Level, Chapter, Set, Tag, UserLevelProgress, Offset
+from oppgavegen.models import Template, ExtendedUser, Level, Chapter, Set, Tag, UserLevelProgress
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
-
-
 
 
 class templateAdmin(admin.ModelAdmin):
@@ -40,9 +38,6 @@ class TagAdmin(admin.ModelAdmin):
 class UserLevelProgressAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'level')
 
-class OffsetAdmin(admin.ModelAdmin):
-    list_display = ('id', 'offset', 'difficulty_number')
-
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
@@ -52,4 +47,3 @@ admin.site.register(Chapter,  ChapterAdmin)
 admin.site.register(Set,  SetAdmin)
 admin.site.register(Tag,  TagAdmin)
 admin.site.register(UserLevelProgress, UserLevelProgressAdmin)
-admin.site.register(Offset, OffsetAdmin)

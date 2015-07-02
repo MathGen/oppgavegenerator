@@ -13,10 +13,6 @@ from django.db.models.signals import post_save
 # The classes have to be in order.
 # The reason is that you might try to make a foreign key on a class that does not exist yet.
 
-
-
-
-
 class Tag(models.Model):
     """Searchable tags for problem templates."""
     name = models.CharField(max_length=200, unique=True)  # Name of the tag.
@@ -90,6 +86,7 @@ class Level(models.Model):
     editor = models.ForeignKey(User, blank=True, null=True, related_name='levels_edited')  # Editor of template
     creation_date = models.DateTimeField('date created', blank=True, null=True)  # Date and time of creation
     k_factor = models.PositiveIntegerField(default=3, null=True, blank=True)  # Decides how fast a user progress
+    offset = models.IntegerField(default=0, null=True, blank=True)  # Offset for the level.
 
     def __str__(self):  # return self.name instead of level-object
         """Returns the level name"""
@@ -134,11 +131,6 @@ class UserLevelProgress(models.Model):
 
     def __str__(self):  #  Returns the pk
         return str(self.pk)
-
-
-class Offset(models.Model):
-    offset = models.FloatField(default=0)
-    difficulty_number = models.PositiveSmallIntegerField
 
 
 class ExtendedUser(models.Model):

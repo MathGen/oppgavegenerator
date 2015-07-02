@@ -228,6 +228,7 @@ def chapters(request, set_id):
             for chapter in set_chapters:
                 if chapter.pk == int(x):
                     set_chapters_ordered.append(chapter)
+                    break
 
         return render_to_response('game/chapters.html',
                                   {'chapters': set_chapters_ordered, 'medals': json.dumps(medals),
@@ -252,6 +253,7 @@ def levels(request, chapter_id):
             for chapter in chapter_levels:
                 if chapter.pk == int(x):
                     chapter_levels_ordered.append(chapter)
+                    break
 
         return render_to_response('game/levels.html',
                                   {'levels': chapter_levels_ordered, 'chapter_title': chapter_title,
@@ -277,25 +279,39 @@ def set_edit(request, set_id=""):
     context = RequestContext(request)
     get_chapters = ""
     set_title = ""
+    chapters = []
     if set_id:
         edit_set = Set.objects.get(pk=set_id)
         set_current_set(request.user, edit_set)
         set_title = edit_set.name
         get_chapters = edit_set.chapters.all()
-    return render_to_response('sets/container.html', {'set_id': set_id, 'chapters': get_chapters,
+        order = edit_set.order
+
+        for x in order.split(','):
+            for chapter in edit_set.chapters.all():
+                if chapter.pk == int(x):
+                    chapters.append(chapter)
+                    break
+    return render_to_response('sets/container.html', {'set_id': set_id, 'chapters': chapters,
                                                       'set_edit': True, 'set_title': set_title}, context)
 
 
 def chapter_edit(request, chapter_id=""):
     context = RequestContext(request)
-    get_levels = ""
     chapter_title = ""
+    levels = []
     if chapter_id:
         edit_chapter = Chapter.objects.get(pk=chapter_id)
         set_current_chapter(request.user, edit_chapter)
         chapter_title = edit_chapter.name
-        get_levels = edit_chapter.levels.all()
-    return render_to_response('sets/container.html', {'chapter_id': chapter_id, 'levels': get_levels,
+        order = edit_chapter.order
+
+        for x in order.split(','):
+            for level in edit_chapter.levels.all():
+                if level.pk == int(x):
+                    levels.append(level)
+                    break
+    return render_to_response('sets/container.html', {'chapter_id': chapter_id, 'levels': levels,
                                                       'chapter_edit': True, 'chapter_title': chapter_title}, context)
 
 
