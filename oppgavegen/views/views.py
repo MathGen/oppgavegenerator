@@ -303,13 +303,16 @@ def level_edit(request, level_id=""):
     context = RequestContext(request)
     get_templates = ""
     level_title = ""
+    k_factor = 3
     if level_id:
         edit_level = Level.objects.get(pk=level_id)
         set_current_level(request.user, edit_level)
         level_title = edit_level.name
+        k_factor = edit_level.k_factor
         get_templates = edit_level.templates.all()
     return render_to_response('sets/container.html', {'level_id': level_id, 'templates': get_templates,
-                                                      'level_edit': True, 'level_title': level_title}, context)
+                                                      'level_edit': True, 'level_title': level_title,
+                                                      'k_factor': k_factor}, context)
 
 
 class SetsSearchView(SearchView):
