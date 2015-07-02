@@ -50,8 +50,11 @@ def latex_to_sympy(expr):
     expr = expr.replace('min(', 'Min(')
     expr = expr.replace('matri x', 'matrix')
 
-    if expr[0] == '*':
-        expr = expr[1:]
+    try:
+        if expr[0] == '*':
+            expr = expr[1:]
+    except IndexError:
+        pass
 
     i = 0
     counter = 0
