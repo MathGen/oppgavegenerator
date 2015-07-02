@@ -35,11 +35,6 @@ def get_question(user, template_id, topic=''):
             f = f.filter(valid_flag=True)
             f = f.filter(fill_in_support=True)
 
-            if topic != '':
-                q = q.filter(topic__topic__iexact=topic)
-                f = f.filter(topic__topic__iexact=topic)
-                m = m.filter(topic__topic__iexact=topic)
-
             # Use count instead of len as len loads the records.
             # Using len would be faster if we had to load all the records to python objects.
             length_normal = q.count()
