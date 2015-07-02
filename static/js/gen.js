@@ -590,7 +590,7 @@ $(document).ready(function() {
 
 	// Slider which sets the templates normal-task difficulty.
 	$('#difficulty_slider').slider({
-		value: 14,
+		value: 13,
 		min: 1,
 		max: 25,
 		step: 1,
@@ -602,7 +602,7 @@ $(document).ready(function() {
 
 	// Slider which sets the templates multiple-choice-task difficulty.
 	$('#m_difficulty_slider').slider({
-		value: 14,
+		value: 13,
 		min: 1,
 		max: 25,
 		step: 1,
@@ -614,7 +614,7 @@ $(document).ready(function() {
 
 	// Slider which sets the templates fill-in-the-blanks-task difficulty.
 	$('#f_difficulty_slider').slider({
-		value: 14,
+		value: 13,
 		min: 1,
 		max: 25,
 		step: 1,
