@@ -114,12 +114,16 @@ def submit_template(template, user, update, newtags=None):
         template.creator = q.creator
         if template.name == '':
             template.name = q.name
-        template.margin_of_error = q.margin_of_error
+        if template.difficulty != q.difficulty:
+            template.difficulty = calculate_start_rating(template.difficulty)
+        if template.difficulty_blanks != q.difficulty_blanks:
+            template.difficulty_blanks = calculate_start_rating(template.difficulty_blanks)
+        if template.difficulty != q.difficulty:
+            template.difficulty_blanks = calculate_start_rating(template.difficulty_blanks)
     else:
-        # todo: add this back in when the view sends difficulty
-        template.rating = 950  + (template.difficulty * 50)
-        template.fill_rating = 950 + (template.difficulty_blanks * 50)
-        template.choice_rating = 950 + (template.difficulty_multiple * 50)
+        template.rating = calculate_start_rating(template.difficulty)
+        template.fill_rating = calculate_start_rating(template.difficulty_blanks)
+        template.choice_rating = calculate_start_rating(template.difficulty_multiple)
         template.times_failed = 0
         template.times_solved = 0
         template.creation_date = datetime.now()
@@ -134,6 +138,8 @@ def submit_template(template, user, update, newtags=None):
     message = template_validation(template.pk)
     return message
 
+def calculate_start_rating(difficulty):
+    return 950 + (difficulty*50)
 
 def cheat_check(user_answer, disallowed):
     """Checks whether the user has used symbols/functions that are not allowed"""
