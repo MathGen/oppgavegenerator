@@ -25,6 +25,8 @@
     <div hidden id="dictionary">{{ dictionary }}</div>
     <div hidden id="used_variables">{{ used_variables }}</div>
     <div hidden id="get_difficulty">{{ difficulty }}</div>
+    <div hidden id="get_difficulty_m">{{ difficulty_multiple }}</div>
+    <div hidden id="get_difficulty_f">{{ difficulty_blanks }}</div>
     <div hidden id="get_disallowed">{{ disallowed }}</div>
     <div hidden id="get_required">{{ required }}</div>
     <div hidden id="get_tags">{{ tags }}</div>
@@ -398,6 +400,15 @@
                     <p>Skriv inn formel for flervalg (Ikke skriv inn det riktige svaret).</p>
                     <div id="m_dyn_solution"></div>
                 </div>
+                <table class="table table-condensed">
+                    <tbody>
+                        <tr>
+                            <td class="col-sm-3" style="vertical-align: middle; text-align: right; height: 41px">Vansklighetsgrad:</td>
+                            <td class="col-sm-6" style="vertical-align: middle"><div id="m_difficulty_slider"></div></td>
+                            <td class="col-sm-3" style="vertical-align: middle"><span id="m_difficulty_amount"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
                 <div class="panel-footer">
                     <div id="keypad_m" class="row keypad">
                         <div class="col-md-8">
@@ -432,6 +443,15 @@
                     <div id="f_diff_latex" class="hidden"></div>
                     <p>Markér utrykkene som skal være utfyllingsruter og trykk på <span class="glyphicon glyphicon-erase"></span> knappen.</p>
                 </div>
+                <table class="table table-condensed">
+                    <tbody>
+                        <tr>
+                            <td class="col-sm-3" style="vertical-align: middle; text-align: right; height: 41px">Vansklighetsgrad:</td>
+                            <td class="col-sm-6" style="vertical-align: middle"><div id="f_difficulty_slider"></div></td>
+                            <td class="col-sm-3" style="vertical-align: middle"><span id="f_difficulty_amount"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
                 <div class="panel-footer">
                     <div id="keypad_f" class="row keypad">
                         <div class="col-md-12">
