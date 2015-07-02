@@ -35,7 +35,7 @@ def make_edit_context_dict(template_id):
     tags = json.dumps(templatetags)
     difficulty_m = q.difficulty_multiple
     difficulty_b = q.difficulty_blanks
-    title = q.name
+    name = q.name
     context_dict = {'template_id': template_id, 'answer': answer, 'solution': solution,
                     'question_text': question_text, 'calculation_references': calculation_references,
                     'choices': choices, 'conditions': conditions, 'fill_in': fill_in,
@@ -43,7 +43,7 @@ def make_edit_context_dict(template_id):
                     'dictionary': dictionary, 'used_variables': used_variables,
                     'tags': tags, 'margin_of_error': q.margin_of_error, 'disallowed': q.disallowed,
                     'required': q.required, 'difficulty': q.difficulty, 'difficulty_blanks': difficulty_b,
-                    'difficulty_multiple': difficulty_m, 'title': title}
+                    'difficulty_multiple': difficulty_m, 'name': name}
     return context_dict
 
 
