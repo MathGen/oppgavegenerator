@@ -590,9 +590,9 @@ $(document).ready(function() {
 
 	// Slider which sets the templates difficulty.
 	$('#difficulty_slider').slider({
-		value: 4,
+		value: 14,
 		min: 1,
-		max: 9,
+		max: 25,
 		step: 1,
 		slide: function(event, ui){
 			$('#difficulty_amount').text(ui.value);
@@ -835,7 +835,7 @@ function submit_template(){
 	form_submit['used_variables'] = variables.join(' ');
 
 	// DIFFICULTY
-	form_submit['difficulty'] = (parseInt($('#difficulty_amount').text()) - 1);
+	form_submit['difficulty'] = (parseInt($('#difficulty_amount').text()));
 
 	// ILLEGAL SIGNS
 	var disallowed = [];
@@ -889,7 +889,7 @@ function reset_difficulty(){
 		$('#difficulty_slider').slider({
 			value: parseInt(difficulty.text()),
 			min: 1,
-			max: 9,
+			max: 25,
 			step: 1,
 			slide: function (event, ui) {
 				$('#difficulty_amount').text(ui.value);
