@@ -7,7 +7,7 @@ from datetime import datetime
 import json
 
 from oppgavegen.latex_translator import remove_pm_and_add_parenthesis, add_phantom_minus
-from oppgavegen.models import Template, Topic, Tag
+from oppgavegen.models import Template, Tag
 from oppgavegen.view_logic.answer_checker import check_answer
 from oppgavegen.generation_folder.calculate_parse_solution import parse_solution, calculate_array, parse_answer
 from oppgavegen.generation_folder.fill_in import get_values_from_position
@@ -33,17 +33,12 @@ def make_edit_context_dict(template_id):
     unchanged_ref = q.unchanged_ref
     dictionary = q.dictionary
     used_variables = q.used_variables
-    topics = ""
     tags = json.dumps(templatetags)
-    for e in Topic.objects.all():
-        topics += '§' + str(e.pk) + '§'
-        topics += e.topic
-    topics = topics[1:] #Remove the redundant §
     context_dict = {'template_id': template_id, 'answer': answer, 'solution': solution,
                     'question_text': question_text, 'calculation_references': calculation_references,
                     'choices': choices, 'conditions': conditions, 'fill_in': fill_in,
                     'topic': topic, 'random_domain': random_domain, 'unchanged_ref': unchanged_ref,
-                    'topics': topics, 'dictionary': dictionary, 'used_variables': used_variables,
+                    'dictionary': dictionary, 'used_variables': used_variables,
                     'tags': tags, 'margin_of_error': q.margin_of_error, 'disallowed': q.disallowed,
                     'required': q.required, 'difficulty': q.difficulty}
     return context_dict

@@ -5,7 +5,6 @@ from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from django.db.models import Q
 from oppgavegen.models import Template
-from oppgavegen.models import Topic
 from django.contrib.auth.models import User
 import time
 

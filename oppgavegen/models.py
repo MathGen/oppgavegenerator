@@ -14,18 +14,7 @@ from django.db.models.signals import post_save
 # The reason is that you might try to make a foreign key on a class that does not exist yet.
 
 
-class Topic(models.Model):
-    """Stores the different topic types"""
-    topic = models.CharField(max_length=200)  # Name of the topic.
 
-    def __str__(self):  # Makes it so that self.topic shows up instead of topic(object)
-        """Returns the objects topic"""
-        return self.topic
-
-    def clean(self):  # Removes trailing whitespace from topic
-        """Returns the topic without whitespace"""
-        if self.topic:
-            self.topic = self.topic.strip()
 
 
 class Tag(models.Model):
@@ -59,7 +48,6 @@ class Template(models.Model):
     choice_rating = models.PositiveSmallIntegerField(blank=True, null=True, default=1100)  # Rating for multiple choice.
     times_solved = models.PositiveIntegerField(blank=True, null=True)  # Times the problem has been solved.
     times_failed = models.PositiveIntegerField(blank=True, null=True)  # Times the problem has not been solved.
-    topic = models.ForeignKey(Topic)  # ID of the topic this problem belongs to ex. 2 (where 2 means algebra.)
     random_domain = models.CharField(max_length=250, blank=True, null=True)
     # random_domain: Space separated string with 3 numbers denoting which values the random numbers can be-
     # and how manny decimals the number has. ie. 1 10 0 -> integers from 1 to 10.

@@ -5,7 +5,6 @@ Defines views, and renders data to html templates.
 """
 
 import json
-
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.template import RequestContext
 from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
@@ -95,13 +94,7 @@ def task_by_extra(request, template_extra):
 def gen(request):
     """Returns a render of gen.html"""
     context = RequestContext(request)
-    topics = ""
-    for e in Topic.objects.all():  # Retrieves a list of topics and passes them to the view.
-        topics += '§' + str(e.pk) + '§'
-        topics += e.topic
-    topics = topics[1:]
-    context_dict = {'topics': topics}
-    return render_to_response('gen.html', context_dict, context)
+    return render_to_response('gen.html',  context)
 
 
 @login_required
@@ -192,13 +185,7 @@ def new_template(request):
     """Returns a render of newtemplate.html used for creating new templates"""
     context = RequestContext(request)
     # Retrieves a list of topics and passes them to the view.
-    topics = ""
-    for e in Topic.objects.all():
-        topics += '§' + str(e.pk) + '§'
-        topics += e.topic
-    topics = topics[1:]
-    context_dict = {'topics': topics}
-    return render_to_response('newtemplate.html', context_dict, context)
+    return render_to_response('newtemplate.html', context)
 
 
 @login_required
@@ -213,8 +200,7 @@ def edit_template(request, template_id):
 @login_required
 def index(request):
     """Returns the index view with a list of topics"""
-    list = Topic.objects.values_list('topic', flat=True)
-    return render(request, "index.html", {"list": list})
+    return render(request, "index.html")
 
 
 ### GAME ###

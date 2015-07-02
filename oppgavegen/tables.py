@@ -7,7 +7,6 @@ Defines tables and their data sources to be rendered in HTML with django-tables2
 import django_tables2 as tables
 from oppgavegen.models import Template
 from oppgavegen.models import ExtendedUser
-from oppgavegen.models import Topic
 
 class TemplateTable(tables.Table):
     """ Generate a html table with all templates marked valid. """
