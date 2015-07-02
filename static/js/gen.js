@@ -12,7 +12,7 @@ var ACTIVE_INPUT			= '#q_input_mathquill';
 var STEP					= 1;						// Number of steps in solution.
 var ANSWER					= 1;						// Number of answers.
 var SUB						= 1;						// Number of text-substitutions.
-var TOPIC_SELECTED			= false;
+var TITLE_INSERTED			= false;
 var MULTI_CHOICE			= 0;
 var FILL_IN					= false;
 var CON_IN					= false;
@@ -92,18 +92,18 @@ $(document).ready(function() {
 		$(this).closest('.popover').popover('hide');
 	});
 
-	// Topic selection validation
-	$('#category_selection').change(function() {
-		if(TOPIC_SELECTED == false){
-			$('#category_selection').removeClass('select_error');
-			TOPIC_SELECTED = true;
+	// Template title validation
+	$('#template_title').change(function() {
+		if(TITLE_INSERTED == false){
+			$('#template_title').removeClass('select_error');
+			TITLE_INSERTED = true;
 		}
 	});
 
 	// Check if template is inserted from db to be modified.
 	if($('#edit_template').text() == 'true'){
 		MODIFY = true;
-		TOPIC_SELECTED = true;
+		TITLE_INSERTED = true;
 		VAR_INIT = true;
 		insert_editable_data(); //FIXME: broken | implement new mathquill
 	}
@@ -293,7 +293,7 @@ $(document).ready(function() {
 		var btn_id = $(this).attr('id');
 		btn_id = btn_id[0];
 		if(btn_id == 'q'){
-			if(TOPIC_SELECTED){
+			if(TITLE_INSERTED){
 				if(MathQuill.MathField($(Q_INPUT)[0]).latex() != ''){
 					$('.btn-group-q').prop('disabled', true);
 					var s_panel = $('#s_panel');
@@ -309,8 +309,8 @@ $(document).ready(function() {
 				}
 			}
 			else{
-				$('#category_selection').addClass('select_error');
-				error_message('category_selection', 'Velg kategori.')
+				$('#template_title').addClass('select_error');
+				error_message('template_title', 'Skriv inn tittel.');
 			}
 		}
 		else if(btn_id == 's'){
@@ -710,8 +710,8 @@ $(document).ready(function() {
  */
 function submit_template(){
 	var form_submit = {};
-	// TOPIC
-	form_submit['topic'] = $('#category_selection').find(':selected').attr('id');
+	// TITLE
+	form_submit['name'] = $('#template_title').val();
 
 	// QUESTION_TEXT
 	form_submit['question_text'] = convert_variables(get_latex_from_mathfield(Q_INPUT));
@@ -1305,6 +1305,11 @@ function error_message(element_id, message){
  */
 function submit_validation(){
 	var valid = true;
+	if($('#template_title').val() == ''){
+		valid = false;
+		$('#template_title').addClass('select_error');
+		error_message('template_title', 'Dette feltet kan ikke være tomt.')
+	}
 	if(get_latex_from_mathfield(Q_INPUT) == ''){
 		valid = false;
 		$(Q_INPUT).addClass('select_error');
@@ -1638,7 +1643,7 @@ function get_diff_latex(){
  * Before unload, ask user to confirm redirecting.
  */
 $(window).bind('beforeunload', function(){
-	if(TOPIC_SELECTED && !SUBMITTING){
+	if(TITLE_INSERTED && !SUBMITTING){
 		return 'Warning!';
 	}
 });
