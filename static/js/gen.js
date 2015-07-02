@@ -588,7 +588,7 @@ $(document).ready(function() {
 		MathQuill.MathField($(C_INPUT)[0]).focus();
 	});
 
-	// Slider which sets the templates difficulty.
+	// Slider which sets the templates normal-task difficulty.
 	$('#difficulty_slider').slider({
 		value: 14,
 		min: 1,
@@ -598,7 +598,31 @@ $(document).ready(function() {
 			$('#difficulty_amount').text(ui.value);
 		}
 	});
-	reset_difficulty();
+	reset_difficulty('normal');
+
+	// Slider which sets the templates multiple-choice-task difficulty.
+	$('#m_difficulty_slider').slider({
+		value: 14,
+		min: 1,
+		max: 25,
+		step: 1,
+		slide: function(event, ui){
+			$('#m_difficulty_amount').text(ui.value);
+		}
+	});
+	reset_difficulty('multiple');
+
+	// Slider which sets the templates fill-in-the-blanks-task difficulty.
+	$('#f_difficulty_slider').slider({
+		value: 14,
+		min: 1,
+		max: 25,
+		step: 1,
+		slide: function(event, ui){
+			$('#f_difficulty_amount').text(ui.value);
+		}
+	});
+	reset_difficulty('blanks');
 
 	// Adding new required input tag.
 	$('#tags_required').find('input').on('focusout', function(){
@@ -836,6 +860,8 @@ function submit_template(){
 
 	// DIFFICULTY
 	form_submit['difficulty'] = (parseInt($('#difficulty_amount').text()));
+	form_submit['difficulty_multiple'] = (parseInt($('#m_difficulty_amount').text()));
+	form_submit['difficulty_blanks'] = (parseInt($('#f_difficulty_amount').text()));
 
 	// ILLEGAL SIGNS
 	var disallowed = [];
@@ -883,21 +909,57 @@ function submit_template(){
 	post(/submit/, form_submit);
 }
 
-function reset_difficulty(){
-	var difficulty = $('#get_difficulty');
-	if(difficulty.text()){
-		$('#difficulty_slider').slider({
-			value: parseInt(difficulty.text()),
-			min: 1,
-			max: 25,
-			step: 1,
-			slide: function (event, ui) {
-				$('#difficulty_amount').text(ui.value);
-			}
-		});
-		$('#difficulty_amount').text(difficulty.text());
-	} else {
-		$('#difficulty_amount').text($('#difficulty_slider').slider('value'));
+function reset_difficulty(type){
+	if(type == 'normal'){
+		var difficulty = $('#get_difficulty');
+		if (difficulty.text()) {
+			$('#difficulty_slider').slider({
+				value: parseInt(difficulty.text()),
+				min: 1,
+				max: 25,
+				step: 1,
+				slide: function (event, ui) {
+					$('#difficulty_amount').text(ui.value);
+				}
+			});
+			$('#difficulty_amount').text(difficulty.text());
+		} else {
+			$('#difficulty_amount').text($('#difficulty_slider').slider('value'));
+		}
+	}
+	else if(type == 'multiple'){
+		var m_difficulty = $('#get_difficulty_m');
+		if (m_difficulty.text()) {
+			$('#m_difficulty_slider').slider({
+				value: parseInt(m_difficulty.text()),
+				min: 1,
+				max: 25,
+				step: 1,
+				slide: function (event, ui) {
+					$('#m_difficulty_amount').text(ui.value);
+				}
+			});
+			$('#m_difficulty_amount').text(m_difficulty.text());
+		} else {
+			$('#m_difficulty_amount').text($('#m_difficulty_slider').slider('value'));
+		}
+	}
+	else if(type == 'blanks'){
+		var f_difficulty = $('#get_difficulty_f');
+		if (f_difficulty.text()) {
+			$('#f_difficulty_slider').slider({
+				value: parseInt(f_difficulty.text()),
+				min: 1,
+				max: 25,
+				step: 1,
+				slide: function (event, ui) {
+					$('#f_difficulty_amount').text(ui.value);
+				}
+			});
+			$('#f_difficulty_amount').text(f_difficulty.text());
+		} else {
+			$('#f_difficulty_amount').text($('#f_difficulty_slider').slider('value'));
+		}
 	}
 }
 
