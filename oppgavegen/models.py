@@ -51,7 +51,10 @@ class Template(models.Model):
     random_domain = models.CharField(max_length=250, blank=True, null=True)
     # random_domain: Space separated string with 3 numbers denoting which values the random numbers can be-
     # and how manny decimals the number has. ie. 1 10 0 -> integers from 1 to 10.
-    difficulty = models.PositiveSmallIntegerField(default=1, blank=True)
+    difficulty = models.PositiveSmallIntegerField(default=14, blank=True)
+    difficulty_multiple = models.PositiveSmallIntegerField(default=14, blank=True)
+    difficulty_blanks = models.PositiveSmallIntegerField(default=14, blank=True)
+
     choices = models.CharField(max_length=700, blank=True, null=True)  # Holds the choices for multiple choice.
     dictionary = models.CharField(max_length=10000, blank=True, null=True, default="")
     conditions = models.CharField(max_length=10000, blank=True, null=True, default="")
