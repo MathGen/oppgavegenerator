@@ -16,7 +16,7 @@ $(document).ready(function () {
         var level_title = $(this).find('.level_title').text();
         $('#level_title').text(" - " + level_title);
         var level_id = $(this).attr('id').match(/\d+/);
-        var level_index = $(this).index(); //ta her fungert.. \o/ easy peazy javasqeuazy
+        var level_index = $(this).index();
         if(level_index <= level_progress + 1){
             current_level = level_id;
             load_template(level_id);

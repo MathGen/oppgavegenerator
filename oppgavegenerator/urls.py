@@ -119,7 +119,7 @@ urlpatterns = patterns('',
 
     url(r'^set/(\d+)/([\w ]+)/([\w ]+)/update_set/$', update_set_view, name='update_set_view'), # Set id, title, order
     url(r'^chapter/(\d+)/([\w ]+)/([\w ]+)/update_chapter/$', update_chapter_view, name='update_chapter_view'), # Chapter id, title, order
-    url(r'^level/(\d+)/([\w ]+)/remove_template/$', update_level_view, name='remove_template_from_level'), # Level id, title
+    url(r'^level/(\d+)/([\w ]+)/update_level/$', update_level_view, name='update_level_view'), # Level id, title, k_factor
 
     # DJANGO SELECTABLE
     url(r'^selectable/', include('selectable.urls')),

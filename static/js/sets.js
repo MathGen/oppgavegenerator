@@ -2,6 +2,7 @@ $(document).ready(function () {
     set_title('#content_title', $('#get_content_title').text());
     init_sortable();
     load_search_view($('.search_container').attr('id').replace(/search_/g, ""));
+
     // Delete the specific content.
     $(document).on('click', '.btn_content_del', function(){
         delete_content($(this).closest('li'));
@@ -12,19 +13,42 @@ $(document).ready(function () {
         edit_content($(this).closest('li'));
     });
 
+    // Save changes
+    $('#btn_save_set').click(function(e){
+        e.preventDefault();
+        save_changes();
+    });
+
+    // Adding new content from the input-field. Posting to server.
     $(document).on('focusout', '.new_content', function(){ //TODO: make grid element if in grid-view.
 		add_new_content($(this));
 	}).on('keyup', '.new_content', function(e){
-		if(/(188|13)/.test(e.which)) $(this).focusout(); // Add chapter if one of these keys are pressed.
+		if(/(13)/.test(e.which)) $(this).focusout(); // Add chapter if one of these keys are pressed.
 	});
 });
 
+function save_changes(){
+    var content = $('#edit_container');
+    if(content.hasClass('edit_chapters')){
+
+    }
+}
+
+function get_content_order(){
+
+}
+
+/**
+ * Set the title of the set/chapter/level
+ * @param {string} input - which input-field to write to.
+ * @param {string} title - the title.
+ */
 function set_title(input, title){
     $(input).val(title);
 }
 
 function add_new_content(input){
-    var text = input.val().replace(/[^a-zA-Z0-9\+\-\.#ÆØÅæøåA]/g, ''); // Allowed characters
+    var text = input.val();
     if (text) {
         var content_path = '../'+ text +'/new_chapter/';
         if($('#edit_container').hasClass('edit_levels')) {
@@ -58,7 +82,7 @@ function delete_content(content){
     }
 }
 
-function load_search_view(type){
+function load_search_view(type){ // TODO: make the search result load with AJAX.
     var search_container = $('.search_container');
     switch (type) {
         case 'chapters':
