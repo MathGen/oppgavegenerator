@@ -66,14 +66,14 @@ function save_changes(content_id){
 
 /**
  * Iterates and write the order of the content to an Array.
- * @returns {Array} The order represented as a list.
+ * @returns {String} The order represented as a String.
  */
 function get_content_order(){
     var order = [];
     $('#edit_container').find('li').each(function(){
         order.push($(this).attr('id').match(/\d+/));
     });
-    return order;
+    return order.join(',');
 }
 
 /**
