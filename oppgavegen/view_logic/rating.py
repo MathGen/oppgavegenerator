@@ -1,3 +1,5 @@
+"""Functions related to rating change."""
+
 from oppgavegen.models import User, UserLevelProgress, Level, Template, Offset
 from oppgavegen.utility.decorators import Debugger
 
