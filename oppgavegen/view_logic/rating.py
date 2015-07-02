@@ -51,6 +51,12 @@ def change_level_rating(template, user, user_won, type, level_id):
     level = Level.objects.get(pk=level_id)
     user_progress = UserLevelProgress.objects.get(user=u, level=level)
     user_rating = user_progress.level_rating
+    k_factor = level.k_factor
+    if k_factor < 3:
+        k_factor = k_factor/4
+    else:
+        k_factor -= 2
+
     # Formula for elo: Rx = Rx(old) + prefactor *(W-Ex) where W=1 if wins and W=0 if x loses
     # and Ex is the expected probability that x will win.
     # Ea = (1+10^((Rb-Ra)/400))^-1
@@ -68,14 +74,15 @@ def change_level_rating(template, user, user_won, type, level_id):
     prefactor_template = 16  # This value should be adjusted according to elo of the user (lower for higher ratings..)
     minimum_answered_questions = 20  # Amount of questions the user needs to have answered for template rating to change
     if user_won:
-        new_user_rating = user_rating + prefactor_user*(1-expected_user)
+        new_user_rating = user_rating + prefactor_user*(1-expected_user)*k_factor
         new_template_rating = template_rating + prefactor_template*(0-expected_template)
         template.times_solved += 1
     else:
-        new_user_rating = user_rating + prefactor_user*(0-expected_user)
+        new_user_rating = user_rating + prefactor_user*(0-expected_user)*k_factor
         new_template_rating = template_rating + prefactor_template*(1-expected_template)
         template.times_failed += 1
-    user_progress.level_rating = new_user_rating
+    new_user_rating = round(new_user_rating)
+    user_progress.level_rating = max(new_user_rating, 1)
     user_progress.questions_answered += 1
     user_progress.save()
     if user_progress.questions_answered <= minimum_answered_questions:

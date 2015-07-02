@@ -65,7 +65,6 @@ class Template(models.Model):
     multiple_support = models.BooleanField(default=False)  # Denotes whether the template supports multiple choice
     fill_in_support = models.BooleanField(default=False)  # Denotes whether the template supports fill in the blanks
     margin_of_error = models.PositiveIntegerField(default=0, null=True, blank=True)
-    k_factor = models.PositiveIntegerField(default=3, null=True, blank=True)
 
     # Also save the original latex for post-back:
     used_variables = models.CharField(max_length=200, blank=True, null=True)
@@ -90,6 +89,7 @@ class Level(models.Model):
     creator = models.ForeignKey(User, blank=True, null=True, related_name='levels_created')
     editor = models.ForeignKey(User, blank=True, null=True, related_name='levels_edited')  # Editor of template
     creation_date = models.DateTimeField('date created', blank=True, null=True)  # Date and time of creation
+    k_factor = models.PositiveIntegerField(default=3, null=True, blank=True)  # Decides how fast a user progress
 
     def __str__(self):  # return self.name instead of level-object
         """Returns the level name"""
