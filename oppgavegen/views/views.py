@@ -108,7 +108,6 @@ def submit(request):
         if form.is_valid():
             newtags = form.cleaned_data['tags_list']
             template = form.save(commit=False)
-            template.difficulty = 1 # todo: remove this when implemented in GUI. Default value doesn't work somehow.
             if request.REQUEST['pk'] != '':  # Can this be written as v = req != ''?
                 template.pk = request.REQUEST['pk']  # Workaround, template doesn't automatically get template.pk
                 update = True
