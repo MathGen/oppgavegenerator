@@ -28,10 +28,18 @@ def latex_to_sympy(expr):
     expr = expr.replace('arccot', 'acot')
     expr = expr.replace('cosec', 'csc')
     expr = expr.replace('int', 'integrate')
+    expr = expr.replace('*)', ')*')
     expr = expr.replace('\\begin{equation*}', '')
     expr = expr.replace('\\end{equation*}', '')
+    expr = expr.replace('§~', '§-')
+    expr = expr.replace('~(-', '-(-')
+    try:
+        if expr[0] == '~':
+            expr = expr[:0] + '-' + expr[1:]
+    except IndexError:
+        pass
 
-    expr = expr.replace('x', ' x') # Add space before variables to prvenet sympy fuckups
+    expr = expr.replace('x', ' x') # Add space before variables to prevent sympy fuckups
     expr = expr.replace('y', ' y')
     expr = expr.replace('z', ' z')
     expr = expr.replace('  ', ' ')  # Remove double whitespace
@@ -87,9 +95,10 @@ def latex_to_sympy(expr):
 
 def parenthesis_around_minus(expression):
     """Takes a expression and returns it with parenthesis around numbers with - where needed."""
+    print(expression)
     exceptions = '0123456789.)({}xyz=+-?/§'  # Having xyz in exceptions might introduce a bug in some situations
     expression += ' ' #add a empty space at the end of the string to avoid error.
-    end_symbols = '0123456789.)({}xyz?/*' #Symbols the check doesn't end at.
+    end_symbols = '0123456789.)({}xyz?/*^' #Symbols the check doesn't end at.
     new_exp = expression
     count = 0
     record = False
@@ -107,15 +116,71 @@ def parenthesis_around_minus(expression):
                 count = 0
         elif record:
             count += 1
+    print(new_exp)
     return new_exp
+
+def minus_exponent(expr):
+    """A special case of parenthesis around minus"""
+    expr += ' '
+    new_exp = expr
+    record = False
+    count = 0
+    difference = 0
+    pm = '+-'
+    numbers = '0123456789'
+    stop = '0123456789.^' #Symbols the check doesn't end at.
+    for i in range(1, len(expr)):
+        if expr[i] == '-' and expr[i-1] in pm and expr[i+1] in numbers:
+           record = True
+        elif expr[i] == '-' and expr[i-1] == '~' and expr[i+1] in numbers:
+           record = True
+        elif i == 1 and expr[0] == '-' and expr[1] in numbers:
+            record = True
+            count += 1
+        elif expr[i] == '-' and expr[i-1] == '§' and expr[i+1] in numbers:
+            record = True
+        elif record and expr[i] not in stop:
+            record = False
+        elif record and expr[i] == '^':
+            insert_start = i-count+difference
+            t_i = i + difference
+            new_exp = new_exp[:insert_start] + '(' + new_exp[insert_start:t_i] + ')' + new_exp[t_i:len(new_exp)]
+            difference += 2
+            count = 0
+            record = False
+        if record:
+            count += 1
+
+    return new_exp
+
+def add_phantom_minus(expr):
+    """
+    Replaces the minus where the string starts with minus and a exponent.
+    This is done to find out if a string intentionally starts with minus or if it is a - from the number generator.
+    """
+    numbers = ['123456789']
+    for i in range(0, len(expr)):
+        if i >= len(expr) - 5:
+            break
+        if i == 0 or expr[i-1] == '§':
+            if expr[i] == '-' and expr[i+1] == 'R' and expr[i+2] in numbers and expr[i+3] == '^' or expr[i+4] == '^':
+                print(i)
+                expr = expr[:i] + '~' + expr[i+1:]
+    return expr
 
 
 def remove_pm_and_add_parenthesis(expr):
+    expr = minus_exponent(expr)
     expr = expr.replace('+-', '-')
     expr = expr.replace('--', '+')
     expr = parenthesis_around_minus(expr)
+    expr = expr.replace('§~', '§-')
+    expr = expr.replace('~(-', '-(-')
+    if expr[0] == '~':
+        expr = expr[:0] + '-' + expr[1:]
     expr = expr.replace('+-', '-')
     expr = expr.replace('--', '+')
+
     return expr
 
 # Note: Remember that {} is swapped for () in latex_to_sympy

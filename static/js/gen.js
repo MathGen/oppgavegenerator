@@ -588,8 +588,42 @@ $(document).ready(function() {
 		MathQuill.MathField($(C_INPUT)[0]).focus();
 	});
 
+	// Slider which sets the templates difficulty.
+	$('#difficulty_slider').slider({
+		value: 4,
+		min: 1,
+		max: 9,
+		step: 1,
+		slide: function(event, ui){
+			$('#difficulty_amount').text(ui.value);
+		}
+	});
+	reset_difficulty();
+
+	// Adding new required input tag.
+	$('#tags_required').find('input').on('focusout', function(){
+		var tag = $(this).val();
+		if(tag){
+			$(this).before('<span class="tag_r">'+tag+'<a class="btn btn_tag_del">x</a></span>');
+		}
+		$(this).val("");
+	}).on('keyup', function(e){
+		if(/(13)/.test(e.which)) $(this).focusout(); // Add tag if one of these keys are pressed.
+	});
+
+	// Adding new illegal input tag.
+	$('#tags_illegal').find('input').on('focusout', function(){
+		var tag = $(this).val();
+		if(tag){
+			$(this).before('<span class="tag_i">'+tag+'<a class="btn btn_tag_del">x</a></span>');
+		}
+		$(this).val("");
+	}).on('keyup', function(e){
+		if(/(13)/.test(e.which)) $(this).focusout(); // Add tag if one of these keys are pressed.
+	});
+
 	// Adding new tag from the value in the input-field.
-	$('#tags').find('input').on('focusout', function(){ //TODO: implement tags
+	$('#tags').find('input').on('focusout', function(){
 		var tag = $(this).val().replace(/[^a-zA-Z0-9\+\-\.#ÆØÅæøåA]/g,''); // Allowed characters
 		if(tag){
 			$(this).before('<span class="tag">'+ tag.toLowerCase() +'<a class="btn btn_tag_del">x</a></span>');
@@ -800,6 +834,23 @@ function submit_template(){
 	}
 	form_submit['used_variables'] = variables.join(' ');
 
+	// DIFFICULTY
+	form_submit['difficulty'] = (parseInt($('#difficulty_amount').text()) - 1);
+
+	// ILLEGAL SIGNS
+	var disallowed = [];
+	$('.tag_i').each(function(){
+		disallowed.push($(this).text().slice(0,-1));
+	});
+	form_submit['disallowed'] = JSON.stringify(disallowed);
+
+	// REQUIRED SIGNS
+	var required = [];
+	$('.tag_r').each(function(){
+		required.push($(this).text().slice(0,-1));
+	});
+	form_submit['required'] = JSON.stringify(required);
+
 	// TAGS
 	var tags = [];
 	$('.tag').each(function(){
@@ -821,15 +872,33 @@ function submit_template(){
 		form_submit['pk'] = "";
 	}
 
-	//// Testing output TODO: When finished testing, switch to submit method.
-	//var test_output = [];
-	//for(var s in form_submit){
-	//	test_output.push(s + '\n' + form_submit[s]);
-	//}
-	//alert(test_output.join('\n'));
+	// Testing output TODO: When finished testing, switch to submit method.
+	var test_output = [];
+	for(var s in form_submit){
+		test_output.push(s + '\n' + form_submit[s]);
+	}
+	alert(test_output.join('\n'));
 
 	// SUBMIT
 	post(/submit/, form_submit);
+}
+
+function reset_difficulty(){
+	var difficulty = $('#get_difficulty');
+	if(difficulty.text()){
+		$('#difficulty_slider').slider({
+			value: parseInt(difficulty.text()),
+			min: 1,
+			max: 9,
+			step: 1,
+			slide: function (event, ui) {
+				$('#difficulty_amount').text(ui.value);
+			}
+		});
+		$('#difficulty_amount').text(difficulty.text());
+	} else {
+		$('#difficulty_amount').text($('#difficulty_slider').slider('value'));
+	}
 }
 
 /**
@@ -1764,6 +1833,22 @@ function insert_editable_data(){
 	if($('#fill_in').text() != ""){
 		$('#opt_fill_blanks').prop('checked', true);
 		refresh_fill_in_content();
+	}
+
+	// Get and insert disallowed symbols/expressions
+	var disallowed = JSON.parse($('#get_disallowed').text());
+	if(disallowed[0] != ""){
+		for(var d = 0; d < disallowed.length; d++){
+			$('#tags_illegal').prepend('<span class="tag_i">'+disallowed[d]+'<a class="btn btn_tag_del">x</a></span>');
+		}
+	}
+
+	// Get and insert required symbols/expressions
+	var required = JSON.parse($('#get_required').text());
+	if(required[0] != ""){
+		for(var r = 0; r < required.length; r++){
+			$('#tags_required').prepend('<span class="tag_r">'+required[r]+'<a class="btn btn_tag_del">x</a></span>');
+		}
 	}
 
 	// Get and insert tags

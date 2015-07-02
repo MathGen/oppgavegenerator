@@ -6,6 +6,7 @@ Defines reusable functions often called from views.py
 from datetime import datetime
 import json
 
+from oppgavegen.latex_translator import remove_pm_and_add_parenthesis, add_phantom_minus
 from oppgavegen.models import Template, Topic, Tag
 from oppgavegen.view_logic.answer_checker import check_answer
 from oppgavegen.generation_folder.calculate_parse_solution import parse_solution, calculate_array, parse_answer
@@ -60,16 +61,20 @@ def make_answer_context_dict(form_values):
 
     if template_type != 'blanks':
         answer = replace_variables_from_array(variable_dictionary, q.answer.replace('\\\\', '\\'))
+        answer = add_phantom_minus(answer)
     else:
         answer = get_values_from_position(template_specific, q.solution.replace('\\\\', '\\'))
         answer = replace_variables_from_array(variable_dictionary, answer)
 
     original_user_answer = user_answer.replace('§', '\\text{ og }')
+    answer = remove_pm_and_add_parenthesis(answer)
     answer = parse_answer(answer, random_domain)
     answer = answer.replace('`', '')
     answer = answer.split('§')
     solution = str(q.question_text.replace('\\\\', '\\')) + "§" + str(q.solution.replace('\\\\', '\\'))
+    solution = add_phantom_minus(solution)
     solution = replace_variables_from_array(variable_dictionary, solution)
+    solution = remove_pm_and_add_parenthesis(solution)
     solution = parse_solution(solution, random_domain)
     if len(replacing_words) > 0:
         solution = replace_words(solution, replacing_words)['sentence']
@@ -114,7 +119,7 @@ def submit_template(template, user, update, newtags=None):
         template.margin_of_error = q.margin_of_error
     else:
         # todo: add this back in when the view sends difficulty
-        template.rating = 1200  # + (template.difficulty * 200)
+        template.rating = 1200  + (template.difficulty * 100)
         template.fill_rating = 1150  # + (template.difficulty * 180)
         template.choice_rating = 1100  # + (template.difficulty * 160)
         template.times_failed = 0

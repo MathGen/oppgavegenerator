@@ -85,8 +85,8 @@ def change_level_rating(template, user, user_won, type, level_id):
     else:
         template.rating = new_template_rating
     template.save()
-    check_for_new_star(user, level_id)
-    return user_progress.level_rating
+    new_star = check_for_new_star(user, level_id)
+    return (user_progress.level_rating, new_star)
 
 
 def get_user_rating(user):
@@ -98,6 +98,7 @@ def get_user_rating(user):
 
 def check_for_new_star(user, level_id):
     """Checks if the user has earned a new star on a level"""
+    new_star = 0
     u = User.objects.get(username=user.username)
     level = Level.objects.get(pk=level_id)
     user_progress = UserLevelProgress.objects.get(user=u, level=level)
@@ -106,6 +107,8 @@ def check_for_new_star(user, level_id):
     r = [1600, 1800, 2000]
     if (rating > r[0] and stars == 0) or (rating > r[1] and stars == 1) or (rating > r[2] and stars == 2):
         add_star(user_progress)
+        new_star = 1
+    return new_star
 
 
 def add_star(user_progress):
