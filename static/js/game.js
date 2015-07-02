@@ -32,6 +32,14 @@ $(document).ready(function () {
     });
 });
 
+function display_loading_icon(boolean){
+    if(boolean){
+        $('#game_loading').show();
+    } else{
+        $('#game_loading').hide();
+    }
+}
+
 /**
  * Loads all chapters within the current set.
  */
@@ -41,7 +49,9 @@ function load_chapters(){
     $('#chapter_title').text("");
     $('#level_title').text("");
     $('#game_content').fadeOut('fast', function(){
+        display_loading_icon(true);
         $(this).load('../' + set_id + '/chapters/', function () { //AJAX load
+            display_loading_icon(false);
             var progress_number = $('#progress_number');
             level_progress = progress_number.text();
             progress_number.remove();
@@ -62,7 +72,9 @@ function load_chapters(){
  */
 function load_levels(chapter_id){
     $('#game_content').fadeOut('fast', function () {
+        display_loading_icon(true);
         $(this).load('../' + chapter_id + '/levels/', function () { //AJAX load
+            display_loading_icon(false);
             var progress_number = $('#progress_number');
             level_progress = progress_number.text();
             progress_number.remove();
@@ -82,7 +94,9 @@ function load_levels(chapter_id){
  */
 function load_template(level_id){
     $('#game_content').fadeOut('fast', function () {
+        display_loading_icon(true);
         $(this).load('../' + level_id + '/template/', function () { //AJAX load
+            display_loading_icon(false);
             $(this).fadeIn('fast', function(){
                 $('#game_nav').fadeIn(function(){
                     redraw_mathquill_elements();
@@ -98,8 +112,10 @@ function load_template(level_id){
  */
 function post_answer(submit_dict){
     $('#game_content').fadeOut('fast', function () {
+        display_loading_icon(true);
         $.post('../' + current_level + '/answer/', submit_dict, function(result){ //AJAX post
             $('#game_content').html(result).fadeIn('fast', function(){
+                display_loading_icon(false);
                 $('#game_nav').fadeIn(function(){
                     redraw_mathquill_elements();
                 });

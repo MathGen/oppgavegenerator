@@ -27,7 +27,7 @@ $(document).ready(function () {
 	});
 });
 
-function save_changes(content_id){
+function save_changes(){
     var valid_form = true;
     var form_submit = {};
     var title = $('#content_title').val();
@@ -35,17 +35,17 @@ function save_changes(content_id){
     var content = $('#edit_container');
     if (content.hasClass('edit_chapters')){
         content = 'set';
-        form_submit['set_id'] = content_id;
+        form_submit['set_id'] = $('#set_id').text();
         form_submit['title'] = title;
         form_submit['order'] = order;
     } else if (content.hasClass('edit_levels')){
         content = 'chapter';
-        form_submit['chapter_id'] = content_id;
+        form_submit['chapter_id'] = $('#chapter_id').text();
         form_submit['title'] = title;
         form_submit['order'] = order;
     } else if (content.hasClass('edit_templates')){
         content = 'level';
-        form_submit['level_id'] = content_id;
+        form_submit['level_id'] = $('#level_id').text();
         form_submit['title'] = title;
         //form_submit['k_factor'] = 1; // TODO: implement k_factor in the editor.
     } else {
