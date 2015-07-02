@@ -28,10 +28,9 @@ def generate_task(user, template_extra, desired_type=''):
     """
     if template_extra == "":
         get_question_dict = get_question(user, '')  # Gets a question from the DB
-    elif template_extra.isdigit():
-        get_question_dict = get_question(user, template_extra)
     else:
-        get_question_dict = get_question(user, '', template_extra)
+        get_question_dict = get_question(user, template_extra)
+
     q = get_question_dict['template']
     if desired_type == '':
         desired_type = get_question_dict['type']
