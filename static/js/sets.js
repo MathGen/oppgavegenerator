@@ -27,15 +27,53 @@ $(document).ready(function () {
 	});
 });
 
-function save_changes(){
+function save_changes(content_id){
+    var valid_form = true;
+    var form_submit = {};
+    var title = $('#content_title').val();
+    var order = get_content_order();
     var content = $('#edit_container');
-    if(content.hasClass('edit_chapters')){
-
+    if (content.hasClass('edit_chapters')){
+        content = 'set';
+        form_submit['set_id'] = content_id;
+        form_submit['title'] = title;
+        form_submit['order'] = order;
+    } else if (content.hasClass('edit_levels')){
+        content = 'chapter';
+        form_submit['chapter_id'] = content_id;
+        form_submit['title'] = title;
+        form_submit['order'] = order;
+    } else if (content.hasClass('edit_templates')){
+        content = 'level';
+        form_submit['level_id'] = content_id;
+        form_submit['title'] = title;
+        //form_submit['k_factor'] = 1; // TODO: implement k_factor in the editor.
+    } else {
+        window.console.log('#edit_container is missing a required class for POST.');
+        valid_form = false;
+    }
+    if(valid_form) {
+        form_submit["csrfmiddlewaretoken"] = getCookie('csrftoken');
+        $.post('../../../' + content + '/update/', form_submit, function(result){
+            if(result[0] == 'c'){
+                $('#update_success').show(100).delay(5000).hide(100).queue(function () {
+                    $(this).remove();
+                });
+            }
+        });
     }
 }
 
+/**
+ * Iterates and write the order of the content to an Array.
+ * @returns {Array} The order represented as a list.
+ */
 function get_content_order(){
-
+    var order = [];
+    $('#edit_container').find('li').each(function(){
+        order.push($(this).attr('id').match(/\d+/));
+    });
+    return order;
 }
 
 /**

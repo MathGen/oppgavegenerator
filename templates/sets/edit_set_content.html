@@ -63,17 +63,14 @@
             <section id="search_templates" class="panel panel-default search_container"></section>
         </div>
     {% endif %}
-{#    </div>#}
-{#    <div class="col-md-4">#}
-{#        <section class="panel panel-default">#}
-{#            Search...#}
-{#        </section>#}
-{#    </div>#}
 </section>
 
 <div class="row">
     <div class="col-sm-12">
-        <div class="btn-group pull-right">
+        <div class="pull-right">
+            <button id="update_success" class="btn btn-link" disabled style="display: none">
+                <span id="update_text" class="glyphicon glyphicon-ok" style="color:green; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white; font-size: 1.2em;"> Vellykket!</span>
+            </button>
             <button id="btn_save_set" class="btn btn-primary"><span class="glyphicon glyphicon-save"></span> Lagre</button>
         </div>
     </div>
