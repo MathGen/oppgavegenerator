@@ -112,7 +112,7 @@ def update_set_view(request, set_id, title, order):
     msg = update_chapter_or_set(set, title, order, request.user)
     return HttpResponse(msg)
 
-def update_level_view(request, set_id, title):
+def update_level_view(request, set_id, title, k_factor):
     set = Set.objects.get(set_id)
-    msg = update_level(set, title, request.user)
+    msg = update_level(set, title, request.user, k_factor)
     return HttpResponse(msg)
