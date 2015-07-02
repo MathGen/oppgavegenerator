@@ -37,7 +37,7 @@ def make_edit_context_dict(template_id):
     context_dict = {'template_id': template_id, 'answer': answer, 'solution': solution,
                     'question_text': question_text, 'calculation_references': calculation_references,
                     'choices': choices, 'conditions': conditions, 'fill_in': fill_in,
-                    'topic': topic, 'random_domain': random_domain, 'unchanged_ref': unchanged_ref,
+                    'random_domain': random_domain, 'unchanged_ref': unchanged_ref,
                     'dictionary': dictionary, 'used_variables': used_variables,
                     'tags': tags, 'margin_of_error': q.margin_of_error, 'disallowed': q.disallowed,
                     'required': q.required, 'difficulty': q.difficulty}
