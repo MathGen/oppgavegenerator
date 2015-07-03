@@ -1,0 +1,26 @@
+
+    <li>
+        {% if user.extendeduser.current_set %}
+            <a href="{% url 'edit_set' user.extendeduser.current_set.id %}">
+                {{ user.extendeduser.current_set.name }}
+            </a>
+        {% else %}
+            <a href="{% url 'edit_current_user_sets' %}">...</a>
+        {% endif %}
+    </li> <li>
+        {% if user.extendeduser.current_chapter %}
+            <a href="{% url 'edit_chapter' user.extendeduser.current_chapter.id %}">
+                {{ user.extendeduser.current_chapter.name }}
+            </a>
+        {% else %}
+            <a href="{% url 'edit_current_user_sets' %}">...</a>
+        {% endif %}
+    </li> <li>
+        {% if user.extendeduser.current_level %}
+            <a href="{% url 'edit_level' user.extendeduser.current_level.id %}">
+                {{ user.extendeduser.current_level.name }}
+            </a>
+        {% else %}
+            <a href="{% url 'edit_current_user_sets' %}">...</a>
+        {% endif %}
+    </li>

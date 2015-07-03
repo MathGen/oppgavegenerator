@@ -116,17 +116,13 @@ def update_chapter_view(request):
 def update_set_view(request):
     msg = 'Noe gikk galt'
     if request.method == 'POST':
-        try:
-            print(request.POST)
-            form = request.POST
-            title = form['title']
-            order = form['order']
-            set_id = int(form['set_id'])
-            set = Set.objects.get(pk=set_id)
-            msg = update_chapter_or_set(set, title, order, request.user)
-            print(msg)
-        except Exception as e:
-            print(e)
+        form = request.POST
+        title = form['title']
+        order = form['order']
+        set_id = int(form['set_id'])
+        set = Set.objects.get(pk=set_id)
+        msg = update_chapter_or_set(set, title, order, request.user)
+
     return HttpResponse(msg)
 
 def update_level_view(request):

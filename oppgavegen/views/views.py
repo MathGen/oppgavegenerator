@@ -126,22 +126,34 @@ def answers(request, level=1):
     """Returns a render of answers.html"""
     context = RequestContext(request)
     cheat_message = '\\text{Ulovlig tegn har blitt brukt i svar}'
+    required_message = '\\text{Svaret ditt har ikke utfylt alle krav}'
+    render_to = 'answers.html'
+    if request.is_ajax():
+        render_to = 'game/answer.html'
+
     if request.method == 'POST':
         form = QuestionForm(request.POST)
         if form.is_valid():
             form_values = form.process()
             template = Template.objects.get(pk=form_values['primary_key'])
-            if cheat_check(form_values['user_answer'], template.disallowed):
-                return render_to_response('answers.html', {'answer': cheat_message}, context)
+
+            user_answer = form_values['user_answer']
+            if cheat_check(user_answer, json.loads(template.disallowed)):
+                return render_to_response(render_to, {'answer': cheat_message}, context)
+            if required_check(user_answer, json.loads(template.required)):
+                return render_to_response(render_to, {'answer': required_message}, context)
+
             context_dict = make_answer_context_dict(form_values)
             if request.is_ajax():
+
                 new_user_rating, new_star = change_level_rating(template, request.user, context_dict['user_won'], form_values['template_type'], level)
+
                 context_dict['ulp'] = int(new_user_rating)
                 context_dict['new_star'] = new_star
-                return render_to_response('game/answer.html', context_dict, context)
+                return render_to_response(render_to, context_dict, context)
             else:
                 change_elo(template, request.user, context_dict['user_won'], form_values['template_type'])
-            return render_to_response('answers.html', context_dict, context)
+            return render_to_response(render_to, context_dict, context)
         else:
             print(form.errors)
     return render_to_response('answers.html')
@@ -211,12 +223,9 @@ def game(request, set_id):
 
 
 def chapters(request, set_id):
-    print('okay?')
     if request.is_ajax():
-        print('yess?')
         game_set = Set.objects.get(pk=set_id)
         set_chapters = game_set.chapters.all()
-        print(set_chapters)
         context = RequestContext(request)
         medals = [] # Both lists get updated in chapter_progress
         completed = []
@@ -598,3 +607,6 @@ class UserCurrentSetsEdit(LoginRequiredMixin, UpdateView):
     #     #self.fields['current_chapter'].queryset = Chapter.objects.filter(creator=self.request.user)
     #     #self.fields['current_set'].queryset = Set.objects.filter(creator=self.request.user)
     #     return form_class
+
+def refresh_navbar(request):
+    render_to_response('includes/current_sets_snippet.html')

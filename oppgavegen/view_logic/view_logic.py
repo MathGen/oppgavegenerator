@@ -50,6 +50,8 @@ def make_edit_context_dict(template_id):
 def make_answer_context_dict(form_values):
     """Returns context dict for use on the answer page"""
     user_answer = form_values['user_answer']
+    user_answer = user_answer.replace(',','.')
+    user_answer = user_answer.replace('..', ',')
     template_type = form_values['template_type']
     template_specific = form_values['template_specific']
     q = Template.objects.get(pk=form_values['primary_key'])
@@ -138,18 +140,29 @@ def submit_template(template, user, update, newtags=None):
     message = template_validation(template.pk)
     return message
 
+
 def calculate_start_rating(difficulty):
     return 950 + (difficulty*50)
 
+
 def cheat_check(user_answer, disallowed):
     """Checks whether the user has used symbols/functions that are not allowed"""
-    standard_disallowed = ['int', 'test', "'", '@']
+    standard_disallowed = ['int', 'test', "'", '@', '?']
     if disallowed is not None and disallowed != '':
-        standard_disallowed = standard_disallowed + disallowed.split('§')
+        standard_disallowed += disallowed
     for s in standard_disallowed:
         if s in user_answer:
             return True
     return False
+
+
+def required_check(user_answer, required):
+    return_value = False
+    for s in required:
+        if s not in user_answer:
+            return_value = True
+            break
+    return return_value
 
 
 def latex_exceptions(string):

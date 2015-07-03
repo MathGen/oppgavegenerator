@@ -140,9 +140,7 @@ def update_chapter_or_set(set_or_chapter, title, order, user):
     msg = 'Failed update.'
     if set_or_chapter.creator == user:
         set_or_chapter.name = title
-        print(set_or_chapter.order)
         set_or_chapter.order = order
-        print(set_or_chapter.order)
         set_or_chapter.save()
 
         msg = 'Successful update'

@@ -92,16 +92,12 @@ def latex_to_sympy(expr):
     expr = expr.replace('\\', '')
     expr = expr.replace('frac', '')
     expr = expr.replace('binom', 'binomial')
-    print('this')
-    print(expr)
     expr = parenthesis_around_minus(expr)
     return expr
 
 
 def parenthesis_around_minus(expression):
     """Takes a expression and returns it with parenthesis around numbers with - where needed."""
-    print('start parenthesis_around')
-    print(expression)
     exceptions = '0123456789.)({}xyz=+-?/§'  # Having xyz in exceptions might introduce a bug in some situations
     expression += ' ' #add a empty space at the end of the string to avoid error.
     end_symbols = '0123456789.xyz' #Symbols the check doesn't end at.
@@ -118,14 +114,10 @@ def parenthesis_around_minus(expression):
                 insert_start = i-count+difference-1
                 t_i = i + difference
                 new_exp = new_exp[:insert_start] + '(' + new_exp[insert_start:t_i] + ')' + new_exp[t_i:len(new_exp)]
-                print('in loop')
-                print(new_exp)
                 difference += 2
                 count = 0
         elif record:
             count += 1
-    print(new_exp)
-    print('exit parenthesis_around')
     return new_exp
 
 def minus_exponent(expr):
@@ -173,7 +165,6 @@ def add_phantom_minus(expr):
             break
         if i == 0 or expr[i-1] == '§':
             if expr[i] == '-' and expr[i+1] == 'R' and expr[i+2] in numbers and (expr[i+3] == '^' or expr[i+4] == '^'):
-                print(i)
                 expr = expr[:i] + '~' + expr[i+1:]
     return expr
 

@@ -128,8 +128,6 @@ def get_level_question(user, level):
 
 @Debugger
 def add_level_to_user(user, level):
-    print(user.username)
-    print(level.name)
     try:
         user_progress = UserLevelProgress.objects.get(user=user, level=level)
     except UserLevelProgress.DoesNotExist:

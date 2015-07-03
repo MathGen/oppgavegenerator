@@ -103,8 +103,12 @@ urlpatterns = patterns('',
 
 
     # AJAX FUNCTION URLS
+    url(r'ajax/currentsets/refresh/$', refresh_navbar, name='refresh_navbar' ),
+
+
     # Return template preview html
     url(r'^template/([\w ]+)/preview/$', 'oppgavegen.views.views.preview_template', name='preview_template'),
+    # Toggle template/level membership for users current level
     url(r'^user/level/template/(\d+)/toggle/$', toggle_template_level, name='current_level_toggle'),
     url(r'^user/level/template/(\d+)/add/$', add_template_to_current_level, name='current_level_add'),
     url(r'^user/level/template/(\d+)/remove/$', remove_template_from_current_level, name='current_level_remove'),
