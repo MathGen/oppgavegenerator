@@ -50,6 +50,8 @@ def make_edit_context_dict(template_id):
 def make_answer_context_dict(form_values):
     """Returns context dict for use on the answer page"""
     user_answer = form_values['user_answer']
+    user_answer = user_answer.replace(',','.')
+    user_answer = user_answer.replace('..', ',')
     template_type = form_values['template_type']
     template_specific = form_values['template_specific']
     q = Template.objects.get(pk=form_values['primary_key'])
