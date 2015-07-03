@@ -50,6 +50,7 @@ urlpatterns = patterns('',
     url(r'^chapter/(\d+)/edit', chapter_edit, name='edit_chapter'),
     url(r'^level/new/$', 'oppgavegen.views.views.level_edit', name='add_new_level'),
     url(r'^level/(\d+)/edit/', 'oppgavegen.views.views.level_edit', name='edit_level'),
+    url(r'^level/(\d+)/stats/', level_stats, name='level_stats'),
 
     url(r'^set/(\d+)/$', set_detail_view, name='set_detail'),
     # url(r'^set/(\d+)/chapters/edit/$', 'oppgavegen.views.views.manage_chapters_in_set', name='manage_chapters_in_set'),
