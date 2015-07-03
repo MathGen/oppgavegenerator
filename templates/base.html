@@ -44,7 +44,7 @@
                                     </a>
                                 </li>
                                 {% endif %}
-                                {% if user.extendeduser.current_set %}
+                                {% if user.extendeduser.current_level %}
                                 <li>
                                     <a href="{% url 'edit_level' user.extendeduser.current_level.id %}">
                                         <span id=nav_level_name">{{ user.extendeduser.current_level.name }}</span>
