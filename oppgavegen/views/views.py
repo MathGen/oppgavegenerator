@@ -598,3 +598,6 @@ class UserCurrentSetsEdit(LoginRequiredMixin, UpdateView):
     #     #self.fields['current_chapter'].queryset = Chapter.objects.filter(creator=self.request.user)
     #     #self.fields['current_set'].queryset = Set.objects.filter(creator=self.request.user)
     #     return form_class
+
+def refresh_navbar(request):
+    render_to_response('includes/current_sets_snippet.html')

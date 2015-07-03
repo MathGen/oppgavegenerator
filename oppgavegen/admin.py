@@ -20,6 +20,10 @@ class ExtendedInline(admin.StackedInline):
     verbose_name_plural = 'extendeduser'
 
 
+class UserAdmin(UserAdmin):
+    inlines = (ExtendedInline, )
+
+
 class LevelAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
 

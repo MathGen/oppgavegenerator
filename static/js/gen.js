@@ -1903,18 +1903,24 @@ function insert_editable_data(){
 	}
 
 	// Get and insert disallowed symbols/expressions
-	var disallowed = JSON.parse($('#get_disallowed').text());
-	if(disallowed[0] != ""){
-		for(var d = 0; d < disallowed.length; d++){
-			$('#tags_illegal').prepend('<span class="tag_i">'+disallowed[d]+'<a class="btn btn_tag_del">x</a></span>');
+	var disallowed = $('#get_disallowed').text();
+	if(disallowed != ""){
+		disallowed = JSON.parse(disallowed);
+		if (disallowed[0] != "") {
+			for (var d = 0; d < disallowed.length; d++) {
+				$('#tags_illegal').prepend('<span class="tag_i">' + disallowed[d] + '<a class="btn btn_tag_del">x</a></span>');
+			}
 		}
 	}
 
 	// Get and insert required symbols/expressions
-	var required = JSON.parse($('#get_required').text());
-	if(required[0] != ""){
-		for(var r = 0; r < required.length; r++){
-			$('#tags_required').prepend('<span class="tag_r">'+required[r]+'<a class="btn btn_tag_del">x</a></span>');
+	var required = $('#get_required').text();
+	if(required != ""){
+		required = JSON.parse(required);
+		if (required[0] != "") {
+			for (var r = 0; r < required.length; r++) {
+				$('#tags_required').prepend('<span class="tag_r">' + required[r] + '<a class="btn btn_tag_del">x</a></span>');
+			}
 		}
 	}
 
@@ -1925,7 +1931,6 @@ function insert_editable_data(){
 			$('#tags').prepend('<span class="tag">'+tags[t]+'<a class="btn btn_tag_del">x</a></span>');
 		}
 	}
-
 	VAR_INIT = false;
 	redraw_mathquill_elements();
 }
