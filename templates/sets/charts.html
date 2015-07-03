@@ -13,9 +13,14 @@
     <section class="panel panel-default">
         <div class="panel-heading"><h3 class="panel-title">Statistikk for {{ level_name }}</h3></div>
             <div class="panel-body">
-                {% if ratings %}
+                {% if players %}
 
                 <div id="levelchart" style="height: 250px"></div>
+
+                <p>Studenter: {{ players }}</p>
+                <p>Gjennomsnittlig rating: {{ average }}</p>
+
+
                 {% else %}
                     Beklager, ingen har begynt på {{ level_name }} enda.
                 {% endif %}
@@ -32,40 +37,39 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
     <script>
         new Morris.Bar({
-            // ID of the element in which to draw the chart.
+
             element: 'levelchart',
-            // Chart data records -- each entry in this array corresponds to a point on
-            // the chart.
+
             data: [
 
                 {% if entries.0 > 0 %}
-                {rating: '0-800', value: {{ entries.0 }} },
+                {rating: '0-800', studenter: {{ entries.0 }} },
                 {% endif %}
-                {rating: '800-1100', value: {{ entries.1 }} },
-                {rating: '1100-1200', value: {{ entries.2 }} },
-                {rating: '1200-1300', value: {{ entries.3 }} },
-                {rating: '1300-1400', value: {{ entries.4 }} },
-                {rating: '1400-1500', value: {{ entries.5 }} },
-                {rating: '1500-1600', value: {{ entries.6 }} },
-                {rating: '1600-1700', value: {{ entries.7 }} },
-                {rating: '1700-1800', value: {{ entries.8 }} },
-                {rating: '1800-1900', value: {{ entries.9 }} },
-                {rating: '1900-2000', value: {{ entries.10 }} },
-                {rating: '2000-2100', value: {{ entries.11 }} },
-                {rating: '2100-2200', value: {{ entries.12 }} },
-                {rating: '2200-2300', value: {{ entries.13 }} },
+                {rating: '800-1100', studenter: {{ entries.1 }} },
+                {rating: '1100-1200', studenter: {{ entries.2 }} },
+                {rating: '1200-1300', studenter: {{ entries.3 }} },
+                {rating: '1300-1400', studenter: {{ entries.4 }} },
+                {rating: '1400-1500', studenter: {{ entries.5 }} },
+                {rating: '1500-1600', studenter: {{ entries.6 }} },
+                {rating: '1600-1700', studenter: {{ entries.7 }} },
+                {rating: '1700-1800', studenter: {{ entries.8 }} },
+                {rating: '1800-1900', studenter: {{ entries.9 }} },
+                {rating: '1900-2000', studenter: {{ entries.10 }} },
+                {rating: '2000-2100', studenter: {{ entries.11 }} },
+                {rating: '2100-2200', studenter: {{ entries.12 }} },
+                {rating: '2200-2300', studenter: {{ entries.13 }} },
                 {% if entries.0 > 0 %}
-                {rating: '2300-2400', value: {{ entries.14 }} }
+                {rating: '2300-2400', studenter: {{ entries.14 }} }
                 {% endif %}
 
             ],
             // The name of the data record attribute that contains x-values.
             xkey: 'rating',
             // A list of names of data record attributes that contain y-values.
-            ykeys: ['value'],
+            ykeys: ['studenter'],
             // Labels for the ykeys -- will be displayed when you hover over the
             // chart.
-            labels: ['Value']
+            labels: ['Studenter']
         });
 
     </script>

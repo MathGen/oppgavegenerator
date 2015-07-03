@@ -614,11 +614,16 @@ def refresh_navbar(request):
 
 def level_stats(request, level_id):
     """
-    Prepares rating statistics for a level by counting student level ratings within a specific interval.
+    Prepares rating statistics for a level by counting student level ratings within specific intervals.
     Designed with morris.js bar chart in mind (see charts.html)
     The range is from 0 to 2400, and the measuring interval is 100 counting from 1100 and up.
     """
 
+    level = Level.objects.get(pk=level_id)
+    level_name = level.name
+    stats = level.student_progresses.all()
+
+    # amount of students in intervals
     interval1 = 0  # 0-800
     interval2 = 0  # 800-1100
     interval3 = 0  # 1100-1200
@@ -636,10 +641,7 @@ def level_stats(request, level_id):
     interval15 = 0 # 2300-2400
     other = 0      # out of range somehow
 
-    level = Level.objects.get(pk=level_id)
-    level_name = level.name
-    stats = level.student_progresses.all()
-    ratings = [] # a list of all ratings
+    ratings = [] # list of all ratings
 
     for e in stats:
         if 0 <= e.level_rating <= 800:
@@ -677,9 +679,12 @@ def level_stats(request, level_id):
 
     for e in stats:
         ratings.append(e.level_rating)
+    players = len(ratings)
+    average = sum(ratings)/len(ratings)
     intervals = [interval1, interval2, interval3, interval4, interval5, interval6, interval7, interval8,
                  interval9,interval10, interval11, interval12, interval13, interval14, interval15]
-    dict = {'ratings': ratings,
+    dict = {'players': players,
+            'average': average,
             'entries': intervals,
             'level_name': level_name, }
-    return render(request, 'charts.html', dict)
+    return render(request, 'sets/charts.html', dict)
