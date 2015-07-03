@@ -145,7 +145,10 @@ def answers(request, level=1):
 
             context_dict = make_answer_context_dict(form_values)
             if request.is_ajax():
-                new_user_rating, new_star = change_level_rating(template, request.user, context_dict['user_won'], form_values['template_type'], level)
+                try:
+                    new_user_rating, new_star = change_level_rating(template, request.user, context_dict['user_won'], form_values['template_type'], level)
+                except Exception as e:
+                    print(e)
                 context_dict['ulp'] = int(new_user_rating)
                 context_dict['new_star'] = new_star
                 return render_to_response(render_to, context_dict, context)

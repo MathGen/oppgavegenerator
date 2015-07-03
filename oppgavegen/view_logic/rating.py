@@ -102,7 +102,7 @@ def change_level_rating(template, user, user_won, type, level_id):
     template.save()
 
     template_rating_change = new_template_rating - template_rating  # How much the templates rating has changed
-    calculate__and_save_offset(template_rating_change, level, difficulty)
+    calculate_and_save_offset(template_rating_change, level, difficulty)
 
     new_star = check_for_new_star(user, level_id)
     return (user_progress.level_rating, new_star)
@@ -136,18 +136,17 @@ def add_star(user_progress):
     user_progress.save()
 
 
-def calculate__and_save_offset(rating_change, level, difficulty):
+def calculate_and_save_offset(rating_change, level, difficulty):
     """Calculates the offset that is used for rating balance and saves it"""
     upper = 15  # The upper bound of templates used for offset
     lower = 11  # The lower bound of templates used for offset
 
     if difficulty < upper and difficulty > lower:
-        num_templates = Template.objects.all().filter(difficulty__gt=lower, difficulty__lt=upper).count
-        num_templates += Template.objects.all().filter(difficulty_multipe__gt=lower, difficulty_multiple__lt=upper).count()
+        num_templates = Template.objects.all().filter(difficulty__gt=lower, difficulty__lt=upper).count()
+        num_templates += Template.objects.all().filter(difficulty_multiple__gt=lower, difficulty_multiple__lt=upper).count()
         num_templates += Template.objects.all().filter(difficulty_blanks__gt=lower, difficulty_blanks__lt=upper).count()
 
-        offset = level.offset
         level.offset += rating_change/num_templates
-        offset.save()
+        level.save()
 
 
