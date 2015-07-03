@@ -619,8 +619,9 @@ def level_stats(request, level_id):
     The range is from 0 to 2400, and the measuring interval is 100 counting from 1100 and up.
     """
 
+    dict = {}
     level = Level.objects.get(pk=level_id)
-    level_name = level.name
+    dict['level_name'] = level.name
     stats = level.student_progresses.all()
 
     # amount of students in intervals
@@ -639,7 +640,7 @@ def level_stats(request, level_id):
     interval13 = 0 # 2100-2200
     interval14 = 0 # 2200-2300
     interval15 = 0 # 2300-2400
-    other = 0      # out of range somehow
+    other = 0      # out of range somehow (just in case)
 
     ratings = [] # list of all ratings
 
@@ -679,12 +680,9 @@ def level_stats(request, level_id):
 
     for e in stats:
         ratings.append(e.level_rating)
-    players = len(ratings)
-    average = sum(ratings)/len(ratings)
-    intervals = [interval1, interval2, interval3, interval4, interval5, interval6, interval7, interval8,
-                 interval9,interval10, interval11, interval12, interval13, interval14, interval15]
-    dict = {'players': players,
-            'average': average,
-            'entries': intervals,
-            'level_name': level_name, }
+    if ratings:
+        dict['players'] = len(ratings)
+        dict['average'] = int(sum(ratings)/len(ratings))
+    dict['entries'] = [interval1, interval2, interval3, interval4, interval5, interval6, interval7, interval8,
+                       interval9,interval10, interval11, interval12, interval13, interval14, interval15]
     return render(request, 'sets/charts.html', dict)
