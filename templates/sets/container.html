@@ -2,12 +2,14 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block panels %}
-<script src="/static/js/sets.js?007"></script>
-<div id="set_editor" class="jumbotron">
+<script src="/static/js/sets.js?008"></script>
+<div class="jumbotron">
+    <div id="set_editor">
     {% if set_id %}
     <div id="set_id" hidden>{{ set_id }}</div>
     {% endif %}
 {#    <h2 class="set_title">{{ set_title }}<span id="chapter_title"></span><span id="level_title"></span></h2>#}
     {% include 'sets/edit_set_content.html' %}
+    </div>
 </div>
 {% endblock %}

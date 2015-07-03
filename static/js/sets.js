@@ -1,11 +1,17 @@
+var current_set = 0;
+var current_chapter = 0;
 $(document).ready(function () {
     set_title('#content_title', $('#get_content_title').text());
     init_sortable();
-    load_search_view($('.search_container').attr('id').replace(/search_/g, ""));
+    load_search_view();
 
     // Delete the specific content.
     $(document).on('click', '.btn_content_del', function(){
         delete_content($(this).closest('li'));
+    });
+
+    $(document).on('click', '.btn_set_back', function(){
+        load_previous_page();
     });
 
     // Edit the specific content.
@@ -25,8 +31,13 @@ $(document).ready(function () {
 	}).on('keyup', '.new_content', function(e){
 		if(/(13)/.test(e.which)) $(this).focusout(); // Add chapter if one of these keys are pressed.
 	});
+
+    init_k_factor_slider();
 });
 
+/**
+ * Saves changes such as content-order and content-title to the server.
+ */
 function save_changes(){
     var valid_form = true;
     var form_submit = {};
@@ -47,7 +58,7 @@ function save_changes(){
         content = 'level';
         form_submit['level_id'] = $('#level_id').text();
         form_submit['title'] = title;
-        //form_submit['k_factor'] = 1; // TODO: implement k_factor in the editor.
+        form_submit['k_factor'] = $('#k_factor_amount').text();
     } else {
         window.console.log('#edit_container is missing a required class for POST.');
         valid_form = false;
@@ -63,6 +74,34 @@ function save_changes(){
 }
 
 /**
+ * Loads the previous page/view.
+ */
+function load_previous_page(){
+    if(current_set != 0 || current_chapter != 0) {
+        var content = $('#edit_container');
+        var return_to = "set";
+        var return_id = 1;
+        if (content.hasClass('edit_levels')) {
+            return_to = "set";
+            return_id = current_set;
+        } else if (content.hasClass('edit_templates')) {
+            return_to = "chapter";
+            return_id = current_chapter;
+        }
+        $('#set_editor').fadeOut('fast', function () {
+            $(this).load('../../../' + return_to + '/' + return_id + '/edit/ #set_editor > *', function () {
+                set_title('#content_title', $('#get_content_title').text());
+                init_sortable();
+                scroll_to($('#set_editor'));
+                redraw_mathquill_elements(); //TODO: redraw after the content is displayed. BUG: delayed content.
+                load_search_view();
+                $(this).fadeIn('fast');
+            });
+        });
+    }
+}
+
+/**
  * Iterates and write the order of the content to an Array.
  * @returns {String} The order represented as a String.
  */
@@ -72,6 +111,25 @@ function get_content_order(){
         order.push($(this).attr('id').match(/\d+/));
     });
     return order.join(',');
+}
+
+/**
+ * Init the slider which sets the progression-speed for the level.
+ */
+function init_k_factor_slider(){
+    var k_value = $('#k_factor_amount').text();
+    if(k_value == ''){
+        k_value = 3;
+    }
+    $('#k_factor_slider').slider({
+        value: k_value,
+        min: 1,
+        max: 8,
+        step: 1,
+        slide: function (event, ui) {
+            $('#k_factor_amount').text(ui.value);
+        }
+    });
 }
 
 /**
@@ -118,8 +176,9 @@ function delete_content(content){
     }
 }
 
-function load_search_view(type){ // TODO: make the search result load with AJAX.
+function load_search_view(){ // TODO: make the search result load with AJAX.
     var search_container = $('.search_container');
+    var type = search_container.attr('id').replace(/search_/g, "");
     switch (type) {
         case 'chapters':
             search_container.load('../../../minisearch/chapters', function(){
@@ -139,19 +198,31 @@ function load_search_view(type){ // TODO: make the search result load with AJAX.
     }
 }
 
+/**
+ * Loads the specific element to edit its content.
+ * @param content - the content-selector.
+ */
 function edit_content(content){
+    var container = $('#edit_container');
     var content_id = content.attr('id').match(/\d+/);
     if(content_id){
         var content_type = "level";
-        if($('#edit_container').hasClass('edit_chapters')) {
+        if(container.hasClass('edit_chapters')) {
             content_type = "chapter";
+            current_set = $('#set_id').text();
+        } else if(container.hasClass('edit_levels')){
+            content_type = "level";
+            current_chapter = $('#chapter_id').text(); // TODO; improve cache of current content-type for loading previous pages.
         }
-        $('#set_editor').fadeOut('fast', function(){
-            $(this).load('../../../'+content_type+'/'+content_id+'/edit/ #set_editor > *').fadeIn('fast', function(){
+        $('#set_editor').fadeOut('fast', function(){ // TODO: Improve load callback.
+            $(this).load('../../../'+content_type+'/'+content_id+'/edit/ #set_editor > *', function(){
                 set_title('#content_title', $('#get_content_title').text());
                 init_sortable();
                 scroll_to($('#set_editor'));
                 redraw_mathquill_elements(); //TODO: redraw after the content is displayed. BUG: delayed content.
+                load_search_view();
+                init_k_factor_slider();
+                $(this).fadeIn('fast');
             });
         });
     }
@@ -162,7 +233,15 @@ function edit_content(content){
  */
 function init_sortable(){
     //TODO: make it switchable (from list to grid)
-    $('#edit_container').sortable({placeholder:"list_content_highlight", containment:"#set_editor", axis:"y"}).disableSelection();
+    var container = $('#edit_container');
+    if(container.hasClass('edit_templates')){}
+    else {
+        container.sortable({
+            placeholder: "list_content_highlight",
+            containment: "#set_editor",
+            axis: "y"
+        }).disableSelection();
+    }
     //$('#chapter_container').sortable({containment:"#chapter_container"}).disableSelection();
     //$('.list_chapter').draggable({containment:"#chapter_container", axis:"y"});
 }

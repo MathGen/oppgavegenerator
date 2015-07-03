@@ -222,7 +222,8 @@ sub{							/* between bootstrap*/
 	color: #D1C3A6;
 	text-shadow: -1px 0 #222222, 0 1px #222222, 1px 0 #222222, 0 -1px #222222;
 }
-.btn_game_back{
+.btn_game_back,
+.btn_set_back{
 	font-size: 36px;
 	color: #D1C3A6;
 	text-shadow: -1px 0 #222222, 0 1px #222222, 1px 0 #222222, 0 -1px #222222;
