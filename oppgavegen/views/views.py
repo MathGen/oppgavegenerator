@@ -21,7 +21,7 @@ from oppgavegen.templatetags.app_filters import is_teacher
 from oppgavegen.models import Set, Chapter, Level, Template
 from oppgavegen.view_logic.rating import change_elo, change_level_rating, get_user_rating
 from oppgavegen.generation_folder.generation import generate_task, generate_level
-from oppgavegen.view_logic.progress import calculate_progress, chapter_progress, get_stars_per_level, get_user_rating_for_level
+from oppgavegen.view_logic.progress import calculate_progress, chapter_progress, get_stars_per_level, get_user_rating_for_level, get_user_stars_for_level
 from oppgavegen.view_logic.view_logic import *
 from oppgavegen.view_logic.current_work import *
 
@@ -278,6 +278,7 @@ def get_template(request, level_id):
     context = RequestContext(request)
     context_dict = generate_level(request.user, level_id)
     context_dict['rating'] = get_user_rating(request.user)
+    context_dict['stars'] = get_user_stars_for_level(request.user, Level.objects.get(pk=level_id))
     context_dict['ulp'] = get_user_rating_for_level(request.user, Level.objects.get(pk=level_id))
 
     return render_to_response('game/template.html', context_dict, context)
