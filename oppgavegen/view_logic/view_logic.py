@@ -149,7 +149,7 @@ def cheat_check(user_answer, disallowed):
     """Checks whether the user has used symbols/functions that are not allowed"""
     standard_disallowed = ['int', 'test', "'", '@', '?']
     if disallowed is not None and disallowed != '':
-        standard_disallowed = standard_disallowed + disallowed.split('§')
+        standard_disallowed += disallowed
     for s in standard_disallowed:
         if s in user_answer:
             return True
