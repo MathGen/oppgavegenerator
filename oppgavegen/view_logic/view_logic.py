@@ -157,10 +157,10 @@ def cheat_check(user_answer, disallowed):
 
 
 def required_check(user_answer, required):
-    return_value = True
+    return_value = False
     for s in required:
         if s not in user_answer:
-            return_value = False
+            return_value = True
             break
     return return_value
 
