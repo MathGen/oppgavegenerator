@@ -18,17 +18,22 @@ def calculate_answer(s, domain):
     :param domain: The domain of the variables.
     :return: A latex version of the calculated string.
     """
-    if not is_number(s):  # Small optimization
-        s = remove_unnecessary(s)
-        s = str(latex_to_sympy(s))
-        s = s.replace('*)', ')*')
-        s = s.replace('?)@', ')?@')
-        s = parse_expr(s, transformations=standard_transformations +
-                       (convert_xor, implicit_multiplication_application,), global_dict=None, evaluate=False)
-        s = latex(sympify(str(s)))
-        # Sometimes sympify returns the value 'zoo'
-    else:
-        s = round_answer(domain, float(s))
+    print('in calculate answer')
+    print(s)
+    try:
+        if not is_number(s):  # Small optimization
+            s = remove_unnecessary(s)
+            s = str(latex_to_sympy(s))
+            s = s.replace('*)', ')*')
+            s = s.replace('?)@', ')?@')
+            s = parse_expr(s, transformations=standard_transformations +
+                           (convert_xor, implicit_multiplication_application,), global_dict=None, evaluate=False)
+            s = latex(sympify(str(s)))
+            # Sometimes sympify returns the value 'zoo'
+        else:
+            s = round_answer(domain, float(s))
+    except Exception as e:
+        print(e)
     return str(s)
 
 
@@ -56,9 +61,12 @@ def parse_solution(solution, domain):
             s += c
         b = c
     for x in range(len(arr)):
-        new_arr.append(calculate_answer(str((arr[x])), domain))
-        r = '@?' + arr[x] + '?@'
-        new_solution = new_solution.replace(r, new_arr[x])
+        print(arr[x])
+        print('hallo?')
+        if(arr[x] != ''):
+            new_arr.append(calculate_answer(str((arr[x])), domain))
+            r = '@?' + arr[x] + '?@'
+            new_solution = new_solution.replace(r, new_arr[x])
     return new_solution
 
 
