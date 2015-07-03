@@ -28,35 +28,32 @@
 					<ul class="nav navbar-nav navbar-right">
 						<!--MENU ITEMS-->
                         {% if user|is_teacher %}
-                     {% comment %}
-                            {% if user.extendeduser.current_set != None %}
 
                             <ol class="breadcrumb inverse" style="float:left; margin: 7px 10px; background: #222;">
+                                {% if user.extendeduser.current_set %}
                                 <li>
                                     <a href="{% url 'edit_set' user.extendeduser.current_set.id %}">
                                         {{ user.extendeduser.current_set.name }}
                                     </a>
+                                {% endif %}
                                 </li>
-                                {% if user.extendeduser.current_chapter != None %}
+                                {% if user.extendeduser.current_chapter %}
                                 <li>
                                     <a href="{% url 'edit_chapter' user.extendeduser.current_chapter.id %}">
                                         {{ user.extendeduser.current_chapter.name }}
                                     </a>
                                 </li>
-                                {% if user.extendeduser.current_set != None %}
+                                {% endif %}
+                                {% if user.extendeduser.current_set %}
                                 <li>
                                     <a href="{% url 'edit_level' user.extendeduser.current_level.id %}">
                                         <span id=nav_level_name">{{ user.extendeduser.current_level.name }}</span>
                                     </a>
                                 </li>
-
-
-                                {% endif %}
                                 {% endif %}
                             </ol>
 
-                            {% endif %}
-                               {% endcomment %}
+
                     	<li><a href="#">{{  user|get_rating }}</a></li>
 						<li><a href="{% url 'newtemplate' %}">Ny Mal</a></li>
                     	<li><a href="{% url 'templates' %}">Maler</a></li>
