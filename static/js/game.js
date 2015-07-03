@@ -98,6 +98,8 @@ function load_template(level_id){
         $(this).load('../' + level_id + '/template/', function () { //AJAX load
             display_loading_icon(false);
             $(this).fadeIn('fast', function(){
+                update_progress_bar_level();
+                draw_level_stars();
                 $('#game_nav').fadeIn(function(){
                     redraw_mathquill_elements();
                 });
@@ -183,6 +185,25 @@ function update_progress_bar(){
 }
 
 /**
+ * Updates the progress-bar which indicates the progress towards unlocking a new star for the current level.
+ */
+function update_progress_bar_level(){
+    var stars = $('#num_stars').text();
+    var rating = $('#get_ulp').text();
+    var rating_from = 1100;
+    var rating_to = 1600;
+    if(stars == 1){
+        rating_from = 1500;
+        rating_to = 1800;
+    } else if (stars >= 2){
+        rating_from = 1700;
+        rating_to = 2000;
+    }
+    var value = ((rating-rating_from)/(rating_to-rating_from))*100;
+    $('.star_progress').find('.progress-bar').width(value+'%').attr('aria-valuenow', value);
+}
+
+/**
  * Draws and appends the star inside the ribbon.
  */
 function append_medal_star(){
@@ -204,6 +225,7 @@ function unlock_chapters(progress_number){ //TODO: call this when retrieving the
 
 /**
  * Unlocks all levels the user has reached. Removes the lock.
+ * @param {object} selector - the container of the contents.
  * @param {number} progress_number - The progress-number which indicates how many levels is unlocked.
  */
 function unlock_contents(selector, progress_number){
@@ -226,5 +248,17 @@ function get_stars_per_level(progress_number){
             }
         });
         return index < progress_number; // To end the iteration when finished with all unlocked levels.
+    });
+}
+
+/**
+ * Draws the amount of stars the user has unlocked in this current level.
+ */
+function draw_level_stars(){
+    var stars = $('#num_stars').text();
+    $('.progress_star').each(function(index){
+        if(index < stars){
+            $(this).toggleClass('glyphicon-star-empty glyphicon-star');
+        }
     });
 }

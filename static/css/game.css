@@ -138,3 +138,16 @@
     color: #D9A441;
 	text-shadow: -1px 0 #222222, 0 1px #222222, 1px 0 #222222, 0 -1px #222222;
 }
+.level_progress_small{
+    font-size: 1.6em;
+    top: -4px;
+    text-align: center;
+    margin-bottom: -12px;
+}
+.progress_bar_star{
+    position: absolute;
+    top: 3px;
+    right: 17px;
+    color: #666;
+    text-shadow: 0px 0 #222222, 0 1px #222222, 1px 0 #222222, 0px 0px #222222;
+}

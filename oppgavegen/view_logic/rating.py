@@ -109,11 +109,10 @@ def change_level_rating(template, user, user_won, type, level_id):
 
 
 def get_user_rating(user):
-    """Returns the rating of the give user"""
+    """Returns the rating of the given user"""
     u = User.objects.get(username=user.username)
     rating = u.extendeduser.rating
     return rating
-
 
 def check_for_new_star(user, level_id):
     """Checks if the user has earned a new star on a level"""

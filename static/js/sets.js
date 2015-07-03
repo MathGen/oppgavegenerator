@@ -70,6 +70,9 @@ function save_changes(){
                 $('#update_text').text(result);
                 $('#update_success').show(100).delay(5000).hide(100);
             }
+            else{
+                window.console.log('Failed to update: ' + result);
+            }
         });
     }
 }
