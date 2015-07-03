@@ -156,6 +156,15 @@ def cheat_check(user_answer, disallowed):
     return False
 
 
+def required_check(user_answer, required):
+    return_value = True
+    for s in required:
+        if s not in user_answer:
+            return_value = False
+            break
+    return return_value
+
+
 def latex_exceptions(string):
     """Replaces wrong latex with the proper one"""
     string = string.replace('\\tilde', '\\sim')
