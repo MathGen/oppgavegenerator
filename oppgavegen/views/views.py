@@ -131,7 +131,7 @@ def answers(request, level=1):
         if form.is_valid():
             form_values = form.process()
             template = Template.objects.get(pk=form_values['primary_key'])
-            if cheat_check(form_values['user_answer'], template.disallowed):
+            if cheat_check(form_values['user_answer'], json.loads(template.disallowed)):
                 return render_to_response('answers.html', {'answer': cheat_message}, context)
             context_dict = make_answer_context_dict(form_values)
             if request.is_ajax():
