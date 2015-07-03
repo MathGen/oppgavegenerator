@@ -165,7 +165,6 @@ def add_phantom_minus(expr):
             break
         if i == 0 or expr[i-1] == '§':
             if expr[i] == '-' and expr[i+1] == 'R' and expr[i+2] in numbers and (expr[i+3] == '^' or expr[i+4] == '^'):
-                print(i)
                 expr = expr[:i] + '~' + expr[i+1:]
     return expr
 

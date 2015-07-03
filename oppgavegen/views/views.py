@@ -145,10 +145,9 @@ def answers(request, level=1):
 
             context_dict = make_answer_context_dict(form_values)
             if request.is_ajax():
-                try:
-                    new_user_rating, new_star = change_level_rating(template, request.user, context_dict['user_won'], form_values['template_type'], level)
-                except Exception as e:
-                    print(e)
+
+                new_user_rating, new_star = change_level_rating(template, request.user, context_dict['user_won'], form_values['template_type'], level)
+
                 context_dict['ulp'] = int(new_user_rating)
                 context_dict['new_star'] = new_star
                 return render_to_response(render_to, context_dict, context)
@@ -224,12 +223,9 @@ def game(request, set_id):
 
 
 def chapters(request, set_id):
-    print('okay?')
     if request.is_ajax():
-        print('yess?')
         game_set = Set.objects.get(pk=set_id)
         set_chapters = game_set.chapters.all()
-        print(set_chapters)
         context = RequestContext(request)
         medals = [] # Both lists get updated in chapter_progress
         completed = []

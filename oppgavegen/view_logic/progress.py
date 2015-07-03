@@ -10,7 +10,6 @@ def calculate_progress(user, chapter):
     counter = 0
     for i in levels:
         level = Level.objects.get(pk=i)
-        print(1)
         try:
             q = UserLevelProgress.objects.get(user=user, level=level)
         except UserLevelProgress.DoesNotExist:
