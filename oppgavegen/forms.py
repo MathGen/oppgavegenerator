@@ -37,16 +37,18 @@ class TagField(forms.CharField):
 
 
 class TemplateSearchForm(SearchForm):
-    q = forms.CharField(required=True, label='Søk',
+    q = forms.CharField(required=True, label='',
                         widget=forms.TextInput(attrs={'type': 'search', 'placeholder' : 'Søk i oppgavemaler'}))
     name = forms.CharField(required=False, label='Tittel',
-                           widget=forms.TextInput(attrs={'type': 'search', 'placeholder' : 'Oppgavetittel'}))
+                           widget=forms.TextInput(attrs={'type': 'text', 'placeholder' : 'Oppgavetittel'}))
     creator = forms.CharField(required=False, label='Forfatter',
-                              widget=forms.TextInput(attrs={'type': 'search', 'placeholder' : 'Forfatter'}))
+                              widget=forms.TextInput(attrs={'type': 'text', 'placeholder' : 'Forfatter'}))
     min_rating = forms.IntegerField(required=False, label='Lavest Rating',
-                                    widget=forms.NumberInput(attrs={'type': 'number', 'placeholder' : 'Minimum'}))
+                                    widget=forms.NumberInput(attrs={'class': 'numberinput', 'type': 'number',
+                                                                    'max': '9999', 'placeholder' : 'Minimum'}))
     max_rating = forms.IntegerField(required=False, label='Høyest Rating',
-                                    widget=forms.NumberInput(attrs={'type': 'number', 'placeholder' : 'Maximum'}))
+                                    widget=forms.NumberInput(attrs={'class': 'numberinput', 'type': 'number',
+                                                                    'max': '9999', 'placeholder' : 'Maximum'}))
     multiple = forms.BooleanField(required=False, label='Flervalg')
     fill_in = forms.BooleanField(required=False, label='Utfylling')
 
