@@ -78,3 +78,12 @@ def get_stars_per_level(user, chapter):
             star_list.append(0)
     star_list = json.dumps(star_list)
     return star_list
+
+def get_user_rating_for_level(user, level):
+    msg = 'no rating'
+    try:
+        q = UserLevelProgress.objects.get(user=user, level=level)
+        msg = q.level_rating
+    except UserLevelProgress.DoesNotExist:
+        pass
+    return msg
