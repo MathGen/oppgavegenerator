@@ -39,9 +39,9 @@ def make_edit_context_dict(template_id):
     unchanged_required = q.unchanged_required
     unchanged_disallowed = q.unchanged_disallowed
 
-    if unchanged_required == '':
+    if unchanged_required == '' or unchanged_required == None:
         unchanged_required = []
-    if unchanged_disallowed == '':
+    if unchanged_disallowed == '' or unchanged_disallowed == None:
         unchanged_disallowed = []
 
     context_dict = {'template_id': template_id, 'answer': answer, 'solution': solution,
