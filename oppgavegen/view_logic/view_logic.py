@@ -130,7 +130,7 @@ def submit_template(template, user, update, newtags=None):
         if template.difficulty_blanks != q.difficulty_blanks:
             template.fill_rating = calculate_start_rating(template.difficulty_blanks)
         if template.difficulty_multiple != q.difficulty_multiple:
-            template.difficulty_multiple = calculate_start_rating(template.difficulty_multiple)
+            template.choice_rating = calculate_start_rating(template.difficulty_multiple)
     else:
         template.rating = calculate_start_rating(template.difficulty)
         template.fill_rating = calculate_start_rating(template.difficulty_blanks)
