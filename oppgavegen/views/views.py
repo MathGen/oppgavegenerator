@@ -576,11 +576,11 @@ def level_stats(request, level_id):
     dict['level_name'] = level.name
     stats = level.student_progresses.all()
 
-    ratings = stats.values_list('level_rating', flat=True) # list of all ratings
+    studentratings = stats.values_list('level_rating', flat=True) # list of all ratings
 
-    if ratings:
-        dict['players'] = len(ratings)
-        dict['average'] = int(sum(ratings)/len(ratings))
+    if studentratings:
+        dict['players'] = len(studentratings)
+        dict['average'] = int(sum(studentratings)/len(studentratings))
 
     dict['student_entries'] = get_level_student_statistics(level)
     dict['templates'] = level.templates.exists()
