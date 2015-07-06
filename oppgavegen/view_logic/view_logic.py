@@ -36,8 +36,8 @@ def make_edit_context_dict(template_id):
     difficulty_m = q.difficulty_multiple
     difficulty_b = q.difficulty_blanks
     name = q.name
-    unchanged_required = q.unchanged_required
-    unchanged_disallowed = q.unchanged_disallowed
+    unchanged_required = json.dumps(q.unchanged_required)
+    unchanged_disallowed = json.dumps(q.unchanged_disallowed)
     context_dict = {'template_id': template_id, 'answer': answer, 'solution': solution,
                     'question_text': question_text, 'calculation_references': calculation_references,
                     'choices': choices, 'conditions': conditions, 'fill_in': fill_in,
