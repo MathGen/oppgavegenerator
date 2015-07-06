@@ -467,19 +467,6 @@ def preview_template(request, template_id):
                               context_instance=RequestContext(request))
 
 
-class SetCreateView(LoginRequiredMixin,CreateView):
-    # form_class = SetForm
-    model = Set
-    fields = ['name', 'chapters',]
-    template_name = 'sets/set_create_form.html'
-    success_url = '/user/sets'
-
-    def form_valid(self, form):
-        obj = form.save(commit=False)
-        obj.creator = self.request.user
-        obj.save()
-        return http.HttpResponseRedirect('/user/sets/')
-
 def set_detail_view(request, set_id):
     """ List titles for all chapters, levels and templates in a set. """
     detailed_set = Set.objects.get(pk=set_id)
@@ -504,17 +491,6 @@ class UserSetListView(LoginRequiredMixin,ListView):
     #def get_context_data(self, **kwargs):
     #    context = super(UserSetListView, self).get_context_data(**kwargs)
     #    context['now'] = datetime.datetime ???
-
-
-@login_required
-class ChapterCreate(LoginRequiredMixin,CreateView):
-    model = Chapter
-    fields = ['name', 'level']
-    template_name = 'sets/chapter_create_form.html'
-
-    def form_valid(self, form):
-        form.instance.creator = self.request.user
-        return super(ChapterCreate, self).form_valid(form)
 
 
 class SetChapterListView(LoginRequiredMixin,ListView):
@@ -557,45 +533,6 @@ class LevelsTemplatesListView(LoginRequiredMixin, ListView):
         context = super(LevelsTemplatesListView, self).get_context_data(**kwargs)
         context['level'] = self.level
         return context
-
-
-def manage_chapters(request):
-    # Mass edit chapter names. (( Testing formsets ))
-    # Should take a set PK to batch-edit chapter names in set or mass add inital chapters to a new set
-    ChapterNameFormSet = formset_factory(ChapterNameForm, extra=9)
-    if request.method == 'POST':
-        formset = ChapterNameFormSet(request.post)
-        if formset.is_valid():
-            pass
-    else:
-        formset = ChapterNameFormSet()
-    return render_to_response('sets/chapter_formset.html', {'formset': formset})
-
-
-def manage_chapters_in_set(request, set_id):
-    # Mass-edit chapters in a set. (( Testing formsets ))
-    # Should take a set PK to batch-edit chapter content in set or mass add inital empty chapters to a new set
-    q = Set.objects.get(pk=set_id)
-    ChapterNameInlineFormSet = inlineformset_factory(Set, Chapter, fields = ('name','levels'))
-    if request.method == 'POST':
-        formset = ChapterNameInlineFormSet(request.POST, instance=q)
-        if formset.is_valid():
-            formset.save()
-            # mer her?
-            return HttpResponse("WE DID IT REDDIT")
-    else:
-        formset = ChapterNameInlineFormSet(instance=q)
-    return render_to_response('sets/chapter_formset.html', {'formset': formset, })
-
-
-@login_required
-class LevelCreateView(LoginRequiredMixin, CreateView):
-    form_class = LevelCreateForm
-    template_name = 'sets/level_create_form.html'
-
-    # def form_valid(self, form):
-    #    form.instance.creator = self.request.user
-    #    return super(Level)
 
 
 class UserCurrentSetsEdit(LoginRequiredMixin, UpdateView):

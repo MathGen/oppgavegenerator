@@ -22,7 +22,6 @@
                     {% bootstrap_field form.q %}
 
 
-
                     <div class="input-group-btn">
                     <button type="button" data-toggle="collapse" data-target="#advanced-search"
                             title="Avansert" class="btn btn-default" aria-expanded="false">
@@ -66,12 +65,16 @@
             <ul class="list-group">
                 <li class="list-group-item clearfix">
                     <strong style="margin: 5px 0">Resultater</strong>
+
+                        {% if user.extendeduser.current_level %}
                             <span class="pull-right">
                                 <button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false">
                                     {{ user.extendeduser.current_level.name }} <span class="caret"></span>
                                 </button>
                             </span>
+                        {% endif %}
+
                 </li>
                 {% for result in page.object_list %}
                     <li class="list-group-item clearfix">
