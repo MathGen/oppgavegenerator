@@ -53,6 +53,7 @@ def parse_using_sympy(s):
     transformations = standard_transformations + (convert_xor, implicit_multiplication_application,)
     return parse_expr(s, transformations=transformations, global_dict=None, evaluate=True)
 
+
 def parse_using_sympy_simplify(s):
     transformations = standard_transformations + (convert_xor, implicit_multiplication_application,)
     s = s.split('==')
