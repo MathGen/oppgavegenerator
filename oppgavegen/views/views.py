@@ -88,15 +88,6 @@ def task_by_extra(request, template_extra):
     context_dict['rating'] = get_user_rating(request.user)
     return render_to_response('taskview.html', context_dict, context)
 
-
-@login_required
-@user_passes_test(is_teacher, '/')
-def gen(request):
-    """Returns a render of gen.html"""
-    context = RequestContext(request)
-    return render_to_response('gen.html',  context)
-
-
 @login_required
 @user_passes_test(is_teacher, '/')
 def submit(request):

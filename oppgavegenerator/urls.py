@@ -24,7 +24,6 @@ urlpatterns = patterns('',
     url(r'^answers/', answers, name='answers'),
     url(r'^templates/$', templates, name='templates'),
     url(r'^newtemplate/', new_template, name='newtemplate'),
-    #url(r'^gen/', 'oppgavegen.views.views.gen', name='gen'),
     url(r'^submit/', 'oppgavegen.views.views.submit', name='submit'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^user/', include('registration.backends.default.urls')),
@@ -36,14 +35,15 @@ urlpatterns = patterns('',
     url(r"^edit/(\d+)/$", 'oppgavegen.views.views.edit_template', name='edit_template'),
     url(r'^useranalysis/', 'oppgavegen.views.views.user_overview_table', name='user_table'),
 
-    # Sets, chapters and level management urls
+    # Game
     url(r'^game/(\d+)/$', 'oppgavegen.views.views.game', name='game'),
     url(r'^game/(\d+)/levels/$', 'oppgavegen.views.views.levels', name='levels'),
     url(r'^game/(\d+)/chapters/$', 'oppgavegen.views.views.chapters', name='chapters'),
     url(r'^game/(\d+)/template/$', 'oppgavegen.views.views.get_template', name='get_template'),
     url(r'^game/(\d+)/answer/$', 'oppgavegen.views.views.answers', name='get_answer'),
+
+    # Sets, chapters and level management urls
     url(r'^user/sets/current/$', UserCurrentSetsEdit.as_view() , name='edit_current_user_sets' ),
-    # url(r'^set/new/', SetCreateView.as_view(), name='set_create_new'),
     url(r'^set/new/$', 'oppgavegen.views.views.set_edit', name='add_new_set'),
     url(r'^set/(\d+)/edit/', set_edit, name='edit_set'),
     url(r'^chapter/new/$', 'oppgavegen.views.views.chapter_edit', name='add_new_chapter'),
@@ -53,11 +53,8 @@ urlpatterns = patterns('',
     url(r'^level/(\d+)/stats/', level_stats, name='level_stats'),
 
     url(r'^set/(\d+)/$', set_detail_view, name='set_detail'),
-    # url(r'^set/(\d+)/chapters/edit/$', 'oppgavegen.views.views.manage_chapters_in_set', name='manage_chapters_in_set'),
     url(r'^set/(\d+)/chapters/$', SetChapterListView.as_view(), name='chapters_by_set'),
-    # url(r'^chapter/new/', 'oppgavegen.views.views.manage_chapters', name='manage_chapters' ),
     url(r'^chapter/(\d+)/levels/$', ChapterLevelsListView.as_view(), name='levels_by_chapter'),
-    # url(r'^level/new/', CreateView.as_view(form_class=LevelCreateForm, template_name='sets/level_create_form.html'), name='level_create',),
     url(r'^level/(\d+)/templates/$', LevelsTemplatesListView.as_view(), name='templates_by_level'),
 
     # Messy haystack search urls. Should maybe put these in own file and import here.
