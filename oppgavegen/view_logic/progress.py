@@ -106,7 +106,7 @@ def check_for_level_skip(user, chapter, level_id):
         if i == level_id:
             break
         counter += 1
-    if counter > progress:
+    if counter > progress+1:
         return_value = True
 
     return return_value

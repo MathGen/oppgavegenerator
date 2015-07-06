@@ -290,6 +290,7 @@ def get_template(request):
         print(level_id)
         chapter_id = int(form['chapter_id'])
         if check_for_level_skip(request.user, Chapter.objects.get(pk=chapter_id), level_id):
+            print('oh noes')
             return render_to_response('game/template.html', context_dict, context)
         context_dict = generate_level(request.user, level_id)
         context_dict['rating'] = get_user_rating(request.user)
@@ -297,6 +298,8 @@ def get_template(request):
         context_dict['stars'] = get_user_stars_for_level(request.user, level)
         context_dict['ulp'] = get_user_rating_for_level(request.user, level)
 
+    print('test test test')
+    print(context_dict)
     return render_to_response('game/template.html', context_dict, context)
 
 
