@@ -19,7 +19,8 @@
             <li>{{ level.name }} -
                 <a href="{% url 'templates_by_level' level.id %}">
                     {{ level.templates.all.count }} oppgaver
-                </a>
+                </a> -
+                <a href="{% url 'level_stats' level.id %}">Statistikk</a>
             </li>
         {% empty %}
             <li>Ingen tema i settet enda.</li>
