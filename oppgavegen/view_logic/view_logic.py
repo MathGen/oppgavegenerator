@@ -38,6 +38,12 @@ def make_edit_context_dict(template_id):
     name = q.name
     unchanged_required = q.unchanged_required
     unchanged_disallowed = q.unchanged_disallowed
+
+    if unchanged_required == '':
+        unchanged_required = []
+    if unchanged_disallowed == '':
+        unchanged_disallowed = []
+
     context_dict = {'template_id': template_id, 'answer': answer, 'solution': solution,
                     'question_text': question_text, 'calculation_references': calculation_references,
                     'choices': choices, 'conditions': conditions, 'fill_in': fill_in,
