@@ -33,7 +33,10 @@ def calculate_answer(s, domain):
         else:
             s = round_answer(domain, float(s))
     except Exception as e:
+        print('exception in calculate answer')
         print(e)
+    print(s)
+    print('exiting calculate answer')
     return str(s)
 
 
@@ -56,17 +59,31 @@ def parse_solution(solution, domain):
             s = ''
         elif b == '?' and c == '@':
             recorder = False
+            print('this gets added to arr')
+            print(s[:-1])
             arr.append(s[:-1])
         elif recorder is True:
             s += c
         b = c
+
+    count = 0
     for x in range(len(arr)):
         print(arr[x])
         print('hallo?')
-        if(arr[x] != ''):
+        if(arr[x]):
             new_arr.append(calculate_answer(str((arr[x])), domain))
             r = '@?' + arr[x] + '?@'
-            new_solution = new_solution.replace(r, new_arr[x])
+            print(new_arr)
+            print(r)
+            try:
+                new_solution = new_solution.replace(r, new_arr[x-count])
+            except:
+                print('exception in parse_solution')
+                print(x)
+                pass
+        else:
+            count += 1
+    print('exiting parse solution')
     return new_solution
 
 
