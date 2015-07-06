@@ -138,9 +138,19 @@ def answers(request, level=1):
             template = Template.objects.get(pk=form_values['primary_key'])
 
             user_answer = form_values['user_answer']
-            if cheat_check(user_answer, json.loads(template.disallowed)):
+            try:
+                disallowed = json.loads(template.disallowed)
+            except ValueError:
+                disallowed = []
+
+            try:
+                required = json.loads(template.required)
+            except ValueError:
+                required = []
+
+            if cheat_check(user_answer, disallowed):
                 return render_to_response(render_to, {'answer': cheat_message}, context)
-            if required_check(user_answer, json.loads(template.required)):
+            if required_check(user_answer, required):
                 return render_to_response(render_to, {'answer': required_message}, context)
 
             context_dict = make_answer_context_dict(form_values)
