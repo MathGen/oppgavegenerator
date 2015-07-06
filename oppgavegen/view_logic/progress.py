@@ -96,3 +96,17 @@ def get_user_stars_for_level(user, level):
     except UserLevelProgress.DoesNotExist:
         pass
     return msg
+
+def check_for_level_skip(user, chapter, level_id):
+    progress = calculate_progress(user, chapter)
+    return_value = False
+    order = chapter.order.split(',')
+    counter = 0
+    for i in order:
+        if i == level_id:
+            break
+        counter += 1
+    if counter > progress:
+        return_value = True
+
+    return return_value

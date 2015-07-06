@@ -21,7 +21,8 @@ from oppgavegen.templatetags.app_filters import is_teacher
 from oppgavegen.models import Set, Chapter, Level, Template, UserLevelProgress
 from oppgavegen.view_logic.rating import change_elo, change_level_rating, get_user_rating
 from oppgavegen.generation_folder.generation import generate_task, generate_level
-from oppgavegen.view_logic.progress import calculate_progress, chapter_progress, get_stars_per_level, get_user_rating_for_level, get_user_stars_for_level
+from oppgavegen.view_logic.progress import calculate_progress, chapter_progress, get_stars_per_level, \
+    get_user_rating_for_level, get_user_stars_for_level, check_for_level_skip
 from oppgavegen.view_logic.view_logic import *
 from oppgavegen.view_logic.current_work import *
 
@@ -276,7 +277,8 @@ def levels(request, chapter_id):
 
         return render_to_response('game/levels.html',
                                   {'levels': chapter_levels_ordered, 'chapter_title': chapter_title,
-                                   'progress_number': progress_number, 'spl': star_per_level}, context)
+                                   'progress_number': progress_number, 'spl': star_per_level, 'chapter_id': chapter_id}
+                                   ,context)
     else:
         return HttpResponseForbidden()
 
@@ -285,6 +287,7 @@ def get_template(request, level_id):
     """Gets a template for a given level"""
     # if request.is_ajax():
     #   if request.method == 'GET':
+
     context = RequestContext(request)
     context_dict = generate_level(request.user, level_id)
     context_dict['rating'] = get_user_rating(request.user)
