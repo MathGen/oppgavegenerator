@@ -119,9 +119,9 @@ def get_level_question(user, level):
             break
         slack += increase
 
-        if slack >= 800:
-            q = Template.objects.all()
-            q = q.latest('id')
+        if slack >= 1200:
+            q = level.templates.all().order_by('?').first()
+            template_type = 'normal'
             break
     return {'template': q, 'type': template_type}
 
