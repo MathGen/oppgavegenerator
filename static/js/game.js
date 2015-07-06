@@ -96,6 +96,7 @@ function load_template(level_id){
     var submit_dict = {};
     submit_dict['chapter_id'] = $('#get_chapter_id').text();
     submit_dict['level_id'] = level_id;
+    submit_dict['csrfmiddlewaretoken'] = getCookie('csrftoken');
     $('#game_content').fadeOut('fast', function () {
         display_loading_icon(true);
         $.post('../template/', submit_dict, function (result) { //AJAX load
