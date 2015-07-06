@@ -285,6 +285,7 @@ def get_template(request):
         context_dict = {'message': 'Noe har gått feil.'}
         if request.method == 'POST':
             form = request.POST
+            print(form)
             level_id = int(form['level_id'])
             chapter_id = int(form['chapter_id'])
             if check_for_level_skip(request.user, Chapter.objects.get(pk=chapter_id), level_id):
