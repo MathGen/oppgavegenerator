@@ -30,7 +30,7 @@ def check_answer(user_answer, answer, template_type, margin_for_error=0):
             for us in user_answer:
                 if margin_for_error != 0 and margin_for_error is not None and margin_for_error != '':
                     if parse_using_sympy_simplify(latex_to_sympy(us + ' + ' + margin_for_error) + '<=' + latex_to_sympy(s) +
-                                         '<=' + latex_to_sympy(us + ' + '+ margin_for_error)):
+                                         '<=' + latex_to_sympy(us + ' - '+ margin_for_error)):
                         user_answer.remove(us)
                         break
                 elif parse_using_sympy_simplify(latex_to_sympy(s) + '==' + latex_to_sympy(us)):
