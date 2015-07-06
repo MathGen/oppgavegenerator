@@ -8,14 +8,8 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from oppgavegen.views.views import *
 from oppgavegen.forms import *
-from oppgavegen.views.views import SetSearch#, ChapterSearch, LevelSearch, SetsSearchView
-from haystack.forms import SearchForm
-import datetime
-from haystack.query import SearchQuerySet, RelatedSearchQuerySet
-#from haystack.views import SearchView
+from haystack.query import SearchQuerySet
 from haystack.views import search_view_factory, SearchView
-#from haystack.generic_views import SearchView
-from django.views.generic import ListView, CreateView
 from oppgavegen.views.add_remove_views import *
 
 
@@ -67,6 +61,7 @@ urlpatterns = patterns('',
        form_class=TemplateSearchForm,
        results_per_page=20 #default
        ), name='template_search'),
+
     # Mini search views (for jquery.load-situations)
     url(r'^minisearch/chapters/$', SearchView(
         template='search/mini_search.html',
@@ -80,15 +75,16 @@ urlpatterns = patterns('',
         template='search/mini_search.html',
         searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.template'),
         )),
+
     # Search in sets, chapters or levels
 
-    #url(r'^sets/search/$', SetSearch(
-        #template='search/search.html',
+    # url(r'^sets/search/$', SetSearch(
+    #    template='search/search.html',
     #    searchqueryset=SearchQuerySet().models(Set),
     #    form_class=SetsSearchForm
-    #), name='set_search'),
+    #    ), name='set_search'),
     # url(r'^chapters/search/$', SearchView(
-    #     #template='search/search.html',
+    #     template='search/search.html',
     #     searchqueryset=SearchQuerySet().models(Chapter),
     #     form_class=SetsSearchForm
     # ), name='chapter_search'),
@@ -106,7 +102,7 @@ urlpatterns = patterns('',
 
     # Return template preview html
     url(r'^template/([\w ]+)/preview/$', 'oppgavegen.views.views.preview_template', name='preview_template'),
-    # Toggle template/level membership for users current level
+    # Toggle template/level relationship for users current level
     url(r'^user/level/template/(\d+)/toggle/$', toggle_template_level, name='current_level_toggle'),
     url(r'^user/level/template/(\d+)/add/$', add_template_to_current_level, name='current_level_add'),
     url(r'^user/level/template/(\d+)/remove/$', remove_template_from_current_level, name='current_level_remove'),
@@ -124,8 +120,7 @@ urlpatterns = patterns('',
     url(r'^level/update/$', update_level_view, name='update_level_view'),
 
     # DJANGO SELECTABLE
+    # Might be useful for autocomplete for tagging
+    # Meant to work with jquery ui https://github.com/mlavin/django-selectable
     url(r'^selectable/', include('selectable.urls')),
-
-    # Experimental ajax search functions
-    url(r'ajax/search/', include('ajaxsearch.urls')),
 )
