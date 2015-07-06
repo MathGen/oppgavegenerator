@@ -60,7 +60,7 @@ class Template(models.Model):
     required = models.CharField(max_length=5000, blank=True, null=True, default="")
     multiple_support = models.BooleanField(default=False)  # Denotes whether the template supports multiple choice
     fill_in_support = models.BooleanField(default=False)  # Denotes whether the template supports fill in the blanks
-    margin_of_error = models.PositiveIntegerField(default=0, null=True, blank=True)
+    margin_of_error = models.CharField(default='0', max_length=20, null=True, blank=True)
 
     # Also save the original latex for post-back:
     used_variables = models.CharField(max_length=200, blank=True, null=True)
@@ -72,6 +72,8 @@ class Template(models.Model):
     fill_in_latex = models.CharField(max_length=10000, blank=True, null=True, default="")
     calculation_ref = models.CharField(max_length=1000, blank=True, null=True)
     unchanged_ref = models.CharField(max_length=1000, blank=True, null=True)
+    unchanged_required = models.CharField(max_length=10000, blank=True, null=True)
+    unchanged_disallowed = models.CharField(max_length=10000, blank=True, null=True)
 
     def __str__(self):  # Makes it so that self.question_text shows up instead of topic(object)
         """Returns the question_text field of the object"""

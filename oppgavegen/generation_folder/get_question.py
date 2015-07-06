@@ -80,7 +80,8 @@ def get_level_question(user, level):
     slack = 100
     increase = 15
     user_progress = add_level_to_user(user, level)
-    user_rating = user_progress.level_rating
+    offset = level.offset
+    user_rating = user_progress.level_rating + offset
     while True:
         q = level.templates.all()
         q = q.filter(rating__gt=(user_rating-slack))
@@ -119,9 +120,9 @@ def get_level_question(user, level):
             break
         slack += increase
 
-        if slack >= 800:
-            q = Template.objects.all()
-            q = q.latest('id')
+        if slack >= 1200:
+            q = level.templates.all().order_by('?').first()
+            template_type = 'normal'
             break
     return {'template': q, 'type': template_type}
 

@@ -141,9 +141,9 @@ def answers(request, level=1):
             except ValueError:
                 required = []
 
-            if cheat_check(user_answer, disallowed):
+            if cheat_check(user_answer, disallowed, form_values['variable_dictionary'].split('§')):
                 return render_to_response(render_to, {'answer': cheat_message}, context)
-            if required_check(user_answer, required):
+            if required_check(user_answer, required, form_values['variable_dictionary'].split('§')):
                 return render_to_response(render_to, {'answer': required_message}, context)
 
             context_dict = make_answer_context_dict(form_values)
@@ -285,8 +285,10 @@ def get_template(request):
     context_dict = {'message': 'Noe har gått feil.'}
     if request.method == 'POST':
         form = request.POST
-        level_id = form['level_id']
-        chapter_id = form['chapter_id']
+        print(form)
+        level_id = int(form['level_id[]'])
+        print(level_id)
+        chapter_id = int(form['chapter_id'])
         if check_for_level_skip(request.user, Chapter.objects.get(pk=chapter_id), level_id):
             return render_to_response('game/template.html', context_dict, context)
         context_dict = generate_level(request.user, level_id)

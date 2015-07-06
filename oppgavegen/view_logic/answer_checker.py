@@ -17,20 +17,25 @@ def check_answer(user_answer, answer, template_type, margin_for_error=0):
     :param template_type: A string detailing how the template is presented.
     :return: Boolean of whether the answer is correct
     """
+    if margin_for_error is None or margin_for_error == '':
+        margin_for_error = 0
 
     if template_type != 'normal':
         # Reverse iteration to avoid index out of bounds when elements get deleted.
         for s in range(len(answer)-1, -1, -1):
-                if parse_using_sympy_simplify(latex_to_sympy(answer[s]) + '==' + latex_to_sympy(user_answer[s])):
+                if parse_using_sympy_simplify(latex_to_sympy(user_answer[s] + ' - ' + margin_for_error) + '<=' + latex_to_sympy(answer[s]) +
+                                         '<=' + latex_to_sympy(user_answer[s] + ' + '+ margin_for_error)):
                     del user_answer[s]
 
     #  Todo: try catch? could also do different things depending on errors, for instance typeError for equalities
     else:
         for s in answer:
             for us in user_answer:
-                if margin_for_error != 0 and margin_for_error is not None and margin_for_error != '':
-                    if parse_using_sympy_simplify(latex_to_sympy(us+margin_for_error) + '<=' + latex_to_sympy(s) +
-                                         '<=' + latex_to_sympy(us+margin_for_error)):
+                print('testing')
+                print(margin_for_error)
+                if margin_for_error != 0:
+                    if parse_using_sympy_simplify(latex_to_sympy(us + ' - ' + margin_for_error) + '<=' + latex_to_sympy(s) +
+                                         '<=' + latex_to_sympy(us + ' + '+ margin_for_error)):
                         user_answer.remove(us)
                         break
                 elif parse_using_sympy_simplify(latex_to_sympy(s) + '==' + latex_to_sympy(us)):
@@ -47,6 +52,7 @@ def check_answer(user_answer, answer, template_type, margin_for_error=0):
 def parse_using_sympy(s):
     transformations = standard_transformations + (convert_xor, implicit_multiplication_application,)
     return parse_expr(s, transformations=transformations, global_dict=None, evaluate=True)
+
 
 def parse_using_sympy_simplify(s):
     transformations = standard_transformations + (convert_xor, implicit_multiplication_application,)
