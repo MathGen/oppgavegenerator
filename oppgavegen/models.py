@@ -72,6 +72,8 @@ class Template(models.Model):
     fill_in_latex = models.CharField(max_length=10000, blank=True, null=True, default="")
     calculation_ref = models.CharField(max_length=1000, blank=True, null=True)
     unchanged_ref = models.CharField(max_length=1000, blank=True, null=True)
+    unchanged_required = models.CharField(max_length=10000, blank=True, null=True)
+    unchanged_disallowed = models.CharField(max_length=10000, blank=True, null=True)
 
     def __str__(self):  # Makes it so that self.question_text shows up instead of topic(object)
         """Returns the question_text field of the object"""
