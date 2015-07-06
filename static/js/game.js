@@ -124,6 +124,8 @@ function post_answer(submit_dict){
                 if($('#new_star').text() == 1){
                     $('#achievement_modal').modal('show');
                 }
+                update_progress_bar_level();
+                draw_level_stars();
             });
         });
     });

@@ -2,11 +2,30 @@
 <script src="/static/js/solution.js?02"></script>
 <link href="/static/css/stud_style.css" rel="stylesheet">
 <div id="new_star" hidden>{{ new_star }}</div>
+<div id="num_stars" hidden>{{ stars }}</div>
+<div id="get_ulp" hidden>{{ ulp }}</div>
 <section class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">
-            Svar <small>(din rating på dette levelet: {{ ulp }})</small>
-        </h3>
+        <div class="row">
+            <div class="col-md-4">
+                <h3 class="panel-title">Svar {% if user|is_superuser %}<small>{{ ulp }}</small> {% endif %}</h3>
+            </div>
+            <div class="col-md-2" style="text-align: right">
+                <span>Progresjon:</span>
+            </div>
+            <div class="col-md-4" style="max-height: 20px">
+                <div class="progress star_progress">
+                    <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"><span class="chapter_completion"></span></div>
+                    <span class="progress_bar_star pull-right glyphicon glyphicon-star"></span>
+                </div>
+            </div>
+            <div class="col-md-2 level_progress_small">
+{#                <span class="glyphicon glyphicon-star-empty"></span><span class="glyphicon glyphicon-star-empty"></span><span class="glyphicon glyphicon-star-empty"></span>#}
+                <span class="progress_star glyphicon glyphicon-star-empty"></span>
+                <span class="progress_star glyphicon glyphicon-star-empty"></span>
+                <span class="progress_star glyphicon glyphicon-star-empty"></span>
+            </div>
+        </div>
     </div>
     <div class="panel-body">
         <form class="form-horizontal">
