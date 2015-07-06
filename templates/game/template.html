@@ -1,3 +1,4 @@
+{% load app_filters %}
 <div hidden id="template_type">{{ template_type }}</div>
 <div hidden id="primary_key">{{ primary_key }}</div>
 <div hidden id="template_specific">{{ template_specific }}</div>
@@ -15,7 +16,7 @@
     <div class="panel-heading">
         <div class="row">
             <div class="col-md-4">
-                <h3 class="panel-title">Spørsmål <small>{{ ulp }}</small></h3>
+                <h3 class="panel-title">Spørsmål {% if user|is_superuser %}<small>{{ ulp }}</small> {% endif %}</h3>
             </div>
             <div class="col-md-2" style="text-align: right">
                 <span>Progresjon:</span>

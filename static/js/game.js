@@ -116,14 +116,16 @@ function post_answer(submit_dict){
     $('#game_content').fadeOut('fast', function () {
         display_loading_icon(true);
         $.post('../' + current_level + '/answer/', submit_dict, function(result){ //AJAX post
+            display_loading_icon(false);
             $('#game_content').html(result).fadeIn('fast', function(){
-                display_loading_icon(false);
                 $('#game_nav').fadeIn(function(){
                     redraw_mathquill_elements();
                 });
                 if($('#new_star').text() == 1){
                     $('#achievement_modal').modal('show');
                 }
+                update_progress_bar_level();
+                draw_level_stars();
             });
         });
     });
