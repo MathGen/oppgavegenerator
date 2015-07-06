@@ -27,8 +27,8 @@
     <div hidden id="get_difficulty">{{ difficulty }}</div>
     <div hidden id="get_difficulty_m">{{ difficulty_multiple }}</div>
     <div hidden id="get_difficulty_f">{{ difficulty_blanks }}</div>
-    <div hidden id="get_disallowed">{{ disallowed }}</div>
-    <div hidden id="get_required">{{ required }}</div>
+    <div hidden id="get_disallowed">{{ unchanged_disallowed }}</div>
+    <div hidden id="get_required">{{ unchanged_required }}</div>
     <div hidden id="get_tags">{{ tags }}</div>
 
     <!-- PANELS -->
@@ -208,21 +208,21 @@
                 <td></td><td></td><td></td>
             </tr>
             <tr>
-                <td style="vertical-align: middle; text-align: right; height: 41px">Vansklighetsgrad:</td>
+                <td style="vertical-align: middle; text-align: right; height: 41px">Vanskelighetsgrad:</td>
                 <td colspan="3" style="vertical-align: middle"><div id="difficulty_slider"></div></td>
                 <td style="vertical-align: middle"><span id="difficulty_amount"></span></td>
             </tr>
             <tr>
                 <td style="vertical-align: middle; text-align: right; height: 41px">Ulovlige tegn:</td>
                 <td id="tags_illegal" colspan="3" style="vertical-align: middle">
-                    <input class="form-control input-sm" type="text" placeholder="Legg til...">
+                    <span id="tags_illegal_input" class="math-field form-control input_mathquill"></span>
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <td style="vertical-align: middle; text-align: right; height: 41px">Påbudte tegn:</td>
                 <td id="tags_required" colspan="3" style="vertical-align: middle">
-                    <input class="form-control input-sm" type="text" placeholder="Legg til...">
+                    <span id="tags_required_input" class="math-field form-control input_mathquill"></span>
                 </td>
                 <td></td>
             </tr>
@@ -403,7 +403,7 @@
                 <table class="table table-condensed">
                     <tbody>
                         <tr>
-                            <td class="col-sm-3" style="vertical-align: middle; text-align: right; height: 41px">Vansklighetsgrad:</td>
+                            <td class="col-sm-3" style="vertical-align: middle; text-align: right; height: 41px">Vanskelighetsgrad:</td>
                             <td class="col-sm-6" style="vertical-align: middle"><div id="m_difficulty_slider"></div></td>
                             <td class="col-sm-3" style="vertical-align: middle"><span id="m_difficulty_amount"></span></td>
                         </tr>
@@ -446,7 +446,7 @@
                 <table class="table table-condensed">
                     <tbody>
                         <tr>
-                            <td class="col-sm-3" style="vertical-align: middle; text-align: right; height: 41px">Vansklighetsgrad:</td>
+                            <td class="col-sm-3" style="vertical-align: middle; text-align: right; height: 41px">Vanskelighetsgrad:</td>
                             <td class="col-sm-6" style="vertical-align: middle"><div id="f_difficulty_slider"></div></td>
                             <td class="col-sm-3" style="vertical-align: middle"><span id="f_difficulty_amount"></span></td>
                         </tr>

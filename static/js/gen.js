@@ -281,7 +281,7 @@ $(document).ready(function() {
 			else if(id_group == 'n'){
 				$('#n_btn_ok').click();
 			}
-			else{
+			else {
 				$('#' + id_group + '_btn_proceed').click();
 			}
 		}
@@ -625,25 +625,33 @@ $(document).ready(function() {
 	reset_difficulty('blanks');
 
 	// Adding new required input tag.
-	$('#tags_required').find('input').on('focusout', function(){
-		var tag = $(this).val();
+	$('#tags_required').find('.input_mathquill').on('focusout', function(){
+		var tag = get_latex_from_mathfield(this);
 		if(tag){
-			$(this).before('<span class="tag_r">'+tag+'<a class="btn btn_tag_del">x</a></span>');
+			$(this).before('<span class="tag_r"><span class="math-field static-math-sm">'+tag+'</span><a class="btn btn_tag_del">x</a></span>');
+			MathQuill.MathField($(this)[0]).select().write(""); // reset the mathquill-input
+			redraw_mathquill_elements();
 		}
-		$(this).val("");
 	}).on('keyup', function(e){
-		if(/(13)/.test(e.which)) $(this).focusout(); // Add tag if one of these keys are pressed.
+		if(/(13)/.test(e.which)) { // Add tag if one of these keys are pressed.
+			e.stopPropagation();
+			$(this).focusout();
+		}
 	});
 
 	// Adding new illegal input tag.
-	$('#tags_illegal').find('input').on('focusout', function(){
-		var tag = $(this).val();
+	$('#tags_illegal').find('.input_mathquill').on('focusout', function(){
+		var tag = get_latex_from_mathfield(this);
 		if(tag){
-			$(this).before('<span class="tag_i">'+tag+'<a class="btn btn_tag_del">x</a></span>');
+			$(this).before('<span class="tag_i"><span class="math-field static-math-sm">'+tag+'</span><a class="btn btn_tag_del">x</a></span>');
+			MathQuill.MathField($(this)[0]).select().write(""); // reset the mathquill-input
+			redraw_mathquill_elements();
 		}
-		$(this).val("");
 	}).on('keyup', function(e){
-		if(/(13)/.test(e.which)) $(this).focusout(); // Add tag if one of these keys are pressed.
+		if(/(13)/.test(e.which)) { // Add tag if one of these keys are pressed.
+			e.stopPropagation();
+			$(this).focusout();
+		}
 	});
 
 	// Adding new tag from the value in the input-field.
@@ -865,17 +873,23 @@ function submit_template(){
 
 	// ILLEGAL SIGNS
 	var disallowed = [];
+	var unchanged_disallowed = [];
 	$('.tag_i').each(function(){
-		disallowed.push($(this).text().slice(0,-1));
+		disallowed.push(convert_variables(get_latex_from_mathfield($(this).find('.static-math-sm'))));
+		unchanged_disallowed.push(get_latex_from_mathfield($(this).find('.static-math-sm')));
 	});
 	form_submit['disallowed'] = JSON.stringify(disallowed);
+	form_submit['unchanged_disallowed'] = JSON.stringify(unchanged_disallowed);
 
 	// REQUIRED SIGNS
 	var required = [];
+	var unchanged_required = [];
 	$('.tag_r').each(function(){
-		required.push($(this).text().slice(0,-1));
+		required.push(convert_variables(get_latex_from_mathfield($(this).find('.static-math-sm'))));
+		unchanged_required.push(get_latex_from_mathfield($(this).find('.static-math-sm')));
 	});
 	form_submit['required'] = JSON.stringify(required);
+	form_submit['unchanged_required'] = JSON.stringify(unchanged_required);
 
 	// TAGS
 	var tags = [];
@@ -1908,7 +1922,7 @@ function insert_editable_data(){
 		disallowed = JSON.parse(disallowed);
 		if (disallowed[0] != "") {
 			for (var d = 0; d < disallowed.length; d++) {
-				$('#tags_illegal').prepend('<span class="tag_i">' + disallowed[d] + '<a class="btn btn_tag_del">x</a></span>');
+				$('#tags_illegal').prepend('<span class="tag_i"><span class="math-field static-math-sm">' + disallowed[d] + '</span><a class="btn btn_tag_del">x</a></span>');
 			}
 		}
 	}
@@ -1919,7 +1933,7 @@ function insert_editable_data(){
 		required = JSON.parse(required);
 		if (required[0] != "") {
 			for (var r = 0; r < required.length; r++) {
-				$('#tags_required').prepend('<span class="tag_r">' + required[r] + '<a class="btn btn_tag_del">x</a></span>');
+				$('#tags_required').prepend('<span class="tag_r"><span class="math-field static-math-sm">' + required[r] + '</span><a class="btn btn_tag_del">x</a></span>');
 			}
 		}
 	}
