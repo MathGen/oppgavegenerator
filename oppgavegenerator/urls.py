@@ -39,7 +39,7 @@ urlpatterns = patterns('',
     url(r'^game/(\d+)/$', 'oppgavegen.views.views.game', name='game'),
     url(r'^game/(\d+)/levels/$', 'oppgavegen.views.views.levels', name='levels'),
     url(r'^game/(\d+)/chapters/$', 'oppgavegen.views.views.chapters', name='chapters'),
-    url(r'^game/(\d+)/template/$', 'oppgavegen.views.views.get_template', name='get_template'),
+    url(r'^game/template/$', get_template, name='get_template'),
     url(r'^game/(\d+)/answer/$', 'oppgavegen.views.views.answers', name='get_answer'),
 
     # Sets, chapters and level management urls

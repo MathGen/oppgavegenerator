@@ -280,12 +280,12 @@ def get_template(request, level_id):
     """Gets a template for a given level"""
     # if request.is_ajax():
     #   if request.method == 'GET':
-
-    context = RequestContext(request)
-    context_dict = generate_level(request.user, level_id)
-    context_dict['rating'] = get_user_rating(request.user)
-    context_dict['stars'] = get_user_stars_for_level(request.user, Level.objects.get(pk=level_id))
-    context_dict['ulp'] = get_user_rating_for_level(request.user, Level.objects.get(pk=level_id))
+    if request.method == 'POST'
+        context = RequestContext(request)
+        context_dict = generate_level(request.user, level_id)
+        context_dict['rating'] = get_user_rating(request.user)
+        context_dict['stars'] = get_user_stars_for_level(request.user, Level.objects.get(pk=level_id))
+        context_dict['ulp'] = get_user_rating_for_level(request.user, Level.objects.get(pk=level_id))
 
     return render_to_response('game/template.html', context_dict, context)
 
