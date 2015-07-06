@@ -93,11 +93,14 @@ function load_levels(chapter_id){
  * @param {number} level_id - The id of the selected level.
  */
 function load_template(level_id){
+    var submit_dict = {};
+    submit_dict['chapter_id'] = $('#get_chapter_id').text();
+    submit_dict['level_id'] = level_id;
     $('#game_content').fadeOut('fast', function () {
         display_loading_icon(true);
-        $(this).load('../' + level_id + '/template/', function () { //AJAX load
+        $.post('../template/', submit_dict, function (result) { //AJAX load
             display_loading_icon(false);
-            $(this).fadeIn('fast', function(){
+            $('#game_content').html(result).fadeIn('fast', function(){
                 update_progress_bar_level();
                 draw_level_stars();
                 $('#game_nav').fadeIn(function(){
