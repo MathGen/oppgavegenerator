@@ -17,6 +17,8 @@ def check_answer(user_answer, answer, template_type, margin_for_error=0):
     :param template_type: A string detailing how the template is presented.
     :return: Boolean of whether the answer is correct
     """
+    if margin_for_error is None or margin_for_error == '':
+        margin_for_error = 0
 
     if template_type != 'normal':
         # Reverse iteration to avoid index out of bounds when elements get deleted.
@@ -31,7 +33,7 @@ def check_answer(user_answer, answer, template_type, margin_for_error=0):
             for us in user_answer:
                 print('testing')
                 print(margin_for_error)
-                if margin_for_error != 0 and margin_for_error is not None and margin_for_error != '':
+                if margin_for_error != 0:
                     if parse_using_sympy_simplify(latex_to_sympy(us + ' - ' + margin_for_error) + '<=' + latex_to_sympy(s) +
                                          '<=' + latex_to_sympy(us + ' + '+ margin_for_error)):
                         user_answer.remove(us)
