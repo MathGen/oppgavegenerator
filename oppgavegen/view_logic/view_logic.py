@@ -145,18 +145,23 @@ def calculate_start_rating(difficulty):
     return 950 + (difficulty*50)
 
 
-def cheat_check(user_answer, disallowed):
+def cheat_check(user_answer, disallowed, variables):
     """Checks whether the user has used symbols/functions that are not allowed"""
     standard_disallowed = ['int', 'test', "'", '@', '?']
     standard_disallowed += disallowed
+    for x in range(0, len(disallowed)):
+        disallowed[x] = replace_variables_from_array(variables, disallowed[x])
+
     for s in standard_disallowed:
         if s in user_answer:
             return True
     return False
 
 
-def required_check(user_answer, required):
+def required_check(user_answer, required, variables):
     return_value = False
+    for x in range(0, len(required)):
+        required[x] = replace_variables_from_array(variables, required[x])
     for s in required:
         if s not in user_answer:
             return_value = True
