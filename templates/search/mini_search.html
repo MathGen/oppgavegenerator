@@ -1,26 +1,23 @@
 {% load bootstrap3 %}
 
-    <h2>Søk etter {{ title }}</h2>
-
-    <form method="get" action=".">
-
-            {% bootstrap_field form.q %}
-                    <input type="submit" value="Search">
-    </form>
+    <div class="form-group">
+        <div class="input-group">
+            <input id="search_input" class="form-control" placeholder="Søk...">
+            <div class="input-group-addon">.00</div>
+        </div>
+        <button id="search_submit" class="btn btn-primary">Søk</button>
+    </div>
 
         {% if query %}
             <h3>Søket fant...</h3>
             {% for result in page.object_list %}
                 {% if result.content_type == "oppgavegen.set" %}
                     {% include 'search/includes/set.html' %}
-                {% endif %}
-                {% if result.content_type == "oppgavegen.chapter" %}
+                {% elif result.content_type == "oppgavegen.chapter" %}
                     {% include 'search/includes/chapter_mini.html' %}
-                {% endif %}
-                {% if result.content_type == "oppgavegen.level" %}
+                {% elif result.content_type == "oppgavegen.level" %}
                     {% include 'search/includes/level_mini.html' %}
-                {% endif %}
-                {% if result.content_type == "oppgavegen.template" %}
+                {% elif result.content_type == "oppgavegen.template" %}
                     {% include 'search/includes/template_mini.html' %}
                 {% endif %}
             {% empty %}
