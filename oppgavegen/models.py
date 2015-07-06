@@ -60,7 +60,7 @@ class Template(models.Model):
     required = models.CharField(max_length=5000, blank=True, null=True, default="")
     multiple_support = models.BooleanField(default=False)  # Denotes whether the template supports multiple choice
     fill_in_support = models.BooleanField(default=False)  # Denotes whether the template supports fill in the blanks
-    margin_of_error = models.PositiveIntegerField(default=0, null=True, blank=True)
+    margin_of_error = models.CharField(default='0', max_length=20, null=True, blank=True)
 
     # Also save the original latex for post-back:
     used_variables = models.CharField(max_length=200, blank=True, null=True)
