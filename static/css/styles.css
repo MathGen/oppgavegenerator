@@ -47,11 +47,11 @@ sub{							/* between bootstrap*/
 .btn{
 	margin-bottom: 5px;
 }
-.mq-editable-field{
+.mq-editable-field:not(.static-math-sm){
 	font-size: 2em;
 	border-radius: 4px;
 }
-.mq-math-mode:not(.btn){
+.mq-math-mode:not(.btn):not(.static-math-sm){
 	font-size: 2em;
 	margin-left: 6px;
 	margin-bottom: 16px;
@@ -284,10 +284,22 @@ sub{							/* between bootstrap*/
 .tag_r>.btn_tag_del:hover{
 	background-color: #006060;
 }
-#tags>.form-control,
+#tags>.form-control{
+	width: 167px; !important;
+}
 #tags_illegal>.form-control,
 #tags_required>.form-control{
-	width: 30%; !important;
+	display: inline-block;
+	width: 167px;
+	height: auto;
+	padding: 4px 6px 3px 6px; !important;
+	margin: 0; !important;
+	font-size: 1.2em;
+	border: 1px solid #ccc;
+	border-radius: 3px; !important;
+}
+.static-math-sm{
+	border: none;
 }
 
 /**** ****/
