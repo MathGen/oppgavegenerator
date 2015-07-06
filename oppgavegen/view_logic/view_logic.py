@@ -126,11 +126,11 @@ def submit_template(template, user, update, newtags=None):
         if template.name == '':
             template.name = q.name
         if template.difficulty != q.difficulty:
-            template.difficulty = calculate_start_rating(template.difficulty)
+            template.rating = calculate_start_rating(template.difficulty)
         if template.difficulty_blanks != q.difficulty_blanks:
-            template.difficulty_blanks = calculate_start_rating(template.difficulty_blanks)
-        if template.difficulty != q.difficulty:
-            template.difficulty_blanks = calculate_start_rating(template.difficulty_blanks)
+            template.fill_rating = calculate_start_rating(template.difficulty_blanks)
+        if template.difficulty_multiple != q.difficulty_multiple:
+            template.difficulty_multiple = calculate_start_rating(template.difficulty_multiple)
     else:
         template.rating = calculate_start_rating(template.difficulty)
         template.fill_rating = calculate_start_rating(template.difficulty_blanks)
