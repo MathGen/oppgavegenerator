@@ -25,6 +25,7 @@ from oppgavegen.view_logic.progress import calculate_progress, chapter_progress,
     get_user_rating_for_level, get_user_stars_for_level, check_for_level_skip
 from oppgavegen.view_logic.view_logic import *
 from oppgavegen.view_logic.current_work import *
+from oppgavegen.view_logic.statistics import *
 
 # Search Views and Forms
 from haystack.generic_views import SearchView
@@ -563,7 +564,7 @@ def refresh_navbar(request):
 
 def level_stats(request, level_id):
     """
-    Prepares rating statistics for a level by counting student level ratings within specific intervals.
+    Prepares rating statistics for a level by counting student level. / template-ratings within specific intervals.
     Designed with morris.js bar chart in mind (see charts.html)
     The range is from 0 to 2400, and the measuring interval is 100 counting from 1100 and up.
     """
@@ -573,65 +574,13 @@ def level_stats(request, level_id):
     dict['level_name'] = level.name
     stats = level.student_progresses.all()
 
-    # amount of students in intervals
-    interval1 = 0  # 0-800
-    interval2 = 0  # 800-1100
-    interval3 = 0  # 1100-1200
-    interval4 = 0  # 1200-1300
-    interval5 = 0  # 1300-1400
-    interval6 = 0  # 1400-1500
-    interval7 = 0  # 1500-1600
-    interval8 = 0  # 1600-1700
-    interval9 = 0  # 1700-1800
-    interval10 = 0 # 1800-1900
-    interval11 = 0 # 1900-2000
-    interval12 = 0 # 2000-2100
-    interval13 = 0 # 2100-2200
-    interval14 = 0 # 2200-2300
-    interval15 = 0 # 2300-2400
-    other = 0      # out of range somehow (just in case)
+    ratings = stats.values_list('level_rating', flat=True) # list of all ratings
 
-    ratings = [] # list of all ratings
-
-    for e in stats:
-        if 0 <= e.level_rating <= 800:
-            interval1 += 1
-        elif 801 <= e.level_rating <= 1100:
-            interval2 += 1
-        elif 1101 <= e.level_rating <= 1200:
-            interval3 += 1
-        elif 1201 <= e.level_rating <= 1300:
-            interval4 += 1
-        elif 1301 <= e.level_rating <= 1400:
-            interval5 += 1
-        elif 1401 <= e.level_rating <= 1500:
-            interval6 += 1
-        elif 1501 <= e.level_rating <= 1600:
-            interval7 += 1
-        elif 1601 <= e.level_rating <= 1700:
-            interval8 += 1
-        elif 1701 <= e.level_rating <= 1800:
-            interval9 += 1
-        elif 1801 <= e.level_rating <= 1900:
-            interval10 += 1
-        elif 1901 <= e.level_rating <= 2000:
-            interval11 += 1
-        elif 2001 <= e.level_rating <= 2100:
-            interval12 += 1
-        elif 2101 <= e.level_rating <= 2200:
-            interval13 += 1
-        elif 2201 <= e.level_rating <= 2300:
-            interval14 += 1
-        elif 2301 <= e.level_rating <= 2400:
-            interval15 += 1
-        else:
-            other += 1
-
-    for e in stats:
-        ratings.append(e.level_rating)
     if ratings:
         dict['players'] = len(ratings)
         dict['average'] = int(sum(ratings)/len(ratings))
-    dict['entries'] = [interval1, interval2, interval3, interval4, interval5, interval6, interval7, interval8,
-                       interval9,interval10, interval11, interval12, interval13, interval14, interval15]
+
+    dict['student_entries'] = get_level_student_statistics(level)
+    dict['templates'] = level.templates.exists()
+    dict['template_entries'] = get_level_template_statistics(level)
     return render(request, 'sets/charts.html', dict)
