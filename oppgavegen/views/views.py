@@ -285,8 +285,8 @@ def get_template(request):
         context_dict = {'message': 'Noe har gått feil.'}
         if request.method == 'POST':
             form = request.POST
-            level_id = form['level_id']
-            chapter_id = form['chapter_id']
+            level_id = int(form['level_id'])
+            chapter_id = int(form['chapter_id'])
             if check_for_level_skip(request.user, Chapter.objects.get(pk=chapter_id), level_id):
                 return render_to_response('game/template.html', context_dict, context)
             context_dict = generate_level(request.user, level_id)
