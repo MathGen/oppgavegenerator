@@ -276,16 +276,23 @@ def levels(request, chapter_id):
         return HttpResponseForbidden()
 
 @login_required
-def get_template(request, level_id):
+def get_template(request):
     """Gets a template for a given level"""
     # if request.is_ajax():
     #   if request.method == 'GET':
-    if request.method == 'POST'
-        context = RequestContext(request)
+    context = RequestContext(request)
+    context_dict = {'message': 'Noe har gått feil.'}
+    if request.method == 'POST':
+        form = request.POST
+        level_id = form['level_id']
+        chapter_id = form['chapter_id']
+        if check_for_level_skip(request.user, Chapter.objects.get(pk=chapter_id), level_id):
+            return render_to_response('game/template.html', context_dict, context)
         context_dict = generate_level(request.user, level_id)
         context_dict['rating'] = get_user_rating(request.user)
-        context_dict['stars'] = get_user_stars_for_level(request.user, Level.objects.get(pk=level_id))
-        context_dict['ulp'] = get_user_rating_for_level(request.user, Level.objects.get(pk=level_id))
+        level = Level.objects.get(pk=level_id)
+        context_dict['stars'] = get_user_stars_for_level(request.user, level)
+        context_dict['ulp'] = get_user_rating_for_level(request.user, level)
 
     return render_to_response('game/template.html', context_dict, context)
 
@@ -294,14 +301,12 @@ def get_template(request, level_id):
 @login_required
 def set_edit(request, set_id=""):
     context = RequestContext(request)
-    get_chapters = ""
     set_title = ""
     chapters = []
     if set_id:
         edit_set = Set.objects.get(pk=set_id)
         set_current_set(request.user, edit_set)
         set_title = edit_set.name
-        get_chapters = edit_set.chapters.all()
         order = edit_set.order
 
         for x in order.split(','):
