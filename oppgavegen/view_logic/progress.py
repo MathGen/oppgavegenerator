@@ -87,3 +87,12 @@ def get_user_rating_for_level(user, level):
     except UserLevelProgress.DoesNotExist:
         pass
     return msg
+
+def get_user_stars_for_level(user, level):
+    msg = 'no stars'
+    try:
+        q = UserLevelProgress.objects.get(user=user, level=level)
+        msg = q.stars
+    except UserLevelProgress.DoesNotExist:
+        pass
+    return msg

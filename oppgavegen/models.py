@@ -124,7 +124,7 @@ class Set(models.Model):
 class UserLevelProgress(models.Model):
     """Stores the users progress on a level"""
     user = models.ForeignKey(User, blank=True, null=True)
-    level = models.ForeignKey(Level, blank=True, null=True)
+    level = models.ForeignKey(Level, blank=True, null=True, related_name='student_progresses')
     level_rating = models.IntegerField(default=1200)
     stars = models.IntegerField(default=0)
     questions_answered = models.PositiveIntegerField(default=0)

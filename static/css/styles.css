@@ -208,7 +208,8 @@ sub{							/* between bootstrap*/
 	z-index: 10;
 	width: 85%;
 }
-.level_progress>.glyphicon-star{
+.level_progress>.glyphicon-star,
+.level_progress_small>.glyphicon-star{
 	color: #D9A441;
 	text-shadow: -1px 0 #222222, 0 1px #222222, 1px 0 #222222, 0 -1px #222222;
 }
