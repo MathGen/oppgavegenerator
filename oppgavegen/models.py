@@ -84,7 +84,7 @@ class Level(models.Model):
     templates = models.ManyToManyField(Template, related_name='levels',blank=True) # List of templates in level
     creator = models.ForeignKey(User, blank=True, null=True, related_name='levels_created')
     editor = models.ForeignKey(User, blank=True, null=True, related_name='levels_edited')  # Editor of template
-    creation_date = models.DateTimeField('date created', blank=True, null=True)  # Date and time of creation
+    creation_date = models.DateTimeField('date created', blank=True, null=True, auto_now_add=True)  # Date and time of creation
     k_factor = models.PositiveIntegerField(default=3, null=True, blank=True)  # Decides how fast a user progress
     offset = models.IntegerField(default=0, null=True, blank=True)  # Offset for the level.
 
@@ -99,7 +99,7 @@ class Chapter(models.Model):
     levels = models.ManyToManyField(Level, related_name='chapters', blank=True)
     creator = models.ForeignKey(User, blank=True, null=True, related_name='chapters_created')
     editor = models.ForeignKey(User, blank=True, null=True, related_name='chapters_edited')  # Editor of template
-    creation_date = models.DateTimeField('date created', blank=True, null=True)  # Date and time of creation
+    creation_date = models.DateTimeField('date created', blank=True, null=True, auto_now_add=True)  # Date and time of creation
     order = models.CharField(max_length=400, default='', blank=True) #CSV list of the order of levels.
 
     def __str__(self):  # Makes it so that self.name shows up instead of set(object)
@@ -113,7 +113,7 @@ class Set(models.Model):
     chapters = models.ManyToManyField(Chapter, related_name='sets', blank=True)
     creator = models.ForeignKey(User, blank=True, null=True, related_name='sets_created')
     editor = models.ForeignKey(User, blank=True, null=True, related_name='sets_edited')  # Editor of template
-    creation_date = models.DateTimeField('date created', blank=True, null=True)  # Date and time of creation
+    creation_date = models.DateTimeField('date created', blank=True, null=True, auto_now_add=True)  # Date and time of creation
     order = models.CharField(max_length=400, default='')
 
     def __str__(self):  # Makes it so that self.name shows up instead of set(object)
