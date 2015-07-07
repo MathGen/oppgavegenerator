@@ -238,7 +238,7 @@
     </div>
 
     <!-- POP-UP: CALCULATION -->
-    <div id="calc_modal" class="modal fade" role="dialog">
+    <div id="calc_modal" class="modal fade" role="dialog" style="z-index: 1041">
         <div class="modal-dialog modal-md">
             <section class="panel panel-default">
                 <div class="panel-heading">
@@ -392,7 +392,7 @@
                 <div class="panel-footer">
                     <div id="keypad_m" class="row keypad">
                         <div class="col-md-8">
-                            {% include 'keypad/calculation_ref.html' %}
+                            {% include 'keypad/calculation.html' %}
                             {% include 'keypad/variables.html' %}
                             {% include 'keypad/operators.html' %}
                         </div>
