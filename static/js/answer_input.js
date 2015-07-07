@@ -110,6 +110,7 @@ $(document).ready(function () {
         };
         if(answer_validation()) {
             if($('#submit_answer').hasClass('game_submit')){
+                submit_dict['chapter_id'] = current_chapter;
                 post_answer(submit_dict);
             }
             else{
