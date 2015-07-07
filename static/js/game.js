@@ -202,11 +202,14 @@ function update_progress_bar_level(){
     if(stars == 1){
         rating_from = 1500;
         rating_to = 1800;
-    } else if (stars >= 2){
+    } else if (stars == 2){
         rating_from = 1700;
         rating_to = 2000;
     }
     var value = ((rating-rating_from)/(rating_to-rating_from))*100;
+    if(stars == 3){
+        value = 100;
+    }
     $('.star_progress').find('.progress-bar').width(value+'%').attr('aria-valuenow', value);
 }
 

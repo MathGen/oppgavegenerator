@@ -63,11 +63,12 @@ $(document).ready(function() {
 	});
 
 	// Custom Matrix popover
-	$('.btn_custom_matrix').click(function(e){
+	$(document).on('click', '.btn_custom_matrix[rel=matrix-popover]', function(e){
 		e.preventDefault();
 		ACTIVE_INPUT = get_input_field(this);
 	}).popover({
 		html: true,
+		selector: '[rel="matrix-popover"]',
 		content: function(){
 			return $('#popover_content_matrix')[0].outerHTML;
 		},

@@ -263,8 +263,8 @@ function init_sortable(){
 function search_for(search_string){
     var search_container = $('.search_container');
     var type = search_container.attr('id').replace(/search_/g, "");
-    search_container.load('?q='+ search_string + ' .search_container > *', function(){
-
+    search_container.load('../../../minisearch/'+ type +'?q='+ search_string + ' .search_container > *', function(result){
+        search_container.html(result);
     });
 }
 
