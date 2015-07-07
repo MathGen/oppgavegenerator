@@ -94,7 +94,8 @@ function load_levels(chapter_id){
  */
 function load_template(level_id){
     var submit_dict = {};
-    submit_dict['chapter_id'], current_chapter = $('#get_chapter_id').text();
+    current_chapter = $('#get_chapter_id').text();
+    submit_dict['chapter_id'] = current_chapter;
     submit_dict['level_id'] = level_id;
     submit_dict['csrfmiddlewaretoken'] = getCookie('csrftoken');
     $('#game_content').fadeOut('fast', function () {
