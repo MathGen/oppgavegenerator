@@ -2,12 +2,13 @@
 
     <div class="form-group">
         <div class="input-group">
-            <input id="search_input" class="form-control" placeholder="Søk...">
-            <div class="input-group-addon">.00</div>
+            <input id="search_input" type="search" class="form-control" placeholder="Søk...">
+            <span class="input-group-btn">
+                <button id="search_submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span></button>
+            </span>
         </div>
-        <button id="search_submit" class="btn btn-primary">Søk</button>
     </div>
-
+    <div id="search_result">
         {% if query %}
             <h3>Søket fant...</h3>
             {% for result in page.object_list %}
@@ -38,3 +39,4 @@
         {% else %}
             {# Show some example queries to run, maybe query syntax, something else? #}
         {% endif %}
+    </div>

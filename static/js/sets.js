@@ -32,6 +32,13 @@ $(document).ready(function () {
 		if(/(13)/.test(e.which)) $(this).focusout(); // Add chapter if one of these keys are pressed.
 	});
 
+    // Sends the search-query when either the search-button or 'enter' key is pressed.
+    $(document).on('click', '#search_submit', function(){
+        search_for($('#search_input').val());
+    }).on('keyup', '#search_input', function(e){
+        if(/(13)/.test(e.which)) $('#search_submit').click();
+    });
+
     init_k_factor_slider();
 });
 
@@ -180,6 +187,9 @@ function delete_content(content){
     }
 }
 
+/**
+ * Loads the search view, with the specific search-filter for each chapters/levels/templates.
+ */
 function load_search_view(){ // TODO: make the search result load with AJAX.
     var search_container = $('.search_container');
     var type = search_container.attr('id').replace(/search_/g, "");
@@ -248,6 +258,14 @@ function init_sortable(){
     }
     //$('#chapter_container').sortable({containment:"#chapter_container"}).disableSelection();
     //$('.list_chapter').draggable({containment:"#chapter_container", axis:"y"});
+}
+
+function search_for(search_string){
+    var search_container = $('.search_container');
+    var type = search_container.attr('id').replace(/search_/g, "");
+    search_container.load('?q='+ search_string + ' .search_container > *', function(){
+
+    });
 }
 
 /**
