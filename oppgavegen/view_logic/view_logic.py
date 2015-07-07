@@ -157,9 +157,8 @@ def calculate_start_rating(difficulty):
 def cheat_check(user_answer, disallowed, variables):
     """Checks whether the user has used symbols/functions that are not allowed"""
     standard_disallowed = ['int', 'test', "'", '@', '?']
-    standard_disallowed += disallowed
     for x in range(0, len(disallowed)):
-        disallowed[x] = replace_variables_from_array(variables, disallowed[x])
+        standard_disallowed += replace_variables_from_array(variables, disallowed[x])
 
     for s in standard_disallowed:
         if s in user_answer:
