@@ -151,7 +151,7 @@ def answers(request, level=1):
 
                 new_user_rating, new_star = change_level_rating(template, request.user, context_dict['user_won'],
                                                                 form_values['template_type'], level)
-
+                context_dict['chapter_id'] = form_values['chapter_id']
                 context_dict['ulp'] = int(new_user_rating)
                 context_dict['new_star'] = new_star
                 context_dict['stars'] = get_user_stars_for_level(request.user, Level.objects.get(pk=level))
@@ -297,7 +297,6 @@ def get_template(request):
         level = Level.objects.get(pk=level_id)
         context_dict['stars'] = get_user_stars_for_level(request.user, level)
         context_dict['ulp'] = get_user_rating_for_level(request.user, level)
-        context_dict['chapter_id'] = chapter_id
 
     return render_to_response('game/template.html', context_dict, context)
 
