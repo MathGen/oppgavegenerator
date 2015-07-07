@@ -17,15 +17,20 @@ def check_answer(user_answer, answer, template_type, margin_for_error=0):
     :param template_type: A string detailing how the template is presented.
     :return: Boolean of whether the answer is correct
     """
-    if margin_for_error is None or margin_for_error == '':
+    if (margin_for_error is None) or (margin_for_error == ''):
         margin_for_error = 0
 
     if template_type != 'normal':
         # Reverse iteration to avoid index out of bounds when elements get deleted.
         for s in range(len(answer)-1, -1, -1):
-                if parse_using_sympy_simplify(latex_to_sympy(user_answer[s] + ' - ' + margin_for_error) + '<=' + latex_to_sympy(answer[s]) +
-                                         '<=' + latex_to_sympy(user_answer[s] + ' + '+ margin_for_error)):
-                    del user_answer[s]
+                try:
+                    if parse_using_sympy_simplify(latex_to_sympy(user_answer[s] + ' - ' + margin_for_error) + '<=' + latex_to_sympy(answer[s]) +
+                                             '<=' + latex_to_sympy(user_answer[s] + ' + '+ margin_for_error)):
+                        del user_answer[s]
+                except TypeError:
+                    if parse_using_sympy_simplify(latex_to_sympy(answer[s]) + '==' + latex_to_sympy(user_answer[s])):
+                        del user_answer[s]
+                        break
 
     #  Todo: try catch? could also do different things depending on errors, for instance typeError for equalities
     else:
@@ -34,10 +39,15 @@ def check_answer(user_answer, answer, template_type, margin_for_error=0):
                 print('testing')
                 print(margin_for_error)
                 if margin_for_error != 0:
-                    if parse_using_sympy_simplify(latex_to_sympy(us + ' - ' + margin_for_error) + '<=' + latex_to_sympy(s) +
-                                         '<=' + latex_to_sympy(us + ' + '+ margin_for_error)):
-                        user_answer.remove(us)
-                        break
+                    try:
+                        if parse_using_sympy_simplify(latex_to_sympy(us + ' - ' + margin_for_error) + '<=' + latex_to_sympy(s) +
+                                             '<=' + latex_to_sympy(us + ' + '+ margin_for_error)):
+                            user_answer.remove(us)
+                            break
+                    except TypeError:
+                        if parse_using_sympy_simplify(latex_to_sympy(s) + '==' + latex_to_sympy(us)):
+                            user_answer.remove(us)
+                            break
                 elif parse_using_sympy_simplify(latex_to_sympy(s) + '==' + latex_to_sympy(us)):
                     user_answer.remove(us)
                     break
