@@ -18,8 +18,6 @@ def calculate_answer(s, domain):
     :param domain: The domain of the variables.
     :return: A latex version of the calculated string.
     """
-    print('in calculate answer')
-    print(s)
     try:
         if not is_number(s):  # Small optimization
             s = remove_unnecessary(s)
@@ -35,8 +33,6 @@ def calculate_answer(s, domain):
     except Exception as e:
         print('exception in calculate answer')
         print(e)
-    print(s)
-    print('exiting calculate answer')
     return str(s)
 
 
@@ -59,8 +55,6 @@ def parse_solution(solution, domain):
             s = ''
         elif b == '?' and c == '@':
             recorder = False
-            print('this gets added to arr')
-            print(s[:-1])
             arr.append(s[:-1])
         elif recorder is True:
             s += c
@@ -68,18 +62,13 @@ def parse_solution(solution, domain):
 
     count = 0
     for x in range(len(arr)):
-        print(arr[x])
-        print('hallo?')
         if(arr[x]):
             new_arr.append(calculate_answer(str((arr[x])), domain))
             r = '@?' + arr[x] + '?@'
-            print(new_arr)
-            print(r)
+
             try:
                 new_solution = new_solution.replace(r, new_arr[x-count])
             except:
-                print('exception in parse_solution')
-                print(x)
                 pass
         else:
             count += 1

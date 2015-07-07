@@ -151,7 +151,8 @@ def answers(request, level=1):
 
                 new_user_rating, new_star = change_level_rating(template, request.user, context_dict['user_won'],
                                                                 form_values['template_type'], level)
-                context_dict['chapter_id'] = form_values['chapter_id']
+                print(form_values)
+                context_dict['chapter_id'] = form['chapter_id']
                 context_dict['ulp'] = int(new_user_rating)
                 context_dict['new_star'] = new_star
                 context_dict['stars'] = get_user_stars_for_level(request.user, Level.objects.get(pk=level))
@@ -286,9 +287,9 @@ def get_template(request):
     context_dict = {'message': 'Noe har gått feil.'}
     if request.method == 'POST':
         form = request.POST
-        #print(form)
+        print(form)
         level_id = int(form['level_id[]'])
-        #print(level_id)
+        print(level_id)
         chapter_id = int(form['chapter_id'])
         #if check_for_level_skip(request.user, Chapter.objects.get(pk=chapter_id), level_id):
         #    return render_to_response('game/template.html', context_dict, context)
