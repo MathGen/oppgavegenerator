@@ -159,15 +159,15 @@ def update_level(level, title, user, k_factor):
     return msg
 
 def reset_current_set(user):
-    user.ExtendedUser.current_set = None
+    user.extendeduser.current_set = None
     reset_current_chapter(user)
-    user.save()
+    user.extendeduser.save()
 
 def reset_current_chapter(user):
-    user.ExtendedUser.current_chapter = None
+    user.extendeduser.current_chapter = None
     reset_current_level(user)
-    user.save()
+    user.extendeduser.save()
 
 def reset_current_level(user):
-    user.ExtendedUser.current_level = None
-    user.save()
+    user.extendeduser.current_level = None
+    user.extendeduser.save()
