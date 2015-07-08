@@ -302,6 +302,14 @@ def get_template(request):
 
 ### SET, CHAPTER, LEVEL MANAGEMENT VIEWS ###
 @login_required
+def set_list(request):
+    context = RequestContext(request)
+    context_dict = {'set_list': True}
+    render_to = 'sets/container.html'
+
+
+
+@login_required
 def set_edit(request, set_id=""):
     context = RequestContext(request)
     set_title = ""

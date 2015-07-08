@@ -4,19 +4,19 @@ from datetime import datetime
 
 
 def new_chapter(chapter_name, user):
-    chapter = Chapter(name=chapter_name, creator=user, creation_date=datetime.now())
+    chapter = Chapter(name=chapter_name, editor=user, creator=user, creation_date=datetime.now())
     chapter.save()
     return chapter
 
 
 def new_level(level_name, user):
-    level = Level(name=level_name, creator=user, creation_date=datetime.now(), k_factor=3)
+    level = Level(name=level_name, creator=user, editor=user, creation_date=datetime.now(), k_factor=3)
     level.save()
     return level
 
 
 def new_set(set_name, user):
-    set = Set(name=set_name, creator=user, creation_date=datetime.now())
+    set = Set(name=set_name, creator=user, editor=user, creation_date=datetime.now())
     set.save()
     return set
 
@@ -131,7 +131,7 @@ def add_chapter_to_set(chapter, set):
 def make_copy(original, user):
     copy = original
     copy.pk = None
-    copy.editor = user.name
+    copy.editor = user
     copy.save()
     return copy
 
