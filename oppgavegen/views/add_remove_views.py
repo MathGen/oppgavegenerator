@@ -6,6 +6,7 @@ from oppgavegen.models import Level, Template, Set, Chapter
 from oppgavegen.view_logic.add_remove import *
 
 def new_set_view(request, set_name='Navn på sett'):
+    """View for creating a new set"""
     user = request.user
     set = new_set(set_name, user)
 
@@ -15,13 +16,13 @@ def add_level_to_current_chapter_view(request, level_id):
     """Add a template to the current level a teacher user is working on."""
     chapter = request.user.extendeduser.current_chapter
     level = Level.objects.get(pk=level_id)
-    if level.creator == request.user:
+    if level.creator == request.user: #todo: change this to level editor
         add_level_to_chapter(level, chapter)
-        return HttpResponse('Template added to level "'
+        return HttpResponse('Template lagt til level "'
                             + level.name +
-                            '". (This will be a background process eventually.)')
+                            '".')
     else:
-        return HttpResponse('Du må være eier a kapitellet for å legge til level')
+        return HttpResponse('Du må være eier av kapitellet for å legge til level')
 
 
 def new_chapter_for_set(request, set_id, chapter_name):
