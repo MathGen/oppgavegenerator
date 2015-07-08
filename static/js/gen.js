@@ -582,6 +582,17 @@ $(document).ready(function() {
 		//alert(get_diff_latex());
 	});
 
+	// Open the Graph-drawer
+	$('#opt_graph').change(function(){
+		if($(this).is(':checked')){
+			$('#graph_modal').modal('show').on('shown.bs.modal', function(){
+
+			}).one('shown.bs.modal', function(){
+				init_graph();
+			});
+		}
+	});
+
 	// Redraws the rendered-math in keypad in the calculation-modal
 	$('#calc_modal').on('shown.bs.modal', function () {
 		redraw_mathquill_elements();
@@ -641,7 +652,7 @@ $(document).ready(function() {
 		$(this).parent().remove();
 	});
 
-	// Retrieve and insert calculation to solution TODO: improve
+	// Retrieve and insert calculation to solution
 	$('#c_btn_ok').click(function(e){
 		e.preventDefault();
 		var total_elements = $(C_INPUT).children().length-1;
@@ -893,6 +904,18 @@ function submit_template(){
 	post(/submit/, form_submit);
 }
 
+function init_graph(){
+	var elt = document.getElementById('graph_container');
+	var graph = Desmos.Calculator(elt, {
+		keypad: false
+	});
+	graph.setExpression({id: 'graph1', latex: 'y=x^2'});
+}
+
+/**
+ * Initialize the difficulty sliders, with either the default value or the given value from the server.
+ * @param {String} type - Which kind of difficulty to initialize/reset (normal/multiple-choice/fill-in-the-blanks).
+ */
 function reset_difficulty(type){
 	if(type == 'normal'){
 		var difficulty = $('#get_difficulty').text();
@@ -1207,7 +1230,10 @@ function close_panel(panel){
 	}
 }
 
-//TODO: improve redrawing of all mathquill elements
+/**
+ * Redraws all mathquill elements in the document. To achieve a redraw, the mathquill element is required to have either
+ * of class-name 'static-math' or 'math-field', depending if the element is an editable math-field or a static one.
+ */
 function redraw_mathquill_elements(){
 	$('.static-math').each(function() {
 		MathQuill.StaticMath(this).reflow();
@@ -1261,7 +1287,10 @@ function simulate_keystroke(input, keystroke, times){
 	}
 }
 
-//TODO: draw/highlight the preview of the custom matrix
+/**
+ * Visually draws the custom-matrix in the popover, by highlighting the cell and the connected ones.
+ * @param {object} obj - The selector of the cell that the mouse enters.
+ */
 function preview_custom_matrix(obj){
 	obj.addClass('highlighted').prevAll().addClass('highlighted');
 	obj.nextAll().removeAttr('class');
@@ -1270,14 +1299,23 @@ function preview_custom_matrix(obj){
 	obj.parent().nextAll().find('td').removeAttr('class');
 }
 
-//TODO: get the size of the matrix (x,y)
+/**
+ * Retrieves the size of the custom matrix.
+ * @param {object} obj - The current cell that the mouse is hovering.
+ * @returns {string} The size (x,y).
+ */
 function get_custom_matrix_size(obj){
 	var col = obj.index() + 1;
 	var row = obj.parent().prevAll().length + 1;
 	return col + 'x' + row;
 }
 
-//TODO: get the latex from the custom matrix
+/**
+ * Get a generated LaTeX-string of a custom-matrix with a given size.
+ * @param {number|String} col - The column-size.
+ * @param {number|String} row - The row-size.
+ * @returns {string} The generated LaTeX-string of the custom-matrix.
+ */
 function get_custom_matrix_latex(col, row){
 	var start = "\\begin{pmatrix}";
 	var end = "\\end{pmatrix}";

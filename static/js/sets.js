@@ -72,7 +72,7 @@ function save_changes(){
     }
     if(valid_form) {
         form_submit["csrfmiddlewaretoken"] = getCookie('csrftoken');
-        $.post('../../../' + content + '/update/', form_submit, function(result){
+        $.post('/' + content + '/update/', form_submit, function(result){
             if(result[0] == 'S'){
                 $('#update_text').text(result);
                 $('#update_success').show(100).delay(5000).hide(100);
@@ -172,9 +172,9 @@ function add_new_content(input){
     if (text) {
         var content_path = '/set/'+ text +'/new_set/';
         if(container.hasClass('edit_chapters')) {
-            content_path = '../'+ text +'/new_chapter/';
+            content_path = '/set/'+ $('#set_id').text() +'/'+ text +'/new_chapter/';
         } else if(container.hasClass('edit_levels')) {
-            content_path = '../../../chapter/'+ $('#chapter_id').text() +'/'+ text +'/new_level/';
+            content_path = '/chapter/'+ $('#chapter_id').text() +'/'+ text +'/new_level/';
         }
         $.post(content_path, {'csrfmiddlewaretoken': getCookie('csrftoken')}, function(result){
             $('#edit_container').append(
@@ -198,9 +198,9 @@ function delete_content(content){
     if(content_id){
         var content_path = '/set/'+ content_id + '/remove_set/';
         if(container.hasClass('edit_chapters')) {
-            content_path = '../chapter/'+ content_id +'/remove_chapter/';
+            content_path = '/set/'+ $('#set_id').text() +'/chapter/'+ content_id +'/remove_chapter/';
         } else if(container.hasClass('edit_levels')) {
-            content_path = '../../../chapter/'+ $('#chapter_id').text() +'/level/'+ content_id +'/remove_level/';
+            content_path = '/chapter/'+ $('#chapter_id').text() +'/level/'+ content_id +'/remove_level/';
         }
         $.post(content_path, {'csrfmiddlewaretoken': getCookie('csrftoken')}, function(result){
             if(result[0] == 's'){ // if success, delete the visual content.
@@ -256,7 +256,7 @@ function edit_content(content){
             current_chapter = $('#chapter_id').text(); // TODO; improve cache of current content-type for loading previous pages.
         }
         $('#set_editor').fadeOut('fast', function(){ // TODO: Improve load callback.
-            $(this).load('../../../'+content_type+'/'+content_id+'/edit/ #set_editor > *', function(){
+            $(this).load('/'+content_type+'/'+content_id+'/edit/ #set_editor > *', function(){
                 set_title('#content_title', $('#get_content_title').text());
                 init_sortable();
                 scroll_to($('#set_editor'));
@@ -290,7 +290,7 @@ function init_sortable(){
 function search_for(search_string){
     var search_container = $('.search_container');
     var type = search_container.attr('id').replace(/search_/g, "");
-    search_container.load('../../../minisearch/'+ type +'?q='+ search_string + ' .search_container > *', function(result){
+    search_container.load('/minisearch/'+ type +'?q='+ search_string + ' .search_container > *', function(result){
         search_container.html(result);
     });
 }
