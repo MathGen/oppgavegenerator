@@ -12,6 +12,13 @@ def new_set_view(request, set_name='Navn på sett'):
 
     return HttpResponse(set.pk)
 
+def remove_set_view(request, set_id):
+    """View for creating a new set"""
+    user = request.user
+    msg = remove_set(set_id, user)
+
+    return HttpResponse(msg)
+
 def add_level_to_current_chapter_view(request, level_id):
     """Add a template to the current level a teacher user is working on."""
     chapter = request.user.extendeduser.current_chapter

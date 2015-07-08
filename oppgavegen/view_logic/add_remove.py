@@ -24,7 +24,7 @@ def new_set(set_name, user):
 def remove_chapter(chapter_id, user):
     chapter = Chapter.objects.get(pk=chapter_id)
     success_string = 'Failed to delete chapter ' + chapter.name + '.'
-    if chapter.creator == user:
+    if chapter.editor == user:
         success_string = 'Chapter sucessfully deleted' + chapter.name + '.'
         chapter.delete()
     return success_string
@@ -33,7 +33,7 @@ def remove_chapter(chapter_id, user):
 def remove_level(level_id, user):
     level = Level.objects.get(pk=level_id)
     success_string = 'Failed to delete chapter ' + level.name + '.'
-    if level.creator == user:
+    if level.editor == user:
         success_string = 'Chapter sucessfully deleted' + level.name + '.'
         level.delete()
     return success_string
@@ -42,7 +42,7 @@ def remove_level(level_id, user):
 def remove_set(set_id, user):
     set = Set.objects.get(pk=set_id)
     success_string = 'Failed to delete chapter ' + set.name + '.'
-    if set.creator == user:
+    if set.editor == user:
         success_string = 'Chapter sucessfully deleted' + set.name + '.'
         set.delete()
     return success_string
@@ -52,7 +52,7 @@ def remove_chapter_from_set(set_id, chapter_id, user):
     set = Set.objects.get(pk=set_id)
     chapter = Chapter.objects.get(pk=chapter_id)
     success_message = 'Failed to remove ' + chapter.name + ' from set.'
-    if user == set.creator:
+    if user == set.editor:
         set.chapters.remove(chapter)
         order = set.order.split(',')
         order.remove(chapter_id)
@@ -68,7 +68,7 @@ def remove_level_from_chapter(chapter_id, level_id, user):
     chapter = Chapter.objects.get(pk=chapter_id)
     level = Level.objects.get(pk=level_id)
     success_message = 'Failed to remove ' + level.name + ' from set.'
-    if user == chapter.creator:
+    if user == chapter.editor:
         chapter.levels.remove(level)
         order = chapter.order.split(',')
         order.remove(level_id)
@@ -84,7 +84,7 @@ def remove_template_from_level(level_id, template_id, user):
     level = Level.objects.get(pk=level_id)
     template = Template.objects.get(pk=template_id)
     success_message = 'Failed to remove ' + template.name + ' from set.'
-    if user == level.creator:
+    if user == level.editor:
         level.chapters.remove(template)
         level.save()
         success_message = 'successfully removed ' + template.name + ' from set.'
@@ -94,8 +94,8 @@ def remove_template_from_level(level_id, template_id, user):
 
 def add_template_to_level(template, level, user):  # Todo: make a copy and add that instead.
     success_message = 'Failed to add template to level'
-    if level.creator == user:
-        level.templates.add(template)
+    if level.editor == user:
+        level.templates.add(make_copy(template, user))
         level.save()
         success_message = 'successfully added template to level'
     return success_message
@@ -104,7 +104,7 @@ def add_template_to_level(template, level, user):  # Todo: make a copy and add t
 def remove_template(template_id, user):
     template = Template.objects.get(pk=template_id)
     success_string = 'Failed to delete template ' + template.name + '.'
-    if template.creator == user:
+    if template.editor == user:
         success_string = 'Successfully deleted template' + template.name + '.'
         template.delete()
     return success_string
