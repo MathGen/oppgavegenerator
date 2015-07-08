@@ -219,6 +219,12 @@ sub{							/* between bootstrap*/
 .btn_locked{
 	content: url('../img/lock-mini.png');
 }
+.btn_locked:after{ /* this for firefox browser */
+	position: absolute;
+	content: url('../img/lock-mini.png');
+	left: -3px;
+	top: -8px;
+}
 .set_title{
 	color: #D1C3A6;
 	text-shadow: -1px 0 #222222, 0 1px #222222, 1px 0 #222222, 0 -1px #222222;
@@ -302,7 +308,7 @@ sub{							/* between bootstrap*/
 	border: none;
 }
 
-/**** ****/
+/**** SET-EDITOR ****/
 .btn_content_del{
 	position: absolute;
 	background-color: transparent;
@@ -333,9 +339,56 @@ sub{							/* between bootstrap*/
 	text-shadow: -1px 0 #222222, 0 1px #222222, 1px 0 #222222, 0 -1px #222222;
 	background-color: transparent;
 }
+
+/**** SLIDERS ****/
 .ui-slider{
 	background-color: lightgrey;
+	border-radius: 3px;
+	top: 1px;
+}
+.ui-slider:not(#k_factor_slider){
+	top: -6px;
 }
 .ui-slider-handle{
 	background-color: gray;
+	border-radius: 3px;
+}
+.slider_star_1,
+.slider_star_2,
+.slider_star_3{
+	position: absolute;
+	top: 130%;
+	margin-left: -7px;
+	color: #D9A441;
+	text-shadow: -1px 0 #222222, 0 1px #222222, 1px 0 #222222, 0 -1px #222222;
+}
+.slider_star_1{
+	left: 40%;
+}
+.slider_star_2{
+	left: 53.3333333333333%;
+}
+.slider_star_3{
+	left: 66.6666666666667%;
+}
+.slider_star_1>span,
+.slider_star_2>span,
+.slider_star_3>span{
+	position: relative;
+	top: -17px;
+	left: -53%;
+	border-left: 2px solid #666;
+}
+.slider_start,
+.slider_end{
+	position: absolute;
+	color: #ababab;
+	top: 100%;
+	margin-left: -7px;
+}
+.slider_start{
+	left: 2%;
+}
+.slider_end{
+	left: 90%;
 }
