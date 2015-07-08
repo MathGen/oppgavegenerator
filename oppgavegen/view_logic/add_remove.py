@@ -27,6 +27,7 @@ def remove_chapter(chapter_id, user):
     if chapter.editor == user:
         success_string = 'Chapter sucessfully deleted' + chapter.name + '.'
         chapter.delete()
+        reset_current_chapter(user)
     return success_string
 
 
@@ -36,6 +37,7 @@ def remove_level(level_id, user):
     if level.editor == user:
         success_string = 'Chapter sucessfully deleted' + level.name + '.'
         level.delete()
+        reset_current_level(user)
     return success_string
 
 
@@ -45,6 +47,7 @@ def remove_set(set_id, user):
     if set.editor == user:
         success_string = 'Chapter sucessfully deleted' + set.name + '.'
         set.delete()
+        reset_current_set(user)
     return success_string
 
 
@@ -154,3 +157,17 @@ def update_level(level, title, user, k_factor):
         level.save()
         msg = 'Successful update'
     return msg
+
+def reset_current_set(user):
+    user.ExtendedUser.current_set = None
+    reset_current_chapter(user)
+    user.save()
+
+def reset_current_chapter(user):
+    user.ExtendedUser.current_chapter = None
+    reset_current_level(user)
+    user.save()
+
+def reset_current_level(user):
+    user.ExtendedUser.current_level = None
+    user.save()
