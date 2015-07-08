@@ -307,7 +307,10 @@ def set_list(request):
     context_dict = {'set_list': True}
     render_to = 'sets/container.html'
 
+    sets = Set.objects.all().filter(editor=request.user)
+    context_dict['sets'] = sets
 
+    return render_to_response(render_to, context_dict, context)
 
 @login_required
 def set_edit(request, set_id=""):
