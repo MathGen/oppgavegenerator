@@ -162,6 +162,10 @@ function set_title(input, title){
     $(input).val(title);
 }
 
+/**
+ * Adding a new content depending on which container-type the user is active in. (Set/Chapter/Level)
+ * @param {String} input - the input string that will be the title of the content.
+ */
 function add_new_content(input){
     var container = $('#edit_container');
     var text = input.val();
@@ -184,11 +188,18 @@ function add_new_content(input){
     input.val("");
 }
 
+/**
+ * Delete the specific content.
+ * @param {object} content - the content selector
+ */
 function delete_content(content){
+    var container = $('#edit_container');
     var content_id = content.attr('id').match(/\d+/);
     if(content_id){
-        var content_path = '../chapter/'+ content_id +'/remove_chapter/';
-        if($('#edit_container').hasClass('edit_levels')) {
+        var content_path = '/set/'+ content_id + '/remove_set/';
+        if(container.hasClass('edit_chapters')) {
+            content_path = '../chapter/'+ content_id +'/remove_chapter/';
+        } else if(container.hasClass('edit_levels')) {
             content_path = '../../../chapter/'+ $('#chapter_id').text() +'/level/'+ content_id +'/remove_level/';
         }
         $.post(content_path, {'csrfmiddlewaretoken': getCookie('csrftoken')}, function(result){
@@ -230,7 +241,7 @@ function load_search_view(){ // TODO: make the search result load with AJAX.
 
 /**
  * Loads the specific element to edit its content.
- * @param content - the content-selector.
+ * @param {object} content - the content-selector.
  */
 function edit_content(content){
     var container = $('#edit_container');
