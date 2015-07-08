@@ -5,6 +5,11 @@ from django.template import RequestContext
 from oppgavegen.models import Level, Template, Set, Chapter
 from oppgavegen.view_logic.add_remove import *
 
+def new_set_view(request, set_name='Navn på sett'):
+    user = request.user
+    set = new_set(set_name, user)
+
+    return HttpResponse(set.pk)
 
 def add_level_to_current_chapter_view(request, level_id):
     """Add a template to the current level a teacher user is working on."""
