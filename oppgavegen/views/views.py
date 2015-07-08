@@ -555,7 +555,9 @@ class UserCurrentSetsEdit(LoginRequiredMixin, UpdateView):
     template_name = 'sets/user_current_sets_form.html'
 
     def get_object(self, queryset=None):
+
         obj = ExtendedUser.objects.get(user=self.request.user)
+
         return obj
 
     def get_success_url(self):

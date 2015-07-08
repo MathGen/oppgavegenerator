@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from oppgavegen.models import Level, Template, Set, Chapter
 from datetime import datetime
+from oppgavegen.models import ExtendedUser
 
 
 def new_chapter(chapter_name, user):
@@ -26,8 +27,8 @@ def remove_chapter(chapter_id, user):
     success_string = 'Failed to delete chapter ' + chapter.name + '.'
     if chapter.editor == user:
         success_string = 'Chapter sucessfully deleted' + chapter.name + '.'
-        chapter.delete()
         reset_current_chapter(user)
+        chapter.delete()
     return success_string
 
 
@@ -36,8 +37,8 @@ def remove_level(level_id, user):
     success_string = 'Failed to delete chapter ' + level.name + '.'
     if level.editor == user:
         success_string = 'Chapter sucessfully deleted' + level.name + '.'
-        level.delete()
         reset_current_level(user)
+        level.delete()
     return success_string
 
 
@@ -46,8 +47,8 @@ def remove_set(set_id, user):
     success_string = 'Failed to delete chapter ' + set.name + '.'
     if set.editor == user:
         success_string = 'Chapter sucessfully deleted' + set.name + '.'
-        set.delete()
         reset_current_set(user)
+        set.delete()
     return success_string
 
 
@@ -159,15 +160,21 @@ def update_level(level, title, user, k_factor):
     return msg
 
 def reset_current_set(user):
-    user.extendeduser.current_set = None
-    reset_current_chapter(user)
-    user.extendeduser.save()
+    euser = ExtendedUser.objects.get(user=user)
+    print(euser)
+    euser.current_set = None
+    euser.current_chapter = None
+    euser.current_level = None
+    print(euser)
+    euser.save()
 
 def reset_current_chapter(user):
-    user.extendeduser.current_chapter = None
-    reset_current_level(user)
-    user.extendeduser.save()
+    euser = ExtendedUser.objects.get(user=user)
+    euser.current_chapter = None
+    euser.current_level = None
+    euser.save()
 
 def reset_current_level(user):
-    user.extendeduser.current_level = None
-    user.extendeduser.save()
+    euser = ExtendedUser.objects.get(user=user)
+    euser.current_level = None
+    euser.save()
