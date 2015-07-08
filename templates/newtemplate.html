@@ -157,6 +157,17 @@
         <table class="table table-condensed">
             <tbody>
             <tr>
+                <td style="vertical-align: middle; text-align: right; height: 41px">Vanskelighetsgrad:</td>
+                <td colspan="3" style="vertical-align: middle"><div id="difficulty_slider">
+                    <span class="slider_start">Lett</span>
+                    <span class="glyphicon glyphicon-star slider_star_1"><span></span></span>
+                    <span class="glyphicon glyphicon-star slider_star_2"><span></span></span>
+                    <span class="glyphicon glyphicon-star slider_star_3"><span></span></span>
+                    <span class="slider_end">Vanskelig</span></div>
+                </td>
+                <td style="vertical-align: middle"><span id="difficulty_amount" hidden></span></td>
+            </tr>
+            <tr>
                 <td class="col-sm-3" style="vertical-align: middle; text-align: right">Utvalg:</td>
                 <td class="col-sm-2"><input id="opt_domain_from" type="number" class="form-control input-sm" placeholder="Fra:" disabled></td>
                 <td class="col-sm-2"><input id="opt_domain_to" type="number" class="form-control input-sm" placeholder="Til:" disabled></td>
@@ -187,17 +198,6 @@
                 <td style="vertical-align: middle; text-align: right; height: 41px">Utfyllingsoppgave:</td>
                 <td style="vertical-align: middle"><input id="opt_fill_blanks" type="checkbox"></td>
                 <td></td><td></td><td></td>
-            </tr>
-            <tr>
-                <td style="vertical-align: middle; text-align: right; height: 41px">Vanskelighetsgrad:</td>
-                <td colspan="3" style="vertical-align: middle"><div id="difficulty_slider">
-                    <span class="slider_start">Lett</span>
-                    <span class="glyphicon glyphicon-star slider_star_1"><span></span></span>
-                    <span class="glyphicon glyphicon-star slider_star_2"><span></span></span>
-                    <span class="glyphicon glyphicon-star slider_star_3"><span></span></span>
-                    <span class="slider_end">Vanskelig</span></div>
-                </td>
-                <td style="vertical-align: middle"><span id="difficulty_amount" hidden></span></td>
             </tr>
             <tr>
                 <td style="vertical-align: middle; text-align: right; height: 41px">Ulovlige tegn:</td>

@@ -109,6 +109,16 @@ function load_previous_page(){
                 $(this).fadeIn('fast');
             });
         });
+    } else {
+        $('#set_editor').fadeOut('fast', function () {
+            $(this).load('../../../set #set_editor > *', function () {
+                set_title('#content_title', $('#get_content_title').text());
+                init_sortable();
+                scroll_to($('#set_editor'));
+                load_search_view();
+                $(this).fadeIn('fast');
+            });
+        });
     }
 }
 
@@ -153,10 +163,13 @@ function set_title(input, title){
 }
 
 function add_new_content(input){
+    var container = $('#edit_container');
     var text = input.val();
     if (text) {
-        var content_path = '../'+ text +'/new_chapter/';
-        if($('#edit_container').hasClass('edit_levels')) {
+        var content_path = '/set/'+ text +'/new_set/';
+        if(container.hasClass('edit_chapters')) {
+            content_path = '../'+ text +'/new_chapter/';
+        } else if(container.hasClass('edit_levels')) {
             content_path = '../../../chapter/'+ $('#chapter_id').text() +'/'+ text +'/new_level/';
         }
         $.post(content_path, {'csrfmiddlewaretoken': getCookie('csrftoken')}, function(result){
@@ -194,6 +207,9 @@ function load_search_view(){ // TODO: make the search result load with AJAX.
     var search_container = $('.search_container');
     var type = search_container.attr('id').replace(/search_/g, "");
     switch (type) {
+        case 'sets':
+            search_container.remove();
+            break;
         case 'chapters':
             search_container.load('../../../minisearch/chapters', function(){
                 //callback function
@@ -220,7 +236,7 @@ function edit_content(content){
     var container = $('#edit_container');
     var content_id = content.attr('id').match(/\d+/);
     if(content_id){
-        var content_type = "level";
+        var content_type = "set";
         if(container.hasClass('edit_chapters')) {
             content_type = "chapter";
             current_set = $('#set_id').text();
@@ -248,7 +264,7 @@ function edit_content(content){
 function init_sortable(){
     //TODO: make it switchable (from list to grid)
     var container = $('#edit_container');
-    if(container.hasClass('edit_templates')){}
+    if(container.hasClass('edit_templates') || container.hasClass('edit_sets')){}
     else {
         container.sortable({
             placeholder: "list_content_highlight",

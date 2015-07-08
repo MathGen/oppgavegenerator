@@ -1,9 +1,31 @@
+{% if sets %}
+<input id="content_title" class="form-control" placeholder="Skriv inn tittel..." disabled style="cursor: text;">
+{% else %}
 <input id="content_title" class="form-control" placeholder="Skriv inn tittel...">
+{% endif %}
 
 <section class="row">
-{#    <div class="col-md-8">#}
-    {% if set_edit %}
-        <div class="col-md-8">
+    {% if set_list %}
+    <div class="col-md-8">
+        <div id="get_content_title" hidden>Alle Oppgavesett</div>
+        <ul id="edit_container" class="edit_sets">
+        {% if sets %}
+            {% for set in sets %}
+                <li id="content_{{ set.id }}" class="btn list_content">
+                    <h4 class="content_title">{{ set.name }}</h4>
+                    <a class="btn btn_content_edit">Edit</a>
+                    <a class="btn btn_content_del"><span class="glyphicon glyphicon-trash"></span></a>
+                </li>
+            {% endfor %}
+        {% endif %}
+        </ul>
+        <input id="input_new_set" type="text" class="list_input form-control new_content" placeholder="Opprett nytt oppgavesett...">
+    </div>
+    <div class="col-md-4">
+        <div id="search_sets" class="panel panel-default search_container"></div>
+    </div>
+    {% elif set_edit %}
+    <div class="col-md-8">
         <div id="get_content_title" hidden>{{ set_title }}</div>
         <ul id="edit_container" class="edit_chapters">
         {% if chapters %}
@@ -19,10 +41,10 @@
         {% endif %}
         </ul>
         <input id="input_new_chapter" type="text" class="list_input form-control new_content" placeholder="Opprett nytt kapittel...">
-        </div>
-        <div class="col-md-4">
-            <div id="search_chapters" class="panel panel-default search_container"></div>
-        </div>
+    </div>
+    <div class="col-md-4">
+        <div id="search_chapters" class="panel panel-default search_container"></div>
+    </div>
     {% elif chapter_edit %}
         <div class="col-md-8">
         <div id="get_content_title" hidden>{{ chapter_title }}</div>
@@ -78,8 +100,8 @@
 <div class="row">
     <div class="col-sm-4">
         <div class="pull-left">
-            {% if chapters %}{% else %}
-                <a class="btn btn-link"><span class="btn_set_back glyphicon glyphicon-arrow-left"></span> </a>
+            {% if sets %}{% else %}
+                <a class="btn btn-link"><span class="btn_set_back glyphicon glyphicon-arrow-left"></span></a>
             {% endif %}
         </div>
     </div>

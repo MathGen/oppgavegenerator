@@ -48,10 +48,12 @@ sub{							/* between bootstrap*/
 	margin-bottom: 5px;
 }
 .mq-editable-field:not(.static-math-sm){
+	display: table-cell; /*Added because of conflict with Desmos API*/
 	font-size: 2em;
 	border-radius: 4px;
 }
 .mq-math-mode:not(.btn):not(.static-math-sm){
+	display: table-cell; /*Added because of conflict with Desmos API*/
 	font-size: 2em;
 	margin-left: 6px;
 	margin-bottom: 16px;
@@ -305,7 +307,7 @@ sub{							/* between bootstrap*/
 	border-radius: 3px; !important;
 }
 .static-math-sm{
-	border: none;
+	border: none !important;
 }
 
 /**** SET-EDITOR ****/
