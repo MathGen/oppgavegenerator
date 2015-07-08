@@ -109,7 +109,7 @@ urlpatterns = patterns('',
     # Urls for sets, chapters and levels.
     url(r'^set/$', set_list, name='set'),  # A list over sets and the possibility of adding or edditing them.
     url(r'^set/([\w ]+)/new_set/$', new_set_view, name='new_set_view'),
-    url(r'^set/(\d+)/remove/$', remove_set_view, name='new_set_view'),
+    url(r'^set/(\d+)/remove_set/$', remove_set_view, name='new_set_view'),
     url(r'^set/(\d+)/([\w ]+)/new_chapter/$', new_chapter_for_set, name='new_chapter_for_set'),
     url(r'^set/(\d+)/chapter/(\d+)/add_chapter/$', add_chapter_to_set, name='add_chapter_to_set'),
     url(r'^set/(\d+)/chapter/(\d+)/remove_chapter/$', remove_chapter_from_set_view, name='remove_chapter_from_set'),
