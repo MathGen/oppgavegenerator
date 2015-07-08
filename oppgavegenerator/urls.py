@@ -22,7 +22,6 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^user/', include('registration.backends.default.urls')),
     url(r'^user/templates/', 'oppgavegen.views.views.template_table_by_user', name='user_templates'),
-    url(r'^user/sets/$', UserSetListView.as_view(), name='user_sets'),
     url(r'^task/$', 'oppgavegen.views.views.task'),
     url(r"^task/([\w ]+)/$", 'oppgavegen.views.views.task_by_extra', name='task_by_extra'),
     url(r"^task/(\d+)/([\w ]+)/$", 'oppgavegen.views.views.task_by_id_and_type', name='task_by_id_and_type'),
@@ -106,6 +105,9 @@ urlpatterns = patterns('',
     url(r'^user/level/template/(\d+)/toggle/$', toggle_template_level, name='current_level_toggle'),
     url(r'^user/level/template/(\d+)/add/$', add_template_to_current_level, name='current_level_add'),
     url(r'^user/level/template/(\d+)/remove/$', remove_template_from_current_level, name='current_level_remove'),
+
+    # Urls for sets, chapters and levels.
+    url(r'^set/$', set_list, name='set'),  # A list over sets and the possibility of adding or edditing them.
     url(r'^set/(\d+)/([\w ]+)/new_chapter/$', new_chapter_for_set, name='new_chapter_for_set'),
     url(r'^set/(\d+)/chapter/(\d+)/add_chapter/$', add_chapter_to_set, name='add_chapter_to_set'),
     url(r'^set/(\d+)/chapter/(\d+)/remove_chapter/$', remove_chapter_from_set_view, name='remove_chapter_from_set'),
