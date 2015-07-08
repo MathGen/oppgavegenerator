@@ -219,7 +219,7 @@ sub{							/* between bootstrap*/
 .btn_locked{
 	content: url('../img/lock-mini.png');
 }
-.btn_locked:after{ /*this for firefox browser*/
+.btn_locked:after{ /* this for firefox browser */
 	position: absolute;
 	content: url('../img/lock-mini.png');
 	left: -3px;
