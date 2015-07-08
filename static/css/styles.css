@@ -219,6 +219,12 @@ sub{							/* between bootstrap*/
 .btn_locked{
 	content: url('../img/lock-mini.png');
 }
+.btn_locked:after{ /*this for firefox browser*/
+	position: absolute;
+	content: url('../img/lock-mini.png');
+	left: -3px;
+	top: -8px;
+}
 .set_title{
 	color: #D1C3A6;
 	text-shadow: -1px 0 #222222, 0 1px #222222, 1px 0 #222222, 0 -1px #222222;
