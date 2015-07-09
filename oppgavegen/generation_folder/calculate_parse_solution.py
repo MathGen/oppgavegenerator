@@ -48,7 +48,7 @@ def parse_solution(solution, domain):
     if solution[0] == '@' and solution[1] == '?' and solution[-1] == '@' and solution[-2] == '?':
         solution = solution.replace('@?', '')
         solution = solution.replace('?@', '')
-        return calculate_answer(str(solution))
+        return calculate_answer(str(solution, domain))
 
     arr = []
     new_arr = []
