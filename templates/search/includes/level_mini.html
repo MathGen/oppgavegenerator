@@ -3,7 +3,7 @@
     {{ result.object.name|capfirst }}, nivå laget av {{ result.object.creator|capfirst }}.
     {% if result.object.id in user.extendeduser.current_chapter_level_ids %}
     Fjern fra "{{ user.extendeduser.current_chapter.name }}"
-        {% else %}
+    {% else %}
     Legg til "{{ user.extendeduser.current_chapter.name }}"
     {% endif %}
 </div>

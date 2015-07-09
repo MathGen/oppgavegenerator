@@ -161,11 +161,9 @@ def update_level(level, title, user, k_factor):
 
 def reset_current_set(user):
     euser = ExtendedUser.objects.get(user=user)
-    print(euser)
     euser.current_set = None
     euser.current_chapter = None
     euser.current_level = None
-    print(euser)
     euser.save()
 
 def reset_current_chapter(user):

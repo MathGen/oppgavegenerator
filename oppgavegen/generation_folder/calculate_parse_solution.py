@@ -44,6 +44,12 @@ def parse_solution(solution, domain):
     :param domain: The domain of the different variables.
     :return: A parsed version of the input string (solution)
     """
+
+    if solution[0] == '@' and solution[1] == '?' and solution[-1] == '@' and solution[-2] == '?':
+        solution = solution.replace('@?', '')
+        solution = solution.replace('?@', '')
+        return calculate_answer(str(solution))
+
     arr = []
     new_arr = []
     recorder = False
