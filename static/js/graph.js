@@ -5,7 +5,7 @@ $(document).ready(function(){
     // Open the Graph-drawer
 	$('#opt_graph').change(function(){
 		if($(this).is(':checked')){
-			$('#graph_modal').modal('show').on('shown.bs.modal', function(){
+			$('#graph_modal').modal('show').one('shown.bs.modal', function(){
                 if(!graph_initialized) {
                     dcg_init_graph();
                     graph_initialized = true;
@@ -30,7 +30,6 @@ function dcg_init_graph(){
     dcg_refresh_variables();
     refresh_char_colors('.dcg-template-mathquill');
     $('.dcg-template-mathquill').addClass('input_mathquill');
-    window.console.log(dcg_get_expressions());
 }
 
 /**
@@ -41,6 +40,9 @@ function dcg_init_graph(){
  */
 function dcg_new_expression(id, expression) {
     graph.setExpression({id: id, latex: expression});
+    var expr_cell = $('div[expr-id="'+id+'"]');
+    expr_cell.find('.dcg-action-delete').remove();
+    expr_cell.find('.dcg-template-dependentlabelhtml');
 }
 
 /**
@@ -52,7 +54,7 @@ function dcg_new_expression(id, expression) {
  * @param {number} max - The maximum range of the variable.
  */
 function dcg_new_variable(id, variable_name, min, max) {
-    graph.setExpression({id: id, latex: variable_name + '=' + min, sliderBounds: {min: min, max: max, step: 0}});
+    graph.setExpression({id: id, latex: variable_name + '=' + min, sliderBounds: {min: min, max: max, step: 0.1}});
     var variable_cell = $('div[expr-id="'+id+'"]');
     variable_cell.find('.dcg-action-delete').remove();
 }
@@ -76,8 +78,12 @@ function dcg_refresh_variables(){
             var from = $(this).val();
             var to = $('#o_adv_to_' + i).val();
             dcg_new_variable('dcg_variable'+i, name, from, to);
-            dcg_set_helper_expression(name);
         });
+    }
+    for(var key in dict_calc_unchanged){
+        var char = "A";
+        char = String.fromCharCode(char.charCodeAt(0) + parseInt(key));
+        dcg_new_expression('dcg_variable_'+key, char+'='+dict_calc_unchanged[key]);
     }
     refresh_char_colors('.dcg-template-mathquill');
     $('.dcg-template-mathquill').addClass('input_mathquill');
@@ -93,13 +99,17 @@ function dcg_set_helper_expression(expression_name){
     helper_expression[expression_name] = graph.HelperExpression({latex: expression_name});
 }
 
+/**
+ * Iterates through the expression-list and stores the expression in an list (sorts out the preset variables).
+ * @returns {Array} A list of expressions (without preset variables).
+ */
 function dcg_get_expressions(){
-    //var expressions = [];
-    //$('.dcg-expressionitem').each(function(){
-    //    $(this).find('.input_mathquill').each(function(index){
-    //
-    //    });
-    //});
-    //return expressions;
-    return graph.getState();
+    var expression_list = graph.getState()['expressions']['list'];
+    var expressions = [];
+    for(var e = 0; e < expression_list.length; e++){
+        if(expression_list[e]['id'].substring(0, 12) != 'dcg_variable'){
+            expressions.push(expression_list[e]['latex']);
+        }
+    }
+    return expressions;
 }

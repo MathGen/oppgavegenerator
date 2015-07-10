@@ -804,6 +804,20 @@ function submit_template(){
 		form_submit['conditions_latex'] = "";
 	}
 
+	// GRAPH
+	var expressions = [];
+	if ($('#opt_graph').is(':checked')) {
+		expressions = dcg_get_expressions();
+		form_submit['unchanged_graph'] = JSON.stringify(expressions);
+		for(var e = 0; e < expressions.length; e++){
+			expressions[e] = convert_variables(expressions[e]);
+		}
+		form_submit['graph'] = JSON.stringify(expressions);
+	} else {
+		form_submit['graph'] = JSON.stringify(expressions);
+		form_submit['unchanged_graph'] = JSON.stringify(expressions);
+	}
+
 	// CHOICES
 	if ($('#opt_multiple_choice').is(':checked')) {
 		form_submit['choices'] = get_multiple_choices(false);

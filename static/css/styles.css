@@ -61,8 +61,17 @@ sub{							/* between bootstrap*/
 	margin-left: 6px;
 	margin-bottom: 16px;
 }
-.dcg-template-mathquill{
+.dcg-template-mathquill,
+.dcg-transient-mathquill{
 	font-size: 1.4em !important;
+}
+.dcg-template-dependentlabelhtml>.mq-math-mode{
+	display: inline-block !important;
+	font-size: 1em !important;
+	margin-left: 0 !important;
+	margin-bottom: 0 !important;
+	height: auto !important;
+	width: auto !important;
 }
 .mq-text-mode,
 #t_input{
