@@ -15,7 +15,7 @@ from oppgavegen.generation_folder.fill_in import fill_in_the_blanks
 from oppgavegen.utility.utility import *
 from oppgavegen.generation_folder.calculate_parse_solution import parse_solution
 from oppgavegen.generation_folder.get_question import get_question, get_level_question
-
+import json
 
 @Debugger
 def generate_task(user, template_extra, desired_type=''):
@@ -54,6 +54,7 @@ def generate_task(user, template_extra, desired_type=''):
     template_specific = ""  # A variable that holds the extra values for a given type. ie. choices for multiple.
     variables_used = ""  # Sends a splitable string since dictionaries can't be passed between layers.
     replacing_words = ''  # The words that got replaced, and the words that replaced them
+    graph = json.loads(q.graph.replace('\\\\', '\\'))
 
     task = add_phantom_minus(task)
     answer = add_phantom_minus(answer)
@@ -70,6 +71,10 @@ def generate_task(user, template_extra, desired_type=''):
         new_task = string_replace(task, variable_dict)
         new_answer = string_replace(answer, variable_dict)
         new_choices = string_replace(choices, variable_dict)
+
+        for x in range(0, len(graph)):
+            graph[x] = string_replace(graph[x], variable_dict)
+            graph[x] = parse_solution(graph[x], q.random_domain)
 
         if new_answer == 'error':
             continue  # Retry if the current template resulted in a error.
@@ -106,7 +111,8 @@ def generate_task(user, template_extra, desired_type=''):
     return_dict = {'question': new_task,
                    'variable_dictionary': variables_used, 'template_type': template_type,
                    'template_specific': template_specific, 'primary_key': primary_key,
-                   'number_of_answers': number_of_answers, 'replacing_words': replacing_words}
+                   'number_of_answers': number_of_answers, 'replacing_words': replacing_words,
+                   'graph': json.dumps(graph)}
     return return_dict
 
 
