@@ -13,21 +13,21 @@
 
     <ul style="list-style: inline; list-style-type: none">
         <li>
-            <strong>
-                {{ result.object.name|title }}
-            </strong>
+            <a id="search_content_{{ result.object.id }}"  class="btn_add_content">
+            <span id="search_url_{{ result.object.id }}" hidden>{% url 'add_template_to_level' user.extendeduser.current_level.id result.object.id %}</span>
+            Legg til: {{ result.object.name|title }}
+            </a>
+
         </li>
         <li>
             <span class="glyphicon glyphicon-user"></span>
-            {% ifequal result.creator user.username %}
+
                 {{ result.object.creator|capfirst }}
-            {% else %}
-                {{ result.object.creator|capfirst }}
-            {% endifequal %} /
+            /
             <span title="Rating" class="rating">{{ result.object.rating }}</span>
 
             {% ifequal True result.object.multiple_support %}
-            / Multiple Choice / Multiple Fill-Ins
+            / Multiple Choice
             {% endifequal %}
             {% ifequal True result.object.fill_in_support %}
             / Fill in the Blanks

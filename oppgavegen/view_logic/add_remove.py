@@ -96,10 +96,10 @@ def remove_template_from_level(level_id, template_id, user):
     return success_message
 
 
-def add_template_to_level(template, level, user):  # Todo: make a copy and add that instead.
+def add_template_to_level(template, level, user):
     success_message = 'Failed to add template to level'
     if level.editor == user:
-        level.templates.add(make_copy(template, user))
+        level.templates.add(template)
         level.save()
         success_message = 'successfully added template to level'
     return success_message

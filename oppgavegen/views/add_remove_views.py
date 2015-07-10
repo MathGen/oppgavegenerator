@@ -4,6 +4,8 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from oppgavegen.models import Level, Template, Set, Chapter
 from oppgavegen.view_logic.add_remove import *
+import json
+from django.utils.encoding import force_text
 
 def new_set_view(request, set_name='Navn på sett'):
     """View for creating a new set"""
@@ -23,7 +25,7 @@ def add_level_to_current_chapter_view(request, level_id):
     """Add a template to the current level a teacher user is working on."""
     chapter = request.user.extendeduser.current_chapter
     level = Level.objects.get(pk=level_id)
-    if level.creator == request.user: #todo: change this to level editor
+    if level.editor == request.user: #todo: change this to level editor
         add_level_to_chapter(level, chapter)
         return HttpResponse('Template lagt til level "'
                             + level.name +
@@ -58,14 +60,6 @@ def new_level_for_chapter(request, chapter_id, level_name):
         return HttpResponse(msg)
 
 
-def add_template_to_level_view(request, level_id, template_id):
-    level = Level.objects.get(pk=level_id)
-    template = Template.objects.get(pk=template_id)
-    msg = add_template_to_level(template, level, request.user)
-
-    return HttpResponse(msg)
-
-
 def remove_template_from_level_view(request, level_id, template_id):
     msg = remove_template_from_level(level_id, template_id, request.user)
     return HttpResponse(msg)
@@ -85,35 +79,52 @@ def remove_level_from_chapter_view(request, chapter_id, level_id):
     remove_level(level_id, request.user)
     return HttpResponse(msg)
 
+def add_template_to_level_view(request, level_id, template_id):
+    msg = 'failed to add template to level.'
+    level = Level.objects.get(pk=level_id)
+    template = Template.objects.get(pk=template_id)
+    user = request.user
+    if level.editor == user:
+        template = make_copy(template, user)
+        add_template_to_level(template, level, request.user)
+        msg = {'id': template.id, 'name': template.name}
+        msg = json.dumps(msg)
+
+    return HttpResponse(msg)
+
 
 def add_level_to_chapter_view(request, chapter_id, level_id):
     """Add a template fo a specified level"""
+    msg = 'Failed to add chapter'
     if request.is_ajax():
         chapter = Chapter.objects.get(pk=chapter_id)
-        msg = 'Failed to add chapter'
         user = request.user
         level = Level.objects.get(pk=level_id)
-        if chapter.creator == user or chapter.editor == user.name:
+        if chapter.editor == user:
             level = make_copy(level, user)
             add_level_to_chapter(level, chapter)
-            msg = level.pk
-
+            msg = {'id': level.id, 'name': level.name}
+            msg = json.dumps(msg)
         return HttpResponse(msg)
 
 
 def add_chapter_to_set_view(request, set_id, chapter_id):
     """Add a template fo a specified level"""
-    if request.is_ajax():
-        set = Set.objects.get(pk=set_id)
-        msg = 'Failed to add chapter'
-        user = request.user
-        chapter = Chapter.objects.get(pk=chapter_id)
-        if set.creator == user or set.editor == user.name:
-            chapter = make_copy(chapter, user)
-            add_level_to_chapter(chapter, set)
-            msg = chapter.pk
+    msg = 'Failed to add chapter'
+    try:
+        if request.is_ajax():
+            set = Set.objects.get(pk=set_id)
+            user = request.user
+            chapter = Chapter.objects.get(pk=chapter_id)
+            if set.editor == user:
+                chapter = make_copy(chapter, user)
+                add_chapter_to_set(chapter, set)
+                msg = {'id': chapter.id, 'name': chapter.name}
+                msg = json.dumps(msg)
+    except Exception as e:
+        print(e)
 
-        return HttpResponse(msg)
+    return HttpResponse(msg)
 
 def update_chapter_view(request):
     msg = 'Noe gikk galt'

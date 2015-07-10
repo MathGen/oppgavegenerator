@@ -39,8 +39,29 @@ $(document).ready(function () {
         if(/(13)/.test(e.which)) $('#search_submit').click();
     });
 
+    $(document).on('click', '.btn_add_content', function(){
+        add_new_content_from_search($(this).attr('id').replace(/search_content_/g, ''));
+    });
+
     init_k_factor_slider();
 });
+
+function add_new_content_from_search(content_id){
+    $.get($('#search_url_' + content_id).text(), function(result){
+        window.console.log(result);
+        var parsed = JSON.parse(result);
+
+        $('#edit_container').append(
+                '<li id="content_' + parsed["id"] + '" class="btn list_content">' +
+                '<h4 class="content_title">' + parsed["name"] + '<small>  ny</small></h4>' +
+                '<a class="btn btn_content_edit">Edit</a>' +
+                '<a class="btn btn_content_del"><span class="glyphicon glyphicon-trash"></span></a>' +
+                '</li>');
+    });
+
+
+
+}
 
 /**
  * Saves changes such as content-order and content-title to the server.

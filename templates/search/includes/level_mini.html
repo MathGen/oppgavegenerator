@@ -2,7 +2,12 @@
 <div class="level_result">
     {{ result.object.name|capfirst }}, nivå laget av {{ result.object.creator|capfirst }}.
     {% if result.object.id not in user.extendeduser.current_chapter_level_ids %}
-        <li><a href="{% url 'add_level_to_chapter' user.extendeduser.current_chapter.id result.object.id %}">Legg til: </a></li>
-    Legg til "{{ user.extendeduser.current_chapter.name }}"
+        <li>
+            <a id="search_content_{{ result.object.id }}"  class="btn_add_content">
+            <span id="search_url_{{ result.object.id }}" hidden>{% url 'add_level_to_chapter' user.extendeduser.current_chapter.id result.object.id %}</span>
+            Legg til: "{{ user.extendeduser.current_chapter.name }}"
+            </a>
+        </li>
+
     {% endif %}
 </div>
