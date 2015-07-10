@@ -113,28 +113,31 @@ $(document).ready(function() {
 	$(document).on('focus', '.input_mathquill', function(e){
 		e.preventDefault();
 		var input_id = $(this).attr('id');
-		var input_group = input_id[0];
-		if(input_group == 'q'){
-			ACTIVE_INPUT = '#' + input_id;
-			$(Q_INPUT).removeClass('select_error');
-		}
-		else if(input_group == 's'){
-			S_INPUT = '#' + input_id;
-			ACTIVE_INPUT = '#' + input_id;
-			$(S_INPUT).removeClass('select_error');
-		}
-		else if(input_group == 'a'){
-			A_INPUT = '#' + input_id;
-			ACTIVE_INPUT = '#' + input_id;
-			$(A_INPUT).removeClass('select_error');
-		}
-		else if(input_group == 'm'){
-			M_INPUT = '#' + input_id;
-			ACTIVE_INPUT = '#' + input_id;
-		}
-		else if(input_group == 'f'){
-			F_INPUT = '#' + input_id;
-			ACTIVE_INPUT = '#' + input_id;
+		if(input_id != undefined) {
+			var input_group = input_id[0];
+
+			if (input_group == 'q') {
+				ACTIVE_INPUT = '#' + input_id;
+				$(Q_INPUT).removeClass('select_error');
+			}
+			else if (input_group == 's') {
+				S_INPUT = '#' + input_id;
+				ACTIVE_INPUT = '#' + input_id;
+				$(S_INPUT).removeClass('select_error');
+			}
+			else if (input_group == 'a') {
+				A_INPUT = '#' + input_id;
+				ACTIVE_INPUT = '#' + input_id;
+				$(A_INPUT).removeClass('select_error');
+			}
+			else if (input_group == 'm') {
+				M_INPUT = '#' + input_id;
+				ACTIVE_INPUT = '#' + input_id;
+			}
+			else if (input_group == 'f') {
+				F_INPUT = '#' + input_id;
+				ACTIVE_INPUT = '#' + input_id;
+			}
 		}
     });
 
@@ -142,10 +145,12 @@ $(document).ready(function() {
 	$(document).on('focus', '.input_blanks', function(e){
 		e.preventDefault();
 		var input_id = $(this).attr('id');
-		var input_group = input_id[0];
-		if(input_group == 'w'){
-			W_INPUT = '#' + input_id;
-			ACTIVE_INPUT = W_INPUT;
+		if(input_id != undefined) {
+			var input_group = input_id[0];
+			if (input_group == 'w') {
+				W_INPUT = '#' + input_id;
+				ACTIVE_INPUT = W_INPUT;
+			}
 		}
     });
 
@@ -257,35 +262,39 @@ $(document).ready(function() {
 	// Keyboard-listener for input-fields
 	$(document).on('keyup', '.input_mathquill', function(e){
 		var id = $(this).attr('id');
-		var id_group = id[0];
-		if(e.keyCode == 88 || e.keyCode == 89 || e.keyCode == 90){
-			if(id_group != 'c'){
-				refresh_char_colors('#' + id);
+		if(id != undefined) {
+			var id_group = id[0];
+			if (e.keyCode == 88 || e.keyCode == 89 || e.keyCode == 90) {
+				if (id_group != 'c') {
+					refresh_char_colors('#' + id);
+				}
+			}
+			else if (e.keyCode >= 65 && e.keyCode <= 87 && e.keyCode != 69 && e.keyCode != 70) {
+				if (id_group == 'q') {
+					refresh_all_char_colors();
+					refresh_variables();
+				}
+				else {
+					refresh_char_colors('#' + id);
+				}
+			}
+			else if (e.keyCode == 13) {
+				if (id_group == 't') {
+					$('#t_btn_ok').click();
+				}
+				else if (id_group == 'c') {
+					$('#c_btn_ok').click();
+				}
+				else if (id_group == 'n') {
+					$('#n_btn_ok').click();
+				}
+				else {
+					$('#' + id_group + '_btn_proceed').click();
+				}
 			}
 		}
-		else if(e.keyCode >= 65 && e.keyCode <= 87 && e.keyCode != 69 && e.keyCode != 70){
-			if(id_group == 'q'){
-				refresh_all_char_colors();
-				refresh_variables();
-			}
-			else{
-				refresh_char_colors('#' + id);
-			}
-		}
-		else if(e.keyCode == 13){
-			if(id_group == 't'){
-				$('#t_btn_ok').click();
-			}
-			else if(id_group == 'c'){
-				$('#c_btn_ok').click();
-			}
-			else if(id_group == 'n'){
-				$('#n_btn_ok').click();
-			}
-			else {
-				$('#' + id_group + '_btn_proceed').click();
-			}
-		}
+	}).on('keyup', '.dcg-template-mathquill', function(){
+		refresh_char_colors('.dcg-template-mathquill');
 	});
 
 	// Proceed to next panel TODO: improve
@@ -580,17 +589,6 @@ $(document).ready(function() {
 		e.preventDefault();
 		write_to_mathfield(get_input_field(this), '■'); // Black square HEX: &#x25A0
 		//alert(get_diff_latex());
-	});
-
-	// Open the Graph-drawer
-	$('#opt_graph').change(function(){
-		if($(this).is(':checked')){
-			$('#graph_modal').modal('show').on('shown.bs.modal', function(){
-
-			}).one('shown.bs.modal', function(){
-				init_graph();
-			});
-		}
 	});
 
 	// Redraws the rendered-math in keypad in the calculation-modal
@@ -902,14 +900,6 @@ function submit_template(){
 
 	// SUBMIT
 	post(/submit/, form_submit);
-}
-
-function init_graph(){
-	var elt = document.getElementById('graph_container');
-	var graph = Desmos.Calculator(elt, {
-		keypad: false
-	});
-	graph.setExpression({id: 'graph1', latex: 'y=x^2'});
 }
 
 /**
@@ -1632,7 +1622,9 @@ function refresh_all_char_colors(){
  */
 function refresh_char_colors(selector){
 	var input_id = $(selector).attr('id');
-	input_id = input_id[0];
+	if(input_id != undefined) {
+		input_id = input_id[0];
+	}
 	$(selector).find('var').each(function(){
 		var f_var = $(this);
 		if(f_var.hasClass('content_x') || $(this).hasClass('florin') || $(this).html() == 'e' || $(this).html() == 'i' || $(this).html() == 'd'){}

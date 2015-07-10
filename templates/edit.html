@@ -3,6 +3,7 @@
 {% load app_filters %}
 {% block head %}<link href="/static/css/jquery-ui.min.css" rel="stylesheet">{% endblock %}
 {% block js %}
+    <script src="/static/js/graph.js"></script>
     <script src="/static/js/jquery-ui.min.js"></script>
     <script src="https://www.desmos.com/api/v0.6/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6" async></script>
 {% endblock %}
@@ -308,13 +309,13 @@
     </div>
     <!-- POP-UP: GRAPH -->
     <div id="graph_modal" class="modal fade" role="dialog">
-        <div class="modal-dialog modal-md">
+        <div class="modal-dialog modal-lg">
             <section class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Tegn graf<a id="g_btn_close" class="glyphicon glyphicon-remove pull-right btn_close" data-dismiss="modal"></a></h3>
                 </div>
                 <div class="panel-body">
-                    <div id="graph_container" style="width: 570px; height: 400px;"></div>
+                    <div id="graph_container" style="width: auto; height: 400px;"></div>
                 </div>
                 <div class="panel-footer">
 
