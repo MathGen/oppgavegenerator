@@ -123,6 +123,7 @@ def submit_template(template, user, update, newtags=None):
         template.times_solved = q.times_solved
         template.creation_date = q.creation_date
         template.creator = q.creator
+        template.copy = q.copy  # todo: maybe set this to False if something is edited.
         if template.name == '':
             template.name = q.name
         if template.difficulty != q.difficulty:
@@ -139,6 +140,7 @@ def submit_template(template, user, update, newtags=None):
         template.times_solved = 0
         template.creation_date = datetime.now()
         template.creator = user
+        template.copy = False
     if len(template.fill_in) > 1:
         template.fill_in_support = True
     if len(template.choices) > 1:

@@ -5,19 +5,19 @@ from oppgavegen.models import ExtendedUser
 
 
 def new_chapter(chapter_name, user):
-    chapter = Chapter(name=chapter_name, editor=user, creator=user, creation_date=datetime.now())
+    chapter = Chapter(name=chapter_name, editor=user, creator=user, creation_date=datetime.now(), copy=False)
     chapter.save()
     return chapter
 
 
 def new_level(level_name, user):
-    level = Level(name=level_name, creator=user, editor=user, creation_date=datetime.now(), k_factor=3)
+    level = Level(name=level_name, creator=user, editor=user, creation_date=datetime.now(), k_factor=3, copy=False)
     level.save()
     return level
 
 
 def new_set(set_name, user):
-    set = Set(name=set_name, creator=user, editor=user, creation_date=datetime.now())
+    set = Set(name=set_name, creator=user, editor=user, creation_date=datetime.now(), copy=False)
     set.save()
     return set
 
