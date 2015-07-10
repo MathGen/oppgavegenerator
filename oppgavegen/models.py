@@ -61,6 +61,7 @@ class Template(models.Model):
     multiple_support = models.BooleanField(default=False)  # Denotes whether the template supports multiple choice
     fill_in_support = models.BooleanField(default=False)  # Denotes whether the template supports fill in the blanks
     margin_of_error = models.CharField(default='0', max_length=20, null=True, blank=True)
+    copy = models.BooleanField(default=False)
 
     graph = models.CharField(default='', max_length=4000, null=True, blank=True)
 
@@ -92,6 +93,7 @@ class Level(models.Model):
     creation_date = models.DateTimeField('date created', blank=True, null=True, auto_now_add=True)  # Date and time of creation
     k_factor = models.PositiveIntegerField(default=3, null=True, blank=True)  # Decides how fast a user progress
     offset = models.IntegerField(default=0, null=True, blank=True)  # Offset for the level.
+    copy = models.BooleanField(default=False)
 
     def __str__(self):  # return self.name instead of level-object
         """Returns the level name"""
@@ -106,6 +108,7 @@ class Chapter(models.Model):
     editor = models.ForeignKey(User, blank=True, null=True, related_name='chapters_edited')  # Editor of template
     creation_date = models.DateTimeField('date created', blank=True, null=True, auto_now_add=True)  # Date and time of creation
     order = models.CharField(max_length=400, default='', blank=True) #CSV list of the order of levels.
+    copy = models.BooleanField(default=False)
 
     def __str__(self):  # Makes it so that self.name shows up instead of set(object)
         """Returns the chapter name"""
@@ -120,6 +123,7 @@ class Set(models.Model):
     editor = models.ForeignKey(User, blank=True, null=True, related_name='sets_edited')  # Editor of template
     creation_date = models.DateTimeField('date created', blank=True, null=True, auto_now_add=True)  # Date and time of creation
     order = models.CharField(max_length=400, default='')
+    copy = models.BooleanField(default=False)
 
     def __str__(self):  # Makes it so that self.name shows up instead of set(object)
         """Returns the set name"""
