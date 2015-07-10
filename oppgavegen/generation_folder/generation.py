@@ -152,6 +152,7 @@ def generate_level(user, level_id):
     new_task = ''
     new_answer = ''
     variable_dict = ''
+    graph = json.loads(q.graph.replace('\\\\', '\\'))
 
     valid_solution = False
     while valid_solution is False:  # Loop until we get a form of the task that has a valid solution
@@ -160,6 +161,10 @@ def generate_level(user, level_id):
         new_task = string_replace(task, variable_dict)
         new_answer = string_replace(answer, variable_dict)
         new_choices = string_replace(choices, variable_dict)
+
+        for x in range(0, len(graph)):
+            graph[x] = string_replace(graph[x], variable_dict)
+            graph[x] = parse_solution(graph[x], q.random_domain)
 
         if new_answer == 'error':
             continue  # Retry if the current template resulted in a error.
@@ -196,7 +201,8 @@ def generate_level(user, level_id):
     new_task = remove_pm_and_add_parenthesis(new_task)
     return_dict = {'question': new_task, 'variable_dictionary': variables_used, 'template_type': template_type,
                    'template_specific': template_specific, 'primary_key': primary_key,
-                   'number_of_answers': number_of_answers, 'replacing_words': replacing_words}
+                   'number_of_answers': number_of_answers, 'replacing_words': replacing_words,
+                   'graph': json.dumps(graph)}
     return return_dict
 
 
