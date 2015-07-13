@@ -33,9 +33,26 @@ function dcg_init_graph(){
 }
 
 /**
+ * Initialize the graph with given options and preferences in the game.
+ */
+function dcg_init_game_graph(){
+    var elt = document.getElementById('graph_container');
+	graph = Desmos.Calculator(elt, { //Set options for the DCG
+		keypad: false,
+        expressions: false
+	});
+    var expressions = JSON.parse($('#get_graph').text());
+    for (var e = 0; e < expressions.length; e++){
+        dcg_new_expression(e, expressions[e]);
+    }
+    refresh_char_colors('.dcg-template-mathquill');
+    $('.dcg-template-mathquill').addClass('input_mathquill');
+}
+
+/**
  * This will update or create a new expression in the DCG. If the provided id already exists, the values for
  * the provided parameters will be updated in the expression (unprovided parameters will remain unchanged).
- * @param {String} id - The id of the expression you want to create or update.
+ * @param {String|number} id - The id of the expression you want to create or update.
  * @param {String|latex} expression - The LaTeX-expression
  */
 function dcg_new_expression(id, expression) {

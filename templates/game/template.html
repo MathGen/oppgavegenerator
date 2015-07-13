@@ -1,4 +1,5 @@
 {% load app_filters %}
+
 <div hidden id="template_type">{{ template_type }}</div>
 <div hidden id="primary_key">{{ primary_key }}</div>
 <div hidden id="template_specific">{{ template_specific }}</div>
@@ -6,8 +7,9 @@
 <div hidden id="variable_dictionary">{{ variable_dictionary }}</div>
 <div hidden id="get_question">{{ question }}</div>
 <div hidden id="replacing_words">{{ replacing_words }}</div>
+<div hidden id="get_graph">{{ graph }}</div>
 
-<script src="/static/js/answer_input.js?18"></script>
+<script src="/static/js/answer_input.js?023"></script>
 <link href="/static/css/stud_style.css" rel="stylesheet">
 <div id="num_stars" hidden>{{ stars }}</div>
 <div id="get_ulp" hidden>{{ ulp }}</div>
@@ -37,8 +39,20 @@
     </div>
     <div class="panel-body">
         <form id="w_question_display" class="form-horizontal">
+            {% if graph|length > 2 %}
+            <div class="row">
+                <div class="col-md-7">
+                    <div id="mathquill_field" class="input_field"></div>
+                </div>
+                <div class="col-md-5">
+                    <div id="graph_container" style="width: auto; height: 250px;"></div></br>
+                </div>
+            </div>
+            <div id="w_target" class="row"></div>
+            {% else %}
             <div id="mathquill_field" class="input_field"></div><hr>
             <div id="w_target" class="row"></div>
+            {% endif %}
             <form>{% csrf_token %} </form>
         </form>
     </div>
