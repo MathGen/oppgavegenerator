@@ -3,6 +3,9 @@ var number_of_answers = "";
 var num_boxx = 0;
 
 $(document).ready(function () {
+    if($('#task_view').text() == "true" && $('#get_graph').text() != "[]"){
+        dcg_init_game_graph();
+    }
     var text = 'some text';
     template_type = $('#template_type').html();
     var template_specific = $('#template_specific').html();
