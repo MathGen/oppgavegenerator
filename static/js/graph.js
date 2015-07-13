@@ -1,13 +1,17 @@
 var graph;
 var helper_expression = {};
+var GRAPH_MODIFIED = false; //Whether or not the graph has been modified when editing a template.
 $(document).ready(function(){
     var graph_initialized = false;
     // Open the Graph-drawer
 	$('#opt_graph').change(function(){
 		if($(this).is(':checked')){
 			$('#graph_modal').modal('show').one('shown.bs.modal', function(){
-                if(!graph_initialized) {
+                if (!graph_initialized && !MODIFY) {
                     dcg_init_graph();
+                    graph_initialized = true;
+                } else if (!graph_initialized && MODIFY){
+                    dcg_edit_graph();
                     graph_initialized = true;
                 } else {
                     dcg_refresh_variables();
@@ -47,6 +51,25 @@ function dcg_init_game_graph(){
     }
     refresh_char_colors('.dcg-template-mathquill');
     $('.dcg-template-mathquill').addClass('input_mathquill');
+}
+
+/**
+ * Initialize the graph with given options and preferences and the given expressions from the server to be able to edit.
+ */
+function dcg_edit_graph(){
+    $('#graph_container').html("");
+	var elt = document.getElementById('graph_container');
+	graph = Desmos.Calculator(elt, { //Set options for the DCG
+		keypad: false
+	});
+    var expressions = JSON.parse($('#get_graph').text());
+    for (var e = 0; e < expressions.length; e++){
+        graph.setExpression({id: e, latex: expressions[e]});
+    }
+    dcg_refresh_variables();
+    refresh_char_colors('.dcg-template-mathquill');
+    $('.dcg-template-mathquill').addClass('input_mathquill');
+    GRAPH_MODIFIED = true;
 }
 
 /**
