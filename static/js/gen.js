@@ -807,7 +807,11 @@ function submit_template(){
 	// GRAPH
 	var expressions = [];
 	if ($('#opt_graph').is(':checked')) {
-		expressions = dcg_get_expressions();
+		if(MODIFY && !GRAPH_MODIFIED){
+			expressions = JSON.parse($('#get_graph').text());
+		} else {
+			expressions = dcg_get_expressions();
+		}
 		form_submit['unchanged_graph'] = JSON.stringify(expressions);
 		for(var e = 0; e < expressions.length; e++){
 			expressions[e] = convert_variables(expressions[e]);
@@ -1442,6 +1446,12 @@ function submit_validation(){
 			}
 		}
 	}
+	if ($('#opt_graph').is(':checked')) {
+		if ($(".dcg-error").length > 0) {
+			valid = false;
+			error_message('opt_graph', 'Feil i graf! Se over og prøv på nytt!');
+		}
+	}
 	return valid;
 }
 
@@ -1911,6 +1921,11 @@ function insert_editable_data(){
 		$('#o_adv_from_' + rd_exist[rd]).val(edit_r[0]);
 		$('#o_adv_to_' + rd_exist[rd]).val(edit_r[1]);
 		$('#o_adv_dec_' + rd_exist[rd]).val(edit_r[2]);
+	}
+
+	// Set checked on graph
+	if($('#get_graph').text() != "[]"){
+		$('#opt_graph').prop('checked', true);
 	}
 
 	// Set checked on required alt.tasks.
