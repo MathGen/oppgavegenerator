@@ -593,7 +593,7 @@ def level_stats(request, level_id):
 
     if studentratings:
         dict['players'] = len(studentratings)
-        dict['average'] = int(sum(studentratings)/len(studentratings))
+        dict['average'] = int(sum(studentratings)/dict['players'])
 
     dict['student_entries'] = get_level_student_statistics(level)
     dict['templates'] = level.templates.exists()
