@@ -78,6 +78,7 @@ class Template(models.Model):
     unchanged_required = models.CharField(max_length=10000, blank=True, null=True)
     unchanged_disallowed = models.CharField(max_length=10000, blank=True, null=True)
     unchanged_graph = models.CharField(max_length=4500, null=True, blank=True)
+    graph_settings = models.CharField(max_length=2000, null=True, blank=True)
 
     def __str__(self):  # Makes it so that self.question_text shows up instead of topic(object)
         """Returns the question_text field of the object"""
