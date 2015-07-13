@@ -54,7 +54,7 @@ def generate_task(user, template_extra, desired_type=''):
     template_specific = ""  # A variable that holds the extra values for a given type. ie. choices for multiple.
     variables_used = ""  # Sends a splitable string since dictionaries can't be passed between layers.
     replacing_words = ''  # The words that got replaced, and the words that replaced them
-    graph = json.loads(q.graph.replace('\\\\', '\\'))
+    graph = json.loads(q.graph)  # took out .replace('\\\\', '\\')
 
     task = add_phantom_minus(task)
     answer = add_phantom_minus(answer)
@@ -152,7 +152,7 @@ def generate_level(user, level_id):
     new_task = ''
     new_answer = ''
     variable_dict = ''
-    graph = json.loads(q.graph.replace('\\\\', '\\'))
+    graph = json.loads(q.graph)  # took out .replace('\\\\', '\\')
 
     valid_solution = False
     while valid_solution is False:  # Loop until we get a form of the task that has a valid solution

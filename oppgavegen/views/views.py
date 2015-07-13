@@ -251,6 +251,7 @@ def chapters(request, set_id):
 
 
 def levels(request, chapter_id):
+
     if request.is_ajax():
         game_chapter = Chapter.objects.get(pk=chapter_id)
         chapter_levels = game_chapter.levels.all()
@@ -270,8 +271,8 @@ def levels(request, chapter_id):
 
         return render_to_response('game/levels.html',
                                   {'levels': chapter_levels_ordered, 'chapter_title': chapter_title,
-                                   'progress_number': progress_number, 'spl': star_per_level, 'chapter_id': chapter_id}
-                                   ,context)
+                                   'progress_number': progress_number, 'spl': star_per_level, 'chapter_id': chapter_id},
+                                  context)
     else:
         return HttpResponseForbidden()
 
@@ -280,24 +281,26 @@ def get_template(request):
     """Gets a template for a given level"""
     # if request.is_ajax():
     #   if request.method == 'GET':
+    try:
+        context = RequestContext(request)
+        context_dict = {'message': 'Noe har gått feil.'}
+        if request.method == 'POST':
+            form = request.POST
+            print(form)
+            level_id = int(form['level_id[]'])
+            print(level_id)
+            chapter_id = int(form['chapter_id'])
+            #if check_for_level_skip(request.user, Chapter.objects.get(pk=chapter_id), level_id):
+            #    return render_to_response('game/template.html', context_dict, context)
+            context_dict = generate_level(request.user, level_id)
+            context_dict['rating'] = get_user_rating(request.user)
+            level = Level.objects.get(pk=level_id)
+            context_dict['stars'] = get_user_stars_for_level(request.user, level)
+            context_dict['ulp'] = get_user_rating_for_level(request.user, level)
 
-    context = RequestContext(request)
-    context_dict = {'message': 'Noe har gått feil.'}
-    if request.method == 'POST':
-        form = request.POST
-        print(form)
-        level_id = int(form['level_id[]'])
-        print(level_id)
-        chapter_id = int(form['chapter_id'])
-        #if check_for_level_skip(request.user, Chapter.objects.get(pk=chapter_id), level_id):
-        #    return render_to_response('game/template.html', context_dict, context)
-        context_dict = generate_level(request.user, level_id)
-        context_dict['rating'] = get_user_rating(request.user)
-        level = Level.objects.get(pk=level_id)
-        context_dict['stars'] = get_user_stars_for_level(request.user, level)
-        context_dict['ulp'] = get_user_rating_for_level(request.user, level)
-
-    return render_to_response('game/template.html', context_dict, context)
+        return render_to_response('game/template.html', context_dict, context)
+    except Exception as e:
+        print(e)
 
 
 ### SET, CHAPTER, LEVEL MANAGEMENT VIEWS ###

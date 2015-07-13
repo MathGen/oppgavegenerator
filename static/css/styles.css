@@ -65,7 +65,10 @@ sub{							/* between bootstrap*/
 .dcg-transient-mathquill{
 	font-size: 1.4em !important;
 }
-.dcg-template-dependentlabelhtml>.mq-math-mode{
+.dcg-template-dependentlabelhtml>.mq-math-mode,
+.dcg-action-editinput,
+.dcg-math-input,
+.dcg-interval-interior{
 	display: inline-block !important;
 	font-size: 1em !important;
 	margin-left: 0 !important;
