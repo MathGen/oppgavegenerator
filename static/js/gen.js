@@ -909,15 +909,15 @@ function submit_template(){
 		form_submit['pk'] = "";
 	}
 
-	// Testing output TODO: When finished testing, switch to submit method.
-	var test_output = [];
-	for(var s in form_submit){
-		test_output.push(s + '\n' + form_submit[s]);
-	}
-	alert(test_output.join('\n'));
+	//// Testing output TODO: When finished testing, switch to submit method.
+	//var test_output = [];
+	//for(var s in form_submit){
+	//	test_output.push(s + '\n' + form_submit[s]);
+	//}
+	//alert(test_output.join('\n'));
 
-	//// SUBMIT
-	//post(/submit/, form_submit);
+	// SUBMIT
+	post(/submit/, form_submit);
 }
 
 /**
@@ -1444,6 +1444,12 @@ function submit_validation(){
 					$('#o_adv_caret').addClass('dropup');
 				}
 			}
+		}
+	}
+	if ($('#opt_graph').is(':checked')) {
+		if ($(".dcg-error").length > 0) {
+			valid = false;
+			error_message('opt_graph', 'Feil i graf! Se over og prøv på nytt!');
 		}
 	}
 	return valid;
