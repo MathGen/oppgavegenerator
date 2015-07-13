@@ -52,7 +52,8 @@ def make_edit_context_dict(template_id):
                     'tags': tags, 'margin_of_error': q.margin_of_error, 'disallowed': q.disallowed,
                     'required': q.required, 'difficulty': q.difficulty, 'difficulty_blanks': difficulty_b,
                     'difficulty_multiple': difficulty_m, 'name': name, 'unchanged_disallowed': unchanged_disallowed,
-                    'unchanged_required': unchanged_required, 'graph': q.unchanged_graph}
+                    'unchanged_required': unchanged_required, 'graph': q.unchanged_graph,
+                    'graph_settings': q.graph_settings}
     return context_dict
 
 

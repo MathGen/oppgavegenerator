@@ -112,7 +112,7 @@ def generate_task(user, template_extra, desired_type=''):
                    'variable_dictionary': variables_used, 'template_type': template_type,
                    'template_specific': template_specific, 'primary_key': primary_key,
                    'number_of_answers': number_of_answers, 'replacing_words': replacing_words,
-                   'graph': json.dumps(graph)}
+                   'graph': json.dumps(graph), 'graph_settings': q.graph_settings}
     return return_dict
 
 
@@ -202,7 +202,7 @@ def generate_level(user, level_id):
     return_dict = {'question': new_task, 'variable_dictionary': variables_used, 'template_type': template_type,
                    'template_specific': template_specific, 'primary_key': primary_key,
                    'number_of_answers': number_of_answers, 'replacing_words': replacing_words,
-                   'graph': json.dumps(graph)}
+                   'graph': json.dumps(graph), 'graph_settings': q.graph_settings}
     return return_dict
 
 
