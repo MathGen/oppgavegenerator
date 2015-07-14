@@ -930,11 +930,11 @@ function reset_difficulty(type){
 	if(type == 'normal'){
 		var difficulty = $('#get_difficulty').text();
 		if (difficulty == '') {
-			difficulty = 13;
+			difficulty = 5;
 		}
 		$('#difficulty_slider').slider({
 			value: parseInt(difficulty),
-			min: 10,
+			min: 1,
 			max: 25,
 			step: 1,
 			slide: function (event, ui) {
@@ -946,11 +946,11 @@ function reset_difficulty(type){
 	else if(type == 'multiple'){
 		var m_difficulty = $('#get_difficulty_m').text();
 		if (m_difficulty == '') {
-			m_difficulty = 13;
+			m_difficulty = 5;
 		}
 		$('#m_difficulty_slider').slider({
 			value: parseInt(m_difficulty),
-			min: 10,
+			min: 1,
 			max: 25,
 			step: 1,
 			slide: function (event, ui) {
@@ -962,11 +962,11 @@ function reset_difficulty(type){
 	else if(type == 'blanks'){
 		var f_difficulty = $('#get_difficulty_f').text();
 		if (f_difficulty == '') {
-			f_difficulty = 13;
+			f_difficulty = 5;
 		}
 		$('#f_difficulty_slider').slider({
 			value: parseInt(f_difficulty),
-			min: 10,
+			min: 1,
 			max: 25,
 			step: 1,
 			slide: function (event, ui) {

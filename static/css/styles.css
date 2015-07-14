@@ -375,7 +375,9 @@ sub{							/* between bootstrap*/
 }
 .slider_star_1,
 .slider_star_2,
-.slider_star_3{
+.slider_star_3,
+.slider_star_4,
+.slider_star_5{
 	position: absolute;
 	top: 130%;
 	margin-left: -7px;
@@ -383,17 +385,25 @@ sub{							/* between bootstrap*/
 	text-shadow: -1px 0 #222222, 0 1px #222222, 1px 0 #222222, 0 -1px #222222;
 }
 .slider_star_1{
-	left: 40%;
+	left: 25%;
 }
 .slider_star_2{
-	left: 53.3333333333333%;
+	left: 37.5%;
 }
 .slider_star_3{
+	left: 50%;
+}
+.slider_star_4{
 	left: 66.6666666666667%;
+}
+.slider_star_5{
+	left: 83.3333333333333%;
 }
 .slider_star_1>span,
 .slider_star_2>span,
-.slider_star_3>span{
+.slider_star_3>span,
+.slider_star_4>span,
+.slider_star_5>span{
 	position: relative;
 	top: -17px;
 	left: -53%;
