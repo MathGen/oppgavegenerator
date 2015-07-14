@@ -598,4 +598,5 @@ def level_stats(request, level_id):
     dict['student_entries'] = get_level_student_statistics(level)
     dict['templates'] = level.templates.exists()
     dict['template_entries'] = get_level_template_statistics(level)
+    dict['template_original'] = ''
     return render(request, 'sets/charts.html', dict)

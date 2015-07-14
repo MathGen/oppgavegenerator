@@ -34,7 +34,7 @@ class Template(models.Model):
     tags = models.ManyToManyField(Tag, blank=True)  # Template tags. Tags should describe content of math problems i.e "arithmetic"
     question_text = models.CharField(max_length=2000)  # Math expression or text question ex. "Solve: ax = b + cx"
     solution = models.CharField(max_length=10000)  # Step by step solution to the answer
-    answer = models.CharField(max_length=200)  # The answer of the question.
+    answer = models.CharField(max_length=1000)  # The answer of the question.
     creator = models.ForeignKey(User, blank=True, null=True, related_name='templates_created')  # User ID of creator of template
     editor = models.ForeignKey(User, blank=True, null=True, related_name='templates_edited')  # Editor of template
 
