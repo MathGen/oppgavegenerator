@@ -10,8 +10,11 @@ $(document).ready(function(){
                 if (!graph_initialized && !MODIFY) {
                     dcg_init_graph();
                     graph_initialized = true;
-                } else if (!graph_initialized && MODIFY){
+                } else if (!graph_initialized && MODIFY && $('#get_graph').text() != "[]"){
                     dcg_edit_graph();
+                    graph_initialized = true;
+                } else if (!graph_initialized && MODIFY && $('#get_graph').text() == "[]"){
+                    dcg_init_graph();
                     graph_initialized = true;
                 } else {
                     dcg_refresh_variables();
@@ -35,6 +38,7 @@ function dcg_init_graph(){
     dcg_refresh_variables();
     refresh_char_colors('.dcg-template-mathquill');
     $('.dcg-template-mathquill').addClass('input_mathquill');
+    GRAPH_MODIFIED = true;
 }
 
 /**
@@ -117,7 +121,8 @@ function dcg_remove_expression(id) {
  */
 function dcg_refresh_variables(){
     if(VARIABLE_COUNT > 0) {
-        $('.opt_domain_from').each(function(i){
+        $('.opt_domain_from').each(function(){
+            var i = $(this).attr('id').replace(/o_adv_from_/g, "");
             var name = $('#o_adv_' + i).text().replace(/:/g, "");
             var from = $(this).val();
             var to = $('#o_adv_to_' + i).val();
