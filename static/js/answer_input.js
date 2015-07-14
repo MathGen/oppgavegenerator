@@ -4,7 +4,7 @@ var num_boxx = 0;
 
 $(document).ready(function () {
     var graph_expressions = $('#get_graph').text();
-    if($('#task_view').text() == "true" && graph_expressions != "[]" && graph_expressions != 'None'){
+    if(($('#task_view').text() == "true") && (graph_expressions != "[]") && (graph_expressions != 'None') && (graph_expressions != "")){
         dcg_init_game_graph();
     }
     var text = 'some text';

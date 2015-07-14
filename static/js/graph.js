@@ -11,10 +11,10 @@ $(document).ready(function(){
                 if (!graph_initialized && !MODIFY) {
                     dcg_init_graph();
                     graph_initialized = true;
-                } else if (!graph_initialized && MODIFY && graph_expressions != "[]" && graph_expressions != "None"){
+                } else if (!graph_initialized && MODIFY && (graph_expressions != "[]") && (graph_expressions != "None") && (graph_expressions != "")){
                     dcg_edit_graph();
                     graph_initialized = true;
-                } else if (!graph_initialized && MODIFY && graph_expressions == "[]" && graph_expressions == "None"){
+                } else if (!graph_initialized && MODIFY && ((graph_expressions == "[]") || (graph_expressions == "None") || (graph_expressions == ""))){
                     dcg_init_graph();
                     graph_initialized = true;
                 } else {
