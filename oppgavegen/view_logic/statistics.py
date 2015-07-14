@@ -66,8 +66,8 @@ def get_level_template_statistics(level, start_interval=1100, end_interval=2300,
     # Check for entries in higher cutoff range (from endintervals to cutoffmax)
     if templates.filter(rating__range=(end_interval, cutoff_max)):
         count = templates.filter(level_rating__range=(end_interval,cutoff_max)).count()
-        count += templates.filter(fill_rating__range=(end_interval, cutoff_max)).count()
-        count += templates.filter(choice_rating__range=(end_interval, cutoff_max)).count()
+        count += templates.filter(fill_rating__range=(end_interval, cutoff_max)).filter(fill_in_support=True).count()
+        count += templates.filter(choice_rating__range=(end_interval, cutoff_max)).filter(multiple_support=True).count()
         morris_data.append('{rating: "%d-%d", oppgaver: %d },' % (end_interval, cutoff_max, count))
 
     return morris_data
@@ -83,8 +83,8 @@ def get_level_template_original_statistics(level, interval=100):
     # Since range in used +- 1 is needed on the bounds, ie. to get 1 and 2 the range is 0,3
     while lower_bound < 25:  # as of the making of this 25 is the max difficulty number
         count = templates.filter(difficulty__range=(lower_bound, upper_bound)).count()
-        count += templates.filter(difficulty_multiple__range=(lower_bound, upper_bound)).count()
-        count += templates.filter(difficulty_blanks__range=(lower_bound, upper_bound)).count()
+        count += templates.filter(difficulty_multiple__range=(lower_bound, upper_bound)).filter(fill_in_support=True).count()
+        count += templates.filter(difficulty_blanks__range=(lower_bound, upper_bound)).filter(multiple_support=True).count()
         morris_data.append('{rating: "%d-%d", oppgaver: %d },' % (lower_bound*50+950, upper_bound*50+950, count))
         lower_bound += interval
         upper_bound += interval
