@@ -106,8 +106,7 @@ def generate_task(user, template_extra, desired_type=''):
         replacing_words = replace_words_dict['replace_string']
     number_of_answers = len(new_answer.split('§'))
 
-
-    if graph:  # to prevent error if none
+    if graph != None:  # to prevent error if none
         graph = json.dumps(graph)
     new_task = parse_solution(new_task, q.random_domain)
     new_task = remove_pm_and_add_parenthesis(new_task)
@@ -200,7 +199,7 @@ def generate_level(user, level_id):
     number_of_answers = len(new_answer.split('§'))
 
 
-    if graph:  # to prevent error if none
+    if graph != None:  # to prevent error if none
         graph = json.dumps(graph)
     new_task = parse_solution(new_task, q.random_domain)
     new_task = remove_pm_and_add_parenthesis(new_task)
