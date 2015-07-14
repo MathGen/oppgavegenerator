@@ -91,9 +91,9 @@ def make_answer_context_dict(form_values):
     user_answer = user_answer.split('§')  # If a string doesn't contain the character it returns a list with 1 element
     # We format both the user answer and the answer the same way.
     user_answer = [after_equal_sign(x) for x in user_answer]  # Only get the values after last equal sign.
-    user_answer = calculate_array(user_answer, random_domain)
+    #user_answer = calculate_array(user_answer, random_domain)
     answer = [after_equal_sign(x) for x in answer]
-    answer = calculate_array(answer, random_domain)
+    #answer = calculate_array(answer, random_domain)
     answer_text = "\\text{Du har svart }" + original_user_answer + \
                       "\\text{. Det er feil. Svaret er: }" + '\\text{ og }'.join(answer)
 
