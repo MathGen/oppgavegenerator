@@ -66,8 +66,8 @@ def get_level_template_statistics(level, start_interval=1100, end_interval=2300,
     # Check for entries in higher cutoff range (from endintervals to cutoffmax)
     if templates.filter(rating__range=(end_interval, cutoff_max)):
         count = templates.filter(level_rating__range=(end_interval,cutoff_max)).count()
-        count += templates.filter(fill_rating__range=(end_interval, cutoff_max)).count()
-        count += templates.filter(choice_rating__range=(end_interval, cutoff_max)).count()
+        count += templates.filter(fill_rating__range=(end_interval, cutoff_max)).filter(fill_in_support=True).count()
+        count += templates.filter(choice_rating__range=(end_interval, cutoff_max)).filter(multiple_support=True).count()
         morris_data.append('{rating: "%d-%d", oppgaver: %d },' % (end_interval, cutoff_max, count))
 
     return morris_data
