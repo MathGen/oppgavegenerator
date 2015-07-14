@@ -7,13 +7,14 @@ $(document).ready(function(){
 	$('#opt_graph').change(function(){
 		if($(this).is(':checked')){
 			$('#graph_modal').modal('show').one('shown.bs.modal', function(){
+                var graph_expressions =  $('#get_graph').text();
                 if (!graph_initialized && !MODIFY) {
                     dcg_init_graph();
                     graph_initialized = true;
-                } else if (!graph_initialized && MODIFY && $('#get_graph').text() != "[]"){
+                } else if (!graph_initialized && MODIFY && graph_expressions != "[]" && graph_expressions != "None"){
                     dcg_edit_graph();
                     graph_initialized = true;
-                } else if (!graph_initialized && MODIFY && $('#get_graph').text() == "[]"){
+                } else if (!graph_initialized && MODIFY && graph_expressions == "[]" && graph_expressions == "None"){
                     dcg_init_graph();
                     graph_initialized = true;
                 } else {
