@@ -3,7 +3,7 @@
 {% load app_filters %}
 {% block head %}<link href="/static/css/jquery-ui.min.css" rel="stylesheet">{% endblock %}
 {% block js %}
-    <script src="/static/js/graph.js?004"></script>
+    <script src="/static/js/graph.js?005"></script>
     <script src="/static/js/jquery-ui.min.js"></script>
     <script src="https://www.desmos.com/api/v0.6/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6" async></script>
 {% endblock %}
@@ -14,6 +14,7 @@
         {% csrf_token %}
     </form>
 
+    {% if template_id %}
     <div hidden id="edit_template">true</div>
     <div hidden id="template_id">{{ template_id }}</div>
     <div hidden id="solution">{{ solution }}</div>
@@ -33,6 +34,8 @@
     <div hidden id="get_required">{{ unchanged_required }}</div>
     <div hidden id="get_tags">{{ tags }}</div>
     <div hidden id="get_graph">{{ graph }}</div>
+    <div hidden id="get_graph_settings">{{ graph_settings }}</div>
+    {% endif %}
 
     <!-- PANELS -->
     <!--QUESTION PANEL-->
@@ -70,14 +73,14 @@
                         <button id="q_btn_delete" class="btn btn-default btn_delete">
                             <span class="glyphicon glyphicon-erase"></span>
                         </button>
-                        <button id="q_btn_proceed" class="btn btn-primary btn-group-q btn_proceed" type="submit" disabled>Fortsett</button>
+                        <button id="q_btn_proceed" class="btn btn-primary btn-group-q btn_proceed" type="submit" {% if template_id %}disabled{% endif %}>Fortsett</button>
                     </div>
                 </div>
             </div>
         </div>
     </section>
     <!--SOLUTION PANEL-->
-    <section id="s_panel" class="panel panel-default">
+    <section id="s_panel" class="panel panel-default" {% if not template_id%}style="display:none"{% endif %}>
         <div class="panel-heading">
             <h3 class="panel-title">Løsning
                 <a id="s_btn_close" class="glyphicon glyphicon-remove pull-right btn_close"></a>
@@ -114,7 +117,7 @@
                         <button id="s_btn_delete" class="btn btn-default btn_delete">
                             <span class="glyphicon glyphicon-erase"></span>
                         </button>
-                        <button id="s_btn_proceed" class="btn btn-primary btn-group-s btn_proceed" type="submit" disabled>Fortsett</button>
+                        <button id="s_btn_proceed" class="btn btn-primary btn-group-s btn_proceed" type="submit" {% if template_id %}disabled{% endif %}>Fortsett</button>
                         <button id="s_btn_next" class="btn btn-default">
                             <span class="glyphicon glyphicon-plus"></span>
                         </button>
@@ -124,7 +127,7 @@
         </div>
     </section>
     <!--ANSWER PANEL-->
-    <section id="a_panel" class="panel panel-default">
+    <section id="a_panel" class="panel panel-default" {% if not template_id %}style="display:none"{% endif %}>
         <div class="panel-heading">
             <h3 class="panel-title">Svar
                 <a id="a_btn_close" class="glyphicon glyphicon-remove pull-right btn_close"></a>
@@ -159,7 +162,7 @@
                         <button id="a_btn_delete" class="btn btn-default btn_delete">
                             <span class="glyphicon glyphicon-erase"></span>
                         </button>
-                        <button id="a_btn_proceed" class="btn btn-primary btn-group-a btn_proceed" type="submit" disabled>Fortsett</button>
+                        <button id="a_btn_proceed" class="btn btn-primary btn-group-a btn_proceed" type="submit" {% if template_id %}disabled{% endif %}>Fortsett</button>
                         <button id="a_btn_next" class="btn btn-default">
                             <span class="glyphicon glyphicon-plus"></span>
                         </button>
@@ -169,7 +172,7 @@
         </div>
     </section>
     <!--OPTION PANEL-->
-    <section id="o_panel" class="panel panel-default">
+    <section id="o_panel" class="panel panel-default" {% if not template_id %}style="display: none"{% endif %}>
         <div class="panel-heading">
             <h3 class="panel-title">Innstillinger
                 <a id="o_btn_close" class="glyphicon glyphicon-remove pull-right btn_close"></a>
@@ -257,7 +260,9 @@
                 </div>
                 <div class="col-md-4">
                     <div class="pull-right btn-group">
+                        {% if template_id %}
                         <button id="o_btn_save_new" class="btn btn-default" type="submit">Lagre som ny mal</button>
+                        {% endif %}
                         <button id="o_btn_save" class="btn btn-primary" type="submit">
                             <span class="glyphicon glyphicon-save"></span> Lagre
                         </button>

@@ -28,7 +28,8 @@ function dcg_init_graph(){
 	$('#graph_container').html("");
 	var elt = document.getElementById('graph_container');
 	graph = Desmos.Calculator(elt, { //Set options for the DCG
-		keypad: false
+		keypad: false,
+        expressionsTopbar: false
 	});
 	graph.setExpression({id: 'graph1', latex: 'f(x)='});
     dcg_refresh_variables();
@@ -49,6 +50,7 @@ function dcg_init_game_graph(){
     for (var e = 0; e < expressions.length; e++){
         dcg_new_expression(e, expressions[e]);
     }
+    dcg_set_graph_settings();
     refresh_char_colors('.dcg-template-mathquill');
     $('.dcg-template-mathquill').addClass('input_mathquill');
 }
@@ -60,12 +62,14 @@ function dcg_edit_graph(){
     $('#graph_container').html("");
 	var elt = document.getElementById('graph_container');
 	graph = Desmos.Calculator(elt, { //Set options for the DCG
-		keypad: false
+		keypad: false,
+        expressionsTopbar: false
 	});
     var expressions = JSON.parse($('#get_graph').text());
     for (var e = 0; e < expressions.length; e++){
         graph.setExpression({id: e, latex: expressions[e]});
     }
+    dcg_set_graph_settings();
     dcg_refresh_variables();
     refresh_char_colors('.dcg-template-mathquill');
     $('.dcg-template-mathquill').addClass('input_mathquill');
@@ -152,4 +156,24 @@ function dcg_get_expressions(){
         }
     }
     return expressions;
+}
+
+/**
+ * Retrieves the settings for the graph and return it as an object.
+ * @returns {Object} The graph settings object.
+ */
+function dcg_get_graph_settings(){
+    return graph.getState()['graph'];
+}
+
+/**
+ * Retrieves and sets the graph-settings for the DCG.
+ */
+function dcg_set_graph_settings(){
+    var settings = JSON.parse($('#get_graph_settings').text());
+    var viewport = settings['viewport'];
+    delete settings['viewport'];
+    delete settings['squareAxes'];
+    graph.setGraphSettings(settings);
+    graph.setViewport([viewport['xmin'], viewport['xmax'], viewport['ymin'], viewport['ymax']]);
 }

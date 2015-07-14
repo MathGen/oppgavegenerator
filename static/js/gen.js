@@ -817,9 +817,11 @@ function submit_template(){
 			expressions[e] = convert_variables(expressions[e]);
 		}
 		form_submit['graph'] = JSON.stringify(expressions);
+		form_submit['graph_settings'] = JSON.stringify(dcg_get_graph_settings());
 	} else {
 		form_submit['graph'] = JSON.stringify(expressions);
 		form_submit['unchanged_graph'] = JSON.stringify(expressions);
+		form_submit['graph_settings'] = "";
 	}
 
 	// CHOICES
