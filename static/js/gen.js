@@ -1930,7 +1930,7 @@ function insert_editable_data(){
 
 	// Set checked on graph
 	var graph_expressions = $('#get_graph').text();
-	if(graph_expressions != "[]" || graph_expressions != "None"){
+	if((graph_expressions != "[]") && (graph_expressions != "None") && (graph_expressions != "")){
 		$('#opt_graph').prop('checked', true);
 	}
 
