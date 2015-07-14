@@ -106,7 +106,7 @@ function load_template(level_id){
                 update_progress_bar_level();
                 draw_level_stars();
                 var graph_expressions = $('#get_graph').text();
-                if(graph_expressions != "[]" && graph_expressions != "None") {
+                if((graph_expressions != "[]") && (graph_expressions != "None") && (graph_expressions != "")) {
                     dcg_init_game_graph();
                 }
                 $('#game_nav').fadeIn(function(){
