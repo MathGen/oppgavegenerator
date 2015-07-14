@@ -7,15 +7,15 @@ Handles task generation from templates.
 from random import uniform, shuffle, choice
 from sympy.parsing.sympy_parser import (parse_expr, standard_transformations,
                                         implicit_multiplication_application, convert_xor)
-
 from oppgavegen.latex_translator import latex_to_sympy, add_phantom_minus, remove_pm_and_add_parenthesis
-from oppgavegen.models import  Level
+from oppgavegen.models import Level
 from oppgavegen.generation_folder.multifill import multifill
 from oppgavegen.generation_folder.fill_in import fill_in_the_blanks
 from oppgavegen.utility.utility import *
 from oppgavegen.generation_folder.calculate_parse_solution import parse_solution
 from oppgavegen.generation_folder.get_question import get_question, get_level_question
 import json
+
 
 @Debugger
 def generate_task(user, template_extra, desired_type=''):
@@ -202,7 +202,6 @@ def generate_level(user, level_id):
         new_task = replace_words_dict['sentence']
         replacing_words = replace_words_dict['replace_string']
     number_of_answers = len(new_answer.split('§'))
-
 
     if graph != None and graph != '':  # to prevent error if none
         graph = json.dumps(graph)
