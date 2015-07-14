@@ -83,8 +83,8 @@ def get_level_template_original_statistics(level, interval=100):
     # Since range in used +- 1 is needed on the bounds, ie. to get 1 and 2 the range is 0,3
     while lower_bound < 25:  # as of the making of this 25 is the max difficulty number
         count = templates.filter(difficulty__range=(lower_bound, upper_bound)).count()
-        count += templates.filter(difficulty_multiple__range=(lower_bound, upper_bound)).count()
-        count += templates.filter(difficulty_blanks__range=(lower_bound, upper_bound)).count()
+        count += templates.filter(difficulty_multiple__range=(lower_bound, upper_bound)).filter(fill_in_support=True).count()
+        count += templates.filter(difficulty_blanks__range=(lower_bound, upper_bound)).filter(multiple_support=True).count()
         morris_data.append('{rating: "%d-%d", oppgaver: %d },' % (lower_bound*50+950, upper_bound*50+950, count))
         lower_bound += interval
         upper_bound += interval
