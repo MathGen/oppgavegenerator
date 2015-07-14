@@ -197,10 +197,10 @@ def user_overview_table(request):
 @login_required
 @user_passes_test(is_teacher, '/')
 def new_template(request):
-    """Returns a render of newtemplate.html used for creating new templates"""
+    """Returns a render of edit.html used for creating new templates"""
     context = RequestContext(request)
     # Retrieves a list of topics and passes them to the view.
-    return render_to_response('newtemplate.html', context)
+    return render_to_response('edit.html', context)
 
 
 @login_required
