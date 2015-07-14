@@ -13,14 +13,7 @@
     <section class="panel panel-default">
         <div class="panel-heading"><h3 class="panel-title">Statistikk for {{ level_name }}</h3></div>
             <div class="panel-body" style="overflow-x:scroll;">
-                <h3>Oppgaver</h3>
 
-                {% if templates %}
-                    <div id="templatesratingchart" style="height: 250px"></div>
-                {% else %}
-                    Ingen oppgaver i {{ level_name }} enda.
-
-                {% endif %}
                 <h3>Studentstatistikk</h3>
                 {% if players %}
 
@@ -33,6 +26,19 @@
                     Ingen har begynt på {{ level_name }} enda.
                 {% endif %}
 
+                <h3>Oppgaver</h3>
+
+
+                {% if templates %}
+                    <p>Nåværende rating</p>
+                    <div id="templatesratingchart" style="height: 250px"></div>
+                    <p>Original rating</p>
+                    <div id="templates_original_chart" style="height: 250px"></div>
+                {% else %}
+                    Ingen oppgaver i {{ level_name }} enda.
+
+                {% endif %}
+
             </div>
     </section>
 
@@ -43,17 +49,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
     <script>
-        new Morris.Bar({
-            element: 'templatesratingchart',
-            data: [
-                {% for entry in template_entries %}
-                    {{ entry|safe }}
-                {% endfor %}
-            ],
-            xkey: 'rating',
-            ykeys: ['oppgaver'],
-            labels: ['Oppgaver']
-        });
+
         new Morris.Bar({
             element: 'studentratingchart',
             data: [
@@ -65,6 +61,32 @@
             ykeys: ['studenter'],
             labels: ['Studenter']
         });
+
+        new Morris.Bar({
+            element: 'templatesratingchart',
+            data: [
+                {% for entry in template_entries %}
+                    {{ entry|safe }}
+                {% endfor %}
+            ],
+            xkey: 'rating',
+            ykeys: ['oppgaver'],
+            labels: ['Oppgaver']
+        });
+
+        new Morris.Bar({
+            element: 'template_original_chart',
+            data: [
+                {% for entry in template_original %}
+                    {{ entry|safe }}
+                {% endfor %}
+            ],
+            xkey: 'rating',
+            ykeys: ['oppgaver'],
+            labels: ['Oppgaver']
+        });
+
+
     </script>
 
 {% endblock %}

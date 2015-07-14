@@ -577,8 +577,10 @@ class UserCurrentSetsEdit(LoginRequiredMixin, UpdateView):
     #     #self.fields['current_set'].queryset = Set.objects.filter(creator=self.request.user)
     #     return form_class
 
+
 def refresh_navbar(request):
     return render_to_response('includes/current_sets_snippet.html')
+
 
 def level_stats(request, level_id):
     """
@@ -587,19 +589,19 @@ def level_stats(request, level_id):
     The range is from 0 to 2400, and the measuring interval is 100 counting from 1100 and up.
     """
 
-    dict = {}
+    context_dict = {}
     level = Level.objects.get(pk=level_id)
-    dict['level_name'] = level.name
+    context_dict['level_name'] = level.name
     stats = level.student_progresses.all()
 
     studentratings = stats.values_list('level_rating', flat=True) # list of all ratings
 
     if studentratings:
-        dict['players'] = len(studentratings)
-        dict['average'] = int(sum(studentratings)/dict['players'])
+        context_dict['players'] = len(studentratings)
+        context_dict['average'] = int(sum(studentratings)/context_dict['players'])
 
-    dict['student_entries'] = get_level_student_statistics(level)
-    dict['templates'] = level.templates.exists()
-    dict['template_entries'] = get_level_template_statistics(level)
-    dict['template_original'] = ''
-    return render(request, 'sets/charts.html', dict)
+    context_dict['student_entries'] = get_level_student_statistics(level)
+    context_dict['templates'] = level.templates.exists()
+    context_dict['template_entries'] = get_level_template_statistics(level)
+    context_dict['template_original'] = get_level_template_original_statistics(level)
+    return render(request, 'sets/charts.html', context_dict)
