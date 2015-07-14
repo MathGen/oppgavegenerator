@@ -806,18 +806,21 @@ function submit_template(){
 
 	// GRAPH
 	var expressions = [];
+	var graph_settings = "";
 	if ($('#opt_graph').is(':checked')) {
 		if(MODIFY && !GRAPH_MODIFIED){
 			expressions = JSON.parse($('#get_graph').text());
+			graph_settings = JSON.parse($('#get_graph_settings').text());
 		} else {
 			expressions = dcg_get_expressions();
+			graph_settings = dcg_get_graph_settings();
 		}
 		form_submit['unchanged_graph'] = JSON.stringify(expressions);
 		for(var e = 0; e < expressions.length; e++){
 			expressions[e] = convert_variables(expressions[e]);
 		}
 		form_submit['graph'] = JSON.stringify(expressions);
-		form_submit['graph_settings'] = JSON.stringify(dcg_get_graph_settings());
+		form_submit['graph_settings'] = JSON.stringify(graph_settings);
 	} else {
 		form_submit['graph'] = JSON.stringify(expressions);
 		form_submit['unchanged_graph'] = JSON.stringify(expressions);
