@@ -105,7 +105,10 @@ function load_template(level_id){
             $('#game_content').html(result).fadeIn('fast', function(){
                 update_progress_bar_level();
                 draw_level_stars();
-                dcg_init_game_graph();
+                var graph_expressions = $('#get_graph').text();
+                if(graph_expressions != "[]" && graph_expressions != "None") {
+                    dcg_init_game_graph();
+                }
                 $('#game_nav').fadeIn(function(){
                     redraw_mathquill_elements();
                 });

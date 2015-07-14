@@ -3,7 +3,8 @@ var number_of_answers = "";
 var num_boxx = 0;
 
 $(document).ready(function () {
-    if($('#task_view').text() == "true" && $('#get_graph').text() != "[]"){
+    var graph_expressions = $('#get_graph').text();
+    if($('#task_view').text() == "true" && graph_expressions != "[]" && graph_expressions != 'None'){
         dcg_init_game_graph();
     }
     var text = 'some text';
