@@ -1478,27 +1478,30 @@ function submit_validation(){
 			error_message('answer_' + ans, 'Dette feltet kan ikke være tomt.');
 		}
 	}
-	if(VARIABLE_COUNT > 0){
+	if(VARIABLE_COUNT > 0){ //TODO: improve validation of random-domain.
 		for(var adv = 22; adv >= 0; adv--){
 			if($('#o_adv_from_' + adv).length){
-				if($('#o_adv_from_' + adv).val() == ''){
-					valid = false;
-					error_message('o_adv_from_' + adv, 'Fyll ut!');
-					$('#o_adv_domain').fadeIn();
-					$('#o_adv_caret').addClass('dropup');
-				}
-				else if($('#o_adv_to_' + adv).val() == ''){
-					valid = false;
-					error_message('o_adv_to_' + adv, 'Fyll ut!');
-					$('#o_adv_domain').fadeIn();
-					$('#o_adv_caret').addClass('dropup');
-				}
-				else if($('#o_adv_dec_' + adv).val() == ''){
-					valid = false;
-					error_message('o_adv_dec_' + adv, 'Fyll ut!');
-					$('#o_adv_domain').fadeIn();
-					$('#o_adv_caret').addClass('dropup');
-				}
+                if($('#o_adv_sequence_'+ adv).is(':checked')) {}
+                else {
+                    if ($('#o_adv_from_' + adv).val() == '') {
+                        valid = false;
+                        error_message('o_adv_from_' + adv, 'Fyll ut!');
+                        $('#o_adv_domain').fadeIn();
+                        $('#o_adv_caret').addClass('dropup');
+                    }
+                    else if ($('#o_adv_to_' + adv).val() == '') {
+                        valid = false;
+                        error_message('o_adv_to_' + adv, 'Fyll ut!');
+                        $('#o_adv_domain').fadeIn();
+                        $('#o_adv_caret').addClass('dropup');
+                    }
+                    else if ($('#o_adv_dec_' + adv).val() == '') {
+                        valid = false;
+                        error_message('o_adv_dec_' + adv, 'Fyll ut!');
+                        $('#o_adv_domain').fadeIn();
+                        $('#o_adv_caret').addClass('dropup');
+                    }
+                }
 			}
 		}
 	}
