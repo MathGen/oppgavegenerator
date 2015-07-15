@@ -11,7 +11,7 @@ from oppgavegen.forms import *
 from haystack.query import SearchQuerySet
 from haystack.views import search_view_factory, SearchView
 from oppgavegen.views.add_remove_views import *
-from oppgavegen.view_logic.format_domain_db import format_domain
+from oppgavegen.view_logic.db_format import format_domain
 
 
 urlpatterns = patterns('',
@@ -128,4 +128,6 @@ urlpatterns = patterns('',
     # Might be useful for autocomplete for tagging
     # Meant to work with jquery ui https://github.com/mlavin/django-selectable
     url(r'^selectable/', include('selectable.urls')),
+
+    url(r'^format/', format_domain()),
 )
