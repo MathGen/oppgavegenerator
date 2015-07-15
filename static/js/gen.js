@@ -499,6 +499,39 @@ $(document).ready(function() {
 		$('#o_adv_caret').toggleClass('dropup');
 	});
 
+	// Toggle the advance domain settings for one variable between a selection in a range and a selection with a list of numbers.
+	$(document).on('change', '.o_btn_adv_sequence', function(){
+		var id = $(this).attr('id').replace(/o_adv_sequence_/g, "");
+		if($(this).is(':checked')){
+			$('#o_adv_'+id).children().nextAll().slice(0, 3).each(function(){
+				$(this).fadeOut(function(){
+					$('#o_adv_sequence_container_'+id).fadeIn();
+				});
+			});
+		} else {
+			$('#o_adv_sequence_container_'+id).fadeOut(function(){
+				$('#o_adv_'+id).children().nextAll().slice(0, 3).each(function(){
+					$(this).fadeIn();
+				});
+			});
+		}
+	});
+
+	$('.sequence_input').find('.input_mathquill').on('focusout', function(){
+		var id = $(this).attr('id').replace(/sequence_input_/g, "");
+		var seq = get_latex_from_mathfield(this);
+		if(seq){
+			$(this).before('<span class="o_seq"><span class="math-field static-math-sm">'+seq+'</span><a class="btn btn_tag_del">x</a></span>');
+			MathQuill.MathField($(this)[0]).select().write(""); // reset the mathquill-input
+			redraw_mathquill_elements();
+		}
+	}).on('keyup', function(e){
+		if(/(13)/.test(e.which)) { // Add tag if one of these keys are pressed.
+			e.stopPropagation();
+			$(this).focusout();
+		}
+	});
+
 	// Domain input-insertion to advanced settings
 	$('#opt_domain_from').on('input', function(){
 		$('.opt_domain_from').val($('#opt_domain_from').val());
@@ -751,13 +784,25 @@ function submit_template(){
 	// RANDOM_DOMAIN
 	// retrieves the list from latest letter in alphabet (w) to earliest (a) as that is the formatting used server side.
 	if(VARIABLE_COUNT > 0){
-		var tmp_r_domain = [];
-		for (var i = 22; i >= 0; i--) {
-			if ($('#o_adv_' + i).length) {
-				tmp_r_domain.push($('#o_adv_from_' + i).val() + " " + $('#o_adv_to_' + i).val() + " " + $('#o_adv_dec_' + i).val());
-			}
-		}
-		form_submit['random_domain'] = tmp_r_domain.join('§');
+        var domain_dict = {};
+        for(var v = 0; v < VARIABLE_COUNT; v++) {
+            var name = "";
+            if ($('#o_adv_sequence_'+ v).is(':checked')) {
+                name = convert_variables($('#o_adv_' + v).children().first().text().replace(/:/g, ""));
+                var sequence = [];
+                $('#o_adv_sequence_container_'+ v).find('.o_seq').each(function () {
+                    sequence.push(get_latex_from_mathfield($(this).find('.static-math-sm')));
+                });
+                domain_dict[name] = [sequence, true];
+            } else {
+                name = convert_variables($('#o_adv_' + v).children().first().text().replace(/:/g, ""));
+                var from = $('#o_adv_from_' + v).val();
+                var to = $('#o_adv_to_' + v).val();
+                var dec = $('#o_adv_dec_' + v).val();
+                domain_dict[name] = [[from, to, dec], false];
+            }
+        }
+        form_submit['random_domain'] = JSON.stringify(domain_dict);
 	}
 	else{
 		form_submit['random_domain'] = "";
@@ -806,13 +851,17 @@ function submit_template(){
 
 	// GRAPH
 	var expressions = [];
+	var colors = [];
 	var graph_settings = "";
 	if ($('#opt_graph').is(':checked')) {
 		if(MODIFY && !GRAPH_MODIFIED){
 			expressions = JSON.parse($('#get_graph').text());
+			colors = JSON.parse($('#get_graph_color').text());
 			graph_settings = JSON.parse($('#get_graph_settings').text());
 		} else {
-			expressions = dcg_get_expressions();
+			var dcg_expr = dcg_get_expressions();
+			expressions = dcg_expr['latex'];
+			colors = dcg_expr['color'];
 			graph_settings = dcg_get_graph_settings();
 		}
 		form_submit['unchanged_graph'] = JSON.stringify(expressions);
@@ -820,10 +869,12 @@ function submit_template(){
 			expressions[e] = convert_variables(expressions[e]);
 		}
 		form_submit['graph'] = JSON.stringify(expressions);
+		form_submit['graph_color'] = JSON.stringify(colors);
 		form_submit['graph_settings'] = JSON.stringify(graph_settings);
 	} else {
 		form_submit['graph'] = JSON.stringify(expressions);
 		form_submit['unchanged_graph'] = JSON.stringify(expressions);
+		form_submit['graph_color'] = JSON.stringify(colors);
 		form_submit['graph_settings'] = "";
 	}
 
@@ -1676,7 +1727,15 @@ function refresh_char_colors(selector){
 						f_var.addClass('content_var');
 						$('#q_btn_var_dyn').append('<div id="q_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc btn_var_abc_q btn_keypad">' + f_var.html() + '<a id="q_btn_abc_del_'+var_id+'" class="btn btn-danger btn-xs btn_var_del">x</a></div>');
 						$('.btn_var_dyn').append('<button class="btn btn-danger btn_var_abc btn_var_'+var_id+' btn_keypad">' + f_var.html() + '</button>');
-						$('#o_adv_domain').append('<tr id="o_adv_' + var_id + '" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">' + f_var.html() + ':</td><td><input id="o_adv_from_' + var_id + '" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_' + var_id + '" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td style="border-left: thin dashed lightgray"><input id="o_adv_dec_'+var_id+'" type="number" class="form-control input-sm opt_domain_dec" placeholder="Desimaler:"></td><td></td></tr>');
+						$('#o_adv_domain').append(
+							'<tr id="o_adv_' + var_id + '" class="active o_adv_dyn">' +
+								'<td style="vertical-align: middle; text-align: right; color: #D9534F">' + f_var.html() + ':</td>' +
+								'<td><input id="o_adv_from_' + var_id + '" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td>' +
+								'<td><input id="o_adv_to_' + var_id + '" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td>' +
+								'<td style="border-left: thin dashed lightgray"><input id="o_adv_dec_'+var_id+'" type="number" class="form-control input-sm opt_domain_dec" placeholder="Desimaler:"></td>' +
+								'<td id="o_adv_sequence_container_'+var_id+'" style="display:none" colspan="3" class="sequence_input"><span id="sequence_input_'+var_id+'" class="math-field form-control input_mathquill"></span></td>' +
+								'<td style="vertical-align: middle"><input id="o_adv_sequence_'+var_id+'" class="o_btn_adv_sequence" type="checkbox"> Sekvens</td>' +
+							'</tr>');
 					}
 				}
 				else if(!var_exist){
@@ -1907,26 +1966,39 @@ function insert_editable_data(){
 
 	refresh_char_colors('.input_mathquill');
 
-	// Insert random-domain
-	var edit_random_domain = $('#random_domain').text();
-	edit_random_domain = edit_random_domain.split('§');
-	var rd_exist = [];
-	for(var r = 22; r >= 0; r--){
-		if($('#o_adv_from_' + r).val() == ''){
-			rd_exist.push(r);
-		}
-	}
-	for(var rd = 0; rd < edit_random_domain.length; rd++){
-		var edit_r = edit_random_domain[rd].split(" ");
-		if(rd == 0){
-			$('#opt_domain_from').val(edit_r[0]);
-			$('#opt_domain_to').val(edit_r[1]);
-			$('#opt_domain_dec').val(edit_r[2]);
-		}
-		$('#o_adv_from_' + rd_exist[rd]).val(edit_r[0]);
-		$('#o_adv_to_' + rd_exist[rd]).val(edit_r[1]);
-		$('#o_adv_dec_' + rd_exist[rd]).val(edit_r[2]);
-	}
+    // Insert random-domain
+    var random_domain = $('#random_domain').text();
+    if((random_domain != "") && (random_domain != "None")){
+        random_domain = JSON.parse(random_domain);
+        window.console.log(random_domain);
+        var init_domain = 0;
+        for(var key in random_domain){
+            var id = key.replace(/R/g, "");
+            if(random_domain[key][1]){
+                for (var s = 0; s < random_domain[key][0].length; s++) {
+                    $('#o_adv_sequence_container_'+ id).prepend('<span class="o_seq"><span class="math-field static-math-sm">' + random_domain[key][0][s] + '</span><a class="btn btn_tag_del">x</a></span>');
+                    $('#o_adv_' + id).children().nextAll().slice(0, 3).each(function () {
+                        $(this).fadeOut(function () {
+                            $('#o_adv_sequence_container_' + id).fadeIn(function(){
+                                $('#o_adv_sequence_'+id).attr('checked', true);
+                            });
+                        });
+                    });
+                }
+            } else {
+                var domain_list = random_domain[key][0];
+                $('#o_adv_from_'+id).val(domain_list[0]);
+                $('#o_adv_to_'+id).val(domain_list[1]);
+                $('#o_adv_dec_'+id).val(domain_list[2]);
+                if(init_domain == 0){
+                    init_domain++;
+                    $('#opt_domain_from').val(domain_list[0]);
+                    $('#opt_domain_to').val(domain_list[1]);
+                    $('#opt_domain_dec').val(domain_list[2]);
+                }
+            }
+        }
+    }
 
 	// Set checked on graph
 	var graph_expressions = $('#get_graph').text();

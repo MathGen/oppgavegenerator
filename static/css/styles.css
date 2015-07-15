@@ -263,10 +263,13 @@ sub{							/* between bootstrap*/
 	max-width: 100%;
 }
 
+/**** DOMAIN-SETTINGS ****/
+
 /**** TAGS/ILLEGAL-TAGS/REQUIRED-TAGS ****/
 .tag,
 .tag_i,
-.tag_r{
+.tag_r,
+.o_seq{
 	display:block;
   	float:left;
   	color:#fff;
@@ -284,9 +287,15 @@ sub{							/* between bootstrap*/
 	background-color: #004444;
 	border-color: #006060;
 }
+.o_seq,
+.o_seq>.btn_tag_del{
+	background-color: #bababa !important;
+	border-color: #868686 !important;
+}
 .tag>.btn_tag_del,
 .tag_i>.btn_tag_del,
-.tag_r>.btn_tag_del{
+.tag_r>.btn_tag_del,
+.o_seq>.btn_tag_del{
 	position: absolute;
 	color: #fff;
 	background:#689;
@@ -313,18 +322,22 @@ sub{							/* between bootstrap*/
 .tag_r>.btn_tag_del:hover{
 	background-color: #006060;
 }
+.o_seq>.btn_tag_del:hover{
+	background-color: #c2c2c2;
+}
 #tags>.form-control{
 	width: 167px; !important;
 }
+.sequence_input>.form-control,
 #tags_illegal>.form-control,
 #tags_required>.form-control{
-	display: inline-block;
-	width: 167px;
-	height: auto;
+	display: inline-block !important;
+	width: 167px !important;
+	height: auto !important;
 	padding: 4px 6px 3px 6px; !important;
 	margin: 0; !important;
-	font-size: 1.2em;
-	border: 1px solid #ccc;
+	font-size: 1.2em !important;
+	border: 1px solid #ccc !important;
 	border-radius: 3px; !important;
 }
 .static-math-sm{

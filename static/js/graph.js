@@ -151,16 +151,22 @@ function dcg_set_helper_expression(expression_name){
 
 /**
  * Iterates through the expression-list and stores the expression in an list (sorts out the preset variables).
- * @returns {Array} A list of expressions (without preset variables).
+ * @returns {Object} An object with expressions (without preset variables).
  */
 function dcg_get_expressions(){
     var expression_list = graph.getState()['expressions']['list'];
-    var expressions = [];
+    var tmp_expr = [];
+    var tmp_color = [];
+    var expressions = {};
     for(var e = 0; e < expression_list.length; e++){
         if(expression_list[e]['id'].substring(0, 12) != 'dcg_variable'){
-            expressions.push(expression_list[e]['latex']);
+            tmp_expr.push(expression_list[e]['latex']);
+            tmp_color.push(expression_list[e]['color']);
         }
     }
+    expressions['latex'] = tmp_expr;
+    expressions['color'] = tmp_color;
+    window.console.log(expressions);
     return expressions;
 }
 
