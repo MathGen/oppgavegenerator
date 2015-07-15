@@ -231,17 +231,20 @@ def generate_valid_numbers(template, random_domain, conditions, test):
     domain_list = {}
     variable_dict = {}
     counter = 0
-    random_domain = json.loads(random_domain)
-    # Loops through all possible variable names, and generate a random number for it.
-    # Adds the variables names and numbers to the 2 dictionaries and the string
-    for key in random_domain:
-        if random_domain[key][1]:
-            random_number = str(make_number_from_list(random_domain[key][0]))
-        else:
-            random_number = str(make_number(random_domain[key][0]))
-        domain_dict[key] = random_domain[key][0]
-        domain_list[key] = random_domain[key][1]
-        variable_dict[key] = random_number
+    try:
+        random_domain = json.loads(random_domain)
+        # Loops through all possible variable names, and generate a random number for it.
+        # Adds the variables names and numbers to the 2 dictionaries and the string
+        for key in random_domain:
+            if random_domain[key][1]:
+                random_number = str(make_number_from_list(random_domain[key][0]))
+            else:
+                random_number = str(make_number(random_domain[key][0]))
+            domain_dict[key] = random_domain[key][0]
+            domain_list[key] = random_domain[key][1]
+            variable_dict[key] = random_number
+    except ValueError:
+        pass
 
     # for i in range(len(hardcoded_variables)):
     #     if template.count(hardcoded_variables[i]) > 0:

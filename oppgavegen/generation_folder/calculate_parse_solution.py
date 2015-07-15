@@ -18,9 +18,9 @@ def calculate_answer(s, domain):
     :param domain: The domain of the variables.
     :return: A latex version of the calculated string.
     """
-    domain = json.loads(domain)
 
     try:
+        domain = json.loads(domain)
         if not is_number(s):  # Small optimization
             s = remove_unnecessary(s)
             s = str(latex_to_sympy(s))
@@ -32,6 +32,8 @@ def calculate_answer(s, domain):
             # Sometimes sympify returns the value 'zoo'
         else:
             s = round_answer(domain, float(s))
+    except ValueError:
+        pass
     except Exception as e:
         print('exception in calculate answer')
         print(e)
