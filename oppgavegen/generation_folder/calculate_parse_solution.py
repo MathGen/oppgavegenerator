@@ -8,7 +8,7 @@ from sympy.parsing.sympy_parser import (parse_expr, standard_transformations,
 from oppgavegen.utility.decorators import Debugger
 from oppgavegen.utility.utility import is_number, remove_unnecessary
 from oppgavegen.latex_translator import latex_to_sympy
-
+import json
 
 @Debugger
 def calculate_answer(s, domain):
@@ -18,6 +18,8 @@ def calculate_answer(s, domain):
     :param domain: The domain of the variables.
     :return: A latex version of the calculated string.
     """
+    domain = json.loads(domain)
+
     try:
         if not is_number(s):  # Small optimization
             s = remove_unnecessary(s)

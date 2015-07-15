@@ -231,6 +231,7 @@ def generate_valid_numbers(template, random_domain, conditions, test):
     domain_list = {}
     variable_dict = {}
     counter = 0
+    random_domain = json.loads(random_domain)
     # Loops through all possible variable names, and generate a random number for it.
     # Adds the variables names and numbers to the 2 dictionaries and the string
     for key in random_domain:
