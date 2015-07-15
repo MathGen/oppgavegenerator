@@ -5,6 +5,7 @@ Handles task generation from templates.
 """
 
 from random import uniform, shuffle, choice
+from sympy import sympify
 from sympy.parsing.sympy_parser import (parse_expr, standard_transformations,
                                         implicit_multiplication_application, convert_xor)
 from oppgavegen.latex_translator import latex_to_sympy, add_phantom_minus, remove_pm_and_add_parenthesis
@@ -327,7 +328,7 @@ def new_random_value(value, domain_dict, bonus=0, extra=''):
     return new_value
 
 def make_number_from_list(domain):
-    return choice(domain)
+    return sympify(latex_to_sympy(choice(domain)))
 
 
 @Debugger
