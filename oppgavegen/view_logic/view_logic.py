@@ -53,7 +53,7 @@ def make_edit_context_dict(template_id):
                     'required': q.required, 'difficulty': q.difficulty, 'difficulty_blanks': difficulty_b,
                     'difficulty_multiple': difficulty_m, 'name': name, 'unchanged_disallowed': unchanged_disallowed,
                     'unchanged_required': unchanged_required, 'graph': q.unchanged_graph,
-                    'graph_settings': q.graph_settings}
+                    'graph_settings': q.graph_settings, 'graph_color': q.graph_color}
     return context_dict
 
 

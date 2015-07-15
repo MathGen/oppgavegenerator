@@ -64,6 +64,7 @@ class Template(models.Model):
     copy = models.BooleanField(default=False)
 
     graph = models.CharField(default='', max_length=4000, null=True, blank=True)
+    graph_color = models.CharField(default='', max_length=4000, null=True, blank=True)
 
     # Also save the original latex for post-back:
     used_variables = models.CharField(max_length=200, blank=True, null=True)

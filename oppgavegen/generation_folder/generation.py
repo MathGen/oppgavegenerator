@@ -117,7 +117,7 @@ def generate_task(user, template_extra, desired_type=''):
                    'variable_dictionary': variables_used, 'template_type': template_type,
                    'template_specific': template_specific, 'primary_key': primary_key,
                    'number_of_answers': number_of_answers, 'replacing_words': replacing_words,
-                   'graph': graph, 'graph_settings': q.graph_settings}
+                   'graph': graph, 'graph_settings': q.graph_settings, 'graph_color': q.graph_color}
     return return_dict
 
 
@@ -210,7 +210,7 @@ def generate_level(user, level_id):
     return_dict = {'question': new_task, 'variable_dictionary': variables_used, 'template_type': template_type,
                    'template_specific': template_specific, 'primary_key': primary_key,
                    'number_of_answers': number_of_answers, 'replacing_words': replacing_words,
-                   'graph': graph, 'graph_settings': q.graph_settings}
+                   'graph': graph, 'graph_settings': q.graph_settings, 'graph_color': q.graph_color}
     return return_dict
 
 
@@ -232,17 +232,25 @@ def generate_valid_numbers(template, random_domain_list, conditions, test):
     counter = 0
     # Loops through all possible variable names, and generate a random number for it.
     # Adds the variables names and numbers to the 2 dictionaries and the string
-    for i in range(len(hardcoded_variables)):
-        if template.count(hardcoded_variables[i]) > 0:
-            try:  # In case of index out of bounds it just uses the first element of the array
-                random_domain = random_domain_list[counter].split()
-            except IndexError:
-                # Uses the first domain in case one was not provided.
-                random_domain = random_domain_list[0].split()
-            random_number = str(make_number(random_domain))
-            domain_dict[hardcoded_variables[i]] = random_domain
-            variable_dict[hardcoded_variables[i]] = random_number
-            counter += 1  # Counter to iterate through the random domains
+    for key in random_domain_list:
+        if random_domain_list[key][1]:
+            pass
+        else:
+            random_number = str(make_number(random_domain_list[key][0]))
+        domain_dict[key] = random_domain_list[key][0]
+        variable_dict[key] = random_number
+
+    # for i in range(len(hardcoded_variables)):
+    #     if template.count(hardcoded_variables[i]) > 0:
+    #         try:  # In case of index out of bounds it just uses the first element of the array
+    #             random_domain = random_domain_list[counter].split()
+    #         except IndexError:
+    #             # Uses the first domain in case one was not provided.
+    #             random_domain = random_domain_list[0].split()
+    #         random_number = str(make_number(random_domain))
+    #         domain_dict[hardcoded_variables[i]] = random_domain
+    #         variable_dict[hardcoded_variables[i]] = random_number
+    #         counter += 1  # Counter to iterate through the random domains
     if len(conditions) > 1:
         variable_dict = check_conditions(conditions, variable_dict, domain_dict)
 
