@@ -41,7 +41,7 @@ def generate_task(user, template_extra, desired_type=''):
             return {'question': 'error'}
 
     # The domain of random numbers that can be generated for the question
-    random_domain_list = q.random_domain.split('§')
+    random_domain_list = q.random_domain
     task = str(q.question_text)
     task = task.replace('\\\\', '\\') # Replaces double \\ with \
     template_type = desired_type
@@ -135,7 +135,7 @@ def generate_level(user, level_id):
     q = get_question_dict['template']
     desired_type = get_question_dict['type']
     # The domain of random numbers that can be generated for the question
-    random_domain_list = q.random_domain.split('§')
+    random_domain_list = q.random_domain
     task = str(q.question_text)
     task = task.replace('\\\\', '\\') # Replaces double \\ with \
     template_type = desired_type
@@ -215,12 +215,12 @@ def generate_level(user, level_id):
 
 
 @Debugger
-def generate_valid_numbers(template, random_domain_list, conditions, test):
+def generate_valid_numbers(template, random_domain, conditions, test):
     """Generates valid numbers using each variables random domain.
 
     Also makes sure all variables follows the given conditions.
     :param template: The template used.
-    :param random_domain_list: List of the random domains.
+    :param random_domain: dict used for random domains
     :param conditions: The conditions the variable have to follow.
     :param test: If true the function returns the domain_dict instead of variable_dict.
     :return: The current generated variables used in the template.
@@ -228,16 +228,18 @@ def generate_valid_numbers(template, random_domain_list, conditions, test):
     hardcoded_variables = ['R22R', 'R21R', 'R20R', 'R19R', 'R18R', 'R17R', 'R16R', 'R15R', 'R14R', 'R13R', 'R12R',
                            'R11R', 'R10R', 'R9R', 'R8R', 'R7R', 'R6R', 'R3R', 'R2R', 'R1R', 'R0R']
     domain_dict = {}
+    domain_list = {}
     variable_dict = {}
     counter = 0
     # Loops through all possible variable names, and generate a random number for it.
     # Adds the variables names and numbers to the 2 dictionaries and the string
-    for key in random_domain_list:
-        if random_domain_list[key][1]:
-            pass
+    for key in random_domain:
+        if random_domain[key][1]:
+            random_number = str(make_number_from_list(random_domain[key][0]))
         else:
-            random_number = str(make_number(random_domain_list[key][0]))
-        domain_dict[key] = random_domain_list[key][0]
+            random_number = str(make_number(random_domain[key][0]))
+        domain_dict[key] = random_domain[key][0]
+        domain_list[key] = random_domain[key][1]
         variable_dict[key] = random_number
 
     # for i in range(len(hardcoded_variables)):
@@ -252,7 +254,7 @@ def generate_valid_numbers(template, random_domain_list, conditions, test):
     #         variable_dict[hardcoded_variables[i]] = random_number
     #         counter += 1  # Counter to iterate through the random domains
     if len(conditions) > 1:
-        variable_dict = check_conditions(conditions, variable_dict, domain_dict)
+        variable_dict = check_conditions(conditions, variable_dict, domain_dict, domain_list)
 
     # lesser_than('R0 * 2 < 3', domain_dict, variable_dict) #for testing purposes
     if test:
@@ -261,7 +263,7 @@ def generate_valid_numbers(template, random_domain_list, conditions, test):
 
 
 @Debugger
-def check_conditions(conditions, variable_dict, domain_dict):
+def check_conditions(conditions, variable_dict, domain_dict, domain_list):
     """A function that checks if the generated variables pass the conditions and generates new ones until they do.
 
     :param conditions: The conditions of the template.
@@ -275,7 +277,10 @@ def check_conditions(conditions, variable_dict, domain_dict):
     while not parse_expr(latex_to_sympy(inserted_conditions), transformations=standard_transformations +
                          (convert_xor, implicit_multiplication_application,), global_dict=None, evaluate=True):
         variable_to_change = choice(list(variable_dict.keys()))  # Chose a random key from variable_dict
-        variable_dict[variable_to_change] = new_random_value(variable_to_change, domain_dict, 0, '')
+        if domain_list[variable_to_change]:
+            variable_dict[variable_to_change] = make_number_from_list(domain_dict[variable_to_change])
+        else:
+            variable_dict[variable_to_change] = new_random_value(variable_to_change, domain_dict)
         inserted_conditions = string_replace(conditions, variable_dict)
     return variable_dict
 
@@ -317,6 +322,9 @@ def new_random_value(value, domain_dict, bonus=0, extra=''):
         new_value = randint(int(domain[0]), int(domain[1]))
     return new_value
 
+def make_number_from_list(domain):
+    return choice(domain)
+
 
 @Debugger
 def make_number(domain):
@@ -329,3 +337,4 @@ def make_number(domain):
     except IndexError:
         number = round(number)
     return number
+

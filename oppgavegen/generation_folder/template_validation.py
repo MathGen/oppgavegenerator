@@ -37,7 +37,6 @@ def test_template(template):
     got_trough_test = 0  # 1 if template got through test, and 0 if not.
     # Make numbers, check condition, check calculations
     random_domain = template.random_domain
-    random_domain_list = random_domain.split('§')
     # Efficiency note: it might be faster to pass the domain list, instead of getting them from template every time.
     answer = template.answer
     question = template.question_text
@@ -45,7 +44,7 @@ def test_template(template):
     conditions = template.conditions
     conditions = remove_unnecessary(conditions)
 
-    variable_dict = generate_valid_numbers(question, random_domain_list, "", False)
+    variable_dict = generate_valid_numbers(question, random_domain, "", False)
     inserted_conditions = string_replace(conditions, variable_dict)
     if len(conditions) > 1:
         conditions_pass = sympify(latex_to_sympy(inserted_conditions))
