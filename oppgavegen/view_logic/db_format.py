@@ -28,9 +28,9 @@ def format_domain():
         counter = 0
         for x in reversed(domain_list):
             try:
-                domain_dict[variable_list[counter]] = [x, False]
+                domain_dict[variable_list[counter]] = [x.split(), False]
             except Exception:
-                domain_dict[hardcoded_variables[counter]] = [x, False]
+                domain_dict[hardcoded_variables[counter]] = [x.split(), False]
             counter += 1
 
         t.random_domain = json.dumps(domain_dict)
