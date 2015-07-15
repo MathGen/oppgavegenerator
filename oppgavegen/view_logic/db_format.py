@@ -4,7 +4,7 @@ import json
 
 def format_domain(request):
     """Formats the random_domain for templates from the old format to the new one."""
-    if request.user.admin:
+    if request.user.is_superuser:
         templates = Template.objects.all()
         letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
                    'v', 'w']
