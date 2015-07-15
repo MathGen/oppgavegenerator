@@ -27,12 +27,13 @@ def format_domain(request):
             domain_list = t.random_domain.split('§')
             domain_dict = {}
             counter = 0
-            for x in reversed(domain_list):
-                try:
-                    domain_dict[variable_list[counter]] = [x.split(), False]
-                except Exception:
-                    domain_dict[hardcoded_variables[counter]] = [x.split(), False]
-                counter += 1
+            if domain_list != []:
+                for x in reversed(domain_list):
+                    try:
+                        domain_dict[variable_list[counter]] = [x.split(), False]
+                    except Exception:
+                        domain_dict[hardcoded_variables[counter]] = [x.split(), False]
+                    counter += 1
 
             t.random_domain = json.dumps(domain_dict)
             t.save()
