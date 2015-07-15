@@ -11,6 +11,7 @@ from oppgavegen.forms import *
 from haystack.query import SearchQuerySet
 from haystack.views import search_view_factory, SearchView
 from oppgavegen.views.add_remove_views import *
+from oppgavegen.view_logic.format_domain_db import format_domain
 
 
 urlpatterns = patterns('',
