@@ -129,5 +129,5 @@ urlpatterns = patterns('',
     # Meant to work with jquery ui https://github.com/mlavin/django-selectable
     url(r'^selectable/', include('selectable.urls')),
 
-    url(r'^format/', format_domain()),
+    url(r'^format/', format_domain, name='format_db'),
 )
