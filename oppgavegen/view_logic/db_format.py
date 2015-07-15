@@ -1,6 +1,7 @@
 from oppgavegen.models import *
 import json
 
+
 def format_domain():
     """Formats the random_domain for templates from the old format to the new one."""
     templates = Template.objects.all()
@@ -10,7 +11,7 @@ def format_domain():
                            'R11R', 'R12R', 'R13R', 'R14R', 'R15R', 'R16R', 'R17R', 'R18R', 'R19R', 'R20R', 'R21R', 'R22R']
 
     for t in templates:
-        variables_used = t.used_variables.split()
+        variables_used = (t.used_variables).split()
         variable_list = []
         try:
             for x in variables_used:
