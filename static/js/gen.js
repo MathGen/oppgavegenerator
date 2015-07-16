@@ -1866,8 +1866,21 @@ function insert_editable_data(){
 	for(var v = 0; v < var_str.length; v++){
 		var tmp_var = var_str[v].split('§');
 		VARIABLES[tmp_var[0]] = tmp_var.join('§');
+
+		$('#q_btn_var_dyn').append('<div id="q_btn_abc_' + tmp_var[0] + '" class="btn btn-danger btn_var_abc btn_var_abc_q btn_keypad">' + tmp_var[1] + '<a id="q_btn_abc_del_' + tmp_var[0] + '" class="btn btn-danger btn-xs btn_var_del">x</a></div>');
+		$('.btn_var_dyn').append('<button class="btn btn-danger btn_var_abc btn_var_' + tmp_var[0] + ' btn_keypad">' + tmp_var[1] + '</button>');
+		$('#o_adv_domain').append(
+			'<tr id="o_adv_' + tmp_var[0] + '" class="active o_adv_dyn">' +
+				'<td style="vertical-align: middle; text-align: right; color: #D9534F">' + tmp_var[1] + ':</td>' +
+				'<td><input id="o_adv_from_' + tmp_var[0] + '" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td>' +
+				'<td><input id="o_adv_to_' + tmp_var[0] + '" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td>' +
+				'<td style="border-left: thin dashed lightgray"><input id="o_adv_dec_' + tmp_var[0] + '" type="number" class="form-control input-sm opt_domain_dec" placeholder="Desimaler:"></td>' +
+				'<td id="o_adv_sequence_container_' + tmp_var[0] + '" style="display:none" colspan="3" class="sequence_input"><span id="sequence_input_' + tmp_var[0] + '" class="math-field form-control input_mathquill seq_input"></span></td>' +
+				'<td style="vertical-align: middle"><input id="o_adv_sequence_' + tmp_var[0] + '" class="o_btn_adv_sequence" type="checkbox"> Sekvens</td>' +
+			'</tr>'
+		);
 	}
-	//console.log(VARIABLES);
+	//window.console.log(VARIABLES);
 
 	// Inserting text-substitution
 	var dictionary = $('#dictionary').text();
@@ -1984,7 +1997,6 @@ function insert_editable_data(){
     var random_domain = $('#random_domain').text();
     if((random_domain != "") && (random_domain != "None")){
         random_domain = JSON.parse(random_domain);
-        window.console.log(random_domain);
         var init_domain = 0;
         for(var key in random_domain){
             var id = key.replace(/R/g, "");
