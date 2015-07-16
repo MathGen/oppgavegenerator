@@ -124,8 +124,12 @@ function dcg_refresh_variables(){
     if(VARIABLE_COUNT > 0) {
         $('.opt_domain_from').each(function(){
             var i = $(this).attr('id').replace(/o_adv_from_/g, "");
-            var name = $('#o_adv_' + i).text().replace(/:/g, "");
+            var name = VARIABLES[i];
+            name = name[name.length -1];
             var from = $(this).val();
+            if(from == ""){
+                from = 1;
+            }
             var to = $('#o_adv_to_' + i).val();
             dcg_new_variable('dcg_variable'+i, name, from, to);
         });
