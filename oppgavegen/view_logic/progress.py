@@ -110,3 +110,20 @@ def check_for_level_skip(user, chapter, level_id):
         return_value = True
 
     return return_value
+
+def check_for_chapter_completed(user, chapter):
+    """Returns 0/1 depending on if the user has completed the given chapter"""
+    levels = chapter.order
+    levels = levels.split(',')
+    counter = 0
+    for i in levels:
+        level = Level.objects.get(pk=i)
+        try:
+            q = UserLevelProgress.objects.get(user=user, level=level)
+        except UserLevelProgress.DoesNotExist:
+            break
+        if q.stars < 1:
+            break
+        counter += 1
+
+    return int(counter == len(levels))

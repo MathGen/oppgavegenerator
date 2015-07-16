@@ -174,9 +174,14 @@ def required_check(user_answer, required, variables):
     for x in range(0, len(required)):
         required[x] = replace_variables_from_array(variables, required[x])
     for s in required:
-        if s not in user_answer:
-            return_value = True
-            break
+        try:
+            if parse_solution(s) not in user_answer:
+                return_value = True
+                break
+        except Exception:
+            if s not in user_answer:
+                return_value = True
+                break
     return return_value
 
 

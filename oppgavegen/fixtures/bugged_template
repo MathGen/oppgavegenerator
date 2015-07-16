@@ -1,0 +1,50 @@
+[{"model": "oppgavegen.template", "pk": 43, "fields": {"name": "Test
+andregradslikning", "solution_latex": "ax^2+bx+c=gx+h\u00a7ax^2+bx-gx+c-
+h=0\u00a7ax^2+Ax+B=0\u00a7x=\\frac{-A\\pm\\sqrt{A^2-4aB}}{2a}=\\frac{E\\pm\\sqrt
+{C}}{D}", "fill_rating": 1506, "margin_of_error": "0.1", "answer": "@?(\\frac{(-
+(R1R-R6R))+\\sqrt{((R1R-R6R)^{2}-4\\cdot R0R\\cdot (R2R-R7R))}}{(2\\cdot R0R)})?@
+\u00a7@?(\\frac{(-(R1R-R6R))-\\sqrt{((R1R-R6R)^{2}-4\\cdot R0R\\cdot (R2R-R7R))}}
+{(2\\cdot R0R)})?@", "times_solved": 1, "solution": "R0Rx^{2}+R1Rx+R2R=R6Rx+R7R
+\u00a7R0Rx^{2}+R1Rx-R6Rx+R2R-R7R=0\u00a7R0Rx^{2}+@?(R1R-R6R)?@x+@?(R2R-R7R)?
+@=0\u00a7x=\\frac{-@?(R1R-R6R)?@\\pm\\sqrt{@?(R1R-R6R)?@^{2}-4\\cdot R0R\\cdot @?
+(R2R-R7R)?@}}{2\\cdot R0R}=\\frac{@?(-(R1R-R6R))?@\\pm\\sqrt{@?((R1R-R6R)^{2}-4\
+\cdot R0R\\cdot (R2R-R7R))?@}}{@?(2\\cdot R0R)?@}", "random_domain": "{\"R1R\":
+[[\"-10\", \"10\", \"0\"], false], \"R0R\": [[\"-10\", \"10\", \"0\"], false],
+\"R6R\": [[\"-10\", \"10\", \"0\"], false], \"R4R\": [[\"-10\", \"10\", \"0\"],
+false], \"R2R\": [[\"-10\", \"10\", \"0\"], false]}", "calculation_ref":
+"0\u00a7@?(R1R-R6R)?@\u00a71\u00a7@?(R2R-R7R)?@\u00a72\u00a7@?((R1R-R6R)^{2}-4\
+\cdot R0R\\cdot (R2R-R7R))?@\u00a73\u00a7@?(2\\cdot R0R)?@\u00a74\u00a7@?(-(R1R-
+R6R))?@\u00a75\u00a7@?(\\frac{(-(R1R-R6R))+\\sqrt{((R1R-R6R)^{2}-4\\cdot R0R\\cdot
+(R2R-R7R))}}{(2\\cdot R0R)})?@\u00a76\u00a7@?(\\frac{(-(R1R-R6R))-\\sqrt{((R1R-
+R6R)^{2}-4\\cdot R0R\\cdot (R2R-R7R))}}{(2\\cdot R0R)})?@", "choices": "",
+"conditions_latex": "\\left(C>0\\right)\\&\\left(a!=0\\right)\\&\\left(b!=0\
+\right)\\&\\left(c!=0\\right)\\&\\left(g!=0\\right)\\&\\left(h!=0\\right)",
+"difficulty_multiple": 5, "question_text": "\\text{L\u00f8s likningen }f\\left(x\
+\right)=R0Rx^{2}+R1Rx+R2R=R6Rx+R7R", "graph_settings": "{\"showGrid\":true,
+\"polarMode\":false,\"showXAxis\":true,\"showYAxis\":true,\"xAxisStep\":50,
+\"yAxisStep\":0,\"xAxisMinorSubdivisions\":0,\"yAxisMinorSubdivisions\":0,
+\"degreeMode\":false,\"xAxisArrowMode\":\"NONE\",\"yAxisArrowMode\":\"NONE\",
+\"xAxisLabel\":\"\",\"yAxisLabel\":\"\",\"xAxisNumbers\":true,\"yAxisNumbers
+\":true,\"polarNumbers\":true,\"projectorMode\":false,\"squareAxes\":true,
+\"viewport\":{\"xmin\":-42.4,\"ymin\":-37.24,\"xmax\":51.37,\"ymax\":35.92}}",
+"rating": 1216, "editor": null, "difficulty": 5, "unchanged_required": "[]",
+"times_failed": 6, "graph": "[\"f(x)=R0Rx^{2}+R1Rx+R2R\",\"R6Rx+R7R\"]",
+"unchanged_ref": "0\u00a7b-g\u00a71\u00a7c-h\u00a72\u00a7A^2-4aB\u00a73\u00a72a
+\u00a74\u00a7-A\u00a75\u00a7\\frac{E+\\sqrt{C}}{D}\u00a76\u00a7\\frac{E-\\sqrt{C}}
+{D}", "multiple_support": false, "answer_latex": "F\u00a7G", "choices_latex": "",
+"unchanged_disallowed": "[]", "fill_in": "R0Rx^{2}+R1Rx+R2R=R6Rx+R7R\u00a7R0Rx^
+{2}+R1Rx-R6Rx+R2R-R7R=0\u00a7R0Rx^{2}+@xxxx@@?(R1R-R6R)?@@xxxx@x+@xxxx@@?(R2R-
+R7R)?@@xxxx@=0\u00a7x=\\frac{@xxxx@-@?(R1R-R6R)?@@xxxx@\\pm\\sqrt{@?(R1R-R6R)?@^
+{2}-4\\cdot R0R@xxxx@\\cdot @?(R2R-R7R)?@@xxxx@}}{2\\cdot R0R}=\\frac{@?(-(R1R-
+R6R))?@\\pm\\sqrt{@xxxx@@?((R1R-R6R)^{2}-4\\cdot R0R\\cdot (R2R-R7R))?@@xxxx@}}{@?
+(2\\cdot R0R)?@}", "used_variables": "0\u00a7a 1\u00a7b 2\u00a7c 6\u00a7g
+7\u00a7h", "disallowed": "[]", "difficulty_blanks": 11, "dictionary": "", "tags":
+[3], "fill_in_latex": "ax^2+bx+c=gx+h\u00a7ax^2+bx-gx+c-h=0\u00a7ax^2+\u25a0x+
+\u25a0=0\u00a7x=\\frac{\u25a0\\pm\\sqrt{A^2-4a\u25a0}}{2a}=\\frac{E\\pm\\sqrt
+{\u25a0}}{D}", "unchanged_graph": "[\"f(x)=ax^2+bx+c\",\"gx+h\"]",
+"fill_in_support": true, "question_text_latex": "\\text{L\u00f8s likningen }f\
+\left(x\\right)=ax^2+bx+c=gx+h", "graph_color": "", "creation_date": "2015-07-
+14T13:57:42.194Z", "valid_flag": true, "choice_rating": 1200, "required": "[]",
+"copy": false, "creator": 1, "conditions": "\\left(@?((R1R-R6R)^{2}-4\\cdot R0R\
+\cdot (R2R-R7R))?@>0\\right)&\\left(R0R!=0\\right)&\\left(R1R!=0\\right)&\\left
+(R2R!=0\\right)&\\left(R6R!=0\\right)&\\left(R7R!=0\\right)"}}]

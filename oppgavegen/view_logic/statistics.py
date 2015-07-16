@@ -1,4 +1,6 @@
 from oppgavegen.models import Level
+from oppgavegen.view_logic.progress import *
+from oppgavegen.models import Set, Chapter
 # NOTE: in the test version the database used is sql lite. In sql lite the between statement is inclusive
 # this means range(1, 10) would return all int numbers between 0 and 11.
 # if the database is changed to another, check how the between statement for that database works
@@ -90,3 +92,12 @@ def get_level_template_original_statistics(level, interval=100):
         upper_bound += interval
 
     return morris_data
+
+def user_stats_for_set(user, set_id):
+    set = Set.objects.get(pk=set_id)
+    chapters = set.chapters.all()
+    number_of_chapters = chapters.count()
+    chapter_status_dict = {}
+    for chapter in chapters:
+        chapter_status_dict[chapter.name] = check_for_chapter_completed(user, chapter)
+    pass
