@@ -517,18 +517,20 @@ $(document).ready(function() {
 		}
 	});
 
-	$('.sequence_input').find('.input_mathquill').on('focusout', function(){
+	//$('.sequence_input').find('.seq_input').on('focusout', function(){
+	$(document).on('focusout', '.seq_input', function(e) {
 		var id = $(this).attr('id').replace(/sequence_input_/g, "");
 		var seq = get_latex_from_mathfield(this);
-		if(seq){
-			$(this).before('<span class="o_seq"><span class="math-field static-math-sm">'+seq+'</span><a class="btn btn_tag_del">x</a></span>');
+		if (seq) {
+			$(this).before('<span class="o_seq"><span class="math-field static-math-sm">' + seq + '</span><a class="btn btn_tag_del">x</a></span>');
 			MathQuill.MathField($(this)[0]).select().write(""); // reset the mathquill-input
 			redraw_mathquill_elements();
 		}
-	}).on('keyup', function(e){
-		if(/(13)/.test(e.which)) { // Add tag if one of these keys are pressed.
-			e.stopPropagation();
-			$(this).focusout();
+	}).on('keyup', '.seq_input', function(e){
+	//}).on('keyup', function(e){
+		if(/(188|13)/.test(e.which)) { // Add tag if one of these keys are pressed.
+			e.stopImmediatePropagation();
+			$(this).find('textarea').focus(); // FIXME: prevent focusing the upper mathquill-input (Answer-input) when pressing Enter-key.
 		}
 	});
 
@@ -1736,7 +1738,7 @@ function refresh_char_colors(selector){
 								'<td><input id="o_adv_from_' + var_id + '" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td>' +
 								'<td><input id="o_adv_to_' + var_id + '" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td>' +
 								'<td style="border-left: thin dashed lightgray"><input id="o_adv_dec_'+var_id+'" type="number" class="form-control input-sm opt_domain_dec" placeholder="Desimaler:"></td>' +
-								'<td id="o_adv_sequence_container_'+var_id+'" style="display:none" colspan="3" class="sequence_input"><span id="sequence_input_'+var_id+'" class="math-field form-control input_mathquill"></span></td>' +
+								'<td id="o_adv_sequence_container_'+var_id+'" style="display:none" colspan="3" class="sequence_input"><span id="sequence_input_'+var_id+'" class="math-field form-control input_mathquill seq_input"></span></td>' +
 								'<td style="vertical-align: middle"><input id="o_adv_sequence_'+var_id+'" class="o_btn_adv_sequence" type="checkbox"> Sekvens</td>' +
 							'</tr>');
 					}

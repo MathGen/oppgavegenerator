@@ -334,11 +334,11 @@ sub{							/* between bootstrap*/
 	display: inline-block !important;
 	width: 167px !important;
 	height: auto !important;
-	padding: 4px 6px 3px 6px; !important;
-	margin: 0; !important;
+	padding: 4px 6px 3px 6px !important;
+	margin: 0 !important;
 	font-size: 1.2em !important;
 	border: 1px solid #ccc !important;
-	border-radius: 3px; !important;
+	border-radius: 3px !important;
 }
 .static-math-sm{
 	border: none !important;
