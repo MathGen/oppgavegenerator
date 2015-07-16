@@ -173,12 +173,19 @@ def required_check(user_answer, required, variables):
     return_value = False
     for x in range(0, len(required)):
         required[x] = replace_variables_from_array(variables, required[x])
+    print('in required check:')
+    print(required)
     for s in required:
         try:
-            if parse_solution(s) not in user_answer:
+            print('this')
+            print(parse_solution(s, ''))
+            print(s)
+            if parse_solution(s, '') not in user_answer:
                 return_value = True
                 break
-        except Exception:
+        except Exception as e:
+            print('in exception ')
+            print(e)
             if s not in user_answer:
                 return_value = True
                 break

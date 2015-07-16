@@ -21,6 +21,10 @@ def calculate_answer(s, domain):
 
     try:
         domain = json.loads(domain)
+    except Exception as e:
+        print('exception in calculate answer (json)')
+        print(e)
+    try:
         if not is_number(s):  # Small optimization
             s = remove_unnecessary(s)
             s = str(latex_to_sympy(s))
@@ -31,7 +35,8 @@ def calculate_answer(s, domain):
             s = latex(sympify(str(s)))
             # Sometimes sympify returns the value 'zoo'
         else:
-            s = round_answer(domain, float(s))
+            if domain != '':
+                s = round_answer(domain, float(s))
     except ValueError:
         pass
     except Exception as e:
