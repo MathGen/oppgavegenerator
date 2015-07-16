@@ -201,8 +201,17 @@ $(document).ready(function() {
 			//FIXME: #q_btn_var_dyn --> .class?
 			$('#q_btn_var_dyn').append('<div id="q_btn_abc_' + q_var_id + '" class="btn btn-danger btn_var_abc btn_var_abc_q btn_keypad">' + q_var + '<a id="q_btn_abc_del_' + q_var_id + '" class="btn btn-danger btn-xs btn_var_del">x</a></div>');
 			//FIXME: dynamic adding of var-buttons to needed keypads
-			$('.btn_var_dyn').append('<button class="btn btn-danger btn_var_abc btn_var_'+ q_var_id +' btn_keypad">' + q_var + '</button>');
-			$('#o_adv_domain').append('<tr id="o_adv_' + q_var_id + '" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">' + q_var + ':</td><td><input id="o_adv_from_' + q_var_id + '" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_' + q_var_id + '" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td style="border-left: thin dashed lightgray"><input id="o_adv_dec_' + q_var_id + '" type="number" class="form-control input-sm opt_domain_dec" placeholder="Desimaler:"></td><td></td></tr>');
+			$('.btn_var_dyn').append('<button class="btn btn-danger btn_var_abc btn_var_'+ q_var_id +' btn_keypad">' + q_var + '</button>');//$('#o_adv_domain').append('<tr id="o_adv_' + q_var_id + '" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">' + q_var + ':</td><td><input id="o_adv_from_' + q_var_id + '" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_' + q_var_id + '" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td style="border-left: thin dashed lightgray"><input id="o_adv_dec_' + q_var_id + '" type="number" class="form-control input-sm opt_domain_dec" placeholder="Desimaler:"></td><td></td></tr>');
+			$('#o_adv_domain').append(
+							'<tr id="o_adv_' + q_var_id + '" class="active o_adv_dyn">' +
+								'<td style="vertical-align: middle; text-align: right; color: #D9534F">' + q_var + ':</td>' +
+								'<td><input id="o_adv_from_' + q_var_id + '" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td>' +
+								'<td><input id="o_adv_to_' + q_var_id + '" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td>' +
+								'<td style="border-left: thin dashed lightgray"><input id="o_adv_dec_'+q_var_id+'" type="number" class="form-control input-sm opt_domain_dec" placeholder="Desimaler:"></td>' +
+								'<td id="o_adv_sequence_container_'+q_var_id+'" style="display:none" colspan="3" class="sequence_input"><span id="sequence_input_'+q_var_id+'" class="math-field form-control input_mathquill seq_input"></span></td>' +
+								'<td style="vertical-align: middle"><input id="o_adv_sequence_'+q_var_id+'" class="o_btn_adv_sequence" type="checkbox"> Sekvens</td>' +
+							'</tr>');
+			redraw_mathquill_elements();
 			$(Q_INPUT).find('textarea').focus();
 			update_variable_count();
 			refresh_all_char_colors();

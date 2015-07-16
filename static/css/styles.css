@@ -323,7 +323,7 @@ sub{							/* between bootstrap*/
 	background-color: #006060;
 }
 .o_seq>.btn_tag_del:hover{
-	background-color: #c2c2c2;
+	background-color: #868686 !important;
 }
 #tags>.form-control{
 	width: 167px; !important;
