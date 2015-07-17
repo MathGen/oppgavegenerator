@@ -164,7 +164,6 @@ def cheat_check(user_answer, disallowed, variables):
         replaced_x = replace_variables_from_array(variables, x)
         standard_disallowed.append(parse_solution(replaced_x, ''))
 
-    print(standard_disallowed)
     for s in standard_disallowed:
         if s in user_answer:
             return True

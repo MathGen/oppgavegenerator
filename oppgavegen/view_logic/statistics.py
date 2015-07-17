@@ -8,6 +8,7 @@ from oppgavegen.models import Set, Chapter
 # The change would be to subtract 1 from lower bound and add 1 to upper bound and also change the string values.
 # note: postgresql also uses inclusive between.
 
+
 def get_level_student_statistics(level, start_interval=1100, end_interval=2300, interval=100):
     morris_data = []
     students = level.student_progresses.all()
@@ -115,5 +116,5 @@ def stats_for_set(set_id):
     for x in order:
         chapter = Chapter.objects.get(pk=x)
         header.append(chapter.name)
-    return stats
+    return (header,stats)  # Todo: put into table and display.
 
