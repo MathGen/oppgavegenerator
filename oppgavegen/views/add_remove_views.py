@@ -159,3 +159,11 @@ def update_level_view(request):
         level = Level.objects.get(pk=level_id)
         msg = update_level(level, title, request.user, k_factor)
     return HttpResponse(msg)
+
+def add_user_to_set_view(request):
+    msg = 'noe gikk galt'
+    if request.method == 'POST':
+        form = request.POST
+        set_id = int(form['set_id'])
+        msg = add_user_to_set(request.user, set_id)
+    return HttpResponse(msg)

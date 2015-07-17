@@ -1,6 +1,9 @@
+{% load app_filters %}
 <div id="medals" hidden>{{ medals }}</div>
 <div id="chapters_completed" hidden>{{ completed }}</div>
 <div id="progress_number" hidden>{{ progress_number }}</div>
+
+{% if user|user_in_set:set_id %}
 
 {% for chapter in chapters %}
 <div id="chapter_{{ chapter.id }}" class="btn btn_chapter btn_locked" disabled>
@@ -11,3 +14,8 @@
     </div>
 </div>
 {% endfor %}
+
+{% else %}
+   <button class="btn btn_add_user_to_set">Delta i sett</button>
+
+{% endif %}

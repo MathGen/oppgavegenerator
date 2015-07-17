@@ -96,8 +96,24 @@ def get_level_template_original_statistics(level, interval=100):
 def user_stats_for_set(user, set_id):
     set = Set.objects.get(pk=set_id)
     chapters = set.chapters.all()
-    number_of_chapters = chapters.count()
     chapter_status_dict = {}
     for chapter in chapters:
         chapter_status_dict[chapter.name] = check_for_chapter_completed(user, chapter)
-    pass
+
+    return chapter_status_dict
+
+def stats_for_set(set_id):
+    """Returns the stats for all users in a set on the form {'name': {'chapter': progress,..},..}"""
+    set = Set.objects.get(pk=set_id)
+    users = set.users.all()
+    stats = {}
+    for user in users:
+        stats[user.first_name + ' ' + user.last_name] = user_stats_for_set(user, set_id)
+
+    order = Set.order.split(',')
+    header = ['Navn']
+    for x in order:
+        chapter = Chapter.objects.get(pk=x)
+        header.append(chapter.name)
+    return stats
+

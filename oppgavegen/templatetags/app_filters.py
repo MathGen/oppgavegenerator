@@ -1,8 +1,9 @@
 from django import template
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
-from oppgavegen.models import ExtendedUser
+from oppgavegen.models import ExtendedUser, Set
 register = template.Library()
+
 
 @register.filter
 def is_teacher(user):
@@ -10,6 +11,7 @@ def is_teacher(user):
     if user.is_superuser:
         return True
     return user.groups.filter(name='Teacher').exists()
+
 
 @register.filter
 def is_superuser(user):
@@ -30,6 +32,7 @@ def get_rating(user):
 
     return rating
 
+
 @register.filter
 def get_current_set(user):
     try:
@@ -37,6 +40,7 @@ def get_current_set(user):
     except ExtendedUser.DoesNotExist:
         set = ''
     return set
+
 
 @register.filter
 def get_current_chapter(user):
@@ -46,6 +50,7 @@ def get_current_chapter(user):
         chapter = ''
     return chapter
 
+
 @register.filter
 def get_current_level(user):
     try:
@@ -53,3 +58,11 @@ def get_current_level(user):
     except ExtendedUser.DoesNotExist:
         level = ''
     return level
+
+
+@register.filter
+def user_in_set(user, set_id):
+    """Returns true/false depending on if the user is in the set"""
+    set = Set.objects.get(pk=set_id)
+    user_in_set = set.users.all().filter(id=user.id).exists()
+    return user_in_set

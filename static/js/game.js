@@ -2,6 +2,11 @@ var current_level = 0;
 var level_progress = 0;
 $(document).ready(function () {
     load_chapters();
+    //Add current user to the set
+    $(document).on('click', '.btn_add_user_to_set', function(e){
+        add_user_to_set()
+    });
+
     // Load levels for the specific chapter
     $(document).on('click', '.btn_chapter', function(e){
         e.preventDefault();
@@ -31,6 +36,12 @@ $(document).ready(function () {
         load_template(current_level);
     });
 });
+
+function add_user_to_set(){
+    $.post('/add_user_to_set/', {'csrfmiddlewaretoken': getCookie('csrftoken'), 'set_id': set_id}, function(result){
+    location.reload();
+    });
+}
 
 function display_loading_icon(boolean){
     if(boolean){

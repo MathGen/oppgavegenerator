@@ -176,3 +176,15 @@ def reset_current_level(user):
     euser = ExtendedUser.objects.get(user=user)
     euser.current_level = None
     euser.save()
+
+def add_user_to_set(user, set_id):
+    msg = 'success'
+    try:
+        set = Set.objects.get(pk=set_id)
+        set.users.add(user)
+        set.save()
+    except Exception as e:
+        print('exception in add_user_to_set')
+        print(e)
+        msg = 'failed to add user to set'
+    return msg

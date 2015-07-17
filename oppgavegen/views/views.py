@@ -141,9 +141,11 @@ def answers(request, level=1):
             except ValueError:
                 required = []
             print('wth')
-            if cheat_check(user_answer, disallowed, form_values['variable_dictionary'].split('§')):
+            if cheat_check(user_answer, disallowed, form_values['variable_dictionary'].split('§')) and \
+                    not (form_values['template_type'] == 'multiple'):
                 return render_to_response(render_to, {'answer': cheat_message}, context)
-            if required_check(user_answer, required, form_values['variable_dictionary'].split('§')):
+            if required_check(user_answer, required, form_values['variable_dictionary'].split('§')) and \
+                    not (form_values['template_type'] == 'multiple'):
                 return render_to_response(render_to, {'answer': required_message}, context)
 
             context_dict = make_answer_context_dict(form_values)
@@ -245,7 +247,8 @@ def chapters(request, set_id):
 
         return render_to_response('game/chapters.html',
                                   {'chapters': set_chapters_ordered, 'medals': json.dumps(medals),
-                                   'completed': json.dumps(completed), 'progress_number': progress_number}, context)
+                                   'completed': json.dumps(completed), 'progress_number': progress_number,
+                                   'set_id': set_id}, context)
     else:
         return HttpResponseForbidden()
 
@@ -465,8 +468,8 @@ def remove_template_from_current_level(request, template_id):
     if level.creator == request.user:
         level.templates.remove(template)
         return HttpResponse('Template removed from level "'
-                        + level.name +
-                        '". (This will be a background process eventually.)')
+                            + level.name +
+                            '". (This will be a background process eventually.)')
     else:
         return HttpResponse('Du må være eier a levelet for å legge til level')
 

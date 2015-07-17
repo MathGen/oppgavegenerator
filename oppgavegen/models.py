@@ -126,6 +126,7 @@ class Set(models.Model):
     creation_date = models.DateTimeField('date created', blank=True, null=True, auto_now_add=True)  # Date and time of creation
     order = models.CharField(max_length=400, default='')
     copy = models.BooleanField(default=False)
+    users = models.ManyToManyField(User, blank=True)
 
     def __str__(self):  # Makes it so that self.name shows up instead of set(object)
         """Returns the set name"""
