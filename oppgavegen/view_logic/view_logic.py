@@ -161,7 +161,7 @@ def cheat_check(user_answer, disallowed, variables):
     """Checks whether the user has used symbols/functions that are not allowed"""
     standard_disallowed = ['int', 'test', "'", '@', '?']
     for x in disallowed:
-        standard_disallowed += parse_solution(replace_variables_from_array(variables, disallowed[x]), '')
+        standard_disallowed += parse_solution(replace_variables_from_array(variables, x), '')
 
     print(standard_disallowed)
     for s in standard_disallowed:
