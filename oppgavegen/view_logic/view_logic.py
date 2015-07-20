@@ -11,7 +11,7 @@ from oppgavegen.models import Template, Tag
 from oppgavegen.view_logic.answer_checker import check_answer
 from oppgavegen.generation_folder.calculate_parse_solution import parse_solution, calculate_array, parse_answer
 from oppgavegen.generation_folder.fill_in import get_values_from_position
-from oppgavegen.utility.utility import after_equal_sign, replace_words, replace_variables_from_array
+from oppgavegen.utility.utility import after_equal_sign, replace_words, replace_variables_from_array, string_replace
 from oppgavegen.generation_folder.template_validation import template_validation
 
 
@@ -107,8 +107,21 @@ def make_answer_context_dict(form_values):
     solution = solution.replace('- -', '+')
     solution = solution.replace('+ -', '-')
     answer_text = latex_exceptions(answer_text)
+
+    graph = q.graph  # took out .replace('\\\\', '\\')
+    if graph:
+        graph = json.loads(graph)
+
+    for x in range(0, len(graph)):
+            graph[x] = string_replace(graph[x], variable_dictionary)
+            graph[x] = parse_solution(graph[x], q.random_domain)
+
+    if graph != None and graph != '':  # to prevent error if none
+        graph = json.dumps(graph)
+
     context_dict = {'title': "Oppgavegen", 'answer': str(answer_text),
-                    'solution': solution, 'user_won': correct_answer}
+                    'solution': solution, 'user_won': correct_answer, 'graph': graph,
+                    'graph_color' : q.graph_color, 'graph_settings': q.graph_settings}
     return context_dict
 
 
