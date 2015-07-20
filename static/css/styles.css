@@ -236,6 +236,10 @@ sub{							/* between bootstrap*/
 	color: #D9A441;
 	text-shadow: -1px 0 #222222, 0 1px #222222, 1px 0 #222222, 0 -1px #222222;
 }
+.level_progress>.glyphicon-star,
+.level_progress>.glyphicon-star-empty{
+	font-size: 0.7em !important;
+}
 .progress{
 	background-color: #999999;
 }

@@ -212,17 +212,28 @@ function update_progress_bar(){
 function update_progress_bar_level(){
     var stars = $('#num_stars').text();
     var rating = $('#get_ulp').text();
-    var rating_from = 1100;
-    var rating_to = 1600;
-    if(stars == 1){
-        rating_from = 1500;
-        rating_to = 1800;
-    } else if (stars == 2){
-        rating_from = 1700;
-        rating_to = 2000;
+    var rating_from = 1000;
+    var rating_to = 1300;
+    switch(stars){
+        case 1:
+            rating_from = 1250;
+            rating_to = 1450;
+            break;
+        case 2:
+            rating_from = 1400;
+            rating_to = 1600;
+            break;
+        case 3:
+            rating_from = 1500;
+            rating_to = 1800;
+            break;
+        case 4:
+            rating_from = 1700;
+            rating_to = 2000;
+            break;
     }
     var value = ((rating-rating_from)/(rating_to-rating_from))*100;
-    if(stars == 3){
+    if(stars == 5){
         value = 100;
     }
     $('.star_progress').find('.progress-bar').width(value+'%').attr('aria-valuenow', value);
