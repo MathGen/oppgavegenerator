@@ -7,7 +7,7 @@
 <!-- QUESTION PANEL -->
 {% block js %}
 {% if graph|length > 2 %}
-    <script src="/static/js/graph.js?010"></script>
+    <script src="/static/js/graph.js?011"></script>
     <script src="https://www.desmos.com/api/v0.6/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6" defer></script> <!--FIXME: make async callback (draw graph when ready)-->
 {% endif %}
 {% endblock %}
@@ -26,6 +26,7 @@
             <div hidden id="get_question">{{ question }}</div>
             <div hidden id="replacing_words">{{ replacing_words }}</div>
             <div hidden id="get_graph">{{ graph }}</div>
+            <div hidden id="get_graph_color">{{ graph_color }}</div>
             <div hidden id="get_graph_settings">{{ graph_settings }}</div>
             <div hidden id="task_view">true</div>
 
