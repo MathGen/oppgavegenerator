@@ -2002,14 +2002,11 @@ function insert_editable_data(){
             var id = key.replace(/R/g, "");
             if(random_domain[key][1]){
                 for (var s = 0; s < random_domain[key][0].length; s++) {
-                    $('#o_adv_sequence_container_'+ id).prepend('<span class="o_seq"><span class="math-field static-math-sm">' + random_domain[key][0][s] + '</span><a class="btn btn_tag_del">x</a></span>');
+                    $('#o_adv_sequence_container_'+ id).prepend('<span class="o_seq"><span class="math-field static-math-sm">' + random_domain[key][0][s] + '</span><a class="btn btn_tag_del">x</a></span>').fadeIn();
                     $('#o_adv_' + id).children().nextAll().slice(0, 3).each(function () {
-                        $(this).fadeOut(function () {
-                            $('#o_adv_sequence_container_' + id).fadeIn(function(){
-                                $('#o_adv_sequence_'+id).attr('checked', true);
-                            });
-                        });
+                        $(this).fadeOut();
                     });
+					$('#o_adv_sequence_'+id).attr('checked', true);
                 }
             } else {
                 var domain_list = random_domain[key][0];

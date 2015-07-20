@@ -52,8 +52,10 @@ function dcg_init_game_graph(){
         expressions: false
 	});
     var expressions = JSON.parse($('#get_graph').text());
+    var colors = JSON.parse($('#get_graph_color').text());
     for (var e = 0; e < expressions.length; e++){
-        dcg_new_expression(e, expressions[e]);
+        //dcg_new_expression(e, expressions[e]);
+        graph.setExpression({id: e, latex: expressions[e], color: colors[e]});
     }
     dcg_set_graph_settings();
     refresh_char_colors('.dcg-template-mathquill');
@@ -71,8 +73,9 @@ function dcg_edit_graph(){
         expressionsTopbar: false
 	});
     var expressions = JSON.parse($('#get_graph').text());
+    var colors = JSON.parse($('#get_graph_color').text());
     for (var e = 0; e < expressions.length; e++){
-        graph.setExpression({id: e, latex: expressions[e]});
+        graph.setExpression({id: e, latex: expressions[e], color: colors[e]});
     }
     dcg_set_graph_settings();
     dcg_refresh_variables();
