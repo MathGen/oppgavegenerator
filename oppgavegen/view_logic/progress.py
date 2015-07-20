@@ -14,12 +14,13 @@ def calculate_progress(user, chapter):
             q = UserLevelProgress.objects.get(user=user, level=level)
         except UserLevelProgress.DoesNotExist:
             break
-        if q.stars < 1:
+        if q.stars < 3:
             break
         counter += 1
     return counter
 
 # avg of stars for every level in chapt.
+
 
 def chapter_progress(user, set, medals, completed):
     """
@@ -45,7 +46,7 @@ def chapter_progress(user, set, medals, completed):
             try:
                 q = UserLevelProgress.objects.get(user=user, level=level)
                 level_star_count += q.stars
-                if q.stars > 0:
+                if q.stars > 2:
                     levels_completed += 1
             except UserLevelProgress.DoesNotExist:
                 pass
@@ -79,6 +80,7 @@ def get_stars_per_level(user, chapter):
     star_list = json.dumps(star_list)
     return star_list
 
+
 def get_user_rating_for_level(user, level):
     msg = 'no rating'
     try:
@@ -88,6 +90,7 @@ def get_user_rating_for_level(user, level):
         pass
     return msg
 
+
 def get_user_stars_for_level(user, level):
     msg = 'no stars'
     try:
@@ -96,6 +99,7 @@ def get_user_stars_for_level(user, level):
     except UserLevelProgress.DoesNotExist:
         pass
     return msg
+
 
 def check_for_level_skip(user, chapter, level_id):
     progress = calculate_progress(user, chapter)
@@ -110,6 +114,7 @@ def check_for_level_skip(user, chapter, level_id):
         return_value = True
 
     return return_value
+
 
 def check_for_chapter_completed(user, chapter):
     """Returns 0/1 depending on if the user has completed the given chapter"""
