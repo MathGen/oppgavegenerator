@@ -113,7 +113,7 @@ def make_answer_context_dict(form_values):
         graph = json.loads(graph)
 
     for x in range(0, len(graph)):
-            graph[x] = string_replace(graph[x], variable_dictionary)
+            graph[x] = replace_variables_from_array(variable_dictionary, graph[x])
             graph[x] = parse_solution(graph[x], q.random_domain)
 
     if graph != None and graph != '':  # to prevent error if none
