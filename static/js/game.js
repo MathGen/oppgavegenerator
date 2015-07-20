@@ -210,10 +210,8 @@ function update_progress_bar(){
  * Updates the progress-bar which indicates the progress towards unlocking a new star for the current level.
  */
 function update_progress_bar_level(){
-    var stars = $('#num_stars').text();
+    var stars = parseInt($('#num_stars').text());
     var rating = $('#get_ulp').text();
-    var rating_from = 1000;
-    var rating_to = 1300;
     switch(stars){
         case 1:
             rating_from = 1250;
@@ -231,9 +229,12 @@ function update_progress_bar_level(){
             rating_from = 1700;
             rating_to = 2000;
             break;
+        default:
+            var rating_from = 1000;
+            var rating_to = 1300;
     }
     var value = ((rating-rating_from)/(rating_to-rating_from))*100;
-    if(stars == 5){
+    if(stars === 5){
         value = 100;
     }
     $('.star_progress').find('.progress-bar').width(value+'%').attr('aria-valuenow', value);
