@@ -105,6 +105,21 @@ sub{							/* between bootstrap*/
 	height: 34px;
 	width: 34px;
 }
+input.input_new_variable{
+	display: inline-block;
+  	color:#D9534F;
+	border-radius: 0 3px 3px 0 !important;
+	border: 1px solid #d43f3a;
+	width: 34px !important;
+	padding: 0 0 0 5px;
+	margin-left: -1px;
+}
+.btn_var{
+	margin-right: -1px;
+}
+.btn_var_abc_q{
+	border-radius: 0;
+}
 .select_error{
 	border: 2px solid #D9534F;
 }
@@ -126,7 +141,7 @@ sub{							/* between bootstrap*/
 	position: absolute;
 	top: -1px;
 	right: -1px;
-	border-radius: 0 4px 0 4px;
+	border-radius: 0 0 0 4px;
 }
 .front_header{
 	margin-top: 0;
