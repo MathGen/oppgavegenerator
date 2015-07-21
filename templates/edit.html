@@ -10,10 +10,6 @@
 
 {% block panels %}
 
-    <form>
-        {% csrf_token %}
-    </form>
-
     {% if template_id %}
     <div hidden id="edit_template">true</div>
     <div hidden id="template_id">{{ template_id }}</div>
@@ -289,6 +285,7 @@
                 <!--CALCULATION INPUT-->
                 <div class="panel-body">
                     <div id="c_input_field" class="input_field">
+                        <input class="form-control calc_variable" type="text" placeholder="A-Z" maxlength="1">
                         <span id="c_input_mathquill" class="math-field form-control input_mathquill"></span>
                         <button id="c_btn_clear" class="btn btn-default btn_clear" style="margin-left: 3px; border: none">
                             <span class="glyphicon glyphicon-trash" style="resize: vertical"></span>
@@ -308,7 +305,7 @@
                                 <button id="c_btn_delete" class="btn btn-default btn_delete">
                                     <span class="glyphicon glyphicon-erase"></span>
                                 </button>
-                                <button id="c_btn_ok" class="btn btn-primary" data-dismiss="modal" type="submit">OK</button>
+                                <button id="c_btn_ok" class="btn btn-primary" type="submit">OK</button>
                             </div>
                         </div>
                     </div>

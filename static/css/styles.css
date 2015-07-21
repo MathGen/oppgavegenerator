@@ -120,6 +120,21 @@ input.input_new_variable{
 .btn_var_abc_q{
 	border-radius: 0;
 }
+input.calc_variable{
+	width: 38px;
+	font-size: 1.5em;
+	padding: 0 0 0 0;
+	border: none;
+	text-align: center;
+	margin-right: 6px;
+	color: #5CB85C;
+}
+input.calc_variable:focus{
+	border-color: transparent;
+	-webkit-box-shadow: inset 0 1px 1px #5CB85C;
+	-moz-box-shadow: inset 0 1px 1px #5CB85C;
+	box-shadow: inset 0 1px 1px #5CB85C;
+}
 .select_error{
 	border: 2px solid #D9534F;
 }
