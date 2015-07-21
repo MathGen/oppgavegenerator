@@ -792,7 +792,8 @@ function submit_template(){
 	// retrieves the list from latest letter in alphabet (w) to earliest (a) as that is the formatting used server side.
 	if(VARIABLE_COUNT > 0){
         var domain_dict = {};
-        for(var v = 0; v < VARIABLE_COUNT; v++) {
+		$('.o_adv_dyn').each(function(){
+			var v = $(this).attr('id').replace(/o_adv_/g, "");
             var name = "";
             if ($('#o_adv_sequence_'+ v).is(':checked')) {
                 name = convert_variables($('#o_adv_' + v).children().first().text().replace(/:/g, ""));
@@ -808,7 +809,7 @@ function submit_template(){
                 var dec = $('#o_adv_dec_' + v).val();
                 domain_dict[name] = [[from, to, dec], false];
             }
-        }
+        });
         form_submit['random_domain'] = JSON.stringify(domain_dict);
 	}
 	else{
