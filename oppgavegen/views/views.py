@@ -512,6 +512,7 @@ class UserSetListView(LoginRequiredMixin,ListView):
     #    context['now'] = datetime.datetime ???
 
 
+
 class SetChapterListView(LoginRequiredMixin,ListView):
     """List Chapters in Set"""
     template_name = 'sets/set_chapter_list.html'
