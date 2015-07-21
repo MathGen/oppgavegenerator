@@ -53,7 +53,7 @@ def chapter_progress(user, set, medals, completed):
         if levels_completed != level_counter:
             level_star_count = 0
         try:
-            medals.append(level_star_count//level_counter)
+            medals.append(max(0, (level_star_count//level_counter-2)))
         except ZeroDivisionError:
             medals.append(0)
         completed.append(levels_completed)

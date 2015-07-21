@@ -4,7 +4,8 @@ $(document).ready(function () {
     load_chapters();
     //Add current user to the set
     $(document).on('click', '.btn_add_user_to_set', function(e){
-        add_user_to_set()
+        e.preventDefault();
+        add_user_to_set();
     });
 
     // Load levels for the specific chapter
@@ -38,8 +39,10 @@ $(document).ready(function () {
 });
 
 function add_user_to_set(){
-    $.post('/add_user_to_set/', {'csrfmiddlewaretoken': getCookie('csrftoken'), 'set_id': set_id}, function(result){
-    location.reload();
+    var set_id = $('#set_id').text();
+    $.post('/add-user-to-set/', {'csrfmiddlewaretoken': getCookie('csrftoken'), 'set_id': set_id}, function(result){
+        console.log(result);
+        location.reload();
     });
 }
 

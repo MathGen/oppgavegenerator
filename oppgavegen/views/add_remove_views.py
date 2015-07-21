@@ -161,9 +161,14 @@ def update_level_view(request):
     return HttpResponse(msg)
 
 def add_user_to_set_view(request):
-    msg = 'noe gikk galt'
-    if request.method == 'POST':
-        form = request.POST
-        set_id = int(form['set_id'])
-        msg = add_user_to_set(request.user, set_id)
+    print("it's a start")
+    try:
+        msg = 'noe gikk galt'
+        if request.method == 'POST':
+            form = request.POST
+            set_id = int(form['set_id'])
+            msg = add_user_to_set(request.user, set_id)
+    except Exception as e:
+        print('wtf')
+        print(e)
     return HttpResponse(msg)

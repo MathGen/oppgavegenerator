@@ -124,7 +124,7 @@ urlpatterns = patterns('',
     url(r'^chapter/update/$', update_chapter_view, name='update_chapter_view'),
     url(r'^level/update/$', update_level_view, name='update_level_view'),
 
-    url(r'^add_user_to_set/', add_user_to_set_view, 'add_user_to_set'),
+    url(r'^add-user-to-set/', add_user_to_set_view, name='add_user_to_set'),
     # DJANGO SELECTABLE
     # Might be useful for autocomplete for tagging
     # Meant to work with jquery ui https://github.com/mlavin/django-selectable
