@@ -8,7 +8,7 @@ var M_INPUT					= '#m_input_mathquill_1';	// Default multiple-choice input-field
 var F_INPUT					= '#f_fill_content_1';		//
 var N_INPUT					= '#n_input_mathquill';		// Condition input-field
 var T_INPUT					= '#t_input';				// Text-input in text-modal
-var ACTIVE_INPUT			= '#q_input_mathquill';
+var ACTIVE_INPUT			= '#q_input_mathquill';     // Current active input-field
 var STEP					= 1;						// Number of steps in solution.
 var ANSWER					= 1;						// Number of answers.
 var SUB						= 1;						// Number of text-substitutions.
@@ -28,9 +28,11 @@ var mod_blanks				= 0;
 var mod_condition 			= 0;
 var mod_multiple			= 0;
 var VARIABLE_COUNT			= 0;
+var edit_calc               = false;
+var edit_calc_id            = 999;
 
 $(document).ready(function() {
-	// Draw math TODO: improve
+	// Draw math
 	redraw_mathquill_elements();
 
 	// KeyPad listeners
@@ -106,7 +108,7 @@ $(document).ready(function() {
 		MODIFY = true;
 		TITLE_INSERTED = true;
 		VAR_INIT = true;
-		insert_editable_data(); //FIXME: broken | implement new mathquill
+		insert_editable_data();
 	}
 
 	// Set which input-field is active
@@ -182,7 +184,7 @@ $(document).ready(function() {
 		});
 	});
 
-	// VARIABLES: Insert new variable TODO: improve
+	// VARIABLES: Insert new variable
 	$('.btn_var').click(function(e){
 		e.preventDefault();
 		if(Object.keys(VARIABLES).length <= MAX_VARIABLES) {
@@ -190,7 +192,7 @@ $(document).ready(function() {
 			var q_var = "a";
 			var q_var_id = 0;
 			while (var_available == false) {
-				if ($('#q_btn_abc_' + q_var_id).length || q_var == "e" || q_var == "f" || q_var == "i" || q_var == "d" || q_var == "x" || q_var == "y" || q_var == "z") {
+				if ($('#q_btn_abc_' + q_var_id).length || q_var == "r" || q_var == "x" || q_var == "y" || q_var == "z") {
 					q_var = String.fromCharCode(q_var.charCodeAt(0) + 1);
 					q_var_id++;
 				}
@@ -198,27 +200,37 @@ $(document).ready(function() {
 					var_available = true;
 				}
 			}
-			//FIXME: #q_btn_var_dyn --> .class?
-			$('#q_btn_var_dyn').append('<div id="q_btn_abc_' + q_var_id + '" class="btn btn-danger btn_var_abc btn_var_abc_q btn_keypad">' + q_var + '<a id="q_btn_abc_del_' + q_var_id + '" class="btn btn-danger btn-xs btn_var_del">x</a></div>');
-			//FIXME: dynamic adding of var-buttons to needed keypads
-			$('.btn_var_dyn').append('<button class="btn btn-danger btn_var_abc btn_var_'+ q_var_id +' btn_keypad">' + q_var + '</button>');//$('#o_adv_domain').append('<tr id="o_adv_' + q_var_id + '" class="active o_adv_dyn"><td style="vertical-align: middle; text-align: right; color: #D9534F">' + q_var + ':</td><td><input id="o_adv_from_' + q_var_id + '" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td><td><input id="o_adv_to_' + q_var_id + '" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td><td style="border-left: thin dashed lightgray"><input id="o_adv_dec_' + q_var_id + '" type="number" class="form-control input-sm opt_domain_dec" placeholder="Desimaler:"></td><td></td></tr>');
-			$('#o_adv_domain').append(
-							'<tr id="o_adv_' + q_var_id + '" class="active o_adv_dyn">' +
-								'<td style="vertical-align: middle; text-align: right; color: #D9534F">' + q_var + ':</td>' +
-								'<td><input id="o_adv_from_' + q_var_id + '" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td>' +
-								'<td><input id="o_adv_to_' + q_var_id + '" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td>' +
-								'<td style="border-left: thin dashed lightgray"><input id="o_adv_dec_'+q_var_id+'" type="number" class="form-control input-sm opt_domain_dec" placeholder="Desimaler:"></td>' +
-								'<td id="o_adv_sequence_container_'+q_var_id+'" style="display:none" colspan="3" class="sequence_input"><span id="sequence_input_'+q_var_id+'" class="math-field form-control input_mathquill seq_input"></span></td>' +
-								'<td style="vertical-align: middle"><input id="o_adv_sequence_'+q_var_id+'" class="o_btn_adv_sequence" type="checkbox"> Sekvens</td>' +
-							'</tr>');
+			init_new_variable(q_var);
 			redraw_mathquill_elements();
 			$(Q_INPUT).find('textarea').focus();
-			update_variable_count();
-			refresh_all_char_colors();
-			refresh_variables();
 		}
 		else{
 			alert('Ikke tillat med flere variabler.');
+		}
+	});
+
+    // VARIABLES: Insert custom variable.
+	$(document).on('focusout', '.input_new_variable', function() {
+		var variable = $(this).val();
+        if (variable) {
+            if (variable.match(/^[a-z]+$/g)) {
+                var id = get_converted_variable(variable).replace(/R/g, "");
+                if($('#q_btn_abc_' + id).length){
+                    error_message('.input_new_variable', "Tegn allerede i bruk!");
+                } else if(variable == "r" || variable == "x" || variable == "y" || variable == "z"){ // Ugyldige tegn!
+                    error_message('.input_new_variable', "Ugyldig tegn!");
+                } else {
+                    init_new_variable(variable);
+                }
+                $(this).val("");
+            } else {
+                error_message('.input_new_variable', "Ugyldig tegn!");
+                $(this).val("");
+            }
+        }
+	}).on('keyup', '.input_new_variable', function(e){
+		if(/(13)/.test(e.which)) { // Add tag if one of these keys are pressed.
+            $(this).focusout();
 		}
 	});
 
@@ -232,7 +244,7 @@ $(document).ready(function() {
 		refresh_variables();
 		e.stopPropagation();
 	});
-	
+
 	// Erase last input
 	$('.btn_delete').click(function(e){
 		e.preventDefault();
@@ -240,7 +252,7 @@ $(document).ready(function() {
 		$(ACTIVE_INPUT).find('textarea').focus();
 	});
 	
-	// Clear input TODO: improve input reset
+	// Clear input
 	$(document).on('click', '.btn_clear', function(e){
 		e.preventDefault();
 		var btn_id = $(this).attr('id');
@@ -273,20 +285,9 @@ $(document).ready(function() {
 		var id = $(this).attr('id');
 		if(id != undefined) {
 			var id_group = id[0];
-			if (e.keyCode == 88 || e.keyCode == 89 || e.keyCode == 90) {
-				if (id_group != 'c') {
-					refresh_char_colors('#' + id);
-				}
-			}
-			else if (e.keyCode >= 65 && e.keyCode <= 87 && e.keyCode != 69 && e.keyCode != 70) {
-				if (id_group == 'q') {
-					refresh_all_char_colors();
-					refresh_variables();
-				}
-				else {
-					refresh_char_colors('#' + id);
-				}
-			}
+            if (e.keyCode >= 65 && e.keyCode <= 90){
+                refresh_char_colors('#' + id);
+            }
 			else if (e.keyCode == 13) {
 				if (id_group == 't') {
 					$('#t_btn_ok').click();
@@ -297,7 +298,7 @@ $(document).ready(function() {
 				else if (id_group == 'n') {
 					$('#n_btn_ok').click();
 				}
-				else {
+				else if(((id_group == 'q') || (id_group == 's') || (id_group == 'a')) && (id[1] != "e")){
 					$('#' + id_group + '_btn_proceed').click();
 				}
 			}
@@ -306,7 +307,7 @@ $(document).ready(function() {
 		refresh_char_colors('.dcg-template-mathquill');
 	});
 
-	// Proceed to next panel TODO: improve
+	// Proceed to next panel
 	$('.btn_proceed').click(function(e){
 		e.preventDefault();
 		var btn_id = $(this).attr('id');
@@ -483,7 +484,7 @@ $(document).ready(function() {
 		$(A_INPUT).find('textarea').focus();
 	});
 
-	// Close panel TODO: improve
+	// Close panel
 	$('.btn_close').click(function(e){
 		e.preventDefault();
 		var btn_id = $(this).attr('id');
@@ -500,6 +501,21 @@ $(document).ready(function() {
 		refresh_all_char_colors();
 		e.stopPropagation();
 	});
+
+    // Edit calculation
+    $(document).on('click', '.btn_calc_edit', function(e){
+        e.stopPropagation();
+        var id = parseInt($(this).attr('class').match(/[\d]+$/));
+        $('.calc_variable').val(String.fromCharCode(65 + id)); // Get the correct variable from the id (A=0, B=1, C=2, etc).
+        $('#calc_modal').modal('show').one('shown.bs.modal', function(){
+            edit_calc = true;
+            edit_calc_id = id;
+            var latex = dict_calc_unchanged[id];
+            write_to_mathfield(C_INPUT, latex);
+            redraw_mathquill_elements();
+            refresh_char_colors(C_INPUT);
+        });
+    });
 
 	// Show advanced domain settings
 	$('#o_btn_adv_domain').click(function(e){
@@ -526,9 +542,8 @@ $(document).ready(function() {
 		}
 	});
 
-	//$('.sequence_input').find('.seq_input').on('focusout', function(){
-	$(document).on('focusout', '.seq_input', function(e) {
-		var id = $(this).attr('id').replace(/sequence_input_/g, "");
+	// Adding sequential domains.
+	$(document).on('focusout', '.seq_input', function() {
 		var seq = get_latex_from_mathfield(this);
 		if (seq) {
 			$(this).before('<span class="o_seq"><span class="math-field static-math-sm">' + seq + '</span><a class="btn btn_tag_del">x</a></span>');
@@ -536,10 +551,8 @@ $(document).ready(function() {
 			redraw_mathquill_elements();
 		}
 	}).on('keyup', '.seq_input', function(e){
-	//}).on('keyup', function(e){
 		if(/(188|13)/.test(e.which)) { // Add tag if one of these keys are pressed.
-			e.stopImmediatePropagation();
-			$(this).find('textarea').focus(); // FIXME: prevent focusing the upper mathquill-input (Answer-input) when pressing Enter-key.
+            $(this).focusout();
 		}
 	});
 
@@ -697,45 +710,35 @@ $(document).ready(function() {
 	// Retrieve and insert calculation to solution
 	$('#c_btn_ok').click(function(e){
 		e.preventDefault();
-		var total_elements = $(C_INPUT).children().length-1;
-		if(total_elements != 0){
-			var char_available = false;
-			var calc_char = "A";
-			var calc_id = 0;
-			while(char_available == false){
-				if($('.btn_calc_ref_' + calc_id).length){
-					calc_char = String.fromCharCode(calc_char.charCodeAt(0) + 1);
-					calc_id++;
-				}
-				else{
-					char_available = true;
-				}
-			}
-			var c_latex = MathQuill.MathField($(C_INPUT)[0]).latex();
-			var la = convert_variables(c_latex);
-			la = la.replace(/\?/g,'');
-			la = la.replace(/@/g,'');
-			dict_calc[calc_id] = '@?(' + la + ')?@';
-			dict_calc_unchanged[calc_id] = c_latex;
-			MathQuill.MathField($(C_INPUT)[0]).revert();
-			// TODO: improve insertion of popovers, and finding available calc variables (A,B,C,..).
-			$('.btn_calc_dyn').append(
-				'<div class="btn btn-success btn_calc btn_keypad btn_calc_ref btn_calc_ref_'+calc_id+'">'+calc_char+
-					'<a class="btn btn-success btn-xs btn_calc_del btn_calc_del_'+calc_id+'">x</a>' +
-				'</div>'
-			);
-			$('.btn_calc_dyn_ref').append(
-				'<button class="btn btn-success btn_calc btn_keypad btn_calc_ref_'+calc_id+'">'+calc_char+'</button>'
-			);
-			$('.btn_calc_ref_' + calc_id).popover({
-				html: true,
-				content: '<img src="http://latex.codecogs.com/svg.latex?'+c_latex+'" border="0"/>',
-				placement: 'top',
-				trigger: 'hover',
-				container: 'body'
-			});
-			refresh_all_char_colors();
-		}
+        if(edit_calc){
+            $('.btn_calc_ref_' + edit_calc_id).popover('destroy').remove();
+		    delete dict_calc[edit_calc_id];
+		    delete dict_calc_unchanged[edit_calc_id];
+            edit_calc = false;
+        }
+		if(get_latex_from_mathfield(C_INPUT) != "") {
+            var calc_var = $('.calc_variable');
+            var variable = calc_var.val();
+            if (variable) {
+                if (variable.match(/^[A-Z]+$/g)) {
+                    var id = variable.charCodeAt(0) - 65; // Get the unique variable-id (A=0, B=1, C=2, etc).
+                    if ($('.btn_calc_ref_' + id).length) {
+                        error_message('.calc_variable', "Tegn allerede i bruk!");
+                    } else {
+                        init_new_calculation(variable, id);
+                        $('#calc_modal').modal('hide');
+                    }
+                    calc_var.val("");
+                } else {
+                    error_message('.calc_variable', "Ugyldig tegn!");
+                    calc_var.val("");
+                }
+            } else {
+                error_message('.calc_variable', "Velg variabel!");
+            }
+        } else {
+            error_message(C_INPUT, "Fyll ut!");
+        }
 	});
 
 	// Submit template to database / Update
@@ -793,10 +796,10 @@ function submit_template(){
 	form_submit['answer_latex'] = tmp_answer_latex.join('§');
 
 	// RANDOM_DOMAIN
-	// retrieves the list from latest letter in alphabet (w) to earliest (a) as that is the formatting used server side.
 	if(VARIABLE_COUNT > 0){
         var domain_dict = {};
-        for(var v = 0; v < VARIABLE_COUNT; v++) {
+		$('.o_adv_dyn').each(function(){
+			var v = $(this).attr('id').replace(/o_adv_/g, "");
             var name = "";
             if ($('#o_adv_sequence_'+ v).is(':checked')) {
                 name = convert_variables($('#o_adv_' + v).children().first().text().replace(/:/g, ""));
@@ -812,7 +815,7 @@ function submit_template(){
                 var dec = $('#o_adv_dec_' + v).val();
                 domain_dict[name] = [[from, to, dec], false];
             }
-        }
+        });
         form_submit['random_domain'] = JSON.stringify(domain_dict);
 	}
 	else{
@@ -985,6 +988,65 @@ function submit_template(){
 
 	// SUBMIT
 	post(/submit/, form_submit);
+}
+
+/**
+ * Initialize a new variable. Store it and make it available with buttons.
+ * @param {String} variable - The letter to store as a variable.
+ */
+function init_new_variable(variable){
+    var id = get_converted_variable(variable).replace(/R/g, "");
+    $('#q_btn_var_dyn').append('' +
+        '<div id="q_btn_abc_' + id + '" class="btn btn-danger btn_var_abc btn_var_abc_q btn_keypad">' + variable +
+            '<a id="q_btn_abc_del_' + id + '" class="btn btn-danger btn-xs btn_var_del">x</a>' +
+        '</div>');
+    $('.btn_var_dyn').append('<button class="btn btn-danger btn_var_abc btn_var_' + id + ' btn_keypad">' + variable + '</button>');
+    $('#o_adv_domain').append(
+        '<tr id="o_adv_' + id + '" class="active o_adv_dyn">' +
+            '<td style="vertical-align: middle; text-align: right; color: #D9534F">' + variable + ':</td>' +
+            '<td><input id="o_adv_from_' + id + '" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td>' +
+            '<td><input id="o_adv_to_' + id + '" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td>' +
+            '<td style="border-left: thin dashed lightgray"><input id="o_adv_dec_' + id + '" type="number" class="form-control input-sm opt_domain_dec" placeholder="Desimaler:"></td>' +
+            '<td id="o_adv_sequence_container_' + id + '" style="display:none" colspan="3" class="sequence_input"><span id="sequence_input_' + id + '" class="math-field form-control input_mathquill seq_input"></span></td>' +
+            '<td style="vertical-align: middle"><input id="o_adv_sequence_' + id + '" class="o_btn_adv_sequence" type="checkbox"> Sekvens</td>' +
+        '</tr>');
+    update_variable_count();
+    refresh_all_char_colors();
+    refresh_variables();
+}
+
+/**
+ * Initialize a new calculation with a variable as a reference. Store it and make it available with buttons.
+ * @param {String} variable - The variable-reference of the calculation (A, B, C, etc).
+ * @param {Number} id - The id of the variable-reference.
+ */
+function init_new_calculation(variable, id){
+    var c_latex = MathQuill.MathField($(C_INPUT)[0]).latex();
+    var la = convert_variables(c_latex);
+    la = la.replace(/\?/g, '');
+    la = la.replace(/@/g, '');
+    dict_calc[id] = '@?(' + la + ')?@';
+    dict_calc_unchanged[id] = c_latex;
+    MathQuill.MathField($(C_INPUT)[0]).revert();
+    $('.btn_calc_dyn').append(
+        '<div class="btn btn-success btn_calc btn_keypad btn_calc_ref btn_calc_ref_' + id + '">' + variable +
+            '<a class="btn btn-success btn-xs btn_calc_del btn_calc_del_' + id + '"><span>x</span></a>' +
+            '<a class="btn btn-success btn-xs btn_calc_edit btn_calc_edit_' + id + '">' +
+                '<span class="glyphicon glyphicon-pencil"></span>' +
+            '</a>' +
+        '</div>'
+    );
+    $('.btn_calc_dyn_ref').append(
+        '<button class="btn btn-success btn_calc btn_keypad btn_calc_ref_' + id + '">' + variable + '</button>'
+    );
+    $('.btn_calc_ref_' + id).popover({
+        html: true,
+        content: '<img src="http://latex.codecogs.com/svg.latex?' + c_latex + '" border="0"/>',
+        placement: 'top',
+        trigger: 'hover',
+        container: 'body'
+    });
+    refresh_all_char_colors();
 }
 
 /**
@@ -1180,19 +1242,18 @@ function convert_variables(latex){
 					}
 				}
 			}
-			//FIXME: be able to write capital-letters that is not stored as calculated references.
+            //TODO:  Use get_converted_variable() instead of dict_letters.
 			// Check if following char is a valid variable. (If the variable is stored in VARIABLES dictionary.)
 			var variable_valid = false;
-			if(dict_letters[la[i]] != undefined){
-				variable_valid = VARIABLES[parseInt(dict_letters[la[i]].replace(/R/g, ''))] != undefined;
+			if(get_converted_variable(la[i]) != undefined){
+				variable_valid = VARIABLES[parseInt(get_converted_variable(la[i]).replace(/R/g, ''))] != undefined;
 			}
 			if (la[i] in dict_letters && (variable_valid || la[i].match(/^[A-Z]*$/))) {
 				// If the char is a capital-letter and doesn't have a calculated variable, set the char as is.
-				var get_dict_letters = dict_letters[la[i]];
+				var get_dict_letters = get_converted_variable(la[i]);
 				if(la[i].match(/^[A-Z]*$/) && get_dict_letters == undefined){
 					get_dict_letters = la[i];
 				}
-
 				if ((la[i - 1] in dict_letters || la[i - 1] == ')' || !isNaN(la[i - 1])) && la[i - 2] != '\^' && la[i - 2] != '\\') {
 					if (la[i - 1] != ' ' && la[i - 2] != 't' && la[i - 3] != 'o' && la[i - 4] != 'd' && la[i - 5] != 'c') {
 						la2 += '\\cdot ' + get_dict_letters;
@@ -1269,6 +1330,7 @@ function close_panel(panel){
 	}
 	else if(panel == 'c'){
 		MathQuill.MathField($(C_INPUT)[0]).revert();
+        $('.calc_variable').val("");
 	}
 	else if(panel == 'a'){
 		$('#o_panel').fadeOut();
@@ -1413,6 +1475,27 @@ function get_custom_matrix_latex(col, row){
 }
 
 /**
+ * Get the converted string of the single variable or calculated-variable.
+ * @param {String} variable - The single letter to convert.
+ * @returns {String|*} The converted variable.
+ */
+function get_converted_variable(variable){
+    var dict_letters = {
+        'a' : 'R0R', 'b' : 'R1R', 'c' : 'R2R', 'd': 'R3R', 'e' : 'R4R', 'f' : 'R5R', 'g' : 'R6R', 'h' : 'R7R',
+        'i' : 'R8R', 'j' : 'R9R', 'k' : 'R10R', 'l' : 'R11R', 'm' : 'R12R', 'n' : 'R13R', 'o' : 'R14R', 'p' : 'R15R',
+        'q' : 'R16R', 'r' : 'R17R', 's' : 'R18R', 't' : 'R19R', 'u' : 'R20R', 'v' : 'R21R', 'w' : 'R22R',
+        'x' : 'R23R', 'y' : 'R24R', 'z' : 'R25R',
+        'A' : dict_calc[0], 'B' : dict_calc[1], 'C' : dict_calc[2], 'D' : dict_calc[3], 'E' : dict_calc[4],
+        'F' : dict_calc[5], 'G' : dict_calc[6], 'H' : dict_calc[7], 'I' : dict_calc[8], 'J' : dict_calc[9],
+        'K' : dict_calc[10], 'L' : dict_calc[11], 'M' : dict_calc[12], 'N' : dict_calc[13], 'O' : dict_calc[14],
+        'P' : dict_calc[15], 'Q' : dict_calc[16],'R' : dict_calc[17],'S' : dict_calc[18],'T' : dict_calc[19],
+        'U' : dict_calc[20], 'V' : dict_calc[21], 'W' : dict_calc[22], 'X' : dict_calc[23], 'Y' : dict_calc[24],
+        'Z' : dict_calc[25]};
+
+    return dict_letters[variable];
+}
+
+/**
  * Updates the unique variable counter. To track whether or not to disable random domain settings.
  * If there's no variables, disabled unneeded fields (or vice-versa).
  */
@@ -1442,11 +1525,14 @@ function scroll_to(id){
 
 /**
  * Add an error message under the given element.
- * @param {string} element_id - id of element to apply error message to.
+ * @param {string} selector - id or class-name of the element to apply error message to.
  * @param {string} message - the error message.
  */
-function error_message(element_id, message){
-	var element = $('#' + element_id);
+function error_message(selector, message){
+	var element = $(selector);
+    if(selector[0] != "." && selector[0] != "#"){
+        element = $('#' + selector);
+    }
 	$(document).ready(function(){
 		element.after('<p class="error_content">* '+message+'</p>');
 		$('.error_content').show(100).delay(5000).hide(100).queue(function(){
@@ -1721,7 +1807,12 @@ function refresh_char_colors(selector){
 	}
 	$(selector).find('var').each(function(){
 		var f_var = $(this);
-		if(f_var.hasClass('content_x') || $(this).hasClass('florin') || $(this).html() == 'e' || $(this).html() == 'i' || $(this).html() == 'd'){}
+        if(f_var.hasClass('content_x') || $(this).html() == 'r'){} // "r" is reserved for the graph-editor.
+        else if(f_var.hasClass('mq-operator-name')){ // Remove color if the the char is part of a LaTeX-command.
+            f_var.removeClass('content_x');
+            f_var.removeClass('content_var');
+            f_var.removeClass('content_calc');
+        }
 		else{
 			if(f_var.html() == 'x' || f_var.html() == 'y' || f_var.html() == 'z'){
 				f_var.addClass('content_x');
@@ -1734,25 +1825,7 @@ function refresh_char_colors(selector){
 						var_exist = true;
 					}
 				});
-				if(input_id == 'q'){
-					var var_id = f_var.html().charCodeAt(0) - 97; // Getting the button id (a:0, b:1, c:2)
-					if($('#q_btn_abc_' + var_id).length){}
-					else if((var_id in VARIABLES || !VAR_INIT) && Object.keys(VARIABLES).length <= MAX_VARIABLES){
-						f_var.addClass('content_var');
-						$('#q_btn_var_dyn').append('<div id="q_btn_abc_' + var_id + '" class="btn btn-danger btn_var_abc btn_var_abc_q btn_keypad">' + f_var.html() + '<a id="q_btn_abc_del_'+var_id+'" class="btn btn-danger btn-xs btn_var_del">x</a></div>');
-						$('.btn_var_dyn').append('<button class="btn btn-danger btn_var_abc btn_var_'+var_id+' btn_keypad">' + f_var.html() + '</button>');
-						$('#o_adv_domain').append(
-							'<tr id="o_adv_' + var_id + '" class="active o_adv_dyn">' +
-								'<td style="vertical-align: middle; text-align: right; color: #D9534F">' + f_var.html() + ':</td>' +
-								'<td><input id="o_adv_from_' + var_id + '" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td>' +
-								'<td><input id="o_adv_to_' + var_id + '" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td>' +
-								'<td style="border-left: thin dashed lightgray"><input id="o_adv_dec_'+var_id+'" type="number" class="form-control input-sm opt_domain_dec" placeholder="Desimaler:"></td>' +
-								'<td id="o_adv_sequence_container_'+var_id+'" style="display:none" colspan="3" class="sequence_input"><span id="sequence_input_'+var_id+'" class="math-field form-control input_mathquill seq_input"></span></td>' +
-								'<td style="vertical-align: middle"><input id="o_adv_sequence_'+var_id+'" class="o_btn_adv_sequence" type="checkbox"> Sekvens</td>' +
-							'</tr>');
-					}
-				}
-				else if(!var_exist){
+				if(!var_exist){
 					f_var.removeClass('content_var');
 				}
 			}
@@ -1866,19 +1939,7 @@ function insert_editable_data(){
 	for(var v = 0; v < var_str.length; v++){
 		var tmp_var = var_str[v].split('§');
 		VARIABLES[tmp_var[0]] = tmp_var.join('§');
-
-		$('#q_btn_var_dyn').append('<div id="q_btn_abc_' + tmp_var[0] + '" class="btn btn-danger btn_var_abc btn_var_abc_q btn_keypad">' + tmp_var[1] + '<a id="q_btn_abc_del_' + tmp_var[0] + '" class="btn btn-danger btn-xs btn_var_del">x</a></div>');
-		$('.btn_var_dyn').append('<button class="btn btn-danger btn_var_abc btn_var_' + tmp_var[0] + ' btn_keypad">' + tmp_var[1] + '</button>');
-		$('#o_adv_domain').append(
-			'<tr id="o_adv_' + tmp_var[0] + '" class="active o_adv_dyn">' +
-				'<td style="vertical-align: middle; text-align: right; color: #D9534F">' + tmp_var[1] + ':</td>' +
-				'<td><input id="o_adv_from_' + tmp_var[0] + '" type="number" class="form-control input-sm opt_domain_from" placeholder="Fra:"></td>' +
-				'<td><input id="o_adv_to_' + tmp_var[0] + '" type="number" class="form-control input-sm opt_domain_to" placeholder="Til:"></td>' +
-				'<td style="border-left: thin dashed lightgray"><input id="o_adv_dec_' + tmp_var[0] + '" type="number" class="form-control input-sm opt_domain_dec" placeholder="Desimaler:"></td>' +
-				'<td id="o_adv_sequence_container_' + tmp_var[0] + '" style="display:none" colspan="3" class="sequence_input"><span id="sequence_input_' + tmp_var[0] + '" class="math-field form-control input_mathquill seq_input"></span></td>' +
-				'<td style="vertical-align: middle"><input id="o_adv_sequence_' + tmp_var[0] + '" class="o_btn_adv_sequence" type="checkbox"> Sekvens</td>' +
-			'</tr>'
-		);
+        init_new_variable(tmp_var[1]);
 	}
 	//window.console.log(VARIABLES);
 
@@ -1936,7 +1997,10 @@ function insert_editable_data(){
 			c_char = String.fromCharCode(c_char.charCodeAt(0) + c_index);
 			$('.btn_calc_dyn').append(
 				'<div class="btn btn-success btn_calc btn_keypad btn_calc_ref btn_calc_ref_'+c_index+'">'+c_char+'' +
-					'<a class="btn btn-success btn-xs btn_calc_del btn_calc_del_'+c_index+'">x</a>' +
+					'<a class="btn btn-success btn-xs btn_calc_del btn_calc_del_'+c_index+'"><span>x</span></a>' +
+                    '<a class="btn btn-success btn-xs btn_calc_edit btn_calc_edit_' + c_index + '">' +
+                        '<span class="glyphicon glyphicon-pencil"></span>' +
+                    '</a>' +
 				'</div>'
 			);
 			$('.btn_calc_dyn_ref').append(

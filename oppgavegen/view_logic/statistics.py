@@ -1,6 +1,6 @@
-from oppgavegen.models import Level
 from oppgavegen.view_logic.progress import *
 from oppgavegen.models import Set, Chapter
+
 # NOTE: in the test version the database used is sql lite. In sql lite the between statement is inclusive
 # this means range(1, 10) would return all int numbers between 0 and 11.
 # if the database is changed to another, check how the between statement for that database works
@@ -9,19 +9,23 @@ from oppgavegen.models import Set, Chapter
 # note: postgresql also uses inclusive between.
 
 
-def get_level_student_statistics(level, start_interval=1100, end_interval=2300, interval=100):
+def get_level_student_statistics(level, start_interval=1100, end_interval=2300, interval=100,
+                                 cutoff_min=800, cutoff_max=2400):
     morris_data = []
     students = level.student_progresses.all()
     intervals = int((end_interval-start_interval)/interval)
-    cutoff_min = start_interval-1
-    cutoff_max = end_interval+1
 
-    # Check for entries in lower cutoff range (from 0 to cutoff_min)
-    if students.filter(level_rating__range=(0, cutoff_min)):
-        count = students.filter(level_rating__range=(0, cutoff_min)).count()
-        morris_data.append('{rating: "0-%d", studenter: %d },' % (cutoff_min, count))
+    # Check for and count entries in lower cutoff range (from 0 to cutoff_min)
+    if students.filter(level_rating__range=(0, cutoff_min-1)):
+        count = students.filter(level_rating__range=(0, cutoff_min-1)).count()
+        morris_data.append('{rating: "0-%d", studenter: %d },' % (cutoff_min-1, count))
 
-    # Check for entries in standard range (start_intervals to end_intervals)
+    # Check for and count entries between lower cutoff and start_interval
+    if students.filter(level_rating__range=(cutoff_min, start_interval-1)):
+        count = students.filter(level_rating__range=(cutoff_min, start_interval-1)).count()
+        morris_data.append('{rating: "%d-%d", studenter: %d },' % (cutoff_min, start_interval-1, count))
+
+    # Count entries in standard range (start_intervals to end_intervals)
     lower_bound = start_interval
     upper_bound = start_interval+interval-1
     print(upper_bound)
@@ -31,7 +35,7 @@ def get_level_student_statistics(level, start_interval=1100, end_interval=2300, 
         lower_bound+=interval
         upper_bound+=interval
 
-    # Check for entries in higher cutoff range (from end_intervals to cutoff_max)
+    # Check for and count entries in higher cutoff range (from end_intervals to cutoff_max)
     if students.filter(level_rating__range=(end_interval, cutoff_max)):
         count = students.filter(level_rating__range=(end_interval,cutoff_max)).count()
         morris_data.append('{rating: "%d-%d", studenter: %d },' % (end_interval, cutoff_max, count))
@@ -40,28 +44,35 @@ def get_level_student_statistics(level, start_interval=1100, end_interval=2300, 
     return morris_data
 
 
-def get_level_template_statistics(level, start_interval=1100, end_interval=2300, interval=100):
+def get_level_template_statistics(level, start_interval=1100, end_interval=2300, interval=100,
+                                  cutoff_min=800, cutoff_max=2400):
     morris_data = []
     templates = level.templates.all()
     num_intervals = int((end_interval-start_interval)/interval)
-    cutoff_min = start_interval-1
-    cutoff_max = end_interval+1
 
     # Check for entries in lower cutoff range (from 0 to cutoffmin)
-    if templates.filter(rating__range=(0, cutoff_min)):
-        count = templates.filter(rating__range=(0, cutoff_min)).count()
-        count += templates.filter(fill_rating__range=(0, cutoff_min)).count()
-        count += templates.filter(choice_rating__range=(0, cutoff_min)).count()
+    if templates.filter(rating__range=(0, cutoff_min-1)):
+        count = templates.filter(rating__range=(0, cutoff_min-1)).count()
+        count += templates.filter(fill_in_support=True,fill_rating__range=(0, cutoff_min-1)).count()
+        count += templates.filter(multiple_support=True,choice_rating__range=(0, cutoff_min-1)).count()
 
-        morris_data.append('{rating: "0-%d", oppgaver: %d },' % (cutoff_min, count))
+        morris_data.append('{rating: "0-%d", oppgaver: %d },' % (cutoff_min-1, count))
 
-    # Check for entries in standard range (start_interval to end_interval)
+    # Check for entries between lower cutoff to start_interval
+    if templates.filter(rating__range=(cutoff_min, start_interval-1)):
+        count = templates.filter(rating__range=(cutoff_min, start_interval-1)).count()
+        count += templates.filter(fill_in_support=True,fill_rating__range=(cutoff_min, start_interval-1)).count()
+        count += templates.filter(multiple_support=True,choice_rating__range=(cutoff_min, start_interval-1)).count()
+
+        morris_data.append('{rating: "%d-%d", oppgaver: %d },' % (cutoff_min, start_interval-1 , count))
+
+    # Count entries in standard range (start_interval to end_interval)
     lower_bound = start_interval
     upper_bound = lower_bound+interval-1
     for i in range(num_intervals):
         count = templates.filter(rating__range=(lower_bound, upper_bound)).count()
-        count += templates.filter(fill_rating__range=(lower_bound, upper_bound)).count()
-        count += templates.filter(choice_rating__range=(lower_bound, upper_bound)).count()
+        count += templates.filter(fill_in_support=True,fill_rating__range=(lower_bound, upper_bound)).count()
+        count += templates.filter(multiple_support=True,choice_rating__range=(lower_bound, upper_bound)).count()
         morris_data.append('{rating: "%d-%d", oppgaver: %d },' % (lower_bound, upper_bound, count))
         lower_bound += interval
         upper_bound += interval
@@ -69,8 +80,8 @@ def get_level_template_statistics(level, start_interval=1100, end_interval=2300,
     # Check for entries in higher cutoff range (from endintervals to cutoffmax)
     if templates.filter(rating__range=(end_interval, cutoff_max)):
         count = templates.filter(level_rating__range=(end_interval,cutoff_max)).count()
-        count += templates.filter(fill_rating__range=(end_interval, cutoff_max)).filter(fill_in_support=True).count()
-        count += templates.filter(choice_rating__range=(end_interval, cutoff_max)).filter(multiple_support=True).count()
+        count += templates.filter(fill_in_support=True,fill_rating__range=(end_interval, cutoff_max)).count()
+        count += templates.filter(multiple_support=True,choice_rating__range=(end_interval, cutoff_max)).count()
         morris_data.append('{rating: "%d-%d", oppgaver: %d },' % (end_interval, cutoff_max, count))
 
     return morris_data

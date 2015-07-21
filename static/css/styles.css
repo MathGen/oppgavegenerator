@@ -105,6 +105,36 @@ sub{							/* between bootstrap*/
 	height: 34px;
 	width: 34px;
 }
+input.input_new_variable{
+	display: inline-block;
+  	color:#D9534F;
+	border-radius: 0 3px 3px 0 !important;
+	border: 1px solid #d43f3a;
+	width: 34px !important;
+	padding: 0 0 0 5px;
+	margin-left: -1px;
+}
+.btn_var{
+	margin-right: -1px;
+}
+.btn_var_abc_q{
+	border-radius: 0;
+}
+input.calc_variable{
+	width: 38px;
+	font-size: 1.5em;
+	padding: 0 0 0 0;
+	border: none;
+	text-align: center;
+	margin-right: 6px;
+	color: #5CB85C;
+}
+input.calc_variable:focus{
+	border-color: transparent;
+	-webkit-box-shadow: inset 0 1px 1px #5CB85C;
+	-moz-box-shadow: inset 0 1px 1px #5CB85C;
+	box-shadow: inset 0 1px 1px #5CB85C;
+}
 .select_error{
 	border: 2px solid #D9534F;
 }
@@ -119,14 +149,35 @@ sub{							/* between bootstrap*/
 }
 .btn_var_abc_q,
 .btn_calc_ref{
-	padding-right: 22px;
+	padding-right: 24px;
+	padding-left: 8px;
 }
-.btn_var_del,
+.btn_var_del{
+	position: absolute;
+	top: -1px;
+	right: -1px;
+	border-radius: 0 0 0 4px;
+}
 .btn_calc_del{
 	position: absolute;
 	top: -1px;
 	right: -1px;
-	border-radius: 0 4px 0 4px;
+	height: 18px;
+	width: 18px;
+	border-radius: 0 3px 0 0;
+	padding-top: 0 !important;
+}
+.btn_calc_edit{
+	position: absolute;
+	bottom: -6px;
+	right: -1px;
+	width: 18px;
+	height: 17px;
+	border-radius: 0 0 3px 0;
+	font-size: 0.7em;
+}
+.btn_calc_edit>.glyphicon-pencil{
+	left: -2px;
 }
 .front_header{
 	margin-top: 0;
