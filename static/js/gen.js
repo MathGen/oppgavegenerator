@@ -1778,6 +1778,11 @@ function refresh_char_colors(selector){
 	$(selector).find('var').each(function(){
 		var f_var = $(this);
         if(f_var.hasClass('content_x') || $(this).html() == 'r'){} // "r" is reserved for the graph-editor.
+        else if(f_var.hasClass('mq-operator-name')){ // Remove color if the the char is part of a LaTeX-command.
+            f_var.removeClass('content_x');
+            f_var.removeClass('content_var');
+            f_var.removeClass('content_calc');
+        }
 		else{
 			if(f_var.html() == 'x' || f_var.html() == 'y' || f_var.html() == 'z'){
 				f_var.addClass('content_x');
