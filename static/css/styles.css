@@ -149,14 +149,35 @@ input.calc_variable:focus{
 }
 .btn_var_abc_q,
 .btn_calc_ref{
-	padding-right: 22px;
+	padding-right: 24px;
+	padding-left: 8px;
 }
-.btn_var_del,
-.btn_calc_del{
+.btn_var_del{
 	position: absolute;
 	top: -1px;
 	right: -1px;
 	border-radius: 0 0 0 4px;
+}
+.btn_calc_del{
+	position: absolute;
+	top: -1px;
+	right: -1px;
+	height: 18px;
+	width: 18px;
+	border-radius: 0 3px 0 0;
+	padding-top: 0 !important;
+}
+.btn_calc_edit{
+	position: absolute;
+	bottom: -6px;
+	right: -1px;
+	width: 18px;
+	height: 17px;
+	border-radius: 0 0 3px 0;
+	font-size: 0.7em;
+}
+.btn_calc_edit>.glyphicon-pencil{
+	left: -2px;
 }
 .front_header{
 	margin-top: 0;
