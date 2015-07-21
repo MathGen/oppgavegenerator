@@ -17,7 +17,7 @@
                 <h3>Studentstatistikk</h3>
                 {% if players %}
 
-                <div id="studentratingchart" style="height: 250px"></div>
+                <div id="student-rating-chart" style="height: 250px"></div>
 
                 <p>Studenter: {{ players }}</p>
                 <p>Gjennomsnittlig rating: {{ average }}</p>
@@ -31,9 +31,9 @@
 
                 {% if templates %}
                     <p>Nåværende rating</p>
-                    <div id="templatesratingchart" style="height: 250px"></div>
+                    <div id="templates-rating-chart" style="height: 250px"></div>
                     <p>Original rating</p>
-                    <div id="template_original_chart" style="height: 250px"></div>
+                    <div id="templates-original-chart" style="height: 250px"></div>
                 {% else %}
                     Ingen oppgaver i {{ level_name }} enda.
 
@@ -51,7 +51,7 @@
     <script>
 
         new Morris.Bar({
-            element: 'studentratingchart',
+            element: 'student-rating-chart',
             data: [
                 {% for entry in student_entries %}
                     {{ entry|safe }}
@@ -63,7 +63,7 @@
         });
 
         new Morris.Bar({
-            element: 'templatesratingchart',
+            element: 'templates-rating-chart',
             data: [
                 {% for entry in template_entries %}
                     {{ entry|safe }}
@@ -75,7 +75,7 @@
         });
 
         new Morris.Bar({
-            element: 'template_original_chart',
+            element: 'templates-original-chart',
             data: [
                 {% for entry in template_original %}
                     {{ entry|safe }}
