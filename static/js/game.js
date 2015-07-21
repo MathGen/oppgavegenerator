@@ -170,17 +170,15 @@ function update_medals(){
         var medal_value = medals[index];
         switch (medal_value){
             case 0:
-            case 1:
-            case 2:
                 $(this).removeClass('medal_bronze').removeClass('medal_silver').removeClass('medal_gold').removeClass('chapter_ribbon').children().remove();
                 break;
-            case 3:
+            case 1:
                 $(this).removeClass('medal_silver').removeClass('medal_gold').addClass('medal_bronze').addClass('chapter_ribbon');
                 break;
-            case 4:
+            case 2:
                 $(this).removeClass('medal_bronze').removeClass('medal_gold').addClass('medal_silver').addClass('chapter_ribbon');
                 break;
-            case 5:
+            case 3:
                 $(this).removeClass('medal_bronze').removeClass('medal_silver').addClass('medal_gold').addClass('chapter_ribbon');
                 break;
         }
