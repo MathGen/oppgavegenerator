@@ -693,45 +693,29 @@ $(document).ready(function() {
 	// Retrieve and insert calculation to solution
 	$('#c_btn_ok').click(function(e){
 		e.preventDefault();
-		var total_elements = $(C_INPUT).children().length-1;
-		if(total_elements != 0){
-			var char_available = false;
-			var calc_char = "A";
-			var calc_id = 0;
-			while(char_available == false){
-				if($('.btn_calc_ref_' + calc_id).length){
-					calc_char = String.fromCharCode(calc_char.charCodeAt(0) + 1);
-					calc_id++;
-				}
-				else{
-					char_available = true;
-				}
-			}
-			var c_latex = MathQuill.MathField($(C_INPUT)[0]).latex();
-			var la = convert_variables(c_latex);
-			la = la.replace(/\?/g,'');
-			la = la.replace(/@/g,'');
-			dict_calc[calc_id] = '@?(' + la + ')?@';
-			dict_calc_unchanged[calc_id] = c_latex;
-			MathQuill.MathField($(C_INPUT)[0]).revert();
-			// TODO: improve insertion of popovers, and finding available calc variables (A,B,C,..).
-			$('.btn_calc_dyn').append(
-				'<div class="btn btn-success btn_calc btn_keypad btn_calc_ref btn_calc_ref_'+calc_id+'">'+calc_char+
-					'<a class="btn btn-success btn-xs btn_calc_del btn_calc_del_'+calc_id+'">x</a>' +
-				'</div>'
-			);
-			$('.btn_calc_dyn_ref').append(
-				'<button class="btn btn-success btn_calc btn_keypad btn_calc_ref_'+calc_id+'">'+calc_char+'</button>'
-			);
-			$('.btn_calc_ref_' + calc_id).popover({
-				html: true,
-				content: '<img src="http://latex.codecogs.com/svg.latex?'+c_latex+'" border="0"/>',
-				placement: 'top',
-				trigger: 'hover',
-				container: 'body'
-			});
-			refresh_all_char_colors();
-		}
+		if(get_latex_from_mathfield(C_INPUT) != "") {
+            var calc_var = $('.calc_variable');
+            var variable = calc_var.val();
+            if (variable) {
+                if (variable.match(/^[A-Z]+$/g)) {
+                    var id = variable.charCodeAt(0) - 65; // Get the unique variable-id (A=0, B=1, C=2, etc).
+                    if ($('.btn_calc_ref_' + id).length) {
+                        error_message('.calc_variable', "Tegn allerede i bruk!");
+                    } else {
+                        init_new_calculation(variable, id);
+                        $('#calc_modal').modal('hide');
+                    }
+                    calc_var.val("");
+                } else {
+                    error_message('.calc_variable', "Ugyldig tegn!");
+                    calc_var.val("");
+                }
+            } else {
+                error_message('.calc_variable', "Velg variabel!");
+            }
+        } else {
+            error_message(C_INPUT, "Fyll ut!");
+        }
 	});
 
 	// Submit template to database / Update
@@ -789,7 +773,6 @@ function submit_template(){
 	form_submit['answer_latex'] = tmp_answer_latex.join('§');
 
 	// RANDOM_DOMAIN
-	// retrieves the list from latest letter in alphabet (w) to earliest (a) as that is the formatting used server side.
 	if(VARIABLE_COUNT > 0){
         var domain_dict = {};
 		$('.o_adv_dyn').each(function(){
@@ -1004,6 +987,37 @@ function init_new_variable(variable){
     update_variable_count();
     refresh_all_char_colors();
     refresh_variables();
+}
+
+/**
+ * Initialize a new calculation with a variable as a reference. Store it and make it available with buttons.
+ * @param {String} variable - The variable-reference of the calculation (A, B, C, etc).
+ * @param {Number} id - The id of the variable-reference.
+ */
+function init_new_calculation(variable, id){
+    var c_latex = MathQuill.MathField($(C_INPUT)[0]).latex();
+    var la = convert_variables(c_latex);
+    la = la.replace(/\?/g, '');
+    la = la.replace(/@/g, '');
+    dict_calc[id] = '@?(' + la + ')?@';
+    dict_calc_unchanged[id] = c_latex;
+    MathQuill.MathField($(C_INPUT)[0]).revert();
+    $('.btn_calc_dyn').append(
+        '<div class="btn btn-success btn_calc btn_keypad btn_calc_ref btn_calc_ref_' + id + '">' + variable +
+        '<a class="btn btn-success btn-xs btn_calc_del btn_calc_del_' + id + '">x</a>' +
+        '</div>'
+    );
+    $('.btn_calc_dyn_ref').append(
+        '<button class="btn btn-success btn_calc btn_keypad btn_calc_ref_' + id + '">' + variable + '</button>'
+    );
+    $('.btn_calc_ref_' + id).popover({
+        html: true,
+        content: '<img src="http://latex.codecogs.com/svg.latex?' + c_latex + '" border="0"/>',
+        placement: 'top',
+        trigger: 'hover',
+        container: 'body'
+    });
+    refresh_all_char_colors();
 }
 
 /**
