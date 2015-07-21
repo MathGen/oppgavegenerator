@@ -144,7 +144,7 @@ function post_answer(submit_dict){
                 $('#game_nav').fadeIn(function(){
                     redraw_mathquill_elements();
                 });
-                if($('#new_star').text() == 1){
+                if(($('#new_star').text() == 1) || $('#new_medal').text() > 0){
                     $('#achievement_modal').modal('show');
                 }
                 update_progress_bar_level();
@@ -170,15 +170,17 @@ function update_medals(){
         var medal_value = medals[index];
         switch (medal_value){
             case 0:
+            case 1:
+            case 2:
                 $(this).removeClass('medal_bronze').removeClass('medal_silver').removeClass('medal_gold').removeClass('chapter_ribbon').children().remove();
                 break;
-            case 1:
+            case 3:
                 $(this).removeClass('medal_silver').removeClass('medal_gold').addClass('medal_bronze').addClass('chapter_ribbon');
                 break;
-            case 2:
+            case 4:
                 $(this).removeClass('medal_bronze').removeClass('medal_gold').addClass('medal_silver').addClass('chapter_ribbon');
                 break;
-            case 3:
+            case 5:
                 $(this).removeClass('medal_bronze').removeClass('medal_silver').addClass('medal_gold').addClass('chapter_ribbon');
                 break;
         }
