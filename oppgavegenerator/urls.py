@@ -7,6 +7,7 @@ Configures how urls for the site works
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from oppgavegen.views.views import *
+from oppgavegen.views.stat_views import *
 from oppgavegen.forms import *
 from haystack.query import SearchQuerySet
 from haystack.views import search_view_factory, SearchView
@@ -119,6 +120,7 @@ urlpatterns = patterns('',
     url(r'^chapter/(\d+)/level/(\d+)/remove_level/$', remove_level_from_chapter_view, name='remove_level_from_chapter'),
     url(r'^level/(\d+)/template/(\d+)/add_template/$', add_template_to_level_view, name='add_template_to_level'),
     url(r'^level/(\d+)/template/(\d+)/remove_template/$', remove_template_from_level_view, name='remove_template_from_level'),
+    url(r'^set/(\d+)/stats/$', set_stats_view, name='set_stats'),
 
     url(r'^set/update/$', update_set_view, name='update_set_view'),
     url(r'^chapter/update/$', update_chapter_view, name='update_chapter_view'),
