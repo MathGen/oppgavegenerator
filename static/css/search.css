@@ -20,7 +20,7 @@ ol li.list-group-item {
     display: list-item;
 }
 
-.btn-sm {
+.btn-sm .btn-primary {
  width: 63px;
 }
 

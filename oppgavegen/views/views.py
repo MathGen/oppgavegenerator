@@ -477,13 +477,13 @@ def remove_template_from_current_level(request, template_id):
 
 def preview_template(request, template_id):
     """Render a template to html"""
-    #if request.is_ajax():
-    q = Template.objects.get(pk=template_id)
-    solution = str(q.question_text_latex.replace('\\\\', '\\')) + "\\n" + str(q.solution_latex.replace('\\\\', '\\'))
-
-    return render_to_response('search/template_preview.html',
-                              { 'solution': solution },
-                              context_instance=RequestContext(request))
+    if request.is_ajax():
+        dict = {}
+        q = Template.objects.get(pk=template_id)
+        dict['template_text'] = str(q.question_text_latex.replace('\\\\', '\\'))
+        dict['template_solution'] = str(q.solution_latex.replace('\\\\', '\\'))
+        return render_to_response('search/template_preview.html',
+                            dict, context_instance=RequestContext(request))
 
 
 def set_detail_view(request, set_id):

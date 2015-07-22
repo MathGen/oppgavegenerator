@@ -134,4 +134,3 @@ def stats_for_set(set_id):
         chapter = Chapter.objects.get(pk=x)
         header.append(chapter.name)
     return (header,stats)  # Todo: put into table and display.
-

@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
-{% load static %}
+{% load staticfiles %}
 {% block head %}
-    <link href="/static/css/search.css" rel="stylesheet">
+    <link href="{% static "css/search.css" %}" rel="stylesheet">
 {% endblock %}
 {% block title %}{% endblock %}
 
@@ -78,7 +78,7 @@
                 </li>
                 {% for result in page.object_list %}
                     <li class="list-group-item clearfix">
-                        {% include 'search/includes/template.html' %}
+                        {% include 'search/includes/template_result.html' %}
                     </li>
                 {% empty %}
                     <li class="list-group-item clearfix">Fant ingen oppgavemaler.</li>
@@ -149,10 +149,27 @@
 
     </section>
 
+    <div class="modal fade" id="previewModal" role="dialog" aria-labelledby="">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="previewModalTitle">Modal title</h4>
+                </div>
+                <div class="modal-body static-math input_mathquill mq-math-mode" id="previewModalBody">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Lukk</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
 {% endblock %}
 
 {% block js %}
-    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-    <script src="/static/js/search_functions.js"></script>
+    <script src="{% static "js/underscore-min.js" %}"></script>
+    <script src="{% static "js/search_functions.js" %}"></script>
 {% endblock %}
