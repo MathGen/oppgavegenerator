@@ -47,11 +47,13 @@ def get_level_student_statistics(level, start_interval=1100, end_interval=2300, 
 def get_level_template_statistics(level, start_interval=1100, end_interval=2300, interval=100,
                                   cutoff_min=800, cutoff_max=2400):
     morris_data = []
-    templates = level.templates.all()
+    templates = level.templates.all().values('rating','fill_rating','choice_rating')
     num_intervals = int((end_interval-start_interval)/interval)
 
     # Check for entries in lower cutoff range (from 0 to cutoffmin)
-    if templates.filter(rating__range=(0, cutoff_min-1)):
+    if templates.filter(rating__range=(0, cutoff_min-1)) \
+    or templates.filter(fill_rating__range=(0,cutoff_min-1)) \
+    or templates.filter(choice_rating__range=(0,cutoff_min-1)):
         count = templates.filter(rating__range=(0, cutoff_min-1)).count()
         count += templates.filter(fill_in_support=True,fill_rating__range=(0, cutoff_min-1)).count()
         count += templates.filter(multiple_support=True,choice_rating__range=(0, cutoff_min-1)).count()
@@ -59,7 +61,9 @@ def get_level_template_statistics(level, start_interval=1100, end_interval=2300,
         morris_data.append('{rating: "0-%d", oppgaver: %d },' % (cutoff_min-1, count))
 
     # Check for entries between lower cutoff to start_interval
-    if templates.filter(rating__range=(cutoff_min, start_interval-1)):
+    if templates.filter(rating__range=(cutoff_min, start_interval-1)) \
+    or templates.filter(fill_rating__range=(cutoff_min,start_interval-1)) \
+    or templates.filter(choice_rating__range=(cutoff_min,start_interval-1)):
         count = templates.filter(rating__range=(cutoff_min, start_interval-1)).count()
         count += templates.filter(fill_in_support=True,fill_rating__range=(cutoff_min, start_interval-1)).count()
         count += templates.filter(multiple_support=True,choice_rating__range=(cutoff_min, start_interval-1)).count()
@@ -78,7 +82,9 @@ def get_level_template_statistics(level, start_interval=1100, end_interval=2300,
         upper_bound += interval
 
     # Check for entries in higher cutoff range (from endintervals to cutoffmax)
-    if templates.filter(rating__range=(end_interval, cutoff_max)):
+    if templates.filter(rating__range=(end_interval, cutoff_max)) \
+    or templates.filter(fill_rating__range=(end_interval,cutoff_max)) \
+    or templates.filter(choice_rating__range=(end_interval,cutoff_max)):
         count = templates.filter(level_rating__range=(end_interval,cutoff_max)).count()
         count += templates.filter(fill_in_support=True,fill_rating__range=(end_interval, cutoff_max)).count()
         count += templates.filter(multiple_support=True,choice_rating__range=(end_interval, cutoff_max)).count()
