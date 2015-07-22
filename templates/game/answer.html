@@ -2,6 +2,7 @@
 <script src="/static/js/solution.js?02"></script>
 <link href="/static/css/stud_style.css" rel="stylesheet">
 <div id="new_star" hidden>{{ new_star }}</div>
+<div id="new_medal" hidden>{{ new_medal }}</div>
 <div id="num_stars" hidden>{{ stars }}</div>
 <div id="get_ulp" hidden>{{ ulp }}</div>
 <div id="get_chapter_id" hidden>{{ chapter_id }}</div>
@@ -74,10 +75,26 @@
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-body">
-{#                <img src="//placehold.it/1000x600" class="img-responsive">#}
                 <h3>Gratulerer!</h3>
-                <h4><small>Du har fått en ny stjerne innenfor dette temaet.</small></h4>
-                <h5 style="text-align: center"><span class="achievement_star glyphicon glyphicon-star" style="font-size: 10em"></span></h5>
+                {% if new_medal == 1 %}
+                    <h4><small>Du har fått en bronse medalje innenfor dette kapittelet.</small></h4>
+                    <div class="ribbon medal_bronze chapter_ribbon">
+                        <div class="star-5-points"></div>
+                    </div>
+                {% elif new_medal == 2 %}
+                    <h4><small>Du har fått en sølv medalje innenfor dette kapittelet.</small></h4>
+                    <div class="ribbon medal_silver chapter_ribbon">
+                        <div class="star-5-points"></div>
+                    </div>
+                {% elif new_medal == 3 %}
+                    <h4><small>Du har fått en gull medalje innenfor dette kapittelet.</small></h4>
+                    <div class="ribbon medal_gold chapter_ribbon">
+                        <div class="star-5-points"></div>
+                    </div>
+                {% elif new_star == 1 %}
+                    <h4><small>Du har fått en ny stjerne innenfor dette temaet.</small></h4>
+                    <h5 style="text-align: center"><span class="achievement_star glyphicon glyphicon-star" style="font-size: 10em"></span></h5>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -144,7 +144,7 @@ function post_answer(submit_dict){
                 $('#game_nav').fadeIn(function(){
                     redraw_mathquill_elements();
                 });
-                if($('#new_star').text() == 1){
+                if(($('#new_star').text() == 1) || $('#new_medal').text() > 0){
                     $('#achievement_modal').modal('show');
                 }
                 update_progress_bar_level();
