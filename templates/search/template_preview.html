@@ -7,15 +7,19 @@
     <script>
         var solution = $('#get_solution');
         var solution_text = solution.text().replace(/§/g, '\\n');
-        solution.html(solution_text);
+        $('#preview').html(solution_text);
 
 
     </script>
     <link href="/static/css/styles.css" rel="stylesheet">
     <p>
 
-    <div id="mathquill_field"></div>
+    <div id="preview" class="static-math mq-math-mode"></div>
     </p>
 
     <script src="/static/js/mathquill.min.js"></script>
-
+    <script>
+        $('.static-math').each(function(){
+            MathQuill.StaticMath(this).reflow();
+        });
+    </script>
