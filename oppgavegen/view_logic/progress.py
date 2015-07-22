@@ -121,14 +121,20 @@ def check_for_chapter_completed(user, chapter):
     levels = chapter.order
     levels = levels.split(',')
     counter = 0
-    for i in levels:
-        level = Level.objects.get(pk=i)
-        try:
-            q = UserLevelProgress.objects.get(user=user, level=level)
-        except UserLevelProgress.DoesNotExist:
-            break
-        if q.stars < 1:
-            break
-        counter += 1
+
+    try:
+        for i in levels:
+            i = int(i)
+            level = Level.objects.get(pk=i)
+            try:
+                q = UserLevelProgress.objects.get(user=user, level=level)
+            except UserLevelProgress.DoesNotExist:
+                break
+            if q.stars < 1:
+                break
+            counter += 1
+    except ValueError:
+        # This happens if no levels are added to the chapter.
+        pass
 
     return int(counter == len(levels))

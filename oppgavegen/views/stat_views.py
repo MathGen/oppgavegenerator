@@ -3,12 +3,14 @@ from django.shortcuts import render
 from django_tables2 import RequestConfig
 from selectable.decorators import login_required
 from oppgavegen.templatetags.app_filters import is_teacher
+from oppgavegen.view_logic.statistics import stats_for_set
 
-@login_required
-@user_passes_test(is_teacher, '/')
-def templates(request):
+
+
+def set_stats_view(request, set_id):
     """Returns a render of tableview.html with all the templates"""
-    panel_title = "Alle Maler"
-    table = TemplateTable(Template.objects.filter(valid_flag=True))
-    RequestConfig(request, paginate={"per_page": 20}).configure(table)
-    return render(request, "tableview.html", {"table": table, "panel_title": panel_title})
+    headers, user_stats = stats_for_set(int(set_id))
+    print(headers)
+    print(user_stats)
+    return render(request, "statview.html", {"headers": headers, "user_stats": user_stats,
+                                             'panel_title': 'Brukerstatistikk'})

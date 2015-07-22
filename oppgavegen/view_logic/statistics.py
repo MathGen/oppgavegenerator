@@ -111,26 +111,37 @@ def get_level_template_original_statistics(level, interval=100):
 
     return morris_data
 
-def user_stats_for_set(user, set_id):
-    set = Set.objects.get(pk=set_id)
-    chapters = set.chapters.all()
-    chapter_status_dict = {}
-    for chapter in chapters:
-        chapter_status_dict[chapter.name] = check_for_chapter_completed(user, chapter)
 
-    return chapter_status_dict
+def user_stats_for_set(user, set_id):
+    """returns whether a user has completed the chapters in a set (according to order)"""
+    set = Set.objects.get(pk=set_id)
+    order = set.order.split(',')
+    chapter_status_list = []
+    print(order)
+    for c_id in order:
+        print('2')
+        c_id = int(c_id)
+        print(c_id)
+        chapter = Chapter.objects.get(pk=c_id)
+        chapter_status_list.append(check_for_chapter_completed(user, chapter))
+
+    return chapter_status_list
+
 
 def stats_for_set(set_id):
-    """Returns the stats for all users in a set on the form {'name': {'chapter': progress,..},..}"""
+    """Returns the stats for all users in a set on the form {'name': [progress1, progress2],..}"""
     set = Set.objects.get(pk=set_id)
     users = set.users.all()
-    stats = {}
+    stats = []
+    print('1')
     for user in users:
-        stats[user.first_name + ' ' + user.last_name] = user_stats_for_set(user, set_id)
+        stats.append([user.first_name + ' ' + user.last_name] + user_stats_for_set(user, set_id))
 
-    order = Set.order.split(',')
-    header = ['Navn']
+    headers = ['Navn']
+    order = set.order
+    order = order.split(',')
     for x in order:
+        x = int(x)
         chapter = Chapter.objects.get(pk=x)
-        header.append(chapter.name)
-    return (header,stats)  # Todo: put into table and display.
+        headers.append(chapter.name)
+    return headers, stats
