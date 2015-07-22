@@ -1,6 +1,6 @@
-Django==1.8
-django-bootstrap3==5.1.1
-django-admin-bootstrapped==2.5.0
+Django==1.8.3
+django-bootstrap3==6.1.0
+django-admin-bootstrapped==2.5.4
 django-registration-redux==1.2
 django-tables2==1.0.4
 gunicorn==19.2.1
