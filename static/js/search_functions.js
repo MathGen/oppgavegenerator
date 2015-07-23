@@ -5,11 +5,19 @@ $('#previewModal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget); // Button that triggered the modal
     var template_id = button.data('template_id'); // Extract info from data-* attributes
     var template_title = button.data('template_title');
+    modal.find('.modal-title').text('Forhåndsvisning av ' + '"' + template_title + '"');
+
     var jsonurl = '/template/' + template_id + '/preview/';
 
     $.getJSON(jsonurl, function (data) {
         modal.find('.template-text').html(data.template_text);
-        modal.find('.template-solution').text(data.template_solution);
+        var solution = data.template_solution.split('§');
+        modal.find('.template-solution').empty();
+        for(var s = 0; s < solution.length; s++){
+        modal.find('.template-solution').append('<div class="input_field"><div id="mathquill_solution_'+s+'" class="static-math">'+solution[s]+'</div></div><br/>');
+        }
+
+        //modal.find('.template-solution').text(data.template_solution);
         redraw_mathquill_elements()
     });
 });
