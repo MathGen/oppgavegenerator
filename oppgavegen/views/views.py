@@ -8,7 +8,7 @@ import json
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.template import RequestContext
 from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import render
 from django_tables2 import RequestConfig
 from django.views.generic.edit import CreateView, UpdateView
@@ -476,15 +476,12 @@ def remove_template_from_current_level(request, template_id):
 
 
 def preview_template(request, template_id):
-    """Render a template to html"""
-    if request.is_ajax():
-        dict = {}
-        q = Template.objects.get(pk=template_id)
-        dict['template_text'] = str(q.question_text_latex.replace('\\\\', '\\'))
-        dict['template_solution'] = str(q.solution_latex.replace('\\\\', '\\'))
-        return render_to_response('search/template_preview.html',
-                            dict, context_instance=RequestContext(request))
-
+    """Return a template as JSON-object"""
+    dict = {}
+    q = Template.objects.get(pk=template_id)
+    dict['template_text'] = str(q.question_text_latex.replace('\\\\', '\\'))
+    dict['template_solution'] = str(q.solution_latex.replace('\\\\', '\\'))
+    return JsonResponse(dict)
 
 def set_detail_view(request, set_id):
     """ List titles for all chapters, levels and templates in a set. """

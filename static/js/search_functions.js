@@ -1,25 +1,17 @@
-var MILLS_TO_IGNORE_REQUESTS = 750;
+var MILLS_TO_IGNORE_REQUESTS = 500;
 
 $('#previewModal').on('show.bs.modal', function (event) {
     var modal = $(this);
     var button = $(event.relatedTarget); // Button that triggered the modal
     var template_id = button.data('template_id'); // Extract info from data-* attributes
     var template_title = button.data('template_title');
-    //var template_content = '';
-    var processServerResponse = function (serverResponse_data, textStatus_ignored, jqXHR_ignored) {
-        //console.log("sf serverResponse_data='" + serverResponse_data + "', textStatus_ignored='" + textStatus_ignored + "', jqXHR_ignored='" + jqXHR_ignored + "', template_id='" + template_id + "'");
-        modal.find('.modal-title').text('Forhåndsvisning av ' + '"' + template_title + '"');
-        modal.find('.modal-body').html(serverResponse_data);
-    };
+    var jsonurl = '/template/' + template_id + '/preview/';
 
-    var config = {
-        url: '/template/' + template_id + '/preview/',
-        dataType: 'text',
-        success: processServerResponse,
-        fail: 'error!'
-    };
-
-    $.ajax(config);
+    $.getJSON(jsonurl, function (data) {
+        modal.find('.template-text').html(data.template_text);
+        modal.find('.template-solution').text(data.template_solution);
+        redraw_mathquill_elements()
+    });
 });
 
 var processAdd = function () {
