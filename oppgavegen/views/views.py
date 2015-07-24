@@ -27,6 +27,9 @@ from oppgavegen.view_logic.view_logic import *
 from oppgavegen.view_logic.current_work import *
 from oppgavegen.view_logic.statistics import *
 
+from registration.views import RegistrationView
+from oppgavegen.forms import NamedUserRegistrationForm
+
 # Search Views and Forms
 from haystack.generic_views import SearchView
 from oppgavegen.forms import QuestionForm, TemplateForm, LevelCreateForm, ChapterNameForm, UserCurrentSetsForm, SetsSearchForm
@@ -52,6 +55,10 @@ def is_member(user):
     if user.is_superuser:
         return True
     return user.groups.filter(name='Teacher').exists()
+
+
+class MathGenRegistrationView(RegistrationView):
+    form_class = NamedUserRegistrationForm
 
 
 @cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)
