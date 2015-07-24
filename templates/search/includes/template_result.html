@@ -9,8 +9,8 @@
 
     <span id="toggle_template_preview_id_{{ result.object.id }}" class="span__toggle_template_preview_button pull-right"
           data-template_id="{{ result.object.id }}">
-        <button class="btn btn-sm btn-default" data-toggle="modal" data-target="#previewModal"
-                data-template_id="{{ result.object.id }}" data-template_title="{{ result.object.name|title }}">
+        <button class="btn btn-sm btn-default preview-button"
+                data-template_id="{{ result.object.id }}" data-template_title="{{ result.object.name|title }}" type="button">
             <span class="glyphicon glyphicon-eye-open"></span>
         </button>
     </span>
