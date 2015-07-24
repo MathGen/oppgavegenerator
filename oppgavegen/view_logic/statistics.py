@@ -117,13 +117,10 @@ def user_stats_for_set(user, set_id):
     set = Set.objects.get(pk=set_id)
     order = set.order.split(',')
     chapter_status_list = []
-    print(order)
     for c_id in order:
-        print('2')
         c_id = int(c_id)
-        print(c_id)
         chapter = Chapter.objects.get(pk=c_id)
-        chapter_status_list.append(check_for_chapter_completed(user, chapter))
+        chapter_status_list.append(check_chapter_completion(user, chapter))
 
     return chapter_status_list
 

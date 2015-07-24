@@ -116,11 +116,12 @@ def check_for_level_skip(user, chapter, level_id):
     return return_value
 
 
-def check_for_chapter_completed(user, chapter):
-    """Returns 0/1 depending on if the user has completed the given chapter"""
+def check_chapter_completion(user, chapter):
+    """Returns how manny levels in a chapter a user has completed"""
     levels = chapter.order
     levels = levels.split(',')
     counter = 0
+    number_of_chapters = len(levels)
 
     try:
         for i in levels:
@@ -130,11 +131,11 @@ def check_for_chapter_completed(user, chapter):
                 q = UserLevelProgress.objects.get(user=user, level=level)
             except UserLevelProgress.DoesNotExist:
                 break
-            if q.stars < 1:
+            if q.stars < 3:
                 break
             counter += 1
     except ValueError:
         # This happens if no levels are added to the chapter.
         pass
 
-    return int(counter == len(levels))
+    return str(counter) + '/' + str(number_of_chapters)
