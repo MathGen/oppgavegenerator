@@ -7,8 +7,23 @@ from django.forms import ModelForm
 from django.forms.formsets import BaseFormSet
 from django import forms
 from haystack.forms import SearchForm
+from registration.users import UserModel, UsernameField
+from registration.forms import RegistrationFormUniqueEmail
 
 from .models import Set, Chapter, Level, Template, ExtendedUser, Tag
+
+User = UserModel()
+
+class NamedUserRegistrationForm(RegistrationFormUniqueEmail):
+    required_css_class = 'required'
+    username = forms.CharField(label="Brukernavn", required=True, max_length=30)
+    email = forms.EmailField(label="E-postadresse", required=True)
+    first_name = forms.CharField(label="Fornavn", required=True)
+    last_name = forms.CharField(label="Etternavn", required=True)
+
+    class Meta:
+        model = User
+        fields = ("username", "email", "first_name", "last_name")
 
 
 class TagField(forms.CharField):

@@ -11,6 +11,7 @@ from oppgavegen.views.stat_views import *
 from oppgavegen.forms import *
 from haystack.query import SearchQuerySet
 from haystack.views import search_view_factory, SearchView
+from registration.backends.default.views import RegistrationView
 from oppgavegen.views.add_remove_views import *
 from oppgavegen.view_logic.db_format import format_domain
 
@@ -23,6 +24,7 @@ urlpatterns = patterns('',
     url(r'^submit/', submit, name='submit'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^user/', include('registration.backends.default.urls')),
+    url(r'^user/register/$', RegistrationView.as_view(form_class=NamedUserRegistrationForm), name='registration_register'),
     url(r'^user/templates/', template_table_by_user, name='user_templates'),
     url(r'^task/$', task),
     url(r"^task/([\w ]+)/$", task_by_extra, name='task_by_extra'),
