@@ -113,5 +113,5 @@ SITE_ID = 1                     # Temporary solution for local production-enviro
 LOGIN_URL = '/user/login/'
 LOGOUT_URL = '/user/logout/'
 LOGIN_REDIRECT_URL = '/'
-#INCLUDE_REGISTER_URL = False
+INCLUDE_REGISTER_URL = False
 
