@@ -9,7 +9,7 @@
 
     <span id="toggle_template_preview_id_{{ result.object.id }}" class="span__toggle_template_preview_button pull-right"
           data-template_id="{{ result.object.id }}">
-        <button class="btn btn-sm btn-default preview-button"
+        <button class="btn btn-sm btn-default preview-button" title="Forhåndsvisning"
                 data-template_id="{{ result.object.id }}" data-template_title="{{ result.object.name|title }}" type="button">
             <span class="glyphicon glyphicon-eye-open"></span>
         </button>
@@ -21,7 +21,11 @@
         <li>
             <strong>
                 <span class="template_title_id_{{ result.object.id }}">
+                    {% if result.object.name %}
                     {{ result.object.name|title }}
+                    {% else %}
+                        Ingen tittel
+                    {% endif %}
                 </span>
             </strong>
         </li>

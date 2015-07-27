@@ -27,6 +27,7 @@ var processAdd = function () {
     var processServerResponse = function (serverResponse_data, textStatus_ignored, jqXHR_ignored) {
         //console.log("sf serverResponse_data='" + serverResponse_data + "', textStatus_ignored='" + textStatus_ignored + "', jqXHR_ignored='" + jqXHR_ignored + "', template_id='" + template_id + "'");
         $('#toggle_template_add_id_' + template_id).html(serverResponse_data);
+        //notification('#toggle_template_add_id_' + template_id, "Oppgaven er lagt til!")
     };
 
     var config = {
@@ -38,6 +39,24 @@ var processAdd = function () {
 
     $.ajax(config);
 };
+
+/**
+ * Add an error message under the given element.
+ * @param {string} selector - id or class-name of the element to apply error message to.
+ * @param {string} message - the error message.
+ */
+function notification(selector, message){
+	var element = $(selector);
+    if(selector[0] != "." && selector[0] != "#"){
+        element = $('#' + selector);
+    }
+	$(document).ready(function(){
+		element.after('<p class="notification_content">* '+message+'</p>');
+		$('.notification_content').show(100).delay(1000).hide(100).queue(function(){
+			$(this).remove();
+		});
+	});
+}
 
 $(document).ready(function () {
 

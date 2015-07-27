@@ -136,6 +136,7 @@ def make_copy(original, user):
     copy = original
     copy.pk = None
     copy.editor = user
+    copy.copy = True
     copy.save()
     return copy
 
