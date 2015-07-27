@@ -38,8 +38,8 @@ from django import http
 from django.forms.models import inlineformset_factory
 
 # Pre-defined renders of add/remove-buttons for toggle-action views
-add_button = render_to_response('search/includes/add_button_ajax.txt')
-remove_button = render_to_response('search/includes/remove_button_ajax.txt')
+add_button = render_to_response('search/includes/add_button_ajax.html')
+remove_button = render_to_response('search/includes/remove_button_ajax.html')
 
 
 class LoginRequiredMixin(object):

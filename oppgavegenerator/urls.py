@@ -60,7 +60,7 @@ urlpatterns = patterns('',
    # Search templates
    url(r'^templates/search/$', search_view_factory(
        template='search/template_search.html',
-       searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.template'),
+       searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.template',copy=False),
        form_class=TemplateSearchForm,
        results_per_page=20 #default
        ), name='template_search'),
@@ -68,15 +68,15 @@ urlpatterns = patterns('',
     # Mini search views (for jquery.load-situations)
     url(r'^minisearch/chapters/$', SearchView(
         template='search/mini_search.html',
-        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.chapter'),
+        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.chapter', copy=False),
         )),
    url(r'^minisearch/levels/$', SearchView(
         template='search/mini_search.html',
-        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.level'),
+        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.level', copy=False),
         )),
     url(r'^minisearch/templates/$', SearchView(
         template='search/mini_search.html',
-        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.template'),
+        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.template', copy=False),
         )),
 
     # Search in sets, chapters or levels

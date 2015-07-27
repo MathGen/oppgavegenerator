@@ -1,9 +1,9 @@
 {% if result.object.id in user.extendeduser.current_level_template_ids %}
 
-    {% include 'search/includes/remove_button_ajax.txt' %}
+    {% include 'search/includes/remove_button_ajax.html' %}
 
 {% else %}
 
-    {% include 'search/includes/add_button_ajax.txt' %}
+    {% include 'search/includes/add_button_ajax.html' %}
 
 {% endif %}
