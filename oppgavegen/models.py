@@ -50,6 +50,7 @@ class Template(models.Model):
     difficulty = models.PositiveSmallIntegerField(default=14, blank=True)
     difficulty_multiple = models.PositiveSmallIntegerField(default=14, blank=True)
     difficulty_blanks = models.PositiveSmallIntegerField(default=14, blank=True)
+    difficulty_multifill = models.PositiveSmallIntegerField(default=14, blank=True, null=True)
 
     choices = models.CharField(max_length=700, blank=True, null=True)  # Holds the choices for multiple choice.
     dictionary = models.CharField(max_length=10000, blank=True, null=True, default="")
@@ -58,8 +59,9 @@ class Template(models.Model):
     valid_flag = models.BooleanField(default=False, choices=valid_choices)
     disallowed = models.CharField(max_length=5000, blank=True, null=True, default="")
     required = models.CharField(max_length=5000, blank=True, null=True, default="")
-    multiple_support = models.BooleanField(default=False)  # Denotes whether the template supports multiple choice
-    fill_in_support = models.BooleanField(default=False)  # Denotes whether the template supports fill in the blanks
+    multiple_support = models.BooleanField(default=False)  # Denotes whether the template supports multiple choice.
+    fill_in_support = models.BooleanField(default=False)  # Denotes whether the template supports fill in the blanks.
+    multifill_support = models.BooleanField(default=False)  # Denotes whether the template supports multifill.
     margin_of_error = models.CharField(default='0', max_length=20, null=True, blank=True)
     copy = models.BooleanField(default=False)
 

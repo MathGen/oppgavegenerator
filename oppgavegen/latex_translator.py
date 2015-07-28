@@ -33,13 +33,25 @@ def latex_to_sympy(expr):
     expr = expr.replace('\\end{equation*}', '')
     expr = expr.replace('§~', '§-')
     expr = expr.replace('~(-', '-(-')
+
+    ### Logic for changing expressions that are multiplied by 1, to the expression only. ###
+    expr = expr.replace('+1(', '+(')
+    expr = expr.replace('-1(', '-(')
+    expr = expr.replace(')1+', ')+')
+    expr = expr.replace(')1-', ')-')
+    expr = expr.replace('*1+', '+')
+    expr = expr.replace('*1-', '-')
+    expr = expr.replace('+1*', '+')
+    expr = expr.replace('*1-', '-')
+    ### end ###
+
     try:
         if expr[0] == '~':
             expr = expr[:0] + '-' + expr[1:]
     except IndexError:
         pass
 
-    expr = expr.replace('x', ' x') # Add space before variables to prevent sympy fuckups
+    expr = expr.replace('x', ' x') # Add space before variables to prevent sympy bugs
     expr = expr.replace('y', ' y')
     expr = expr.replace('z', ' z')
     expr = expr.replace('  ', ' ')  # Remove double whitespace
