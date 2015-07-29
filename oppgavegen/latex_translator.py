@@ -33,13 +33,25 @@ def latex_to_sympy(expr):
     expr = expr.replace('\\end{equation*}', '')
     expr = expr.replace('§~', '§-')
     expr = expr.replace('~(-', '-(-')
+
+    ### Logic for changing expressions that are multiplied by 1, to the expression only. ###
+    expr = expr.replace('+1(', '+(')
+    expr = expr.replace('-1(', '-(')
+    expr = expr.replace(')1+', ')+')
+    expr = expr.replace(')1-', ')-')
+    expr = expr.replace('*1+', '+')
+    expr = expr.replace('*1-', '-')
+    expr = expr.replace('+1*', '+')
+    expr = expr.replace('*1-', '-')
+    ### end ###
+
     try:
         if expr[0] == '~':
             expr = expr[:0] + '-' + expr[1:]
     except IndexError:
         pass
 
-    expr = expr.replace('x', ' x') # Add space before variables to prevent sympy fuckups
+    expr = expr.replace('x', ' x') # Add space before variables to prevent sympy bugs
     expr = expr.replace('y', ' y')
     expr = expr.replace('z', ' z')
     expr = expr.replace('  ', ' ')  # Remove double whitespace
@@ -98,7 +110,7 @@ def latex_to_sympy(expr):
 
 def parenthesis_around_minus(expression):
     """Takes a expression and returns it with parenthesis around numbers with - where needed."""
-    exceptions = '0123456789.)({}xyz=+-?/§'  # Having xyz in exceptions might introduce a bug in some situations
+    exceptions = '0123456789.)({}xyz=+-?/§@'  # Having xyz in exceptions might introduce a bug in some situations
     expression += ' ' #add a empty space at the end of the string to avoid error.
     end_symbols = '0123456789.xyz' #Symbols the check doesn't end at.
     new_exp = expression
