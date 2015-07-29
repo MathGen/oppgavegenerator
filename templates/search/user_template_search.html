@@ -14,7 +14,7 @@
 
             <form method="get" action=".">
 
-                <div class="input-group">
+                <div id="search_form" class="input-group">
 
 
                   {% bootstrap_field form.q %}
@@ -64,17 +64,17 @@
                 <li class="list-group-item clearfix">
                     <strong style="margin: 5px 0">Resultater</strong>
 
-           {% if user.extendeduser.current_level %}
+                        {% if user.extendeduser.current_level %}
                             <span class="pull-right">
-                                <button class="btn btn-default btn-sm dropdown-toggle" title="Oppgaver vil bli lagt til dette settet" data-toggle="tooltip" data-placement="left"
+                                <button class="btn btn-default btn-sm dropdown-toggle" title="Oppgavemaler vil bli lagt til dette settet" data-toggle="tooltip" data-placement="bottom"
                                         aria-haspopup="true" aria-expanded="false">
                                     {{ user.extendeduser.current_level.name|title }}
                                 </button>
                             </span>
-                            <div class="tooltip left" role="tooltip">
+                            <div class="tooltip top" role="tooltip">
                                 <div class="tooltip-arrow"></div>
                                     <div class="tooltip-inner">
-                                        Oppgaver vil bli lagt til dette settet
+                                        Some tooltip text!
                                     </div>
                             </div>
                         {% endif %}

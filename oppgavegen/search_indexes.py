@@ -18,6 +18,7 @@ class TemplateIndex(indexes.SearchIndex, indexes.Indexable):
     rating = indexes.IntegerField(model_attr='rating', indexed=False)
     multiple = indexes.BooleanField(model_attr='multiple_support', default='false', indexed=False)
     fill_in = indexes.BooleanField(model_attr='fill_in_support', default='false', indexed=False)
+    copy = indexes.BooleanField(model_attr='copy', default='false', indexed=False)
     levels = indexes.MultiValueField()
     tags = indexes.MultiValueField()
 
@@ -38,6 +39,7 @@ class SetIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     name = indexes.CharField(model_attr='name')
     creator = indexes.CharField(model_attr='creator')
+    copy = indexes.BooleanField(model_attr='copy', default='false', indexed=False)
     # chapters=indexes.MultiValueField()
 
     # def prepare_chapters(self, object):
@@ -53,6 +55,7 @@ class ChapterIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     name = indexes.CharField(model_attr='name')
     creator = indexes.CharField(model_attr='creator')
+    copy = indexes.BooleanField(model_attr='copy', default='false', indexed=False)
     # levels = indexes.MultiValueField()
 
     # def prepare_levels(self, object):
@@ -68,6 +71,7 @@ class LevelIndex(indexes.SearchIndex, indexes.Indexable):
     text = indexes.CharField(document=True, use_template=True)
     name = indexes.CharField(model_attr='name')
     creator = indexes.CharField(model_attr='creator')
+    copy = indexes.BooleanField(model_attr='copy', default='false', indexed=False)
 
     def get_model(self):
         return Level

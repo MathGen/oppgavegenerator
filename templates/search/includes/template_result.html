@@ -2,20 +2,22 @@
 
 <div class="template-result">
 
-    <span id="toggle_template_add_id_{{ result.object.id }}" class="span__toggle_template_add_button pull-right"
+    <div class="btn-group-sm">
+    {% ifequal result.creator user.username %}
+    <span id="toggle_template_add_id_{{ result.object.id }}" class="span__toggle_template_add_button pull-right btn-group-sm"
           data-template_id="{{ result.object.id }}">
         {% include "search/includes/template_toggle_button_template.txt" %}
     </span>
+    {% endifequal %}
 
-    <span id="toggle_template_preview_id_{{ result.object.id }}" class="span__toggle_template_preview_button pull-right"
+    <span id="toggle_template_preview_id_{{ result.object.id }}" class="span__toggle_template_preview_button pull-right btn-group-sm"
           data-template_id="{{ result.object.id }}">
         <button class="btn btn-sm btn-default preview-button" title="Forhåndsvisning"
                 data-template_id="{{ result.object.id }}" data-template_title="{{ result.object.name|title }}" type="button">
             <span class="glyphicon glyphicon-eye-open"></span>
         </button>
     </span>
-
-
+    </div>
 
     <ul style="list-style: inline; list-style-type: none">
         <li>

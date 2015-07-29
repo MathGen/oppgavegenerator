@@ -64,7 +64,7 @@ $(document).ready(function () {
         MILLS_TO_IGNORE_REQUESTS, true
     ));
 
-    $('.span__toggle_template_preview_button').click(function () {
+    $('.preview-button').click(function () {
 
 
         var button = $(this);
@@ -85,4 +85,9 @@ $(document).ready(function () {
             redraw_mathquill_elements();
         });
     });
+
+});
+
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
 });

@@ -36,34 +36,42 @@ li.list-group-item:hover {
     text-decoration: underline dotted;
 }
 
+.template-result a {
+    color: #000;
+}
+
 /* form css */
 
-.dropdown.dropdown-lg .dropdown-menu {
+#search-form .dropdown.dropdown-lg .dropdown-menu {
     margin-top: -1px;
     padding: 6px 20px;
 }
-.input-group-btn .btn-group {
+#search-form .input-group-btn .btn-group {
     display: flex !important;
 }
-.btn-group .btn {
+#search-form .btn-group .btn {
     border-radius: 0;
     margin-left: -1px;
 }
-.btn-group .btn:last-child {
+#search-form .btn-group .btn:last-child {
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
 }
-.btn-group .form-horizontal .btn[type="submit"] {
+#search-form .btn-group .form-horizontal .btn[type="submit"] {
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
 }
-.form-horizontal .form-group {
+#search-form .form-horizontal .form-group {
     margin-left: 0;
     margin-right: 0;
 }
-.form-group .form-control:last-child {
+#search-form .form-group .form-control:last-child {
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
+}
+
+#search-form .edit-button .glyphicon-pencil {
+    color: #000;
 }
 
 @media screen and (min-width: 768px) {
