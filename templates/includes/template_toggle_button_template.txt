@@ -1,0 +1,9 @@
+{% if template.id in user.extendeduser.current_level_template_ids %}
+
+    {% include 'includes/remove_button_ajax.html' %}
+
+{% else %}
+
+    {% include 'includes/add_button_ajax.html' %}
+
+{% endif %}

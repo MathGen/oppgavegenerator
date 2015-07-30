@@ -9,62 +9,8 @@
 {% block panels %}
 
     <section class="panel panel-default">
-        <div class="panel-heading"><h3 class="panel-title">Søk</h3></div>
-        <div class="panel-body">
-
-            <form method="get" action=".">
-
-                <div class="input-group">
-
-
-                  {% bootstrap_field form.q %}
-
-
-                    <div class="input-group-btn">
-                    <button type="button" data-toggle="collapse" data-target="#advanced-search"
-                            title="Avansert" class="btn btn-default" aria-expanded="false">
-                        {% bootstrap_icon "chevron-down" %}
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        {% bootstrap_icon "search" %} Søk
-                    </button>
-                    </div>
-                </div>
-
-
-                <div id="advanced-search" class="collapse pull-right">
-                    <div class="well">
-                        <div class="input-group">
-                            {% bootstrap_field form.name %}
-                            {% bootstrap_field form.creator %}
-                            <div class="form-inline">
-                            {% bootstrap_field form.min_rating %}
-                            {% bootstrap_field form.max_rating %}
-                            </div>
-                            <br>
-                            {% bootstrap_field form.multiple %}
-                            {% bootstrap_field form.fill_in %}
-                        </div>
-                        <button type="button" data-toggle="collapse" data-target="#advanced-search" class="btn btn-default pull-right" aria-expanded="false">
-                        {% bootstrap_icon "chevron-up" %}
-                        </button>
-                    </div>
-
-
-
-                </div>
-            </form>
-        </div>
-
-        {% if query %}
-
-
-
-            <ul class="list-group">
-                <li class="list-group-item clearfix">
-                    <strong style="margin: 5px 0">Resultater</strong>
-
-           {% if user.extendeduser.current_level %}
+        <div class="panel-heading clearfix"><h3 class="panel-title pull-left">Mine maler</h3>
+            {% if user.extendeduser.current_level %}
                             <span class="pull-right">
                                 <button class="btn btn-default btn-sm dropdown-toggle" title="Oppgaver vil bli lagt til dette settet" data-toggle="tooltip" data-placement="left"
                                         aria-haspopup="true" aria-expanded="false">
@@ -78,11 +24,25 @@
                                     </div>
                             </div>
                         {% endif %}
+        </div>
 
-                </li>
-                {% for result in page.object_list %}
+
+
+
+
+
+
+
+
+
+        {% if object_list %}
+
+
+
+            <ul class="list-group">
+                 {% for template in object_list %}
                     <li class="list-group-item clearfix">
-                        {% include 'search/includes/template_result.html' %}
+                        {% include 'includes/template_list_result.html' %}
                     </li>
                 {% empty %}
                     <li class="list-group-item clearfix">Fant ingen oppgavemaler.</li>

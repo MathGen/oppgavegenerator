@@ -31,11 +31,10 @@ from registration.views import RegistrationView
 from oppgavegen.forms import NamedUserRegistrationForm
 
 # Search Views and Forms
+from haystack.forms import SearchForm
 from haystack.generic_views import SearchView
-from oppgavegen.forms import QuestionForm, TemplateForm, LevelCreateForm, ChapterNameForm, UserCurrentSetsForm, SetsSearchForm
-from django.forms.formsets import formset_factory
-from django import http
-from django.forms.models import inlineformset_factory
+from haystack.query import SearchQuerySet
+from oppgavegen.forms import QuestionForm, TemplateForm, UserCurrentSetsForm, SetsSearchForm, TemplateSearchForm
 
 # Pre-defined renders of add/remove-buttons for toggle-action views
 add_button = render_to_response('search/includes/add_button_ajax.html')
@@ -481,6 +480,9 @@ def remove_template_from_current_level(request, template_id):
         return HttpResponse('Du må være eier a levelet for å legge til level')
 
 
+class UserTemplatesSearchView(SearchView):
+    template_name = 'search/template_search.html'
+
 
 def preview_template(request, template_id):
     """Return a template as JSON-object"""
@@ -504,6 +506,11 @@ def set_detail_view(request, set_id):
                                         #'levels': chapter_levels, 'templates': level_templates,
                                         }, context_instance=RequestContext(request))
 
+class UserTemplatesListView(LoginRequiredMixin,ListView):
+    template_name = 'user_template_list.html'
+
+    def get_queryset(self):
+        return Template.objects.filter(creator=self.request.user,copy=False)
 
 class UserSetListView(LoginRequiredMixin,ListView):
     template_name = 'sets/user_set_list.html'
@@ -613,3 +620,4 @@ def level_stats(request, level_id):
     context_dict['template_entries'] = get_level_template_statistics(level)
     context_dict['template_original'] = get_level_template_original_statistics(level)
     return render(request, 'sets/charts.html', context_dict)
+

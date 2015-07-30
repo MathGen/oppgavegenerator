@@ -7,7 +7,7 @@ from django.forms import ModelForm
 from django.forms.formsets import BaseFormSet
 from django import forms
 from haystack.forms import SearchForm
-from registration.users import UserModel, UsernameField
+from registration.users import UserModel
 from registration.forms import RegistrationFormUniqueEmail
 
 from .models import Set, Chapter, Level, Template, ExtendedUser, Tag
@@ -52,7 +52,7 @@ class TagField(forms.CharField):
 
 
 class TemplateSearchForm(SearchForm):
-    q = forms.CharField(required=True, label='',
+    q = forms.CharField(required=True,label='',
                         widget=forms.TextInput(attrs={'type': 'search', 'placeholder' : 'Søk i oppgavemaler'}))
     name = forms.CharField(required=False, label='Tittel',
                            widget=forms.TextInput(attrs={'type': 'text', 'placeholder' : 'Oppgavetittel'}))

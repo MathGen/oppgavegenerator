@@ -10,7 +10,8 @@ from oppgavegen.views.views import *
 from oppgavegen.views.stat_views import *
 from oppgavegen.forms import *
 from haystack.query import SearchQuerySet
-from haystack.views import search_view_factory, SearchView
+from haystack.views import search_view_factory
+#from haystack.generic_views import SearchView
 from registration.backends.default.views import RegistrationView
 from oppgavegen.views.add_remove_views import *
 from oppgavegen.view_logic.db_format import format_domain
@@ -25,7 +26,8 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^user/', include('registration.backends.default.urls')),
     url(r'^user/register/$', RegistrationView.as_view(form_class=NamedUserRegistrationForm), name='registration_register'),
-    url(r'^user/templates/', template_table_by_user, name='user_templates'),
+    url(r'^user/templates/$', template_table_by_user, name='user_templates'),
+    url(r'^user/templates/list/', UserTemplatesListView.as_view(), name='user_templates_list'),
     url(r'^task/$', task),
     url(r"^task/([\w ]+)/$", task_by_extra, name='task_by_extra'),
     url(r"^task/(\d+)/([\w ]+)/$", task_by_id_and_type, name='task_by_id_and_type'),
@@ -54,29 +56,28 @@ urlpatterns = patterns('',
     url(r'^chapter/(\d+)/levels/$', ChapterLevelsListView.as_view(), name='levels_by_chapter'),
     url(r'^level/(\d+)/templates/$', LevelsTemplatesListView.as_view(), name='templates_by_level'),
 
-    # Messy haystack search urls. Should maybe put these in own file and import here.
+    # Haystack search urls
     # Search all content
-   url(r'^search/$', include('haystack.urls')),
+    url(r'^search/$', include('haystack.urls')),
    # Search templates
-   url(r'^templates/search/$', search_view_factory(
-       template='search/template_search.html',
-       searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.template',copy=False),
-       form_class=TemplateSearchForm,
-       results_per_page=20 #default
-       ), name='template_search'),
+    url(r'^templates/search/$', search_view_factory(
+        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.template', copy=False),
+        template='search/template_search.html',
+        form_class=TemplateSearchForm,
+    ), name='templates_search'),
 
     # Mini search views (for jquery.load-situations)
-    url(r'^minisearch/chapters/$', SearchView(
+    url(r'^minisearch/chapters/$', search_view_factory(
         template='search/mini_search.html',
-        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.chapter', copy=False),
+        queryset=SearchQuerySet().filter(django_ct='oppgavegen.chapter', copy=False),
         )),
-   url(r'^minisearch/levels/$', SearchView(
+   url(r'^minisearch/levels/$', search_view_factory(
         template='search/mini_search.html',
-        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.level', copy=False),
+        queryset=SearchQuerySet().filter(django_ct='oppgavegen.level', copy=False),
         )),
-    url(r'^minisearch/templates/$', SearchView(
+    url(r'^minisearch/templates/$', search_view_factory(
         template='search/mini_search.html',
-        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.template', copy=False),
+        queryset=SearchQuerySet().filter(django_ct='oppgavegen.template', copy=False),
         )),
 
     # Search in sets, chapters or levels
@@ -103,7 +104,7 @@ urlpatterns = patterns('',
     url(r'ajax/currentsets/refresh/$', refresh_navbar, name='refresh_navbar' ),
 
 
-    # Return template preview html
+    # Return template as JSON
     url(r'^template/([\w ]+)/preview/$', preview_template, name='preview_template'),
     # Toggle template/level relationship for users current level
     url(r'^user/level/template/(\d+)/toggle/$', toggle_template_level, name='current_level_toggle'),

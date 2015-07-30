@@ -1,0 +1,63 @@
+{# TEMPLATE SEARCH RESULT #}
+
+<div class="template-result">
+
+
+    <div class="btn-group pull-right" role="group">
+        <button class="btn btn-sm btn-default preview-button" title="Forhåndsvisning"
+                data-template_id="{{ template.id }}" data-template_title="{{ template.name|title }}" type="button">
+            <span class="glyphicon glyphicon-eye-open"></span>
+        </button>
+        <a href="{% url 'edit_template' template.id %}" class="btn btn-sm btn-default edit-button" title="Rediger"
+           type="button">
+            <span class="glyphicon glyphicon-pencil"></span>
+        </a>
+
+        <span id="toggle_template_add_id_{{ template.id }}" class="span__toggle_template_add_button"
+              data-template_id="{{ template.id }}">
+        {% include "includes/template_toggle_button_template.txt" %}
+
+    </span>
+
+    </div>
+
+    <ul style="list-style: inline; list-style-type: none">
+        <li>
+            <strong>
+                <a href="{% url 'task_by_extra' template.id %}">
+                <span class="template_title_id_{{ template.id }}">
+                    {% if template.name %}
+                        {{ template.name|title }}
+                    {% else %}
+                        Ingen tittel
+                    {% endif %}
+                </span>
+                </a>
+            </strong>
+        </li>
+        <li><span title="Forfatter">
+            <span class="glyphicon glyphicon-user"></span>
+            {% ifequal template.creator user.username %}
+                {{ template.creator|capfirst }}
+            {% else %}
+                {{ template.creator|capfirst }}
+            {% endifequal %}
+            </span> /
+            <span title="Rating" class="rating">{{ template.rating }}</span>
+
+            {% ifequal True template.multiple_support %}
+                / <a href="{% url 'task_by_id_and_type' template.id 'multiple' %}">Multiple Choice</a> (
+                {{ template.choice_rating }})
+                / <a href="{% url 'task_by_id_and_type' template.id 'multifill' %}">Multiple Fill-Ins</a>
+            {% endifequal %}
+            {% ifequal True template.fill_in_support %}
+                / <a href="{% url 'task_by_id_and_type' template.id 'blanks' %}">Fill in the Blanks</a> (
+                {{ template.fill_rating }})
+            {% endifequal %}
+        </li>
+    </ul>
+
+
+    <div id="preview-template-id_{{ template.id }}" class="hidden"></div>
+
+</div>
