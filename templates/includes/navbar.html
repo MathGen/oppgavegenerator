@@ -39,8 +39,10 @@
                                 <li><a href="{% url 'user_templates' %}">Mine Maler</a></li>
                                 <li><a href="{% url 'set' %}">Oppgavesett</a></li>
                             {% endif %}
+                            <li><a href="{% url 'user_settings' %}">Min konto</a></li>
                             <li><a href="{% url 'auth_logout' %}">Logg ut</a></li>
                             <li><a href="{% url 'auth_password_change' %}">Bytt Passord</a></li>
+
                         </ul>
                     </li>
                 {% endif %}

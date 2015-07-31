@@ -25,6 +25,15 @@ class NamedUserRegistrationForm(RegistrationFormUniqueEmail):
         model = User
         fields = ("username", "email", "first_name", "last_name")
 
+class NamedUserDetailsForm(ModelForm):
+    first_name = forms.CharField(label="Fornavn", required=False)
+    last_name = forms.CharField(label="Etternavn", required=False)
+    email = forms.EmailField(label="E-postadresse", required=False)
+
+    class Meta:
+        model = User
+        fields = ('first_name','last_name','email')
+
 
 class TagField(forms.CharField):
     """

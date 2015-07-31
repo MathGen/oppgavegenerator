@@ -28,13 +28,12 @@ from oppgavegen.view_logic.current_work import *
 from oppgavegen.view_logic.statistics import *
 
 from registration.views import RegistrationView
-from oppgavegen.forms import NamedUserRegistrationForm
 
 # Search Views and Forms
 from haystack.forms import SearchForm
 from haystack.generic_views import SearchView
 from haystack.query import SearchQuerySet
-from oppgavegen.forms import QuestionForm, TemplateForm, UserCurrentSetsForm, SetsSearchForm, TemplateSearchForm
+from oppgavegen.forms import *
 
 # Pre-defined renders of add/remove-buttons for toggle-action views
 add_button = render_to_response('search/includes/add_button_ajax.html')
@@ -621,3 +620,15 @@ def level_stats(request, level_id):
     context_dict['template_original'] = get_level_template_original_statistics(level)
     return render(request, 'sets/charts.html', context_dict)
 
+class UserSettingsView(UpdateView):
+    form_class = NamedUserDetailsForm
+    model = User
+    template_name = 'registration/account_details.html'
+    success_url = '/user/settings'
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+
+def user_deactivate(request):
+    return render(request, 'registration/user_deactivate_account.html')
