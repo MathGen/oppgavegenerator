@@ -8,10 +8,6 @@
             <div class="panel-heading"><h3 class="panel-title">Min konto</h3></div>
             <div class="panel-body">
 
-            <a href="{% url 'auth_password_change' %}" class="btn btn-warning">Bytt Passord</a>
-            <a href="{% url 'user_deactivate' %}" class="btn btn-danger">Deaktiver kontoen min</a>
-
-            <hr>
             <h3 class="panel-title">Endre Detaljer</h3>
                 <form role="form" method="post">
                     {% csrf_token %}
@@ -22,6 +18,13 @@
                         </button>
                     {% endbuttons %}
                 </form>
+
+<hr>
+
+            <a href="{% url 'auth_password_change' %}" class="btn btn-warning">Bytt Passord</a>
+            <a href="{% url 'user_deactivate' %}" class="btn btn-danger">Deaktiver kontoen min</a>
+
+
 
             </div>
         </section>
