@@ -1,18 +1,25 @@
 {# TEMPLATE SEARCH RESULT #}
-
+{% load app_filters %}
 
 
 
 
     <div class="col-md-6">
     <strong>
+
+        {% if user|is_superuser %}
+            {{ template.id }}
+        {% endif %}
+
         <a href="{% url 'task_by_extra' template.id %}">
                 <span class="template_title_id_{{ template.id }}">
+
                     {% if template.name %}
                         {{ template.name|title }}
                     {% else %}
-                        INGEN TITTEL
+                        Uten Tittel
                     {% endif %}
+
                 </span>
         </a>
     </strong>
@@ -32,15 +39,15 @@
             <span title="Rating">
                 <span class="glyphicon glyphicon-stats"></span>
                 {{ template.rating }}
-                {% ifequal True template.multiple_support %},
+                {% ifequal True template.multiple_support %}/
                     <a href="{% url 'task_by_id_and_type' template.id 'multiple' %}">Flervalg:</a>
                     {{ template.choice_rating }}
                 {% endifequal %}
-                {% ifequal True template.fill_in_support %},
+                {% ifequal True template.fill_in_support %}/
                     <a href="{% url 'task_by_id_and_type' template.id 'blanks' %}">Utfylling:</a>
                     {{ template.fill_rating }}
                 {% endifequal %}
-                {% ifequal True template.multifill_support %},
+                {% ifequal True template.multifill_support %}/
                     <a href="{% url 'task_by_id_and_type' template.id 'multifill' %}">Flerutfylling:</a>
                     {{ template.multifill_rating }}
                 {% endifequal %}
@@ -60,7 +67,7 @@
 
 
     <div class="col-md-6" >
-    <div class="btn-group pull-right" role="group">
+    <div class="btn-group pull-right" role="group" style="padding-top:0px">
 
         <button class="btn btn-sm btn-default preview-button" title="Forhåndsvisning"
                 data-template_id="{{ template.id }}" data-template_title="{{ template.name|title }}" type="button">

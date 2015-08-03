@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
+{% load app_filters %}
 {% load staticfiles %}
 {% block head %}
     <link href="{% static "css/search.css" %}" rel="stylesheet">
@@ -10,26 +11,29 @@
 
     <div class="panel panel-default">
 
-        <div class="panel-heading clearfix"><h3 class="panel-title pull-left" style="padding-top: 7px">Mine maler</h3>
+        <div class="panel-heading clearfix">
 
                         {% if user.extendeduser.current_level %}
-                <span id="current_level_indicator" class="pull-right">
-                    <button id="current_level_button" class="pull-right btn btn-default btn-sm dropdown-toggle"
+
+                    <button id="current_level_button" class="btn btn-default btn-xs pull-right"
                             title="Oppgaver vil bli lagt til dette settet" data-toggle="tooltip" data-placement="left"
                             aria-haspopup="true" aria-expanded="false" style="min-width:100px">
                         {{ user.extendeduser.current_level.name|title }}
                     </button>
-                </span>
+
                 {% endif %}
+
+        <h3 class="panel-title pull-left" style="padding-right: 10px">Mine maler</h3>
+        <a href="{% url 'templates_search' %}">Søk i maler</a>
         </div>
 
-        <div class="container-fluid">
+        <div class="panel-body">
             <div class="row">
-
                 <div class="col-lg-10" style="padding-right:0">
+
                     {% for sort_link in sort_link_list %}
                         <span class="sort-link col-xs-2">
-		                <a href="{{ sort_link.path }}">
+		                <a href="{{ sort_link.path }}" title="Sorter etter {{ sort_link.title|lower }}">
 				<span class="{{ sort_link.indicator }}">
                     {{ sort_link.title }}
 				</span>
@@ -51,14 +55,14 @@
 
             {% if template_list %}
 
-                <hr>
+                <hr style="margin-bottom: 5px">
                 {% for template in template_list %}
                     <div class="row">
 
                         {% include 'includes/template_list_result.html' %}
 
                     </div>
-                    <hr>
+                    <hr style="margin-top: 5px; margin-bottom: 5px">
                 {% endfor %}
 
                 {% if is_paginated %}

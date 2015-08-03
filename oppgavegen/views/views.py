@@ -508,7 +508,10 @@ class UserTemplatesListView(LoginRequiredMixin,SortableListView):
 
     allowed_sort_fields = (
         (default_sort_field, {'default_direction': '-', 'verbose_name': 'Dato'}),
+        ('name', {'default_direction': '', 'verbose_name': 'Tittel'}),
         ('rating', {'default_direction': '-', 'verbose_name': 'Hovedrating'}),
+        ('choice_rating', {'default_direction': '-', 'verbose_name': 'Flervalgsrating'}),
+        ('fill_rating', {'default_direction': '-', 'verbose_name': 'Utfyllingsrating'}),
     )
 
     template_name = 'user_template_list.html'
@@ -521,6 +524,30 @@ class UserTemplatesListView(LoginRequiredMixin,SortableListView):
     def get_queryset(self):
         qs = super(SortableListView, self).get_queryset()
         qs.filter(editor=self.request.user)
+        qs = qs.order_by(self.sort)
+        return qs
+
+class TemplatesListView(LoginRequiredMixin,SortableListView):
+    queryset = Template.objects.filter(copy=False)
+    default_sort_field = 'creation_date'
+
+    allowed_sort_fields = (
+        (default_sort_field, {'default_direction': '-', 'verbose_name': 'Dato'}),
+        ('name', {'default_direction': '', 'verbose_name': 'Tittel'}),
+        ('rating', {'default_direction': '-', 'verbose_name': 'Hovedrating'}),
+        ('choice_rating', {'default_direction': '-', 'verbose_name': 'Flervalgsrating'}),
+        ('fill_rating', {'default_direction': '-', 'verbose_name': 'Utfyllingsrating'}),
+    )
+
+    template_name = 'user_template_list.html'
+    allow_empty = True
+    paginate_by = 15
+    paginate_orphans = 20
+    context_object_name = 'template_list'
+    model = Template
+
+    def get_queryset(self):
+        qs = super(SortableListView, self).get_queryset()
         qs = qs.order_by(self.sort)
         return qs
 
