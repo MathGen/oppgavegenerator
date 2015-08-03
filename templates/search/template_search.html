@@ -8,7 +8,7 @@
 
 {% block panels %}
 
-    <section class="panel panel-default">
+    <div class="panel panel-default">
         <div class="panel-heading"><h3 class="panel-title">Søk</h3></div>
         <div class="panel-body">
 
@@ -56,37 +56,39 @@
                 </div>
             </form>
         </div>
+    </div>
 
         {% if query %}
 
-            <ul class="list-group">
-                <li class="list-group-item clearfix">
-                    <strong style="margin: 5px 0">Resultater</strong>
+        <div class="panel panel-default">
+            <div class="panel-heading">
 
-           {% if user.extendeduser.current_level %}
-                            <span class="pull-right">
-                                <button class="btn btn-default btn-sm dropdown-toggle" title="Oppgaver vil bli lagt til dette settet" data-toggle="tooltip" data-placement="left"
-                                        aria-haspopup="true" aria-expanded="false">
-                                    {{ user.extendeduser.current_level.name|title }}
-                                </button>
-                            </span>
-                            <div class="tooltip left" role="tooltip">
-                                <div class="tooltip-arrow"></div>
-                                    <div class="tooltip-inner">
-                                        Oppgaver vil bli lagt til dette settet
-                                    </div>
-                            </div>
-                        {% endif %}
+                {% if user.extendeduser.current_level %}
 
-                </li>
+                    <button id="current_level_button" class="btn btn-default btn-xs pull-right"
+                            title="Oppgaver vil bli lagt til dette settet" data-toggle="tooltip" data-placement="left"
+                            aria-haspopup="true" aria-expanded="false" style="min-width:100px">
+                        {{ user.extendeduser.current_level.name|title }}
+                    </button>
+
+                {% endif %}
+
+
+                <h3 class="panel-title">Resultater</h3></div>
+        <div class="panel-body">
+
+
+
+
                 {% for template in page.object_list %}
-                    <li class="list-group-item clearfix">
+                       <div class="row">
                         {% include 'search/includes/template_result.html' %}
-                    </li>
+                        </div>
+                    <hr style="margin-top: 5px; margin-bottom: 5px">
                 {% empty %}
-                    <li class="list-group-item clearfix">Fant ingen oppgavemaler.</li>
+                    <div class="row">Fant ingen oppgavemaler.</div>
                 {% endfor %}
-            </ul>
+
         {% else %}
             {# Show some example queries to run, maybe query syntax, something else? #}
         {% endif %}
@@ -122,35 +124,7 @@
             </nav>
         {% endif %}
 
-
-        {% comment boring pagination %}
-        {% if page.has_previous or page.has_next %}
-            <nav>
-                <ul class="pager">
-                    {% if page.has_previous %}
-                        <li>
-                            <a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">
-                                <span aria-hidden="true">&laquo;</span>
-                                Forrige
-                            </a></li>
-                    {% endif %}
-
-
-
-                    {% if page.has_next %}
-                        <li>
-                            <a href="?q={{ query }}&amp;page={{ page.next_page_number }}">
-                                Neste
-                                <span aria-hidden="true">&raquo;</span>
-                            </a></li>
-                    {% endif %}
-                </ul>
-            </nav>
-        {% endif %}
-{% endcomment %}
-
-
-    </section>
+    </div>
 
     <div class="modal fade" id="previewModal" role="dialog" aria-labelledby="">
         <div class="modal-dialog">

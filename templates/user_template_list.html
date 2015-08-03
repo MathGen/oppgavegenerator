@@ -11,9 +11,9 @@
 
     <div class="panel panel-default">
 
-        <div class="panel-heading clearfix">
+        <div class="panel-heading">
 
-                        {% if user.extendeduser.current_level %}
+                {% if user.extendeduser.current_level %}
 
                     <button id="current_level_button" class="btn btn-default btn-xs pull-right"
                             title="Oppgaver vil bli lagt til dette settet" data-toggle="tooltip" data-placement="left"
@@ -23,8 +23,8 @@
 
                 {% endif %}
 
-        <h3 class="panel-title pull-left" style="padding-right: 10px">Mine maler</h3>
-        <a href="{% url 'templates_search' %}">Søk i maler</a>
+        <h3 class="panel-title" style="padding-right: 10px">Mine maler</h3>
+{#        <a href="{% url 'templates_search' %}">Søk i maler</a>#}
         </div>
 
         <div class="panel-body">
@@ -57,8 +57,8 @@
 
                 <hr style="margin-bottom: 5px">
                 {% for template in template_list %}
-                    <div class="row">
 
+                    <div class="row">
                         {% include 'includes/template_list_result.html' %}
 
                     </div>
