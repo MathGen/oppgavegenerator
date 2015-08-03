@@ -13,7 +13,7 @@ from django.shortcuts import render
 from django_tables2 import RequestConfig
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
-from sortable_listview.views import SortableListView
+from oppgavegen.utility.sortable_listview import SortableListView
 
 from django.views.decorators.cache import cache_control
 
@@ -505,10 +505,12 @@ def set_detail_view(request, set_id):
 class UserTemplatesListView(LoginRequiredMixin,SortableListView):
     queryset = Template.objects.filter(copy=False)
     default_sort_field = 'creation_date'
-    allowed_sort_fields = {default_sort_field: {'default_direction': '-',
-                                                'verbose_name': 'Dato'},
-                           'rating': {'default_direction': '-',
-                                      'verbose_name': 'Hovedrating'}}
+
+    allowed_sort_fields = (
+        (default_sort_field, {'default_direction': '-', 'verbose_name': 'Dato'}),
+        ('rating', {'default_direction': '-', 'verbose_name': 'Hovedrating'}),
+    )
+
     template_name = 'user_template_list.html'
     allow_empty = True
     paginate_by = 15

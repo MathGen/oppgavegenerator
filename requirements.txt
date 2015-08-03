@@ -7,4 +7,3 @@ gunicorn==19.2.1
 sympy==0.7.6
 whoosh==2.7.0
 django-haystack==2.4.0
-django-sortable-listview==0.41
