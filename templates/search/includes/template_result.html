@@ -3,17 +3,17 @@
 <div class="template-result">
 
     <div class="btn-group-sm">
-    {% ifequal result.creator user.username %}
-    <span id="toggle_template_add_id_{{ result.object.id }}" class="span__toggle_template_add_button pull-right btn-group-sm"
-          data-template_id="{{ result.object.id }}">
+    {% ifequal template.creator user.username %}
+    <span id="toggle_template_add_id_{{ template.id }}" class="span__toggle_template_add_button pull-right btn-group-sm"
+          data-template_id="{{ template.id }}">
         {% include "search/includes/template_toggle_button_template.txt" %}
     </span>
     {% endifequal %}
 
-    <span id="toggle_template_preview_id_{{ result.object.id }}" class="span__toggle_template_preview_button pull-right btn-group-sm"
-          data-template_id="{{ result.object.id }}">
+    <span id="toggle_template_preview_id_{{ template.id }}" class="span__toggle_template_preview_button pull-right btn-group-sm"
+          data-template_id="{{ template.id }}">
         <button class="btn btn-sm btn-default preview-button" title="Forhåndsvisning"
-                data-template_id="{{ result.object.id }}" data-template_title="{{ result.object.name|title }}" type="button">
+                data-template_id="{{ template.id }}" data-template_title="{{ template.name|title }}" type="button">
             <span class="glyphicon glyphicon-eye-open"></span>
         </button>
     </span>
@@ -22,9 +22,9 @@
     <ul style="list-style: inline; list-style-type: none">
         <li>
             <strong>
-                <span class="template_title_id_{{ result.object.id }}">
-                    {% if result.object.name %}
-                    {{ result.object.name|title }}
+                <span class="template_title_id_{{ template.id }}">
+                    {% if template.name %}
+                    {{ template.name|title }}
                     {% else %}
                         Ingen tittel
                     {% endif %}
@@ -33,23 +33,27 @@
         </li>
         <li>
             <span class="glyphicon glyphicon-user"></span>
-            {% ifequal result.creator user.username %}
-                {{ result.object.creator|capfirst }}
+            {% ifequal template.creator user.username %}
+                {{ template.creator|capfirst }}
             {% else %}
-                {{ result.object.creator|capfirst }}
+                {{ template.creator|capfirst }}
             {% endifequal %} /
-            <span title="Rating" class="rating">{{ result.object.rating }}</span>
+            <span title="Rating" class="rating">{{ template.rating }}</span>
 
-            {% ifequal True result.object.multiple_support %}
-            / Multiple Choice / Multiple Fill-Ins
+            {% ifequal 'True' template.multiple_support %}
+            / Multiple Choice
             {% endifequal %}
-            {% ifequal True result.object.fill_in_support %}
+            {% ifequal 'True' template.fill_in_support %}
             / Fill in the Blanks
             {% endifequal %}
+            {% ifequal 'True' template.multifill_support %}
+            / Multiple Fill-Ins
+            {% endifequal %}
+
         </li>
     </ul>
 
 
-    <div id="preview-template-id_{{ result.object.id }}" class="hidden"></div>
+    <div id="preview-template-id_{{ template.id }}" class="hidden"></div>
 
 </div>

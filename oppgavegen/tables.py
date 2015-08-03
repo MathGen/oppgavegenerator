@@ -22,10 +22,10 @@ class TemplateTable(tables.Table):
                    '</div>'
 
     view = tables.TemplateColumn(dropdownhtml, orderable=False)
-    content = tables.TemplateColumn('<div class="input_field" style="width:400px;padding:-5px;margin:-5px;">'
+    content = tables.TemplateColumn('<div class="input_field" style="padding:-5px;margin:-5px;">'
                                     '<span class="static-math input_mathquill" style="font-size:1.2em;width:parent;">'
                                     '{{record.question_text_latex}}'
-                                    '</span></div>')
+                                    '</span></div>', verbose_name='Oppgavetekst')
     multiple_support = tables.BooleanColumn(verbose_name='MC')
     fill_in_support = tables.BooleanColumn(verbose_name='FI')
 
@@ -41,7 +41,7 @@ class TemplateTable(tables.Table):
 
 class UserTemplatesTable(tables.Table):
     """Generate a html table with the logged in users own templates, and an action menu."""
-    dropdownhtml = '<div class="btn-group">' \
+    dropdownhtml = '<div class="btn-group pull-right">' \
                    '<button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">' \
                    '<span class="caret"></span>' \
                    '<span class="sr-only">Toggle Dropdown</span>' \
@@ -56,13 +56,15 @@ class UserTemplatesTable(tables.Table):
                    '</ul>' \
                    '</div>'
 
-    action = tables.TemplateColumn(dropdownhtml, orderable=False)
-    content = tables.TemplateColumn('<div class="input_field" style="width:400px;padding:-5px;margin:-5px;">'
+    action = tables.TemplateColumn(dropdownhtml, orderable=False, verbose_name='Handling')
+    content = tables.TemplateColumn('<div class="input_field">'
                                     '<span class="static-math input_mathquill" style="font-size:1.2em;width:parent;">'
                                     '{{record.question_text_latex}}'
-                                    '</span></div>')
-    multiple_support = tables.BooleanColumn(verbose_name='MC')
+                                    '</span></div>', verbose_name='Oppgavetekst', orderable=False)
+    name = tables.Column(verbose_name='Tittel')
+    multiple_support = tables.BooleanColumn(verbose_name='MC', attrs={'title': 'Multiple Choice'})
     fill_in_support = tables.BooleanColumn(verbose_name='FI')
+    multifill_support = tables.BooleanColumn(verbose_name='MF')
 
     class Meta:
         model = Template
@@ -70,7 +72,7 @@ class UserTemplatesTable(tables.Table):
         # attrs = {"class": "paleblue"} # add class="paleblue" (table theme) to <table> tag
         # fields to include in table (displayed in this order)
         fields = ("id", "name", "multiple_support", "fill_in_support", "rating")
-        sequence = ("id", "content", "name", "multiple_support", "fill_in_support", "rating", "action")
+        sequence = ("id", "content", "name", "multiple_support", "fill_in_support", "multifill_support", "rating", "action")
         order_by = ("-id")
 
 class UserTable(tables.Table):

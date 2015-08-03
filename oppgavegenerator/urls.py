@@ -63,6 +63,7 @@ urlpatterns = patterns('',
     url(r'^search/$', include('haystack.urls')),
    # Search templates
     url(r'^templates/search/$', search_view_factory(
+
         searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.template', copy=False),
         template='search/template_search.html',
         form_class=TemplateSearchForm,
@@ -109,7 +110,8 @@ urlpatterns = patterns('',
     # Return template as JSON
     url(r'^template/([\w ]+)/preview/$', preview_template, name='preview_template'),
     # Toggle template/level relationship for users current level
-    url(r'^user/level/template/(\d+)/toggle/$', toggle_template_level, name='current_level_toggle'),
+    #url(r'^user/level/template/(\d+)/toggle/$', toggle_template_level, name='current_level_toggle'),
+    url(r'^user/level/template/(\d+)/toggle/$', toggle_template_level_membership, name='current_level_toggle'),
     url(r'^user/level/template/(\d+)/add/$', add_template_to_current_level, name='current_level_add'),
     url(r'^user/level/template/(\d+)/remove/$', remove_template_from_current_level, name='current_level_remove'),
 

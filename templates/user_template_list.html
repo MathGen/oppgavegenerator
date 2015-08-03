@@ -8,110 +8,93 @@
 
 {% block panels %}
 
-    <section class="panel panel-default">
-        <div class="panel-heading clearfix"><h3 class="panel-title pull-left">Mine maler</h3>
-            {% if user.extendeduser.current_level %}
-                            <span class="pull-right">
-                                <button class="btn btn-default btn-sm dropdown-toggle" title="Oppgaver vil bli lagt til dette settet" data-toggle="tooltip" data-placement="left"
-                                        aria-haspopup="true" aria-expanded="false">
-                                    {{ user.extendeduser.current_level.name|title }}
-                                </button>
-                            </span>
-                            <div class="tooltip left" role="tooltip">
-                                <div class="tooltip-arrow"></div>
-                                    <div class="tooltip-inner">
-                                        Oppgaver vil bli lagt til dette settet
-                                    </div>
-                            </div>
+    <div class="panel panel-default">
+
+        <div class="panel-heading clearfix"><h3 class="panel-title pull-left">Mine maler</h3></div>
+
+        <div class="container-fluid">
+<br>
+            <div class="row">
+                <div class="col-lg-10" style="padding-right:0">
+                {% for sort_link in sort_link_list %}
+                    <span class="sort-link col-xs-2">
+		                <a href="{{ sort_link.path }}">
+				<span class="{{ sort_link.indicator }}">
+                    {{ sort_link.title }}
+				</span>
+            </a>
+                        {% if sort_link.indicator == 'sort-asc' %}<span class="caret"></span>
+                    {% elif sort_link.indicator == 'sort-desc' %}<span class="dropup"><span class="caret"></span></span>
                         {% endif %}
-        </div>
+	</span>
+                {% endfor %}
+                {% if user.extendeduser.current_level %}
+
+            {% endif %}
+                </div>
+
+                    <div id="current_level_indicator" class="col-xs-2">
+                    <button id="current_level_button" class="pull-right btn btn-default btn-sm dropdown-toggle"
+                            title="Oppgaver vil bli lagt til dette settet" data-toggle="tooltip" data-placement="left"
+                            aria-haspopup="true" aria-expanded="false" style="min-width:100px">
+                        {{ user.extendeduser.current_level.name|title }}
+                    </button>
+                    </div>
+
+                </div>
 
 
 
+        {% if template_list %}
 
+                <hr>
+                {% for template in template_list %}
+                    <div class="row">
 
-
-
-
-
-
-        {% if object_list %}
-
-
-
-            <ul class="list-group">
-                 {% for template in object_list %}
-                    <li class="list-group-item clearfix">
                         {% include 'includes/template_list_result.html' %}
-                    </li>
-                {% empty %}
-                    <li class="list-group-item clearfix">Fant ingen oppgavemaler.</li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            {# Show some example queries to run, maybe query syntax, something else? #}
-        {% endif %}
 
-        {% if page.has_previous or page.has_next %}
-            <nav class="text-center">
-
-
-            <ul class="pagination pagination-centered">
-                {% if page.has_previous %}
-                    <li><a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                    </li>
-                {% endif %}
-
-                {% for i in paginator.page_range %}
-                    <li {% if page.number == i %} class="active" {% endif %}>
-                        <a href="?q={{ query }}&amp;page={{ i }}">
-                            {{ i }}
-                        </a>
-                    </li>
+                    </div>
+                    <hr>
                 {% endfor %}
 
-                {% if page.has_next %}
-                    <li>
-                        <a href="?q={{ query }}&amp;page={{ page.next_page_number }}">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                {% endif %}
-            </ul>
-            </nav>
-        {% endif %}
+            {% if is_paginated %}
+                <nav class="text-center">
 
-
-        {% comment boring pagination %}
-        {% if page.has_previous or page.has_next %}
-            <nav>
-                <ul class="pager">
-                    {% if page.has_previous %}
-                        <li>
-                            <a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">
+                    <ul class="pagination pagination-centered">
+                        {% if page_obj.has_previous %}
+                            <li><a href="?page={{ page_obj.previous_page_number }}&amp;{{ current_sort_query }}&amp;{{ current_querystring }}">
                                 <span aria-hidden="true">&laquo;</span>
-                                Forrige
-                            </a></li>
-                    {% endif %}
+                            </a>
+                            </li>
+                        {% endif %}
+
+                        {% for i in paginator.page_range %}
+                            <li {% if page_obj.number == i %} class="active" {% endif %}>
+                                <a href="?page={{ i }}&amp;{{ current_sort_query }}&amp;{{ current_querystring }}">
+                                    {{ i }}
+                                </a>
+                            </li>
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <li>
+                                <a href="?page={{ page.next_page_number }}&amp;{{ current_sort_query }}&amp;{{ current_querystring }}">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+
+                </nav>
+            {% endif %}
 
 
-
-                    {% if page.has_next %}
-                        <li>
-                            <a href="?q={{ query }}&amp;page={{ page.next_page_number }}">
-                                Neste
-                                <span aria-hidden="true">&raquo;</span>
-                            </a></li>
-                    {% endif %}
-                </ul>
-            </nav>
+        {% else %}
+            <li class="list-group-item clearfix">Fant ingen oppgavemaler knyttet til brukeren din.</li>
         {% endif %}
-{% endcomment %}
 
-
-    </section>
+        </div>
+    </div>
 
     <div class="modal fade" id="previewModal" role="dialog" aria-labelledby="">
         <div class="modal-dialog">
@@ -123,17 +106,28 @@
                 </div>
                 <div class="modal-body">
                     <h4>Oppgavetekst</h4>
+
                     <div id="modal_template_text"></div>
                     <hr>
                     <h4>Løsningsforslag</h4>
+
                     <div id="modal_template_solution"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Lukk</button>
                 </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
     </div><!-- /.modal -->
+
+    <div class="tooltip left" role="tooltip">
+        <div class="tooltip-arrow"></div>
+        <div class="tooltip-inner">
+            Oppgaver vil bli lagt til dette settet
+        </div>
+    </div>
 
 {% endblock %}
 

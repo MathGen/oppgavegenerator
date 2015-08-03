@@ -14,13 +14,36 @@ class TemplateIndex(indexes.SearchIndex, indexes.Indexable):
     question_text = indexes.CharField(model_attr='question_text_latex')
     solution_text = indexes.CharField(model_attr='solution_latex')
     creator = indexes.CharField(model_attr='creator')
+    editor = indexes.CharField(model_attr='editor')
     creation_date = indexes.DateTimeField(model_attr='creation_date', indexed=False)
     rating = indexes.IntegerField(model_attr='rating', indexed=False)
-    multiple = indexes.BooleanField(model_attr='multiple_support', default='false', indexed=False)
-    fill_in = indexes.BooleanField(model_attr='fill_in_support', default='false', indexed=False)
+    multiple_support = indexes.CharField(model_attr='multiple_support', indexed=False)
+    fill_in_support = indexes.CharField(model_attr='fill_in_support', indexed=False)
+    multifill_support = indexes.CharField(model_attr='multifill_support', indexed=False)
     copy = indexes.BooleanField(model_attr='copy', default='false', indexed=False)
     levels = indexes.MultiValueField()
     tags = indexes.MultiValueField()
+
+    def prepare_multiple_support(self, object):
+        """ Store boolean value as string """
+        str = 'False'
+        if object.multiple_support == True:
+            str = 'True'
+        return str
+
+    def prepare_fill_in_support(self, object):
+        """ Store boolean value as string """
+        str = 'False'
+        if object.fill_in_support == True:
+            str = 'True'
+        return str
+
+    def prepare_multifill_support(self, object):
+        """ Store boolean value as string """
+        str = 'False'
+        if object.multifill_support == True:
+            str = 'True'
+        return str
 
     def prepare_levels(self, object):
         return [level.name for level in object.levels.all()]

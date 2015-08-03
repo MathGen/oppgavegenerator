@@ -33,6 +33,7 @@ INSTALLED_APPS = (
     'gunicorn',                     # gunicorn (for unix deployment)
     'django_tables2',               # django-tables2
     'haystack',
+    'sortable_listview',
     'selectable'
 )
 

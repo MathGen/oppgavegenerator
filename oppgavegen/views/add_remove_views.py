@@ -1,5 +1,5 @@
 """For views that either add or remove something from the database"""
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from oppgavegen.models import Level, Template, Set, Chapter
@@ -171,4 +171,26 @@ def add_user_to_set_view(request):
     except Exception as e:
         print('wtf')
         print(e)
+    return HttpResponse(msg)
+
+def toggle_template_level_membership(request, template_id):
+    """"
+    Toggle template->level membership via ajax POST without making a copy.
+    For Advanced Search-results.
+    """
+    msg = ''
+    level = request.user.extendeduser.current_level
+    if request.method == 'POST':
+        try:
+            template = Template.objects.get(pk=template_id)
+        except Template.DoesNotExist as e:
+            raise ValueError("Unknown template.id=" + str(template_id) + "or level.id=" +
+                             str(level.id) + ". Original error: " + str(e))
+        if template in level.templates.all():
+            level.templates.remove(template)
+            level.save()
+            msg = "Template " + str(template.id) + " removed from " + level.name
+        else:
+            level.templates.add(template)
+            msg = "Template " + str(template.id) + " added to " + level.name
     return HttpResponse(msg)

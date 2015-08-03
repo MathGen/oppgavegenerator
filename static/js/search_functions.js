@@ -1,5 +1,5 @@
 var MILLS_TO_IGNORE_REQUESTS = 500;
-var VARIABLES = ['a','b','c','d'];
+var VARIABLES = ['a', 'b', 'c', 'd'];
 
 var templateText_latex = "";
 var templateSolution_latex = {};
@@ -17,27 +17,19 @@ var refresh_preview = function () {
     }
 };
 
-var processAdd = function () {
+var processToggle = function () {
+    var $toggle_button = $(this);
+    var template_id = $toggle_button.data('template_id');
+    var post_url = '/user/level/template/' + template_id + '/toggle/';
+    console.log($toggle_button.data('template_id'));
 
-    var $button_just_clicked = $(this);
+    $.post(post_url, {'csrfmiddlewaretoken': getCookie('csrftoken')}, function (result) {
+        console.log(result);
+        $('#toggle_button_id_' + template_id).toggleClass('btn-primary btn-danger').children().toggleClass('glyphicon-plus glyphicon-minus');
+        $('#current_level_button').effect('highlight',{ 'color': '#5cb85c' });
 
-    var template_id = $button_just_clicked.data('template_id');
-    console.log($button_just_clicked.data('template_id'));
 
-    var processServerResponse = function (serverResponse_data, textStatus_ignored, jqXHR_ignored) {
-        //console.log("sf serverResponse_data='" + serverResponse_data + "', textStatus_ignored='" + textStatus_ignored + "', jqXHR_ignored='" + jqXHR_ignored + "', template_id='" + template_id + "'");
-        $('#toggle_template_add_id_' + template_id).html(serverResponse_data);
-        //notification('#toggle_template_add_id_' + template_id, "Oppgaven er lagt til!")
-    };
-
-    var config = {
-        url: "/user/level/template/" + template_id + "/toggle/",
-        dataType: 'html',
-        success: processServerResponse,
-        fail: 'error!'
-    };
-
-    $.ajax(config);
+    })
 };
 
 /**
@@ -45,22 +37,22 @@ var processAdd = function () {
  * @param {string} selector - id or class-name of the element to apply error message to.
  * @param {string} message - the error message.
  */
-function notification(selector, message){
-	var element = $(selector);
-    if(selector[0] != "." && selector[0] != "#"){
+function notification(selector, message) {
+    var element = $(selector);
+    if (selector[0] != "." && selector[0] != "#") {
         element = $('#' + selector);
     }
-	$(document).ready(function(){
-		element.after('<p class="notification_content">* '+message+'</p>');
-		$('.notification_content').show(100).delay(1000).hide(100).queue(function(){
-			$(this).remove();
-		});
-	});
+    $(document).ready(function () {
+        element.after('<p class="notification_content">* ' + message + '</p>');
+        $('.notification_content').show(100).delay(1000).hide(100).queue(function () {
+            $(this).remove();
+        });
+    });
 }
 
 $(document).ready(function () {
 
-    $('.span__toggle_template_add_button').click(_.debounce(processAdd,
+    $('.ajax-toggle-button').click(_.debounce(processToggle,
         MILLS_TO_IGNORE_REQUESTS, true
     ));
 
@@ -89,5 +81,5 @@ $(document).ready(function () {
 });
 
 $(function () {
-  $('[data-toggle="tooltip"]').tooltip()
+    $('[data-toggle="tooltip"]').tooltip()
 });

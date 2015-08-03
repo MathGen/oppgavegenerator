@@ -13,6 +13,7 @@ from django.shortcuts import render
 from django_tables2 import RequestConfig
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
+from sortable_listview.views import SortableListView
 
 from django.views.decorators.cache import cache_control
 
@@ -479,10 +480,6 @@ def remove_template_from_current_level(request, template_id):
         return HttpResponse('Du må være eier a levelet for å legge til level')
 
 
-class UserTemplatesSearchView(SearchView):
-    template_name = 'search/template_search.html'
-
-
 def preview_template(request, template_id):
     """Return a template as JSON-object"""
     dict = {}
@@ -505,11 +502,30 @@ def set_detail_view(request, set_id):
                                         #'levels': chapter_levels, 'templates': level_templates,
                                         }, context_instance=RequestContext(request))
 
-class UserTemplatesListView(LoginRequiredMixin,ListView):
+class UserTemplatesListView(LoginRequiredMixin,SortableListView):
+    queryset = Template.objects.filter(copy=False)
+    default_sort_field = 'creation_date'
+    allowed_sort_fields = {default_sort_field: {'default_direction': '-',
+                                                'verbose_name': 'Dato'},
+                           'rating': {'default_direction': '-',
+                                      'verbose_name': 'Hovedrating'}}
     template_name = 'user_template_list.html'
+    allow_empty = True
+    paginate_by = 15
+    paginate_orphans = 20
+    context_object_name = 'template_list'
+    model = Template
 
     def get_queryset(self):
-        return Template.objects.filter(creator=self.request.user,copy=False)
+        qs = super(SortableListView, self).get_queryset()
+        qs.filter(editor=self.request.user)
+        qs = qs.order_by(self.sort)
+        return qs
+
+
+class UserTemplatesSearchView(SearchView):
+    template_name = 'search/template_search.html'
+    queryset = SearchQuerySet()
 
 class UserSetListView(LoginRequiredMixin,ListView):
     template_name = 'sets/user_set_list.html'

@@ -34,7 +34,7 @@
         {% empty %}
         {% if table.empty_text %}
         {% block table.tbody.empty_text %}
-        <tr><td colspan="{{ table.columns|length }}">{{ table.empty_text }}</td></tr>
+        <tr><td {% comment %}colspan="{{ table.columns|length }}"{% endcomment %}>{{ table.empty_text }}</td></tr>
         {% endblock table.tbody.empty_text %}
         {% endif %}
         {% endfor %}
@@ -49,6 +49,34 @@
  
 {% if table.page %}
     {% block pagination %}
-        {% bootstrap_pagination table.page %}
+                <nav class="text-center">
+
+                    <ul class="pagination pagination-centered">
+                        {% if table.page.has_previous %}
+                            <li><a href="?page={{ table.page.previous_page_number }}">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                            </li>
+                        {% endif %}
+
+                        {% for i in table.paginator.page_range %}
+                            <li {% if table.page.number == i %} class="active" {% endif %}>
+                                <a href="?page={{ i }}">
+                                    {{ i }}
+                                </a>
+                            </li>
+                        {% endfor %}
+
+                        {% if table.page.has_next %}
+                            <li>
+                                <a href="?page={{ table.page.next_page_number }}">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+
+                </nav>
+
     {% endblock pagination %}
 {% endif %}

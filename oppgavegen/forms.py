@@ -61,7 +61,7 @@ class TagField(forms.CharField):
 
 
 class TemplateSearchForm(SearchForm):
-    q = forms.CharField(required=True,label='',
+    q = forms.CharField(required=False,label='',
                         widget=forms.TextInput(attrs={'type': 'search', 'placeholder' : 'Søk i oppgavemaler'}))
     name = forms.CharField(required=False, label='Tittel',
                            widget=forms.TextInput(attrs={'type': 'text', 'placeholder' : 'Oppgavetittel'}))
@@ -73,8 +73,9 @@ class TemplateSearchForm(SearchForm):
     max_rating = forms.IntegerField(required=False, label='Høyest Rating',
                                     widget=forms.NumberInput(attrs={'class': 'numberinput', 'type': 'number',
                                                                     'max': '9999', 'placeholder' : 'Maximum'}))
-    multiple = forms.BooleanField(required=False, label='Flervalg')
-    fill_in = forms.BooleanField(required=False, label='Utfylling')
+    multiple_support = forms.BooleanField(required=False, label='Flervalg')
+    fill_in_support = forms.BooleanField(required=False, label='Utfylling')
+    multifill_support = forms.BooleanField(required=False, label='Flervalg med utfylling')
 
     def search(self):
         # First, store the SearchQuerySet received from other processing.
@@ -100,16 +101,21 @@ class TemplateSearchForm(SearchForm):
             sqs = sqs.filter(rating__lte=self.cleaned_data['max_rating'])
 
         # Check for multiple-choice filter
-        if self.cleaned_data['multiple']:
+        if self.cleaned_data['multiple_support']:
             #sqs = sqs.filter(multiple_support=self.cleaned_data['multiple'])
-            sqs = sqs.filter(multiple='True')
+            sqs = sqs.filter(multiple_support='True')
 
         # Check for fill-in filter
-        if self.cleaned_data['fill_in']:
+        if self.cleaned_data['fill_in_support']:
             #sqs = sqs.filter(fill_in_support=self.cleaned_data['fill_in'])
-            sqs = sqs.filter(fill_in='True')
+            sqs = sqs.filter(fill_in_support='True')
 
-        return sqs.models(Template)
+        # Check for multifill filter
+        if self.cleaned_data['multifill_support']:
+            #sqs = sqs.filter(fill_in_support=self.cleaned_data['fill_in'])
+            sqs = sqs.filter(multifill_support='True')
+
+        return sqs
 
 
 class SetsSearchForm(SearchForm):
