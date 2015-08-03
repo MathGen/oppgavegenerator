@@ -33,7 +33,6 @@ urlpatterns = patterns('',
     url(r"^task/([\w ]+)/$", task_by_extra, name='task_by_extra'),
     url(r"^task/(\d+)/([\w ]+)/$", task_by_id_and_type, name='task_by_id_and_type'),
     url(r"^edit/(\d+)/$", edit_template, name='edit_template'),
-    url(r'^useranalysis/', user_overview_table, name='user_table'),
 
     # Game
     url(r'^game/(\d+)/$', game, name='game'),
@@ -71,15 +70,15 @@ urlpatterns = patterns('',
     # Mini search views (for jquery.load-situations)
     url(r'^minisearch/chapters/$', search_view_factory(
         template='search/mini_search.html',
-        queryset=SearchQuerySet().filter(django_ct='oppgavegen.chapter', copy=False),
+        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.chapter', copy=False),
         )),
    url(r'^minisearch/levels/$', search_view_factory(
         template='search/mini_search.html',
-        queryset=SearchQuerySet().filter(django_ct='oppgavegen.level', copy=False),
+        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.level', copy=False),
         )),
     url(r'^minisearch/templates/$', search_view_factory(
         template='search/mini_search.html',
-        queryset=SearchQuerySet().filter(django_ct='oppgavegen.template', copy=False),
+        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.template', copy=False),
         )),
 
     # Search in sets, chapters or levels

@@ -13,6 +13,7 @@
             {% for set in sets %}
                 <li id="content_{{ set.id }}" class="btn list_content">
                     <h4 class="content_title">{{ set.name }}</h4>
+                    <a href="{% url 'set_stats' set.id %}" class="btn btn_content_edit">Stats</a>
                     <a class="btn btn_content_edit">Edit</a>
                     <a class="btn btn_content_del"><span class="glyphicon glyphicon-trash"></span></a>
                 </li>

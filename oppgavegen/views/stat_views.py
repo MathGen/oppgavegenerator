@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 
 @login_required
 def set_stats_view(request, set_id):
-    """Returns a render of tableview.html with all the templates"""
+    """Returns a render of statview.html with all the templates"""
     # Todo: check if user owns set or is superuser or w/e.
     headers, user_stats = stats_for_set(int(set_id))
     print(headers)

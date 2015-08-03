@@ -10,16 +10,14 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
 from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import render
-from django_tables2 import RequestConfig
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 from oppgavegen.utility.sortable_listview import SortableListView
 
 from django.views.decorators.cache import cache_control
 
-from oppgavegen.tables import *
 from oppgavegen.templatetags.app_filters import is_teacher
-from oppgavegen.models import Set, Chapter, Level, Template, UserLevelProgress
+from oppgavegen.models import Set, Chapter, Level, Template
 from oppgavegen.view_logic.rating import change_elo, change_level_rating, get_user_rating
 from oppgavegen.generation_folder.generation import generate_task, generate_level
 from oppgavegen.view_logic.progress import calculate_progress, chapter_progress, get_stars_per_level, \
@@ -169,37 +167,6 @@ def answers(request, level=1):
         else:
             print(form.errors)
     return render_to_response('answers.html')
-
-
-@login_required
-@user_passes_test(is_teacher, '/')
-def templates(request):
-    """Returns a render of tableview.html with all the templates"""
-    panel_title = "Alle Maler"
-    table = TemplateTable(Template.objects.filter(valid_flag=True))
-    RequestConfig(request, paginate={"per_page": 20}).configure(table)
-    return render(request, "tableview.html", {"table": table, "panel_title": panel_title})
-
-
-@login_required
-@user_passes_test(is_teacher, '/')
-def template_table_by_user(request):
-    """Returns a render of tableview.html with only templates from the logged in user."""
-    user = request.user
-    panel_title = "Dine Maler"
-    table = UserTemplatesTable(Template.objects.filter(creator=user))
-    RequestConfig(request, paginate={"per_page": 20}).configure(table)
-    return render(request, "tableview.html", {"table": table, "panel_title": panel_title})
-
-
-@login_required
-@user_passes_test(is_teacher, '/')
-def user_overview_table(request):
-    """Returns a render of tableview.html with overview over users"""
-    panel_title = "Brukere"
-    table = UserTable(ExtendedUser.objects.all())
-    RequestConfig(request, paginate={"per_page": 20}).configure(table)
-    return render(request, "tableview.html", {"table": table, "panel_title": panel_title})
 
 
 @login_required

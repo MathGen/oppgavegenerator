@@ -176,7 +176,7 @@ def add_user_to_set_view(request):
 def toggle_template_level_membership(request, template_id):
     """"
     Toggle template->level membership via ajax POST without making a copy.
-    For Advanced Search-results.
+    For Advanced Search-results where the user is the editor (owner).
     """
     msg = ''
     level = request.user.extendeduser.current_level
