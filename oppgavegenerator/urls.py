@@ -20,7 +20,7 @@ from oppgavegen.view_logic.db_format import format_domain
 urlpatterns = patterns('',
     url(r'^$', index, name='index'),
     url(r'^answers/', answers, name='answers'),
-    url(r'^templates/$', templates, name='templates'),
+    url(r'^templates/$', TemplatesListView.as_view(), name='templates'),
     url(r'^newtemplate/', new_template, name='newtemplate'),
     url(r'^submit/', submit, name='submit'),
     url(r'^admin/', include(admin.site.urls)),

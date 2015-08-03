@@ -502,34 +502,11 @@ def set_detail_view(request, set_id):
                                         #'levels': chapter_levels, 'templates': level_templates,
                                         }, context_instance=RequestContext(request))
 
-class UserTemplatesListView(LoginRequiredMixin,SortableListView):
-    queryset = Template.objects.filter(copy=False)
-    default_sort_field = 'creation_date'
-
-    allowed_sort_fields = (
-        (default_sort_field, {'default_direction': '-', 'verbose_name': 'Dato'}),
-        ('name', {'default_direction': '', 'verbose_name': 'Tittel'}),
-        ('rating', {'default_direction': '-', 'verbose_name': 'Hovedrating'}),
-        ('choice_rating', {'default_direction': '-', 'verbose_name': 'Flervalgsrating'}),
-        ('fill_rating', {'default_direction': '-', 'verbose_name': 'Utfyllingsrating'}),
-    )
-
-    template_name = 'user_template_list.html'
-    allow_empty = True
-    paginate_by = 15
-    paginate_orphans = 20
-    context_object_name = 'template_list'
-    model = Template
-
-    def get_queryset(self):
-        qs = super(SortableListView, self).get_queryset()
-        qs.filter(editor=self.request.user)
-        qs = qs.order_by(self.sort)
-        return qs
 
 class TemplatesListView(LoginRequiredMixin,SortableListView):
     queryset = Template.objects.filter(copy=False)
     default_sort_field = 'creation_date'
+    panel_title = "Alle maler"
 
     allowed_sort_fields = (
         (default_sort_field, {'default_direction': '-', 'verbose_name': 'Dato'}),
@@ -539,7 +516,7 @@ class TemplatesListView(LoginRequiredMixin,SortableListView):
         ('fill_rating', {'default_direction': '-', 'verbose_name': 'Utfyllingsrating'}),
     )
 
-    template_name = 'user_template_list.html'
+    template_name = 'template_list.html'
     allow_empty = True
     paginate_by = 15
     paginate_orphans = 20
@@ -548,6 +525,25 @@ class TemplatesListView(LoginRequiredMixin,SortableListView):
 
     def get_queryset(self):
         qs = super(SortableListView, self).get_queryset()
+        qs = qs.order_by(self.sort)
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super(SortableListView,
+                        self).get_context_data(**kwargs)
+        context['current_sort_query'] = self.get_sort_string()
+        context['current_querystring'] = self.get_querystring()
+        context['sort_link_list'] = self.sort_link_list
+        context['panel_title'] = self.panel_title
+        return context
+
+class UserTemplatesListView(TemplatesListView):
+    queryset = Template.objects.all()
+    panel_title = "Mine Maler"
+
+    def get_queryset(self):
+        qs = super(SortableListView, self).get_queryset()
+        qs.filter(editor=self.request.user)
         qs = qs.order_by(self.sort)
         return qs
 
