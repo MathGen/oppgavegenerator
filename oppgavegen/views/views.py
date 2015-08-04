@@ -478,6 +478,7 @@ class TemplatesListView(LoginRequiredMixin,SortableListView):
     allowed_sort_fields = (
         (default_sort_field, {'default_direction': '-', 'verbose_name': 'Dato'}),
         ('name', {'default_direction': '', 'verbose_name': 'Tittel'}),
+        ('editor', {'default_direction': '', 'verbose_name': 'Forfatter'}),
         ('rating', {'default_direction': '-', 'verbose_name': 'Hovedrating'}),
         ('choice_rating', {'default_direction': '-', 'verbose_name': 'Flervalgsrating'}),
         ('fill_rating', {'default_direction': '-', 'verbose_name': 'Utfyllingsrating'}),
@@ -507,6 +508,15 @@ class TemplatesListView(LoginRequiredMixin,SortableListView):
 class UserTemplatesListView(TemplatesListView):
     queryset = Template.objects.all()
     panel_title = "Mine Maler"
+    default_sort_field = 'creation_date'
+
+    allowed_sort_fields = (
+        (default_sort_field, {'default_direction': '-', 'verbose_name': 'Dato'}),
+        ('name', {'default_direction': '', 'verbose_name': 'Tittel'}),
+        ('rating', {'default_direction': '-', 'verbose_name': 'Hovedrating'}),
+        ('choice_rating', {'default_direction': '-', 'verbose_name': 'Flervalgsrating'}),
+        ('fill_rating', {'default_direction': '-', 'verbose_name': 'Utfyllingsrating'}),
+    )
 
     def get_queryset(self):
         qs = super(SortableListView, self).get_queryset()
@@ -601,7 +611,8 @@ class UserCurrentSetsEdit(LoginRequiredMixin, UpdateView):
 
 
 def refresh_navbar(request):
-    return render_to_response('includes/current_sets_snippet.html')
+
+    return render(request,'includes/current_sets_snippet.html')
 
 
 def level_stats(request, level_id):

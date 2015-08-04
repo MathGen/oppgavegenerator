@@ -61,13 +61,16 @@ urlpatterns = patterns('',
     url(r'^search/$', include('haystack.urls')),
    # Search templates
     url(r'^templates/search/$', search_view_factory(
-
-        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.template', copy=False),
+        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.template', copy=False).order_by('creation_date'),
         template='search/template_search.html',
         form_class=TemplateSearchForm,
     ), name='templates_search'),
 
     # Mini search views (for jquery.load-situations)
+    url(r'^minisearch/sets/$', search_view_factory(
+        template='search/mini_search.html',
+        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.set', copy=False)
+    )),
     url(r'^minisearch/chapters/$', search_view_factory(
         template='search/mini_search.html',
         searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.chapter', copy=False),

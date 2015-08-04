@@ -13,9 +13,9 @@
 
     <ul style="list-style: inline; list-style-type: none">
         <li>
-            <a id="search_content_{{ result.object.id }}"  class="btn_add_content">
-            <span id="search_url_{{ result.object.id }}" hidden>{% url 'add_template_to_level' user.extendeduser.current_level.id result.object.id %}</span>
-            Legg til: {{ result.object.name|title }}
+            <a id="search_content_{{ result.pk }}"  class="btn btn-xs btn_add_content">
+            <span id="search_url_{{ result.pk }}" hidden>{% url 'add_template_to_level' user.extendeduser.current_level.id result.pk %}</span>
+            Legg til: {{ result.name|title }}
             </a>
 
         </li>
@@ -24,18 +24,18 @@
 
                 {{ result.object.creator|capfirst }}
             /
-            <span title="Rating" class="rating">{{ result.object.rating }}</span>
+            <span title="Rating" class="rating">{{ result.rating }}</span>
 
-            {% ifequal True result.object.multiple_support %}
+            {% ifequal "True" result.multiple_support %}
             / Multiple Choice
             {% endifequal %}
-            {% ifequal True result.object.fill_in_support %}
+            {% ifequal "True" result.fill_in_support %}
             / Fill in the Blanks
             {% endifequal %}
         </li>
     </ul>
 
 
-    <div id="preview-template-id_{{ result.object.id }}" class="hidden"></div>
+    <div id="preview-template-id_{{ result.pk }}" class="hidden"></div>
 
 </div>
