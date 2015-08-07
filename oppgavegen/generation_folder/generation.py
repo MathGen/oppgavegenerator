@@ -333,7 +333,7 @@ def new_random_value(value, domain_dict, bonus=0, extra=''):
         new_value = randint(int(domain[0]), int(domain[1]))
     else:
         new_value = randint(int(domain[0]), int(domain[1]))
-    return '(' + new_value + ')'
+    return new_value
 
 def make_number_from_list(domain):
     return sympify(latex_to_sympy(choice(domain)))
