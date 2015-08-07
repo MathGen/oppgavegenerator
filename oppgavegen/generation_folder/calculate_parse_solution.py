@@ -51,10 +51,12 @@ def parse_solution(solution, domain):
     :return: A parsed version of the input string (solution)
     """
 
-    if solution[0] == '@' and solution[1] == '?' and solution[-1] == '@' and solution[-2] == '?':
-        solution = solution.replace('@?', '')
-        solution = solution.replace('?@', '')
-        return calculate_answer(str(solution), domain)
+    # ..? won't this break if s is '@?2+2?@ - @?1+1?@
+    # todo: check if this was needed for something
+    # if solution[0] == '@' and solution[1] == '?' and solution[-1] == '@' and solution[-2] == '?':
+    #     solution = solution.replace('@?', '')
+    #     solution = solution.replace('?@', '')
+    #     return calculate_answer(str(solution), domain)
 
     arr = []
     new_arr = []
@@ -79,7 +81,7 @@ def parse_solution(solution, domain):
             r = '@?' + arr[x] + '?@'
 
             try:
-                new_solution = new_solution.replace(r, new_arr[x-count])
+                new_solution = new_solution.replace(r, '(' + new_arr[x-count] + ')')
             except:
                 pass
         else:

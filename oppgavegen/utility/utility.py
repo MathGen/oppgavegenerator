@@ -76,7 +76,7 @@ def string_replace(string, variable_dict):
     :return: String with numbers instead of variable names.
     """
     for key in variable_dict:
-        string = string.replace(key, str(variable_dict[key]))
+        string = string.replace(key, '(' + str(variable_dict[key])) + ')'
     return string
 
 @Debugger
@@ -89,5 +89,5 @@ def replace_variables_from_array(arr, s):
     :return: String with replaced variables
     """
     for x in range(0, len(arr)-1, 2):  # Set increment size to 2.
-        s = s.replace(arr[x], arr[x+1])
+        s = s.replace(arr[x], '(' + str(arr[x+1]) + ')')
     return s
