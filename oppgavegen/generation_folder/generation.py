@@ -12,6 +12,7 @@ from oppgavegen.latex_translator import latex_to_sympy, add_phantom_minus, remov
 from oppgavegen.models import Level
 from oppgavegen.generation_folder.multifill import multifill
 from oppgavegen.generation_folder.fill_in import fill_in_the_blanks
+from oppgavegen.utility.parenthesis_removal import parenthesis_remover
 from oppgavegen.utility.utility import *
 from oppgavegen.generation_folder.calculate_parse_solution import parse_solution
 from oppgavegen.generation_folder.get_question import get_question, get_level_question
@@ -45,6 +46,8 @@ def generate_task(user, template_extra, desired_type=''):
     random_domain_list = q.random_domain
     task = str(q.question_text)
     task = task.replace('\\\\', '\\') # Replaces double \\ with \
+    task = task.replace('(', 'parenthesisleft')  # Done to preserve original parenthesis
+    task = task.replace(')', 'parenthesisright')  # Done to preserve original parenthesis
     template_type = desired_type
     choices = q.choices.replace('\\\\', '\\')
     conditions = q.conditions.replace('\\\\', '\\')
@@ -114,6 +117,11 @@ def generate_task(user, template_extra, desired_type=''):
         graph = json.dumps(graph)
     new_task = parse_solution(new_task, q.random_domain)
     new_task = remove_pm_and_add_parenthesis(new_task)
+
+    new_task = parenthesis_remover(new_task)
+    new_task = new_task.replace('parenthesisleft', '(')  # Done to preserve original parenthesis
+    new_task = new_task.replace('parenthesisright', ')')  # Done to preserve original parenthesis
+
     return_dict = {'question': new_task,
                    'variable_dictionary': variables_used, 'template_type': template_type,
                    'template_specific': template_specific, 'primary_key': primary_key,
@@ -147,7 +155,7 @@ def generate_level(user, level_id):
     primary_key = q.pk
     fill_in = q.fill_in.replace('\\\\', '\\')
     template_specific = ""  # A variable that holds the extra values for a given type. ie. choices for multiple.
-    variables_used = ""  # Sends a splitable string since dictionaries can't be passed between layers.
+    variables_used = ""
     replacing_words = ''  # The words that got replaced, and the words that replaced them
 
     task = add_phantom_minus(task)
@@ -325,7 +333,7 @@ def new_random_value(value, domain_dict, bonus=0, extra=''):
         new_value = randint(int(domain[0]), int(domain[1]))
     else:
         new_value = randint(int(domain[0]), int(domain[1]))
-    return new_value
+    return '(' + new_value + ')'
 
 def make_number_from_list(domain):
     return sympify(latex_to_sympy(choice(domain)))
