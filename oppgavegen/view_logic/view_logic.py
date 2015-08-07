@@ -8,6 +8,7 @@ import json
 
 from oppgavegen.latex_translator import remove_pm_and_add_parenthesis, add_phantom_minus
 from oppgavegen.models import Template, Tag
+from oppgavegen.utility.parenthesis_removal import parenthesis_remover
 from oppgavegen.view_logic.answer_checker import check_answer
 from oppgavegen.generation_folder.calculate_parse_solution import parse_solution, calculate_array, parse_answer
 from oppgavegen.generation_folder.fill_in import get_values_from_position
@@ -61,7 +62,7 @@ def make_answer_context_dict(form_values):
     """Returns context dict for use on the answer page"""
     user_answer = form_values['user_answer']
     user_answer = user_answer.replace(',','.')
-    user_answer = user_answer.replace('..', ',')
+    user_answer = user_answer.replace('..', ',')  # A cheeky way to circumvent removal of ','
     template_type = form_values['template_type']
     template_specific = form_values['template_specific']
     q = Template.objects.get(pk=form_values['primary_key'])
@@ -77,14 +78,16 @@ def make_answer_context_dict(form_values):
         answer = replace_variables_from_array(variable_dictionary, answer)
 
     original_user_answer = user_answer.replace('§', '\\text{ og }')
-    answer = remove_pm_and_add_parenthesis(answer)
+    #answer = remove_pm_and_add_parenthesis(answer) # Replace with new parenthesis parsing
+    answer = parenthesis_remover(answer)
     answer = parse_answer(answer, random_domain)
     answer = answer.replace('`', '')
     answer = answer.split('§')
     solution = str(q.question_text.replace('\\\\', '\\')) + "§" + str(q.solution.replace('\\\\', '\\'))
-    solution = add_phantom_minus(solution)
+    #solution = add_phantom_minus(solution)
     solution = replace_variables_from_array(variable_dictionary, solution)
-    solution = remove_pm_and_add_parenthesis(solution)
+    #solution = remove_pm_and_add_parenthesis(solution)
+    solution = parenthesis_remover(solution)
     solution = parse_solution(solution, random_domain)
     if len(replacing_words) > 0:
         solution = replace_words(solution, replacing_words)['sentence']
