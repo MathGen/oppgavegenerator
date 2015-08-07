@@ -11,7 +11,6 @@ from oppgavegen.views.stat_views import *
 from oppgavegen.forms import *
 from haystack.query import SearchQuerySet
 from haystack.views import search_view_factory
-#from haystack.generic_views import SearchView
 from registration.backends.default.views import RegistrationView
 from oppgavegen.views.add_remove_views import *
 from oppgavegen.view_logic.db_format import format_domain
@@ -19,20 +18,24 @@ from oppgavegen.view_logic.db_format import format_domain
 
 urlpatterns = patterns('',
     url(r'^$', index, name='index'),
+
     url(r'^answers/', answers, name='answers'),
     url(r'^templates/$', TemplatesListView.as_view(), name='templates'),
     url(r'^newtemplate/', new_template, name='newtemplate'),
     url(r'^submit/', submit, name='submit'),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^task/$', task, name='task_by_user_rating'),
+    url(r"^task/([\w ]+)/$", task_by_extra, name='task_by_extra'),
+    url(r"^task/(\d+)/([\w ]+)/$", task_by_id_and_type, name='task_by_id_and_type'),
+    url(r"^edit/(\d+)/$", edit_template, name='edit_template'),
+
     url(r'^user/', include('registration.backends.default.urls')),
     url(r'^user/register/$', RegistrationView.as_view(form_class=NamedUserRegistrationForm), name='registration_register'),
     url(r'^user/settings/$', UserSettingsView.as_view(), name='user_settings'),
     url(r'^user/settings/deactivate/$', user_deactivate, name='user_deactivate'),
     url(r'^user/templates/$', UserTemplatesListView.as_view(), name='user_templates_list'),
-    url(r'^task/$', task),
-    url(r"^task/([\w ]+)/$", task_by_extra, name='task_by_extra'),
-    url(r"^task/(\d+)/([\w ]+)/$", task_by_id_and_type, name='task_by_id_and_type'),
-    url(r"^edit/(\d+)/$", edit_template, name='edit_template'),
+
+
 
     # Game
     url(r'^game/(\d+)/$', game, name='game'),
@@ -43,6 +46,7 @@ urlpatterns = patterns('',
 
     # Sets, chapters and level management urls
     url(r'^user/sets/current/$', UserCurrentSetsEdit.as_view() , name='edit_current_user_sets' ),
+    url(r'^user/sets/$', UserSetListView.as_view(), name='user_sets'),
     url(r'^set/new/$', set_edit, name='add_new_set'),
     url(r'^set/(\d+)/edit/', set_edit, name='edit_set'),
     url(r'^chapter/new/$', chapter_edit, name='add_new_chapter'),

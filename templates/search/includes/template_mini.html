@@ -1,6 +1,6 @@
 {# TEMPLATE MINISEARCH RESULT SNIPPET #}
 
-<div class="template-result">
+
 
 {% comment ###button stuff (needs search_functions.js to work)## %}
 
@@ -11,13 +11,27 @@
 
 {% endcomment %}
 
-    <ul style="list-style: inline; list-style-type: none">
-        <li>
-            <a id="search_content_{{ result.pk }}"  class="btn btn-xs btn_add_content">
-            <span id="search_url_{{ result.pk }}" hidden>{% url 'add_template_to_level' user.extendeduser.current_level.id result.pk %}</span>
-            Legg til: {{ result.name|title }}
-            </a>
+<div class="row">
 
+    <ul class="list-inline">
+        <li>
+            <a id="search_content_{{ result.pk }}"  class="btn btn-primary btn-xs btn_add_content" title="Kopier og legg til">
+            <span id="search_url_{{ result.pk }}" hidden>{% url 'add_template_to_level' user.extendeduser.current_level.id result.pk %}</span>
+            <span class="glypicon glyphicon-plus"></span>
+            </a>
+                    <button class="btn btn-xs btn-default preview-button" title="Forhåndsvisning"
+                data-template_id="{{ result.pk }}" data-template_title="{{ result.name|title }}" type="button">
+            <span class="glyphicon glyphicon-eye-open"></span>
+        </button>
+
+        </li>
+        <li><strong>
+        {% if result.name %}
+                        {{ result.name|title }}
+                    {% else %}
+                        Uten Tittel
+                    {% endif %}
+        </strong>
         </li>
         <li>
             <span class="glyphicon glyphicon-user"></span>
@@ -36,6 +50,5 @@
     </ul>
 
 
-    <div id="preview-template-id_{{ result.pk }}" class="hidden"></div>
 
 </div>

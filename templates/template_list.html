@@ -13,43 +13,45 @@
 
         <div class="panel-heading">
 
-                {% if user.extendeduser.current_level %}
+            {% if user.extendeduser.current_level %}
 
-                    <button id="current_level_button" class="btn btn-default btn-xs pull-right"
-                            title="Oppgaver vil bli lagt til dette settet" data-toggle="tooltip" data-placement="left"
-                            aria-haspopup="true" aria-expanded="false" style="min-width:100px">
-                        {{ user.extendeduser.current_level.name|title }}
-                    </button>
+                <button id="current_level_button" class="btn btn-default btn-xs pull-right"
+                        title="Oppgaver vil bli lagt til dette settet" data-toggle="tooltip" data-placement="left"
+                        aria-haspopup="true" aria-expanded="false" style="min-width:100px">
+                    {{ user.extendeduser.current_level.name|title }}
+                </button>
 
-                {% endif %}
+            {% endif %}
 
-        <h3 class="panel-title" style="padding-right: 10px">{{ panel_title }}</h3>
-{#        <a href="{% url 'templates_search' %}">Søk i maler</a>#}
+            <h3 class="panel-title" style="padding-right: 10px">{{ panel_title }}</h3>
+            {#        <a href="{% url 'templates_search' %}">Søk i maler</a>#}
         </div>
 
         <div class="panel-body">
-            <div class="row">
-                <div class="col-lg-10" style="padding-right:0">
+            <ul class="nav nav-pills nav-justified">
 
-                    {% for sort_link in sort_link_list %}
-                        <span class="sort-link col-xs-2">
-		                <a href="{{ sort_link.path }}" title="Sorter etter {{ sort_link.title|lower }}">
+                {% for sort_link in sort_link_list %}
+                    <li role="presentation" {% if sort_link.indicator %}class="active"{% endif %}>
+
+                        <a href="{{ sort_link.path }}" title="Sorter etter {{ sort_link.title|lower }}">
 				<span class="{{ sort_link.indicator }}">
                     {{ sort_link.title }}
 				</span>
-                        </a>
-                            {% if sort_link.indicator == 'sort-asc' %}<span class="caret"></span>
+                            {% if sort_link.indicator == 'sort-asc' %}
+                                <span class="caret"></span>
                             {% elif sort_link.indicator == 'sort-desc' %}
                                 <span class="dropup"><span class="caret"></span></span>
                             {% endif %}
-	                    </span>
-                    {% endfor %}
+                        </a>
 
 
+                    </li>
+                {% endfor %}
 
-                </div>
 
-            </div>
+            </ul>
+
+
 
 
 
@@ -99,7 +101,11 @@
 
 
             {% else %}
-                <li class="list-group-item clearfix">Fant ingen oppgavemaler knyttet til brukeren din.</li>
+                <hr>
+                <div class="row">
+                    <div class="text-center text-muted">Fant ingen oppgavemaler knyttet til brukeren din.</div>
+                    <!-- TODO: lenker til kopiering av andres maler eller malkonstruktør -->
+                </div>
             {% endif %}
 
         </div>

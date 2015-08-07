@@ -71,6 +71,7 @@
             {% for level in levels %}
                 <li id="content_{{ level.id }}" class="btn list_content">
                     <h4 class="content_title">{{ level.name }}</h4>
+                    <a class="btn">Stats</a>
                     <a class="btn btn_content_edit">Edit</a>
                     <a class="btn btn_content_del"><span class="glyphicon glyphicon-trash"></span></a>
                 </li>
@@ -116,17 +117,39 @@
                 </tbody>
             </table>
         </div>
+
         <div class="col-md-4">
-            <div class="form-group">
-        <div class="input-group">
-            <input id="search_input" type="search" class="form-control" placeholder="Søk i oppgavemaler...">
-            <span class="input-group-btn">
-                <button id="search_submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span></button>
-            </span>
+
+        <ul class="nav nav-tabs nav-justified" role="tablist">
+
+            <li role="presentation" class="active"><a href="#search" aria-controls="search" role="tab"
+                                                      data-toggle="tab">
+                Søk</a></li>
+
+            <li role="presentation"><a href="#userobjects" aria-controls="userobjects" role="tab" data-toggle="tab">
+                Mine Maler</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade in active" id="search">
+            <div class="form-group" style="margin-bottom: -5px">
+                <div class="input-group">
+                    <input id="search_input" type="search" class="form-control input-sm" placeholder="Søk i oppgavemaler...">
+                    <span class="input-group-btn">
+                        <button id="search_submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-search"></span></button>
+                    </span>
+                </div>
+            </div>
+            <a href="{% url 'templates_search' %}" class="btn btn-primary btn-xs pull-right">Avansert Søk</a>
+            <section id="search_templates" class="panel panel-default search_container" style="display: none; {% comment %}max-height: 200px; overflow-y: scroll;{% endcomment %}"></section>
+            </div>
+
+
+            <div role="tabpanel" class="tab-pane fade" id="userobjects">
+            <h4>Mine Maler</h4>
+            </div>
         </div>
-    </div>
-            <section id="search_templates" class="panel panel-default search_container"></section>
-        </div>
+
     {% endif %}
 </section>
 

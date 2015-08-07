@@ -1,29 +1,97 @@
-{# LIST CHAPTERS IN SET #}
 {% extends 'base.html' %}
+{% load staticfiles %}
+{% load bootstrap3 %}
 
 {% block panels %}
-    <h1>Kapitler i oppgavesettet "{{ set.name|capfirst }}"</h1>
+    <div class="panel panel-default">
+        <div class="panel-body">
 
-    {% if user == set.creator %}
+            <div class="col-md-8">
+                <h1>{{ set.name }}
+                    <small>Kapitler</small>
+                </h1>
+                <hr>
 
-        <a href="{% url 'edit_set' set.id %}">
-            Rediger oppgavesettet
-        </a>
+                <div id="object_container" class="sortable">
+                    {% for chapter in object_list %}
+                        <div class="panel panel-default" data-object_id="{{ chapter.id }}">
+                            <div class="panel-body">
 
-    {% else %}
-        Dette oppgavesettet er laget av {{ set.creator }}.
-    {% endif %}
+                                <strong class="text-left">{{ chapter.name|title }}</strong>
 
-    <ul>
-        {% for chapter in object_list %}
+                                <div class="btn-group btn-group-sm pull-right" role="group">
+                                    <a href="{% url 'levels_by_chapter' chapter.id %}" class="btn btn-default">
+                                        <span class="glyphicon glyphicon-pencil"></span>
+                                    </a>
+                                    <button class="btn btn-danger">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
-            <li>{{ chapter.name }} -
-                <a href="{% url 'levels_by_chapter' chapter.id %}">
-                    {{ chapter.levels.all.count }} tema
+                    {% empty %}
+                        <div class="alert alert-info text-center">
+                            Ingen kapitler i settet enda.
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <input id="input_new_set" type="text" class="list_input form-control new_content input-chapter-name"
+                       placeholder="Opprett nytt kapittel...">
+                <hr>
+                <a href="{% url 'user_sets' %}" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-arrow-left"></span>
+                    Mine Oppgavesett
                 </a>
-            </li>
-        {% empty %}
-            <li>Ingen kapitler i settet enda.</li>
-        {% endfor %}
-    </ul>
+                <button class="btn btn-primary" data-type="set" data-object-id="{{ set.id }}">
+                    Lagre
+                </button>
+
+            </div>
+
+            <div class="col-md-4">
+                <h1>Kopiering</h1>
+                <hr>
+                <div class="form-group">
+                    <div class="input-group">
+                        <input id="search_input" type="search" class="form-control input-sm"
+                               placeholder="Søk i kapitler...">
+            <span class="input-group-btn">
+                <button id="search_submit" class="btn btn-primary btn-sm"><span
+                        class="glyphicon glyphicon-search"></span>
+                </button>
+            </span>
+                    </div>
+                </div>
+                <div id="search_chapters" class="panel panel-default search_container hidden"></div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <div id="deleteModal" class="modal fade bs-example-modal-sm confirm-delete-modal" tabindex="-1" role="dialog"
+         aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="modal-alert alert alert-danger"></div>
+                    <a id="cancelModal" class="btn btn-sm btn-primary">Avbryt</a>
+                    <button id="confirmDelete" class="btn btn-sm btn-danger" data-object-type="" data-object-id="">
+                        Slett
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block js %}
+    <script>
+        var current_set = {{ user.extendeduser.current_set.id }};
+    </script>
+    <script src="{% static "js/set_edit_functions.js" %}"></script>
 {% endblock %}

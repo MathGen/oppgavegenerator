@@ -1,9 +1,10 @@
 var current_set = 0;
 var current_chapter = 0;
+
 $(document).ready(function () {
     set_title('#content_title', $('#get_content_title').text());
-    init_sortable();
 
+    init_sortable();
 
     // Delete the specific content.
     $(document).on('click', '.btn_content_del', function(){
@@ -36,7 +37,7 @@ $(document).ready(function () {
     // Sends the search-query when either the search-button or 'enter' key is pressed.
     $(document).on('click', '#search_submit', function(){
         search_for($('#search_input').val());
-        load_search_view();
+        load_search_results();
     }).on('keyup', '#search_input', function(e){
         if(/(13)/.test(e.which)) $('#search_submit').click();
     });
@@ -60,7 +61,6 @@ function add_new_content_from_search(content_id){
                 '<a class="btn btn_content_del"><span class="glyphicon glyphicon-trash"></span></a>' +
                 '</li>');
     });
-
 
 
 }
@@ -128,7 +128,7 @@ function load_previous_page(){
                 init_sortable();
                 scroll_to($('#set_editor'));
                 redraw_mathquill_elements(); //TODO: redraw after the content is displayed. BUG: delayed content.
-                load_search_view();
+                load_search_results();
                 $(this).fadeIn('fast');
             });
         });
@@ -138,7 +138,7 @@ function load_previous_page(){
                 set_title('#content_title', $('#get_content_title').text());
                 init_sortable();
                 scroll_to($('#set_editor'));
-                load_search_view();
+                load_search_results();
                 $(this).fadeIn('fast');
             });
         });
@@ -237,7 +237,7 @@ function delete_content(content){
 /**
  * Loads the search view, with the specific search-filter for each chapters/levels/templates.
  */
-function load_search_view(){ // TODO: make the search result load with AJAX.
+function load_search_results(){ // TODO: make the search result load with AJAX.
     var search_container = $('.search_container');
     var type = search_container.attr('id').replace(/search_/g, "");
     switch (type) {
@@ -290,7 +290,7 @@ function edit_content(content){
                 init_sortable();
                 scroll_to($('#set_editor'));
                 redraw_mathquill_elements(); //TODO: redraw after the content is displayed. BUG: delayed content.
-                load_search_view();
+                load_search_results();
                 init_k_factor_slider();
                 refresh_navbar_breadcrumb();
                 $(this).fadeIn('fast');
@@ -322,6 +322,7 @@ function search_for(search_string){
     var type = search_container.attr('id').replace(/search_/g, "");
     search_container.load('/minisearch/'+ type +'?q='+ search_string + ' .search_container > *', function(result){
         search_container.html(result);
+        search_container.show("fade", {'direction': 'up'});
     });
 }
 
@@ -329,7 +330,6 @@ function refresh_navbar_breadcrumb() {
     var breadcrumb_container = $('#navbar_current_sets');
     breadcrumb_container.load('/ajax/currentsets/refresh/', function(result) {
     breadcrumb_container.html(result);
-    console.log('refresh navbar breadcrumbs')
     });
 }
 

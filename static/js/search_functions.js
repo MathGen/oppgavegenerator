@@ -58,7 +58,6 @@ $(document).ready(function () {
 
     $('.preview-button').click(function () {
 
-
         var button = $(this);
         var template_id = button.data('template_id'); // Extract info from data-* attributes
         var template_title = button.data('template_title');
