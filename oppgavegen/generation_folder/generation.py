@@ -52,7 +52,7 @@ def generate_task(user, template_extra, desired_type=''):
     choices = q.choices.replace('\\\\', '\\')
     conditions = q.conditions.replace('\\\\', '\\')
     dictionary = q.dictionary
-    answer = q.answer.replace('\\\\', '\\')
+    answer = q.answer.replace('\\\\', '\\') #todo: parenthesis parsing here as well.
     primary_key = q.pk
     fill_in = q.fill_in.replace('\\\\', '\\')
     template_specific = ""  # A variable that holds the extra values for a given type. ie. choices for multiple.
@@ -63,9 +63,9 @@ def generate_task(user, template_extra, desired_type=''):
     if graph:
         graph = json.loads(graph)
 
-    task = add_phantom_minus(task)
-    answer = add_phantom_minus(answer)
-    choices = add_phantom_minus(choices)
+    #task = add_phantom_minus(task)
+    #answer = add_phantom_minus(answer)
+    #choices = add_phantom_minus(choices)
     new_choices = ''
     new_task = ''
     new_answer = ''
@@ -95,7 +95,7 @@ def generate_task(user, template_extra, desired_type=''):
         shuffle(new_choices)  # Shuffles the choices so that the answer is not always in the same place.
         new_choices = '§'.join(new_choices)
         template_specific = new_choices
-        template_specific = remove_pm_and_add_parenthesis(template_specific)
+        #template_specific = remove_pm_and_add_parenthesis(template_specific)
     elif template_type == 'blanks':
         fill_in_dict = fill_in_the_blanks(fill_in)
         # new_task = new_task + '\n' + fill_in_dict['fill_in'].replace('\\n', '\n')
@@ -116,7 +116,7 @@ def generate_task(user, template_extra, desired_type=''):
     if graph != None and graph != '':  # to prevent error if none
         graph = json.dumps(graph)
     new_task = parse_solution(new_task, q.random_domain)
-    new_task = remove_pm_and_add_parenthesis(new_task)
+    #new_task = remove_pm_and_add_parenthesis(new_task)
 
     new_task = parenthesis_remover(new_task)
     new_task = new_task.replace('parenthesisleft', '(')  # Done to preserve original parenthesis
@@ -149,6 +149,8 @@ def generate_level(user, level_id):
     task = task.replace('\\\\', '\\') # Replaces double \\ with \
     template_type = desired_type
     choices = q.choices.replace('\\\\', '\\')
+    choices = choices.replace('(', 'parenthesisleft')
+    choices = choices.replace(')', 'parenthesisright')
     conditions = q.conditions.replace('\\\\', '\\')
     dictionary = q.dictionary
     answer = q.answer.replace('\\\\', '\\')
@@ -158,9 +160,9 @@ def generate_level(user, level_id):
     variables_used = ""
     replacing_words = ''  # The words that got replaced, and the words that replaced them
 
-    task = add_phantom_minus(task)
-    answer = add_phantom_minus(answer)
-    choices = add_phantom_minus(choices)
+    #task = add_phantom_minus(task)
+    #answer = add_phantom_minus(answer)
+    #choices = add_phantom_minus(choices)
 
     new_choices = ''
     new_task = ''
@@ -189,6 +191,9 @@ def generate_level(user, level_id):
     if template_type.lower() == 'multiple':
         new_choices = new_choices.split('§')
         for x in range(len(new_choices)):
+            new_choices[x] = parenthesis_remover(new_choices[x])
+            new_choices[x] = new_choices[x].replace('parenthesisleft', '(')
+            new_choices[x] = new_choices[x].replace('parenthesisright', ')')
             new_choices[x] = parse_solution(new_choices[x], q.random_domain)
         new_choices.append(parse_solution(new_answer, q.random_domain).replace('§', 'og'))
         shuffle(new_choices)  # Shuffles the choices so that the answer is not always in the same place.
@@ -222,6 +227,7 @@ def generate_level(user, level_id):
                    'graph': graph, 'graph_settings': q.graph_settings, 'graph_color': q.graph_color}
     return return_dict
 
+#todo new parenthesis parsing for fillin/template specific
 
 @Debugger
 def generate_valid_numbers(template, random_domain, conditions, test):
