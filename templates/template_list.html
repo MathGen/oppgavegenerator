@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load app_filters %}
+{% load staticfiles %}
+{% block head %}
+    <link href="{% static "css/search.css" %}" rel="stylesheet">
+{% endblock %}
+{% block title %}{% endblock %}
+
+{% block panels %}
+
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+
+                {% if user.extendeduser.current_level %}
+
+                    <button id="current_level_button" class="btn btn-default btn-xs pull-right"
+                            title="Oppgaver vil bli lagt til dette settet" data-toggle="tooltip" data-placement="left"
+                            aria-haspopup="true" aria-expanded="false" style="min-width:100px">
+                        {{ user.extendeduser.current_level.name|title }}
+                    </button>
+
+                {% endif %}
+
+        <h3 class="panel-title" style="padding-right: 10px">{{ panel_title }}</h3>
+{#        <a href="{% url 'templates_search' %}">Søk i maler</a>#}
+        </div>
+
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-10" style="padding-right:0">
+
+                    {% for sort_link in sort_link_list %}
+                        <span class="sort-link col-xs-2">
+		                <a href="{{ sort_link.path }}" title="Sorter etter {{ sort_link.title|lower }}">
+				<span class="{{ sort_link.indicator }}">
+                    {{ sort_link.title }}
+				</span>
+                        </a>
+                            {% if sort_link.indicator == 'sort-asc' %}<span class="caret"></span>
+                            {% elif sort_link.indicator == 'sort-desc' %}
+                                <span class="dropup"><span class="caret"></span></span>
+                            {% endif %}
+	                    </span>
+                    {% endfor %}
+
+
+
+                </div>
+
+            </div>
+
+
+
+            {% if template_list %}
+
+                <hr style="margin-bottom: 5px">
+                {% for template in template_list %}
+
+                    <div class="row">
+                        {% include 'includes/template_list_result.html' %}
+
+                    </div>
+                    <hr style="margin-top: 5px; margin-bottom: 5px">
+                {% endfor %}
+
+                {% if is_paginated %}
+                    <nav class="text-center">
+
+                        <ul class="pagination pagination-centered">
+                            {% if page_obj.has_previous %}
+                                <li>
+                                    <a href="?page={{ page_obj.previous_page_number }}&amp;{{ current_sort_query }}&amp;{{ current_querystring }}">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {% for i in paginator.page_range %}
+                                <li {% if page_obj.number == i %} class="active" {% endif %}>
+                                    <a href="?page={{ i }}&amp;{{ current_sort_query }}&amp;{{ current_querystring }}">
+                                        {{ i }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+
+                            {% if page_obj.has_next %}
+                                <li>
+                                    <a href="?page={{ page.next_page_number }}&amp;{{ current_sort_query }}&amp;{{ current_querystring }}">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+
+                    </nav>
+                {% endif %}
+
+
+            {% else %}
+                <li class="list-group-item clearfix">Fant ingen oppgavemaler knyttet til brukeren din.</li>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="previewModal" role="dialog" aria-labelledby="">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="previewModalTitle">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                    <h4>Oppgavetekst</h4>
+
+                    <div id="modal_template_text"></div>
+                    <hr>
+                    <h4>Løsningsforslag</h4>
+
+                    <div id="modal_template_solution"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Lukk</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div class="tooltip left" role="tooltip">
+        <div class="tooltip-arrow"></div>
+        <div class="tooltip-inner">
+            Oppgaver vil bli lagt til dette settet
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script src="{% static "js/underscore-min.js" %}"></script>
+    <script src="{% static "js/search_functions.js" %}"></script>
+{% endblock %}

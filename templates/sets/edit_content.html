@@ -13,6 +13,7 @@
             {% for set in sets %}
                 <li id="content_{{ set.id }}" class="btn list_content">
                     <h4 class="content_title">{{ set.name }}</h4>
+{#                    <a href="{% url 'set_stats' set.id %}" class="btn btn_content_edit">Stats</a>#}
                     <a class="btn btn_content_edit">Edit</a>
                     <a class="btn btn_content_del"><span class="glyphicon glyphicon-trash"></span></a>
                 </li>
@@ -22,6 +23,14 @@
         <input id="input_new_set" type="text" class="list_input form-control new_content" placeholder="Opprett nytt oppgavesett...">
     </div>
     <div class="col-md-4">
+    <div class="form-group">
+        <div class="input-group">
+            <input id="search_input" type="search" class="form-control" placeholder="Søk i oppgavesett...">
+            <span class="input-group-btn">
+                <button id="search_submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span></button>
+            </span>
+        </div>
+    </div>
         <div id="search_sets" class="panel panel-default search_container"></div>
     </div>
     {% elif set_edit %}
@@ -43,6 +52,14 @@
         <input id="input_new_chapter" type="text" class="list_input form-control new_content" placeholder="Opprett nytt kapittel...">
     </div>
     <div class="col-md-4">
+        <div class="form-group">
+        <div class="input-group">
+            <input id="search_input" type="search" class="form-control" placeholder="Søk i kapitler...">
+            <span class="input-group-btn">
+                <button id="search_submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span></button>
+            </span>
+        </div>
+    </div>
         <div id="search_chapters" class="panel panel-default search_container"></div>
     </div>
     {% elif chapter_edit %}
@@ -65,6 +82,14 @@
         <input id="input_new_level" type="text" class="list_input form-control new_content" placeholder="Opprett nytt level...">
         </div>
         <div class="col-md-4">
+            <div class="form-group">
+        <div class="input-group">
+            <input id="search_input" type="search" class="form-control" placeholder="Søk i nivåer...">
+            <span class="input-group-btn">
+                <button id="search_submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span></button>
+            </span>
+        </div>
+    </div>
             <section id="search_levels" class="panel panel-default search_container"></section>
         </div>
     {% elif level_edit %}
@@ -92,6 +117,14 @@
             </table>
         </div>
         <div class="col-md-4">
+            <div class="form-group">
+        <div class="input-group">
+            <input id="search_input" type="search" class="form-control" placeholder="Søk i oppgavemaler...">
+            <span class="input-group-btn">
+                <button id="search_submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span></button>
+            </span>
+        </div>
+    </div>
             <section id="search_templates" class="panel panel-default search_container"></section>
         </div>
     {% endif %}

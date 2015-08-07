@@ -3,7 +3,7 @@ var current_chapter = 0;
 $(document).ready(function () {
     set_title('#content_title', $('#get_content_title').text());
     init_sortable();
-    load_search_view();
+
 
     // Delete the specific content.
     $(document).on('click', '.btn_content_del', function(){
@@ -17,6 +17,7 @@ $(document).ready(function () {
     // Edit the specific content.
     $(document).on('click', '.btn_content_edit', function(){
         edit_content($(this).closest('li'));
+
     });
 
     // Save changes
@@ -35,6 +36,7 @@ $(document).ready(function () {
     // Sends the search-query when either the search-button or 'enter' key is pressed.
     $(document).on('click', '#search_submit', function(){
         search_for($('#search_input').val());
+        load_search_view();
     }).on('keyup', '#search_input', function(e){
         if(/(13)/.test(e.which)) $('#search_submit').click();
     });
@@ -240,21 +242,27 @@ function load_search_view(){ // TODO: make the search result load with AJAX.
     var type = search_container.attr('id').replace(/search_/g, "");
     switch (type) {
         case 'sets':
-            search_container.remove();
+            search_container.load('/minisearch/chapters', function() {
+                //callback function
+                $('#search_input').attr("placeholder", "Søk etter oppgavesett...").blur()
+            });
             break;
         case 'chapters':
-            search_container.load('../../../minisearch/chapters', function(){
+            search_container.load('/minisearch/chapters', function(){
                 //callback function
+                $('#search_input').attr("placeholder", "Søk etter kapitler...").blur()
             });
             break;
         case 'levels':
-            search_container.load('../../../minisearch/levels', function(){
+            search_container.load('/minisearch/levels', function(){
                 //callback function
+                $('#search_input').attr("placeholder", "Søk etter nivå...").blur()
             });
             break;
         case 'templates':
-            search_container.load('../../../minisearch/templates', function(){
+            search_container.load('/minisearch/templates', function(){
                 //callback function
+                $('#search_input').attr("placeholder", "Søk etter oppgavemaler...").blur()
             });
             break;
     }
@@ -284,6 +292,7 @@ function edit_content(content){
                 redraw_mathquill_elements(); //TODO: redraw after the content is displayed. BUG: delayed content.
                 load_search_view();
                 init_k_factor_slider();
+                refresh_navbar_breadcrumb();
                 $(this).fadeIn('fast');
             });
         });
@@ -315,6 +324,15 @@ function search_for(search_string){
         search_container.html(result);
     });
 }
+
+function refresh_navbar_breadcrumb() {
+    var breadcrumb_container = $('#navbar_current_sets');
+    breadcrumb_container.load('/ajax/currentsets/refresh/', function(result) {
+    breadcrumb_container.html(result);
+    console.log('refresh navbar breadcrumbs')
+    });
+}
+
 
 /**
  *Gets a cookie and returns its value

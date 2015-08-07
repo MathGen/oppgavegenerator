@@ -1,16 +1,8 @@
 {% load bootstrap3 %}
 
-    <div class="form-group">
-        <div class="input-group">
-            <input id="search_input" type="search" class="form-control" placeholder="Søk...">
-            <span class="input-group-btn">
-                <button id="search_submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span></button>
-            </span>
-        </div>
-    </div>
     <div id="search_result">
         {% if query %}
-            <h3>Søket fant...</h3>
+
             {% for result in page.object_list %}
                 {% if result.content_type == "oppgavegen.set" %}
                     {% include 'search/includes/set.html' %}

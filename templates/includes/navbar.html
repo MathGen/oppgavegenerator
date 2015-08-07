@@ -16,12 +16,12 @@
 
                 {% if user|is_teacher %}
 
-                    <ol id="current-sets" class="breadcrumb inverse"
+                    <ol id="navbar_current_sets" class="breadcrumb inverse"
                         style="float:left; margin: 7px 10px; background: #222;">
                         {% include 'includes/current_sets_snippet.html' %}
                     </ol>
 
-                    {# <li><a href="#">{{ user|get_rating }}</a></li>#}
+
                     <li><a href="{% url 'newtemplate' %}">Ny Mal</a></li>
                     <li><a href="{% url 'templates' %}">Maler</a></li>
                 {% endif %}
@@ -31,16 +31,19 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span
                                 class="glyphicon glyphicon-user">&nbsp;</span>{{ user.username|capfirst }}<b
                                 class="caret"></b></a>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuDivider">
                             {% if user|is_superuser %}
                                 <li><a href="{% url 'admin:index' %}">Admin</a></li>
+                                <li role="presentation" class="divider"></li>
                             {% endif %}
                             {% if user|is_teacher %}
-                                <li><a href="{% url 'user_templates' %}">Mine Maler</a></li>
-                                <li><a href="{% url 'set' %}">Oppgavesett</a></li>
+                                <li><a href="{% url 'user_templates_list' %}">Mine Maler</a></li>
+                                <li><a href="{% url 'set' %}">Mine Oppgavesett</a></li>
+                                <li role="presentation" class="divider"></li>
                             {% endif %}
+                            <li><a href="{% url 'user_settings' %}">Min konto</a></li>
                             <li><a href="{% url 'auth_logout' %}">Logg ut</a></li>
-                            <li><a href="{% url 'auth_password_change' %}">Bytt Passord</a></li>
+
                         </ul>
                     </li>
                 {% endif %}

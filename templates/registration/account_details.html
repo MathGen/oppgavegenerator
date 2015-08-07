@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block panels %}
+
+        <section id="table_panel" class="panel panel-default center center-block">
+            <div class="panel-heading"><h3 class="panel-title">Min konto</h3></div>
+            <div class="panel-body">
+
+            <h3 class="panel-title">Endre Detaljer</h3>
+                <form role="form" method="post">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    {% buttons %}
+                        <button type="submit" class="btn btn-primary">
+                            {% bootstrap_icon "ok" %} Lagre
+                        </button>
+                    {% endbuttons %}
+                </form>
+
+<hr>
+
+            <a href="{% url 'auth_password_change' %}" class="btn btn-warning">Bytt Passord</a>
+            <a href="{% url 'user_deactivate' %}" class="btn btn-danger">Deaktiver kontoen min</a>
+
+
+
+            </div>
+        </section>
+
+{% endblock %}

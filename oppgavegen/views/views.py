@@ -10,15 +10,14 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
 from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import render
-from django_tables2 import RequestConfig
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
+from oppgavegen.utility.sortable_listview import SortableListView
 
 from django.views.decorators.cache import cache_control
 
-from oppgavegen.tables import *
 from oppgavegen.templatetags.app_filters import is_teacher
-from oppgavegen.models import Set, Chapter, Level, Template, UserLevelProgress
+from oppgavegen.models import Set, Chapter, Level, Template
 from oppgavegen.view_logic.rating import change_elo, change_level_rating, get_user_rating
 from oppgavegen.generation_folder.generation import generate_task, generate_level
 from oppgavegen.view_logic.progress import calculate_progress, chapter_progress, get_stars_per_level, \
@@ -28,13 +27,12 @@ from oppgavegen.view_logic.current_work import *
 from oppgavegen.view_logic.statistics import *
 
 from registration.views import RegistrationView
-from oppgavegen.forms import NamedUserRegistrationForm
 
 # Search Views and Forms
 from haystack.forms import SearchForm
 from haystack.generic_views import SearchView
 from haystack.query import SearchQuerySet
-from oppgavegen.forms import QuestionForm, TemplateForm, UserCurrentSetsForm, SetsSearchForm, TemplateSearchForm
+from oppgavegen.forms import *
 
 # Pre-defined renders of add/remove-buttons for toggle-action views
 add_button = render_to_response('search/includes/add_button_ajax.html')
@@ -169,37 +167,6 @@ def answers(request, level=1):
         else:
             print(form.errors)
     return render_to_response('answers.html')
-
-
-@login_required
-@user_passes_test(is_teacher, '/')
-def templates(request):
-    """Returns a render of tableview.html with all the templates"""
-    panel_title = "Alle Maler"
-    table = TemplateTable(Template.objects.filter(valid_flag=True))
-    RequestConfig(request, paginate={"per_page": 20}).configure(table)
-    return render(request, "tableview.html", {"table": table, "panel_title": panel_title})
-
-
-@login_required
-@user_passes_test(is_teacher, '/')
-def template_table_by_user(request):
-    """Returns a render of tableview.html with only templates from the logged in user."""
-    user = request.user
-    panel_title = "Dine Maler"
-    table = UserTemplatesTable(Template.objects.filter(creator=user))
-    RequestConfig(request, paginate={"per_page": 20}).configure(table)
-    return render(request, "tableview.html", {"table": table, "panel_title": panel_title})
-
-
-@login_required
-@user_passes_test(is_teacher, '/')
-def user_overview_table(request):
-    """Returns a render of tableview.html with overview over users"""
-    panel_title = "Brukere"
-    table = UserTable(ExtendedUser.objects.all())
-    RequestConfig(request, paginate={"per_page": 20}).configure(table)
-    return render(request, "tableview.html", {"table": table, "panel_title": panel_title})
 
 
 @login_required
@@ -480,10 +447,6 @@ def remove_template_from_current_level(request, template_id):
         return HttpResponse('Du må være eier a levelet for å legge til level')
 
 
-class UserTemplatesSearchView(SearchView):
-    template_name = 'search/template_search.html'
-
-
 def preview_template(request, template_id):
     """Return a template as JSON-object"""
     dict = {}
@@ -506,11 +469,65 @@ def set_detail_view(request, set_id):
                                         #'levels': chapter_levels, 'templates': level_templates,
                                         }, context_instance=RequestContext(request))
 
-class UserTemplatesListView(LoginRequiredMixin,ListView):
-    template_name = 'user_template_list.html'
+
+class TemplatesListView(LoginRequiredMixin,SortableListView):
+    queryset = Template.objects.filter(copy=False)
+    default_sort_field = 'creation_date'
+    panel_title = "Alle maler"
+
+    allowed_sort_fields = (
+        (default_sort_field, {'default_direction': '-', 'verbose_name': 'Dato'}),
+        ('name', {'default_direction': '', 'verbose_name': 'Tittel'}),
+        ('editor', {'default_direction': '', 'verbose_name': 'Forfatter'}),
+        ('rating', {'default_direction': '-', 'verbose_name': 'Hovedrating'}),
+        ('choice_rating', {'default_direction': '-', 'verbose_name': 'Flervalgsrating'}),
+        ('fill_rating', {'default_direction': '-', 'verbose_name': 'Utfyllingsrating'}),
+    )
+
+    template_name = 'template_list.html'
+    allow_empty = True
+    paginate_by = 15
+    paginate_orphans = 20
+    context_object_name = 'template_list'
+    model = Template
 
     def get_queryset(self):
-        return Template.objects.filter(creator=self.request.user,copy=False)
+        qs = super(SortableListView, self).get_queryset()
+        qs = qs.order_by(self.sort)
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super(SortableListView,
+                        self).get_context_data(**kwargs)
+        context['current_sort_query'] = self.get_sort_string()
+        context['current_querystring'] = self.get_querystring()
+        context['sort_link_list'] = self.sort_link_list
+        context['panel_title'] = self.panel_title
+        return context
+
+class UserTemplatesListView(TemplatesListView):
+    queryset = Template.objects.all()
+    panel_title = "Mine Maler"
+    default_sort_field = 'creation_date'
+
+    allowed_sort_fields = (
+        (default_sort_field, {'default_direction': '-', 'verbose_name': 'Dato'}),
+        ('name', {'default_direction': '', 'verbose_name': 'Tittel'}),
+        ('rating', {'default_direction': '-', 'verbose_name': 'Hovedrating'}),
+        ('choice_rating', {'default_direction': '-', 'verbose_name': 'Flervalgsrating'}),
+        ('fill_rating', {'default_direction': '-', 'verbose_name': 'Utfyllingsrating'}),
+    )
+
+    def get_queryset(self):
+        qs = super(SortableListView, self).get_queryset()
+        qs.filter(editor=self.request.user)
+        qs = qs.order_by(self.sort)
+        return qs
+
+
+class UserTemplatesSearchView(SearchView):
+    template_name = 'search/template_search.html'
+    queryset = SearchQuerySet()
 
 class UserSetListView(LoginRequiredMixin,ListView):
     template_name = 'sets/user_set_list.html'
@@ -594,7 +611,8 @@ class UserCurrentSetsEdit(LoginRequiredMixin, UpdateView):
 
 
 def refresh_navbar(request):
-    return render_to_response('includes/current_sets_snippet.html')
+
+    return render(request,'includes/current_sets_snippet.html')
 
 
 def level_stats(request, level_id):
@@ -621,3 +639,15 @@ def level_stats(request, level_id):
     context_dict['template_original'] = get_level_template_original_statistics(level)
     return render(request, 'sets/charts.html', context_dict)
 
+class UserSettingsView(UpdateView):
+    form_class = NamedUserDetailsForm
+    model = User
+    template_name = 'registration/account_details.html'
+    success_url = '/user/settings'
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+
+def user_deactivate(request):
+    return render(request, 'registration/user_deactivate_account.html')

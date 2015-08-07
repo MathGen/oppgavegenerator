@@ -31,7 +31,6 @@ INSTALLED_APPS = (
     'bootstrap3',                   # django-bootstrap-3
     'registration',                 # django-registration-redux
     'gunicorn',                     # gunicorn (for unix deployment)
-    'django_tables2',               # django-tables2
     'haystack',
     'selectable'
 )

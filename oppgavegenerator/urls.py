@@ -20,19 +20,19 @@ from oppgavegen.view_logic.db_format import format_domain
 urlpatterns = patterns('',
     url(r'^$', index, name='index'),
     url(r'^answers/', answers, name='answers'),
-    url(r'^templates/$', templates, name='templates'),
+    url(r'^templates/$', TemplatesListView.as_view(), name='templates'),
     url(r'^newtemplate/', new_template, name='newtemplate'),
     url(r'^submit/', submit, name='submit'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^user/', include('registration.backends.default.urls')),
     url(r'^user/register/$', RegistrationView.as_view(form_class=NamedUserRegistrationForm), name='registration_register'),
-    url(r'^user/templates/$', template_table_by_user, name='user_templates'),
-    url(r'^user/templates/list/', UserTemplatesListView.as_view(), name='user_templates_list'),
+    url(r'^user/settings/$', UserSettingsView.as_view(), name='user_settings'),
+    url(r'^user/settings/deactivate/$', user_deactivate, name='user_deactivate'),
+    url(r'^user/templates/$', UserTemplatesListView.as_view(), name='user_templates_list'),
     url(r'^task/$', task),
     url(r"^task/([\w ]+)/$", task_by_extra, name='task_by_extra'),
     url(r"^task/(\d+)/([\w ]+)/$", task_by_id_and_type, name='task_by_id_and_type'),
     url(r"^edit/(\d+)/$", edit_template, name='edit_template'),
-    url(r'^useranalysis/', user_overview_table, name='user_table'),
 
     # Game
     url(r'^game/(\d+)/$', game, name='game'),
@@ -61,23 +61,27 @@ urlpatterns = patterns('',
     url(r'^search/$', include('haystack.urls')),
    # Search templates
     url(r'^templates/search/$', search_view_factory(
-        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.template', copy=False),
+        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.template', copy=False).order_by('creation_date'),
         template='search/template_search.html',
         form_class=TemplateSearchForm,
     ), name='templates_search'),
 
     # Mini search views (for jquery.load-situations)
+    url(r'^minisearch/sets/$', search_view_factory(
+        template='search/mini_search.html',
+        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.set', copy=False)
+    )),
     url(r'^minisearch/chapters/$', search_view_factory(
         template='search/mini_search.html',
-        queryset=SearchQuerySet().filter(django_ct='oppgavegen.chapter', copy=False),
+        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.chapter', copy=False),
         )),
    url(r'^minisearch/levels/$', search_view_factory(
         template='search/mini_search.html',
-        queryset=SearchQuerySet().filter(django_ct='oppgavegen.level', copy=False),
+        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.level', copy=False),
         )),
     url(r'^minisearch/templates/$', search_view_factory(
         template='search/mini_search.html',
-        queryset=SearchQuerySet().filter(django_ct='oppgavegen.template', copy=False),
+        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.template', copy=False),
         )),
 
     # Search in sets, chapters or levels
@@ -107,7 +111,8 @@ urlpatterns = patterns('',
     # Return template as JSON
     url(r'^template/([\w ]+)/preview/$', preview_template, name='preview_template'),
     # Toggle template/level relationship for users current level
-    url(r'^user/level/template/(\d+)/toggle/$', toggle_template_level, name='current_level_toggle'),
+    #url(r'^user/level/template/(\d+)/toggle/$', toggle_template_level, name='current_level_toggle'),
+    url(r'^user/level/template/(\d+)/toggle/$', toggle_template_level_membership, name='current_level_toggle'),
     url(r'^user/level/template/(\d+)/add/$', add_template_to_current_level, name='current_level_add'),
     url(r'^user/level/template/(\d+)/remove/$', remove_template_from_current_level, name='current_level_remove'),
 
