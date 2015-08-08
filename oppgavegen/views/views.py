@@ -506,7 +506,7 @@ class TemplatesListView(LoginRequiredMixin,SortableListView):
         return context
 
 class UserTemplatesListView(TemplatesListView):
-    queryset = Template.objects.all()
+    #queryset = Template.objects.all()
     panel_title = "Mine Maler"
     default_sort_field = 'creation_date'
 
@@ -519,9 +519,9 @@ class UserTemplatesListView(TemplatesListView):
     )
 
     def get_queryset(self):
-        qs = super(SortableListView, self).get_queryset()
-        qs.filter(editor=self.request.user)
-        qs = qs.order_by(self.sort)
+        #qs = super(UserTemplatesListView, self).get_queryset()
+        #qs.filter(creator=self.request.user)
+        qs = Template.objects.order_by(self.sort).filter(editor=self.request.user)
         return qs
 
 
@@ -535,23 +535,26 @@ class UserSetListView(LoginRequiredMixin,ListView):
     def get_queryset(self):
         return Set.objects.filter(creator=self.request.user)
 
-    #def get_context_data(self, **kwargs):
-    #    context = super(UserSetListView, self).get_context_data(**kwargs)
-    #    context['now'] = datetime.datetime ???
-
-
-
 class SetChapterListView(LoginRequiredMixin,ListView):
     """List Chapters in Set"""
     template_name = 'sets/set_chapter_list.html'
 
     def get_queryset(self):
+        chapters = []
         self.set = get_object_or_404(Set, id=self.args[0])
-        return self.set.chapters.all()
+        order = self.set.order
+
+        for x in order.split(','):
+            for chapter in self.set.chapters.all():
+                if chapter.pk == int(x):
+                    chapters.append(chapter)
+                    break
+        return chapters
 
     def get_context_data(self, **kwargs):
         context = super(SetChapterListView, self).get_context_data(**kwargs)
         context['set'] = self.set
+        set_current_set(self.request.user, self.set)
         return context
 
 
@@ -566,6 +569,7 @@ class ChapterLevelsListView(LoginRequiredMixin,ListView):
     def get_context_data(self, **kwargs):
         context = super(ChapterLevelsListView, self).get_context_data(**kwargs)
         context['chapter'] = self.chapter
+        set_current_chapter(self.request.user, self.chapter)
         return context
 
 
@@ -580,24 +584,27 @@ class LevelsTemplatesListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(LevelsTemplatesListView, self).get_context_data(**kwargs)
         context['level'] = self.level
+        set_current_level(self.request.user, self.level)
+        context['k_factor'] = self.level.k_factor
         return context
 
 
 class UserCurrentSetsEdit(LoginRequiredMixin, UpdateView):
-    model = ExtendedUser
-    form_class = UserCurrentSetsForm
-    #fields = ['current_set', 'current_chapter', 'current_level',]
     template_name = 'sets/user_current_sets_form.html'
 
     def get_object(self, queryset=None):
-
         obj = ExtendedUser.objects.get(user=self.request.user)
-
         return obj
+
+    def get_form_class(self):
+        form = UserCurrentSetsForm
+        form.current_set.queryset = Set.objects.all().filter(editor=self.request.user)
+        form.current_chapter.queryset = Chapter.objects.all().filter(editor=self.request.user)
+        form.current_level.queryset = Level.objects.all().filter(editor=self.request.user)
+        return form
 
     def get_success_url(self):
         success_url = self.request.GET.get('next', '')
-        #success_url = self.request.get_full_path()
         return success_url
 
     # todo: filter dropdowns for objects made by current user

@@ -1,11 +1,14 @@
 {% load bootstrap3 %}
 
-    <div id="search_result">
+    <div class="container-fluid">
+
         {% if query %}
+        <span class="text-muted">Fant {{ paginator.count }}</span>
+            <hr>
 
             {% for result in page.object_list %}
                 {% if result.content_type == "oppgavegen.set" %}
-                    {% include 'search/includes/set.html' %}
+                    {% include 'search/includes/set_mini.html' %}
                 {% elif result.content_type == "oppgavegen.chapter" %}
                     {% include 'search/includes/chapter_mini.html' %}
                 {% elif result.content_type == "oppgavegen.level" %}
@@ -14,7 +17,7 @@
                     {% include 'search/includes/template_mini.html' %}
                 {% endif %}
             {% empty %}
-                <p>Fant ingenting.</p>
+{#                <p>Fant ingenting.</p>#}
             {% endfor %}
 
             {% if page.has_previous or page.has_next %}
@@ -28,7 +31,6 @@
                 </div>
             {% endif %}
 
-        {% else %}
-            {# Show some example queries to run, maybe query syntax, something else? #}
         {% endif %}
+
     </div>

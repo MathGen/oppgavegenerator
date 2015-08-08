@@ -11,7 +11,7 @@ from django.contrib.auth.admin import UserAdmin
 
 
 class templateAdmin(admin.ModelAdmin):
-    list_display = ('id','name','creation_date', 'question_text', 'answer','creator', 'times_solved', 'times_failed')
+    list_display = ('id','name','creation_date', 'question_text', 'answer','creator','editor', 'times_solved', 'times_failed')
 
 
 class ExtendedInline(admin.StackedInline):

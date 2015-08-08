@@ -1,20 +1,90 @@
-{# LIST SETS BY USER #}
-
 {% extends 'base.html' %}
+{% load staticfiles %}
+{% load bootstrap3 %}
 
 {% block panels %}
-    <h1>Dine Oppgavesett</h1>
-    <a href="{% url 'add_new_set' %}">Opprett nytt oppgavesett</a>
-    <ul>
-        {% for set in object_list %}
-            <li>
-                {{ set.name|capfirst }} -
-                <a href="{% url 'chapters_by_set' set.id %}">
-                    {{ set.chapters.all.count }} kapitler
-                </a> - <a href="{% url 'edit_set' set.id %}">Rediger</a>
-            </li>
-        {% empty %}
-            <li>Du har ingen oppgavesett enda.</li>
-        {% endfor %}
-    </ul>
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            <div class="col-md-8">
+                <h1>Mine Oppgavesett</h1>
+                <hr>
+
+                <div id="object_container">
+                    {% for set in object_list %}
+                        <div id="content_id_{{ set.id }}" class="panel panel-default">
+                            <div class="panel-body">
+
+                                <strong class="text-left">{{ set.name|title }}</strong>
+
+                                <div class="btn-group btn-group-sm pull-right" role="group">
+                                    <a class="btn btn-default" href="{% url 'chapters_by_set' set.id %}">
+                                        <span class="glyphicon glyphicon-pencil"></span>
+                                    </a>
+                                    <button class="btn btn-default">
+                                        <span class="glyphicon glyphicon-stats"></span>
+                                    </button>
+                                    <button class="btn btn-danger btn-delete-object" data-object-title="{{ set.name }}"
+                                            data-object-type="set" data-object-id="{{ set.id }}">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% empty %}
+                        <div class="alert alert-info text-center">
+                            Fant ingen oppgavesett knyttet til brukeren din.
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <input id="input_new_object_title" type="text"
+                       class="list_input form-control new_content input_set_name"
+                       placeholder="Opprett nytt oppgavesett...">
+
+            </div>
+
+            <div class="col-md-4">
+                <h1>Kopiering</h1>
+                <hr>
+                <div class="form-group">
+                    <div class="input-group">
+                        <input id="search_input" type="search" class="form-control input-sm"
+                               placeholder="Søk i oppgavesett...">
+            <span class="input-group-btn">
+                <button id="search_submit" class="btn btn-primary btn-sm"><span
+                        class="glyphicon glyphicon-search"></span>
+                </button>
+            </span>
+                    </div>
+                </div>
+                <div id="search_sets" class="search_container"
+                     style="display:none; max-height:50%;overflow-y: scroll"></div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <div id="deleteModal" class="modal fade bs-example-modal-sm confirm-delete-modal" tabindex="-1" role="dialog"
+         aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="modal-alert alert alert-danger"></div>
+                    <a id="cancelModal" class="btn btn-sm btn-primary">Avbryt</a>
+                    <button id="confirmDelete" class="btn btn-sm btn-danger" data-object-type="" data-object-id="">
+                        Slett
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block js %}
+    <script src="{% static "js/set_edit_functions.js" %}"></script>
 {% endblock %}

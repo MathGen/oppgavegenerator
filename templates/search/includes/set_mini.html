@@ -1,0 +1,31 @@
+{# MINISEARCH SET RESULT SNIPPET #}
+
+<div class="row">
+
+    <ul class="list-inline">
+        <li>
+            <a id="search_content_{{ result.pk }}"  class="btn btn-primary btn-xs btn_add_content" title="Kopier og legg til">
+            <span id="search_url_{{ result.pk }}" hidden>#</span>
+            <span class="glypicon glyphicon-plus"></span>
+            </a>
+
+        </li>
+        <li><strong>
+        {% if result.name %}
+                        {{ result.name|title }}
+                    {% else %}
+                        Uten Tittel
+                    {% endif %}
+        </strong>
+        </li>
+        <li>
+            <span class="glyphicon glyphicon-user"></span>
+
+                {{ result.object.creator|capfirst }}
+
+        </li>
+    </ul>
+
+
+
+</div>

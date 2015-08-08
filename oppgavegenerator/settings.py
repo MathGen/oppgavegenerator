@@ -25,6 +25,7 @@ INSTALLED_APPS = (
     'django.contrib.auth',          # needed for registration
     'django.contrib.sites',         # needed for registration
     'django.contrib.contenttypes',
+    'django.contrib.humanize',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',

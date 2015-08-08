@@ -1,101 +1,54 @@
-{# TEMPLATE LIST RENDER #}
-{% load app_filters %}
+{# TEMPLATE MINISEARCH RESULT SNIPPET #}
 
-    <div class="col-md-6">
-    <strong>
 
-        {% if user|is_superuser %}
-            {{ template.pk }}
-        {% endif %}
 
-        <a href="{% url 'task_by_extra' template.pk %}">
-                <span class="template_title_id_{{ template.pk }}">
+{% comment ###button stuff (needs search_functions.js to work)## %}
 
-                    {% if template.name %}
-                        {{ template.name|title }}
-                    {% else %}
-                        Uten Tittel
-                    {% endif %}
+    <span id="toggle_template_add_id_{{ result.object.id }}" class="span__toggle_template_add_button pull-right"
+          data-template_id="{{ result.object.id }}">
+        {% include "search/includes/template_toggle_button_template.txt" %}
+    </span>
 
-                </span>
-        </a>
-    </strong>
+{% endcomment %}
 
-        <ul class="list-inline">
+<div class="row">
+
+    <ul class="list-inline">
         <li>
-            <span title="Forfatter">
-            <span class="glyphicon glyphicon-user"></span>
-                {% ifequal template.creator user %}
-                    {{ template.creator|capfirst }}
-                {% else %}
-                    {{ template.creator|capfirst }}
-                {% endifequal %}
-            </span>
-        </li>
-        <li>
-            <span title="Rating">
-                <span class="glyphicon glyphicon-stats"></span>
-                {{ template.rating }}
-                {% ifequal "True" template.multiple_support %}/
-                    <a href="{% url 'task_by_id_and_type' template.pk 'multiple' %}">Flervalg:</a>
-                    {{ template.choice_rating }}
-                {% endifequal %}
-                {% ifequal "True" template.fill_in_support %}/
-                    <a href="{% url 'task_by_id_and_type' template.pk 'blanks' %}">Utfylling:</a>
-                    {{ template.fill_rating }}
-                {% endifequal %}
-                {% ifequal "True" template.multifill_support %}/
-                    <a href="{% url 'task_by_id_and_type' template.pk 'multifill' %}">Flerutfylling:</a>
-                    {{ template.multifill_rating }}
-                {% endifequal %}
-            </span>
-        </li>
-        <li>
-            <span title="Lagringsdato">
-            <span class="glyphicon glyphicon-calendar"></span>
-                {{ template.creation_date|date:"SHORT_DATE_FORMAT" }}
-            </span>
-        </li>
-    </ul>
-    </div>
-
-
-
-
-
-    <div class="col-md-6" >
-    <div class="btn-group pull-right" role="group" style="padding-top:0px">
-
-        <button class="btn btn-sm btn-default preview-button" title="Forhåndsvisning"
-                data-template_id="{{ template.pk }}" data-template_title="{{ template.name|title }}" type="button">
+            <a id="search_content_{{ result.pk }}"  class="btn btn-primary btn-xs btn_add_content" title="Kopier og legg til">
+            <span id="search_url_{{ result.pk }}" hidden>{% url 'add_template_to_level' user.extendeduser.current_level.id result.pk %}</span>
+            <span class="glypicon glyphicon-plus"></span>
+            </a>
+                    <button class="btn btn-xs btn-default preview-button" title="Forhåndsvisning"
+                data-template_id="{{ result.pk }}" data-template_title="{{ result.name|title }}" type="button">
             <span class="glyphicon glyphicon-eye-open"></span>
         </button>
 
-        {% if user.username == template.editor %}
+        </li>
+        <li><strong>
+        {% if result.name %}
+                        {{ result.name|title }}
+                    {% else %}
+                        Uten Tittel
+                    {% endif %}
+        </strong>
+        </li>
+        <li>
+            <span class="glyphicon glyphicon-user"></span>
 
-            <a href="{% url 'edit_template' template.pk %}" class="btn btn-sm btn-default edit-button" title="Rediger"
-               role="button">
-                <span class="glyphicon glyphicon-pencil"></span>
-            </a>
+                {{ result.object.creator|capfirst }}
+            /
+            <span title="Rating" class="rating">{{ result.rating }}</span>
 
-            {% if template.pk in user.extendeduser.current_level_template_ids %}
+            {% ifequal "True" result.multiple_support %}
+            / Multiple Choice
+            {% endifequal %}
+            {% ifequal "True" result.fill_in_support %}
+            / Fill in the Blanks
+            {% endifequal %}
+        </li>
+    </ul>
 
-                <button id="toggle_button_id_{{ template.pk }}" title="Fjern fra level"
-                        class="btn btn-sm btn-danger ajax-toggle-button"
-                        data-template_id="{{ template.pk }}">
-                    <span class="glyphicon glyphicon-minus"></span>
-                </button>
 
-            {% else %}
 
-                <button id="toggle_button_id_{{ template.pk }}" title="Legg til level"
-                        class="btn btn-sm btn-primary ajax-toggle-button"
-                        data-template_id="{{ template.pk }}">
-                    <span class="glyphicon glyphicon-plus"></span>
-                </button>
-
-            {% endif %}
-        {% endif %}
-
-    </div>
-    </div>
+</div>

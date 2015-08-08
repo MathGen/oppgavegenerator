@@ -220,6 +220,9 @@ class TemplateForm(ModelForm):
         return super(TemplateForm, self).save(commit=commit)
 
 class UserCurrentSetsForm(ModelForm):
+    current_set = forms.ModelChoiceField
+    current_chapter = forms.ModelChoiceField
+    current_level = forms.ModelChoiceField
     class Meta:
         model = ExtendedUser
         fields = ('current_set', 'current_chapter', 'current_level',)
