@@ -30,6 +30,8 @@ def parenthesis_remover(s):
             print('^ string that failed. end of exception.')
     s = remove_all_from_list(s, removable)
     s = replace_key_with_value(s, replace_dict)
+    s = s.replacee('parenthesisleft', '(')
+    s = s.replace('parenthesisright', ')')
     return s
 
 
