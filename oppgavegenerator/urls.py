@@ -109,7 +109,8 @@ urlpatterns = patterns('',
 
 
     # AJAX FUNCTION URLS
-    url(r'ajax/currentsets/refresh/$', refresh_navbar, name='refresh_navbar' ),
+    url(r'ajax/currentsets/refresh/$', refresh_navbar, name='refresh_navbar'),
+    url(r'object/(\d+)/updatename/$', update_object_name, name='update_name'),
 
 
     # Return template as JSON
@@ -121,17 +122,18 @@ urlpatterns = patterns('',
     url(r'^user/level/template/(\d+)/remove/$', remove_template_from_current_level, name='current_level_remove'),
 
     # Urls for sets, chapters and levels.
-    url(r'^set/$', set_list, name='set'),  # A list over sets and the possibility of adding or edditing them.
+    url(r'^set/$', set_list, name='set'),  # A list over sets and the possibility of adding or editing them.
     url(r'^set/([\w ]+)/new_set/$', new_set_view, name='new_set_view'),
-    url(r'^set/(\d+)/remove_set/$', remove_set_view, name='remove_set_view'),
+    url(r'^set/([\w ]+)/add/$', add_set_to_user_view, name='add_set_view'),
+    url(r'^set/(\d+)/remove/$', remove_set_view, name='remove_set_view'),
     url(r'^set/(\d+)/([\w ]+)/new_chapter/$', new_chapter_for_set, name='new_chapter_for_set'),
     url(r'^set/(\d+)/chapter/(\d+)/add_chapter/$', add_chapter_to_set_view, name='add_chapter_to_set'),
-    url(r'^set/(\d+)/chapter/(\d+)/remove_chapter/$', remove_chapter_from_set_view, name='remove_chapter_from_set'),
+    url(r'^set/(\d+)/chapter/(\d+)/remove/$', remove_chapter_from_set_view, name='remove_chapter_from_set'),
     url(r'^chapter/(\d+)/([\w ]+)/new_level/$', new_level_for_chapter, name='new_level_for_chapter'),
     url(r'^chapter/(\d+)/level/(\d+)/add_level/$', add_level_to_chapter_view, name='add_level_to_chapter'),
-    url(r'^chapter/(\d+)/level/(\d+)/remove_level/$', remove_level_from_chapter_view, name='remove_level_from_chapter'),
+    url(r'^chapter/(\d+)/level/(\d+)/remove/$', remove_level_from_chapter_view, name='remove_level_from_chapter'),
     url(r'^level/(\d+)/template/(\d+)/add_template/$', add_template_to_level_view, name='add_template_to_level'),
-    url(r'^level/(\d+)/template/(\d+)/remove_template/$', remove_template_from_level_view, name='remove_template_from_level'),
+    url(r'^level/(\d+)/template/(\d+)/remove/$', remove_template_from_level_view, name='remove_template_from_level'),
     url(r'^set/(\d+)/stats/$', set_stats_view, name='set_stats'),
 
     url(r'^set/update/$', update_set_view, name='update_set_view'),

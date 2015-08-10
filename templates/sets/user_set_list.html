@@ -11,35 +11,10 @@
                 <hr>
 
                 <div id="object_container">
-                    {% for set in object_list %}
-                        <div id="content_id_{{ set.id }}" class="panel panel-default">
-                            <div class="panel-body">
-
-                                <strong class="text-left">{{ set.name|title }}</strong>
-
-                                <div class="btn-group btn-group-sm pull-right" role="group">
-                                    <a class="btn btn-default" href="{% url 'chapters_by_set' set.id %}">
-                                        <span class="glyphicon glyphicon-pencil"></span>
-                                    </a>
-                                    <button class="btn btn-default">
-                                        <span class="glyphicon glyphicon-stats"></span>
-                                    </button>
-                                    <button class="btn btn-danger btn-delete-object" data-object-title="{{ set.name }}"
-                                            data-object-type="set" data-object-id="{{ set.id }}">
-                                        <span class="glyphicon glyphicon-trash"></span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                    {% empty %}
-                        <div class="alert alert-info text-center">
-                            Fant ingen oppgavesett knyttet til brukeren din.
-                        </div>
-                    {% endfor %}
+                    {% include 'sets/includes/set_list.html' %}
                 </div>
 
-                <input id="input_new_object_title" type="text"
+                <input id="input_new_object_title" type="text" title="Skriv inn tittel på nytt oppgavesett"
                        class="list_input form-control new_content input_set_name"
                        placeholder="Opprett nytt oppgavesett...">
 
@@ -68,21 +43,29 @@
 
     </div>
 
+{% endblock %}
+
+{% block modals %}
     <div id="deleteModal" class="modal fade bs-example-modal-sm confirm-delete-modal" tabindex="-1" role="dialog"
          aria-labelledby="mySmallModalLabel">
-        <div class="modal-dialog modal-sm">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body">
-                    <div class="modal-alert alert alert-danger"></div>
-                    <a id="cancelModal" class="btn btn-sm btn-primary">Avbryt</a>
-                    <button id="confirmDelete" class="btn btn-sm btn-danger" data-object-type="" data-object-id="">
+                    <div class="modal-alert alert alert-danger text-center"></div>
+                    <a id="cancelModal" class="btn btn-sm btn-primary hidemodal">Avbryt</a>
+                    <button id="confirmDelete" class="btn btn-sm btn-danger" data-object-type="0" data-object-id="0">
                         Slett
                     </button>
                 </div>
             </div>
         </div>
     </div>
+
+
+
 {% endblock %}
+
+
 
 
 {% block js %}

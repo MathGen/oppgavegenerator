@@ -25,10 +25,10 @@ def add_level_to_current_chapter_view(request, level_id):
     """Add a template to the current level a teacher user is working on."""
     chapter = request.user.extendeduser.current_chapter
     level = Level.objects.get(pk=level_id)
-    if level.editor == request.user: #todo: change this to level editor
+    if level.editor == request.user:
         add_level_to_chapter(level, chapter)
-        return HttpResponse('Template lagt til level "'
-                            + level.name +
+        return HttpResponse('Level lagt til Chapter "'
+                            + chapter.name +
                             '".')
     else:
         return HttpResponse('Du må være eier av kapitellet for å legge til level')
@@ -94,7 +94,7 @@ def add_template_to_level_view(request, level_id, template_id):
 
 
 def add_level_to_chapter_view(request, chapter_id, level_id):
-    """Add a template fo a specified level"""
+    """Add a level fo a specified chapter"""
     msg = 'Failed to add chapter'
     if request.is_ajax():
         chapter = Chapter.objects.get(pk=chapter_id)
@@ -109,7 +109,7 @@ def add_level_to_chapter_view(request, chapter_id, level_id):
 
 
 def add_chapter_to_set_view(request, set_id, chapter_id):
-    """Add a template fo a specified level"""
+    """Add a chapter fo a specified set"""
     msg = 'Failed to add chapter'
     try:
         if request.is_ajax():
@@ -121,6 +121,21 @@ def add_chapter_to_set_view(request, set_id, chapter_id):
                 add_chapter_to_set(chapter, set)
                 msg = {'id': chapter.id, 'name': chapter.name}
                 msg = json.dumps(msg)
+    except Exception as e:
+        print(e)
+
+    return HttpResponse(msg)
+
+def add_set_to_user_view(request, set_id):
+    """Makes a copy of a set and adds it to a user's collection"""
+    msg = 'Failed to copy set'
+    try:
+        if request.is_ajax():
+            set = Set.objects.get(pk=set_id)
+            user = request.user
+            new_set = make_copy(set, user)
+            msg = {'id': new_set.id, 'name': new_set.name}
+            msg = json.dumps(msg)
     except Exception as e:
         print(e)
 
@@ -148,6 +163,16 @@ def update_set_view(request):
         msg = update_chapter_or_set(set, title, order, request.user)
 
     return HttpResponse(msg)
+
+def update_object_name(request, object):
+    "Set an object name"
+    if object.editor == request.user:
+        if request.method == 'POST':
+            form = request.post
+            title = form['title']
+            object.update(name=title)
+
+    return HttpResponse(object.title)
 
 def update_level_view(request):
     msg = 'Noe gikk galt'
