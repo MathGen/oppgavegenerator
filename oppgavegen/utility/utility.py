@@ -76,7 +76,8 @@ def string_replace(string, variable_dict):
     :return: String with numbers instead of variable names.
     """
     for key in variable_dict:
-        string = string.replace(key, '(' + str(variable_dict[key])) + ')'
+
+        string = string.replace(key, '(' + str(variable_dict[key]) + ')')
     return string
 
 @Debugger

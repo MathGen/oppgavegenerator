@@ -86,6 +86,7 @@ def parse_solution(solution, domain):
                 pass
         else:
             count += 1
+    print(new_solution)
     print('exiting parse solution')
     return new_solution
 

@@ -48,6 +48,8 @@ def generate_task(user, template_extra, desired_type=''):
     task = task.replace('\\\\', '\\') # Replaces double \\ with \
     task = task.replace('(', 'parenthesisleft')  # Done to preserve original parenthesis
     task = task.replace(')', 'parenthesisright')  # Done to preserve original parenthesis
+    print(1)
+    print(task)
     template_type = desired_type
     choices = q.choices.replace('\\\\', '\\')
     conditions = q.conditions.replace('\\\\', '\\')
@@ -76,9 +78,14 @@ def generate_task(user, template_extra, desired_type=''):
         variable_dict = generate_valid_numbers(task, random_domain_list, conditions, False)
         variables_used = dict_to_string(variable_dict)  # Get a string with the variables used
         new_task = string_replace(task, variable_dict)
+        print(1.1)
+        print(new_task)
         new_answer = string_replace(answer, variable_dict)
         new_choices = string_replace(choices, variable_dict)
+        print('variable_dict:')
         print(variable_dict)
+        print('choices, then new_choices:')
+        print(choices)
         print(new_choices)
 
         for x in range(0, len(graph)):
@@ -119,11 +126,15 @@ def generate_task(user, template_extra, desired_type=''):
         graph = json.dumps(graph)
     new_task = parse_solution(new_task, q.random_domain)
     #new_task = remove_pm_and_add_parenthesis(new_task)
+    print(2)
+    print(new_task)
 
     new_task = parenthesis_remover(new_task)
     new_task = new_task.replace('parenthesisleft', '(')  # Done to preserve original parenthesis
     new_task = new_task.replace('parenthesisright', ')')  # Done to preserve original parenthesis
 
+    print(3)
+    print(new_task)
     return_dict = {'question': new_task,
                    'variable_dictionary': variables_used, 'template_type': template_type,
                    'template_specific': template_specific, 'primary_key': primary_key,
