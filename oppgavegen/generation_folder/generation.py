@@ -78,6 +78,8 @@ def generate_task(user, template_extra, desired_type=''):
         new_task = string_replace(task, variable_dict)
         new_answer = string_replace(answer, variable_dict)
         new_choices = string_replace(choices, variable_dict)
+        print(variable_dict)
+        print(new_choices)
 
         for x in range(0, len(graph)):
             graph[x] = string_replace(graph[x], variable_dict)

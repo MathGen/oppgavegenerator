@@ -85,10 +85,12 @@ def make_answer_context_dict(form_values):
     answer = answer.split('§')
     solution = str(q.question_text.replace('\\\\', '\\')) + "§" + str(q.solution.replace('\\\\', '\\'))
     #solution = add_phantom_minus(solution)
+    solution = solution.replace('(', 'parenthesisleft')  # Done to preserve original parenthesis
+    solution = solution.replace(')', 'parenthesisright')  # Done to preserve original parenthesis
     solution = replace_variables_from_array(variable_dictionary, solution)
     #solution = remove_pm_and_add_parenthesis(solution)
-    solution = parenthesis_remover(solution)
     solution = parse_solution(solution, random_domain)
+    solution = parenthesis_remover(solution)
     if len(replacing_words) > 0:
         solution = replace_words(solution, replacing_words)['sentence']
     user_answer = user_answer.split('§')  # If a string doesn't contain the character it returns a list with 1 element
@@ -105,10 +107,7 @@ def make_answer_context_dict(form_values):
     if correct_answer:
         answer_text = "\\text{Du har svart riktig!}"
 
-    solution = solution.replace('+-', '-')
-    solution = solution.replace('--', '+')
-    solution = solution.replace('- -', '+')
-    solution = solution.replace('+ -', '-')
+
     answer_text = latex_exceptions(answer_text)
 
     graph = q.graph  # took out .replace('\\\\', '\\')
@@ -121,7 +120,7 @@ def make_answer_context_dict(form_values):
 
     if graph != None and graph != '':  # to prevent error if none
         graph = json.dumps(graph)
-
+    print(solution)
     context_dict = {'title': "Oppgavegen", 'answer': str(answer_text),
                     'solution': solution, 'user_won': correct_answer, 'graph': graph,
                     'graph_color' : q.graph_color, 'graph_settings': q.graph_settings}

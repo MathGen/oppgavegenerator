@@ -9,9 +9,13 @@ def parenthesis_remover(s):
     replace_dict = make_replace_text_dict(s)
     s = replace_value_with_key(s, replace_dict)
     s = s.replace(')(', ')*(')
+    s = s.replace('=', '+erlik+')
+    s = s.replace('§', '+paragraftegn+')
+    s = s.replace('(+', '(')
+    s = s.replace('(+', '(')
     #what signs need to be replaced? text might have to be replaced as , can't be removed willy nilly?
     #Which means there needs to exist a function that replaces text with placeholder, and puts it back together.
-    # = is another symbol that needs to be replaced
+    # = and § are examples of symbols that needs to be replaced
     #todo: Make better exception, find a logical way to split the string and try changing every string
     #todo: That way 1 bad apple won't spoil the bunch.
     #todo: one way is split spaces and also by text, the main problem here is functions though
@@ -20,7 +24,8 @@ def parenthesis_remover(s):
     for pair in pairs:
         temp_s =  remove_all_from_list(s, pair)
         try:
-            if  parse_using_sympy(latex_to_sympy(temp_s) + '==' + latex_to_sympy(s)):
+            #  Note: +0 is added so the string never ends with + (which would stop sympy)
+            if  parse_using_sympy(latex_to_sympy(temp_s) + '+0' + '==' + latex_to_sympy(s) + '+0'):
                 removable.append(pair[0])
                 removable.append(pair[1])
         except Exception as e:
@@ -28,10 +33,28 @@ def parenthesis_remover(s):
             print(e)
             print(s)
             print('^ string that failed. end of exception.')
+
+
+
     s = remove_all_from_list(s, removable)
     s = replace_key_with_value(s, replace_dict)
-    s = s.replacee('parenthesisleft', '(')
+    s = s.replace('parenthesisleft', '(')
     s = s.replace('parenthesisright', ')')
+    s = s.replace('+erlik+', '=')
+    s = s.replace('+paragraftegn+', '§')
+
+    s = s.replace('+-', '-')
+    s = s.replace('--', '+')
+    s = s.replace('- -', '+')
+    s = s.replace('+ -', '-')
+
+    s = s.replace('§+', '§')
+    s = s.replace('=+', '=')
+    s = s.replace('^{+', '^{')
+    s = s.replace('(+', '(')
+
+    print(s)
+    print('here')
     return s
 
 
@@ -117,4 +140,11 @@ def replace_key_with_value(s, replace_dict):
     """In string s keys in the dict get replaced with their value"""
     for key in replace_dict:
         s = s.replace(key, replace_dict[key])
+    return s
+
+def remove_redudant_pluss(s):
+    # define some rules
+    if s[0] == '+':
+        s = s[1:]
+
     return s
