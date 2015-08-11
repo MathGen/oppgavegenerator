@@ -618,9 +618,12 @@ class UserCurrentSetsEdit(LoginRequiredMixin, UpdateView):
 
 
 def refresh_navbar(request):
-
     return render(request,'includes/current_sets_snippet.html')
 
+def refresh_user_sets(request):
+    context = {}
+    context['object_list'] = Set.objects.get(editor=request.user)
+    return render(request,'sets/includes/set_list.html', context)
 
 def level_stats(request, level_id):
     """

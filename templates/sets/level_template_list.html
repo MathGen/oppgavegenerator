@@ -84,6 +84,26 @@
     </div>
 {% endblock %}
 
+{% block modals %}
+
+    <div id="deleteModal" class="modal fade bs-example-modal-sm confirm-delete-modal" tabindex="-1" role="dialog"
+         aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="modal-alert alert alert-danger"></div>
+                    <a id="cancelModal" class="btn btn-sm btn-primary">Avbryt</a>
+                    <button id="confirmDelete" class="btn btn-sm btn-danger" data-object-type="" data-object-id="">
+                        Slett
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
 
 {% block js %}
     <script>

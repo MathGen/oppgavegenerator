@@ -44,9 +44,9 @@ def remove_level(level_id, user):
 
 def remove_set(set_id, user):
     set = Set.objects.get(pk=set_id)
-    success_string = 'Failed to delete chapter ' + set.name + '.'
+    success_string = 'failed to delete set: "' + set.name + '".'
     if set.editor == user:
-        success_string = 'Chapter sucessfully deleted' + set.name + '.'
+        success_string = 'set sucessfully deleted: "' + set.name + '".'
         reset_current_set(user)
         set.delete()
     return success_string
