@@ -53,6 +53,7 @@ def parenthesis_remover(s):
     s = s.replace('^{+', '^{')
     s = s.replace('(+', '(')
 
+    s = fix_multiply_minus(s)
     print(s)
     print('here')
     return s
@@ -148,3 +149,62 @@ def remove_redudant_pluss(s):
         s = s[1:]
 
     return s
+
+def fix_multiply_minus(s):
+    # Fixes instances where *-... appears. (It should be *(-...)  )
+    allowed = 'abcdefghijklmnopqrstuvwxyz123456789'
+    record = False
+    counter = 0
+    difference = 0
+    s += ' '  # add a whitespace to avoid end of string bugs.
+    new_s = s
+    for i in range(0, len(s)):
+        if record == True:
+            if s[i] not in allowed:
+                print(counter)
+                print(s[i])
+                if counter > 0:
+                    start = i - 1 - counter + difference
+                    end = i
+                    new_s = new_s[0:start] + '(' + new_s[start:end] + ')' + new_s[end:]
+                    difference += 2
+                record = False
+            else:
+                counter += 1
+        if s[i-1] == '*' and s[i] == '-':
+            record = True
+
+    return new_s
+
+
+def find_occurrences(s, left, right,  left_skip='', right_skip=''):
+    # Finds a occurrence (left, right) in a string and returns a list of start and end positions.
+    # left and right skip are used for occurrences that have some sort of nesting.
+    # For instance \text{} needs to check for nesting of {} and end the occurrence when a } is found at the outer level.
+    if s == '':
+        return []
+    position_list = []
+    record = False
+    count = 0
+    start = 0
+
+    for i in range(0, len(s)):
+        if record is False:
+            if s[i:i+len(left)] == left:
+                start = i
+                count = 0
+                record = True
+
+        elif record is True and s[i] == left_skip:
+            if count == 0:
+                end = i+1  # Redundant
+
+            else:
+                count -= 1
+
+        elif record is True and s[i] == right_skip:
+            count += 1
+
+
+
+    return position_list
