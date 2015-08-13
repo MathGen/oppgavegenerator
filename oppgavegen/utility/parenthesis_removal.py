@@ -32,7 +32,6 @@ def parenthesis_remover(s):
     #replace_dict = make_replace_text_dict(s)
     #s = replace_value_with_key(s, replace_dict)
     s = s.replace(')(', ')*(')
-    s = s.replace('=', '+erlik+')
     s = s.replace('§', '+paragraftegn+')
     s = s.replace('(+', '(')
     s = s.replace('(+', '(')
