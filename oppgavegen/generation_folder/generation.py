@@ -130,8 +130,8 @@ def generate_task(user, template_extra, desired_type=''):
     print(new_task)
 
     new_task = parenthesis_removal(new_task)
-    new_task = new_task.replace('parenthesisleft', '(')  # Done to preserve original parenthesis
-    new_task = new_task.replace('parenthesisright', ')')  # Done to preserve original parenthesis
+    new_task = new_task.replace('+parenthesisleft+', '(')  # Done to preserve original parenthesis
+    new_task = new_task.replace('+parenthesisright+', ')')  # Done to preserve original parenthesis
 
     print(3)
     print(new_task)

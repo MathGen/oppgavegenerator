@@ -85,8 +85,8 @@ def make_answer_context_dict(form_values):
     answer = answer.split('§')
     solution = str(q.question_text.replace('\\\\', '\\')) + "§" + str(q.solution.replace('\\\\', '\\'))
     #solution = add_phantom_minus(solution)
-    solution = solution.replace('(', 'parenthesisleft')  # Done to preserve original parenthesis
-    solution = solution.replace(')', 'parenthesisright')  # Done to preserve original parenthesis
+    solution = solution.replace('(', '+parenthesisleft+')  # Done to preserve original parenthesis
+    solution = solution.replace(')', '+parenthesisright+')  # Done to preserve original parenthesis
     solution = replace_variables_from_array(variable_dictionary, solution)
     #solution = remove_pm_and_add_parenthesis(solution)
     solution = parse_solution(solution, random_domain)
