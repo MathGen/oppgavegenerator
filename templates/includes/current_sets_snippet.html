@@ -2,7 +2,7 @@
 
         {% if user.extendeduser.current_set %}
 
-            <a href="{% url 'edit_set' user.extendeduser.current_set.id %}">
+            <a href="{% url 'chapters_by_set' user.extendeduser.current_set.id %}">
                 {{ user.extendeduser.current_set.name }}
             </a>
 
@@ -16,7 +16,7 @@
     <li>
         {% if user.extendeduser.current_chapter %}
 
-            <a href="{% url 'edit_chapter' user.extendeduser.current_chapter.id %}">
+            <a href="{% url 'levels_by_chapter' user.extendeduser.current_chapter.id %}">
                 {{ user.extendeduser.current_chapter.name }}
             </a>
         {% else %}
@@ -29,7 +29,7 @@
     <li>
         {% if user.extendeduser.current_level%}
 
-            <a href="{% url 'edit_level' user.extendeduser.current_level.id %}">
+            <a href="{% url 'templates_by_level' user.extendeduser.current_level.id %}">
                 {{ user.extendeduser.current_level.name }}
             </a>
 
