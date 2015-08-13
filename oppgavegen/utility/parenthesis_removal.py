@@ -6,6 +6,7 @@ from oppgavegen.latex_translator import latex_to_sympy
 
 def parenthesis_removal(s):
 
+    s.replace('\\text{ }', ' ')
     split_list = ['=', '§', '\\arrow', '\\and', '\\or', '\\union', '\\intersection', '\\rightarrow', '\\leftarrow'
                   '\\leftrightarrow']
     replace_dict = make_replace_text_dict(s)
