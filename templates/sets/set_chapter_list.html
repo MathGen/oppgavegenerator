@@ -1,33 +1,42 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% load bootstrap3 %}
+{% load app_filters %}
 
 {% block panels %}
     <div class="panel panel-default">
-        <div class="panel-body">
+
+        <div class="panel-body" style="padding: 0 15px 15px">
 
             <div class="col-md-8">
-                <h1 id="current_object_title"><span id=current_content_title>{{ set.name }}</span>
+                <h1>
+                    <span id=current_object_title>{{ set.name|title }}</span>
                     <small>Kapitler</small>
                 </h1>
-                <hr style="margin-bottom: 5px">
+                <hr style="margin: 5px 0">
                 <div style="margin-bottom: 10px">
+                <a href="{% url 'user_sets' %}" class="btn btn-xs btn-primary">
+                <span class="glyphicon glyphicon-arrow-left"></span>
+                    Mine Oppgavesett
+                </a>
                 <button class="btn btn-default btn-xs btn-edit-title">
                     Endre tittel
                 </button>
                 <button class="btn btn-default btn-xs btn-edit-order">
                     Endre rekkefølge
-                </button><span id="order_success" class="glyphicon glyphicon-ok text-success" style="display:none"></span>
+                </button>
+                    <span id="save_success" class="glyphicon glyphicon-ok text-success"
+                          style="margin-left: 10px;display:none"></span>
                 </div>
-                <hr style="display:none">
+{#                <hr style="display:none">#}
                 <div id="object_container" class="sortable edit_chapters">
                     {% for chapter in object_list %}
-                        <div class="panel panel-default" data-object_id="{{ chapter.id }}">
+                        <div class="panel panel-default editable-object" data-object_id="{{ chapter.id }}">
                             <div class="panel-body">
 
                                 <strong class="text-left">{{ chapter.name|title }}</strong>
 
-                                <div class="btn-group btn-group-sm pull-right" role="group">
+                                <div class="btn-group btn-group-sm pull-right object-options" role="group">
                                     <a href="{% url 'levels_by_chapter' chapter.id %}" class="btn btn-default">
                                         <span class="glyphicon glyphicon-pencil"></span>
                                     </a>
@@ -48,32 +57,57 @@
 
                 <input id="input_new_set" type="text" class="list_input form-control new_content input-chapter-name"
                        placeholder="Opprett nytt kapittel...">
-                <hr>
-                <a href="{% url 'user_sets' %}" class="btn btn-primary">
-                    <span class="glyphicon glyphicon-arrow-left"></span>
-                    Mine Oppgavesett
-                </a>
-                <button class="btn btn-primary" data-type="set" data-object-id="{{ set.id }}">
-                    Lagre
-                </button>
 
             </div>
 
             <div class="col-md-4">
                 <h1>Kopiering</h1>
-                <hr>
-                <div class="form-group">
-                    <div class="input-group">
-                        <input id="search_input" type="search" class="form-control input-sm"
-                               placeholder="Søk i kapitler...">
-            <span class="input-group-btn">
-                <button id="search_submit" class="btn btn-primary btn-sm"><span
-                        class="glyphicon glyphicon-search"></span>
-                </button>
-            </span>
-                    </div>
-                </div>
-                <div id="search_chapters" class="panel panel-default search_container hidden"></div>
+                <hr style="margin: 5px 0">
+
+                <ul class="nav nav-pills nav-justified" role="tablist">
+                    <li role="presentation" class="active">
+                        <a href="#search" aria-controls="search" role="tab"
+                           data-toggle="pill">Søk</a></li>
+                        <li role="presentation">
+                        <a href="#userobjects" aria-controls="userobjects" role="tab"
+                           data-toggle="pill">Mine Kapitler</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+
+                        <div role="tabpanel" class="tab-pane fade in active" id="search">
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input id="search_input" type="search" class="form-control input-sm"
+                                           placeholder="Søk i kapitler...">
+
+                                    <span class="input-group-btn">
+                                    <button id="search_submit" class="btn btn-primary btn-sm"><span
+                                            class="glyphicon glyphicon-search"></span>
+                                    </button>
+                                    </span>
+                                </div>
+                            </div>
+            {# AVANSERT SØK <a href="{% url 'templates_search' %}" class="btn btn-primary btn-xs pull-right">Avansert Søk</a>#}
+                        <div id="search_chapters" class="panel panel-default search_container"
+                                 style="display:none;border:none;margin-top:-5px;max-height: 500px;overflow-y: scroll"></div>
+
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane fade" id="userobjects">
+                            <h4>Mine Kapitler</h4>
+
+                            <div class="container panel panel-default"
+                                 style="border:none;max-width:100%;max-height:500px;overflow-y: scroll;overflow-x: hidden">
+
+                                {% get_user_objects user=user object_type='chapter' %}
+
+                            </div>
+                        </div>
+
+                        </div>
+
             </div>
 
 
@@ -85,38 +119,8 @@
 
 {% block modals %}
 
-    <div id="deleteModal" class="modal fade bs-example-modal-sm confirm-delete-modal" tabindex="-1" role="dialog"
-         aria-labelledby="mySmallModalLabel">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="modal-alert alert alert-danger"></div>
-                    <a id="cancelModal" class="btn btn-sm btn-primary hidemodal">Avbryt</a>
-                    <button id="confirmDelete" class="btn btn-sm btn-danger" data-object-type="" data-object-id="">
-                        Slett
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div id="titleModal" class="modal fade bs-example-modal-sm change-title-modal" tabindex="-1" role="dialog"
-         aria-labelledby="mySmallModalLabel">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="modal-alert alert alert-info text-center">Skriv inn ny tittel.</div>
-                    <input id="new_title_input" type="text" class="form-control new-title" placeholder="Ny tittel">
-                    <hr>
-                    <a id="cancelModal" class="btn btn-sm btn-primary hidemodal">Avbryt</a>
-                    <button id="confirmTitle" class="btn btn-sm btn-primary" data-object-type="0" data-object-id="0">
-                        Lagre
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% include 'sets/includes/deletemodal.html' %}
+    {% include 'sets/includes/edit_title_modal.html' %}
 
 {% endblock %}
 

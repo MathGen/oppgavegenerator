@@ -1,13 +1,32 @@
-{# LEVEL MINISEARCH RESULT SNIPPET #}
-<div class="level_result">
-    {{ result.object.name|capfirst }}, nivå laget av {{ result.object.creator|capfirst }}.
-    {% if result.object.id not in user.extendeduser.current_chapter_level_ids %}
-        <li>
-            <a id="search_content_{{ result.object.id }}"  class="btn_add_content">
-            <span id="search_url_{{ result.object.id }}" hidden>{% url 'add_level_to_chapter' user.extendeduser.current_chapter.id result.object.id %}</span>
-            Legg til: "{{ user.extendeduser.current_chapter.name }}"
-            </a>
-        </li>
+{# MINISEARCH SET RESULT SNIPPET #}
 
-    {% endif %}
+<div class="row">
+
+    <ul class="list-inline">
+        <li>
+            
+            <button class="btn btn-primary btn-xs btn-copy-object" data-object-type="level" data-object-id="{{ result.pk }}"
+            title="Kopier Nivået">
+            <span class="glypicon glyphicon-plus"></span>
+            </button>
+
+        </li>
+        <li><strong>
+        {% if result.name %}
+                        {{ result.name|title }}
+                    {% else %}
+                        Uten Tittel
+                    {% endif %}
+        </strong>
+        </li>
+        <li>
+            <span class="glyphicon glyphicon-user"></span>
+
+                {{ result.editor|capfirst }}
+
+        </li>
+    </ul>
+
+
+
 </div>

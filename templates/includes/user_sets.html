@@ -1,0 +1,43 @@
+{# CHAPTER/SET/LEVEL TEMPLATE INCLUDE TAG-TEMPLATE #}
+
+{% for object in objects %}
+
+<div class="row">
+
+    <ul class="list-inline">
+        <li>
+
+            <button class="btn btn-primary btn-xs btn-copy-object"
+                    data-object-type="{{ type }}" data-object-id="{{ object.id }}"
+title="Kopier{% if type == "set" %} oppgavesettet{% elif type == "chapter" %} kapittelet{% elif type == "level" %} nivået{% endif %}">
+            <span class="glypicon glyphicon-plus"></span>
+            </button>
+
+        </li>
+        <li><strong>
+            {{ object.name|default:"Uten Tittel"|title }}
+        </strong>
+        </li>
+        <li>
+            <span class="glyphicon glyphicon-user"></span>
+
+                {{ object.editor|capfirst }}
+
+        </li>
+    </ul>
+
+</div>
+
+    {% empty %}
+
+    {% if type in types %}
+
+    Fant ingen
+    {% if type == "set" %} oppgavesett
+    {% elif type == "chapter" %} kapitler
+    {% elif type == "level" %} nivå{% endif %} knyttet til brukeren din.
+        {% else %}
+        Fant ingenting!
+    {% endif %}
+
+{% endfor %}

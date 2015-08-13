@@ -180,7 +180,7 @@ def update_level_view(request):
         form = request.POST
         title = form['title']
         k_factor = form['k_factor']
-        level_id = int(form['set_id'])
+        level_id = int(form['level_id'])
         level = Level.objects.get(pk=level_id)
         msg = update_level(level, title, request.user, k_factor)
     return HttpResponse(msg)
@@ -194,7 +194,7 @@ def add_user_to_set_view(request):
             set_id = int(form['set_id'])
             msg = add_user_to_set(request.user, set_id)
     except Exception as e:
-        print('wtf')
+        print('error')
         print(e)
     return HttpResponse(msg)
 
