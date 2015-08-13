@@ -8,7 +8,7 @@ import json
 
 from oppgavegen.latex_translator import remove_pm_and_add_parenthesis, add_phantom_minus
 from oppgavegen.models import Template, Tag
-from oppgavegen.utility.parenthesis_removal import parenthesis_remover
+from oppgavegen.utility.parenthesis_removal import parenthesis_removal
 from oppgavegen.view_logic.answer_checker import check_answer
 from oppgavegen.generation_folder.calculate_parse_solution import parse_solution, calculate_array, parse_answer
 from oppgavegen.generation_folder.fill_in import get_values_from_position
@@ -79,7 +79,7 @@ def make_answer_context_dict(form_values):
 
     original_user_answer = user_answer.replace('§', '\\text{ og }')
     #answer = remove_pm_and_add_parenthesis(answer) # Replace with new parenthesis parsing
-    answer = parenthesis_remover(answer)
+    answer = parenthesis_removal(answer)
     answer = parse_answer(answer, random_domain)
     answer = answer.replace('`', '')
     answer = answer.split('§')
@@ -90,7 +90,7 @@ def make_answer_context_dict(form_values):
     solution = replace_variables_from_array(variable_dictionary, solution)
     #solution = remove_pm_and_add_parenthesis(solution)
     solution = parse_solution(solution, random_domain)
-    solution = parenthesis_remover(solution)
+    solution = parenthesis_removal(solution)
     if len(replacing_words) > 0:
         solution = replace_words(solution, replacing_words)['sentence']
     user_answer = user_answer.split('§')  # If a string doesn't contain the character it returns a list with 1 element

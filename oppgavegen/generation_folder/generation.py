@@ -12,7 +12,7 @@ from oppgavegen.latex_translator import latex_to_sympy, add_phantom_minus, remov
 from oppgavegen.models import Level
 from oppgavegen.generation_folder.multifill import multifill
 from oppgavegen.generation_folder.fill_in import fill_in_the_blanks
-from oppgavegen.utility.parenthesis_removal import parenthesis_remover
+from oppgavegen.utility.parenthesis_removal import parenthesis_removal
 from oppgavegen.utility.utility import *
 from oppgavegen.generation_folder.calculate_parse_solution import parse_solution
 from oppgavegen.generation_folder.get_question import get_question, get_level_question
@@ -129,7 +129,7 @@ def generate_task(user, template_extra, desired_type=''):
     print(2)
     print(new_task)
 
-    new_task = parenthesis_remover(new_task)
+    new_task = parenthesis_removal(new_task)
     new_task = new_task.replace('parenthesisleft', '(')  # Done to preserve original parenthesis
     new_task = new_task.replace('parenthesisright', ')')  # Done to preserve original parenthesis
 
@@ -204,7 +204,7 @@ def generate_level(user, level_id):
     if template_type.lower() == 'multiple':
         new_choices = new_choices.split('§')
         for x in range(len(new_choices)):
-            new_choices[x] = parenthesis_remover(new_choices[x])
+            new_choices[x] = parenthesis_removal(new_choices[x])
             new_choices[x] = new_choices[x].replace('parenthesisleft', '(')
             new_choices[x] = new_choices[x].replace('parenthesisright', ')')
             new_choices[x] = parse_solution(new_choices[x], q.random_domain)
