@@ -9,6 +9,8 @@ def parenthesis_removal(s):
     split_list = ['=', '§', '\\arrow', '\\and', '\\or', '\\union', '\\intersection', '\\rightarrow', '\\leftarrow'
                   '\\leftrightarrow']
     replace_dict = make_replace_text_dict(s)
+    print('b<<')
+    print(replace_dict)
     s = replace_value_with_key(s, replace_dict)
     split_list.extend(replace_dict.keys())
     s_list = splitter(s, split_list)
@@ -116,6 +118,7 @@ def make_replace_text_dict(s):
     """Makes a dictionary used for replacing latex text in a string"""
     #Technicly this function isn't perfect, for instance if someone put a stray } or { inside their text.
     #However if they did it would also break mathquill/latex so the function is good enough (heuristic).
+    print(s)
     record = False
     count = 0
     start = 0
@@ -131,13 +134,15 @@ def make_replace_text_dict(s):
             if count == 0:
                 end = i+1  # Redundant
                 text_dict['+text' + str(start) + '+'] = s[start:end]
-
+                record = False
             else:
                 count -= 1
 
         elif record is True and s[i] == '{':
             count += 1
 
+    print('a<<')
+    print(text_dict)
     return text_dict
 
 
