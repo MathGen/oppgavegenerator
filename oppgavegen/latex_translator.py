@@ -12,6 +12,7 @@ def latex_to_sympy(expr):
     expr = expr.replace('}', ')')
     expr = expr.replace('+parenthesisleft+', '(')
     expr = expr.replace('+parenthesisright+', ')')
+    expr = expr.replace('+)', ')')
     expr = expr.replace('\\cdot', '*')
     expr = expr.replace('\\times', '*')
     expr = expr.replace('\\left[\\begin(matrix)', '\\begin(matrix)')

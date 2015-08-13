@@ -79,8 +79,8 @@ def make_answer_context_dict(form_values):
 
     original_user_answer = user_answer.replace('§', '\\text{ og }')
     #answer = remove_pm_and_add_parenthesis(answer) # Replace with new parenthesis parsing
-    answer = parenthesis_removal(answer)
     answer = parse_answer(answer, random_domain)
+    answer = parenthesis_removal(answer)
     answer = answer.replace('`', '')
     answer = answer.split('§')
     solution = str(q.question_text.replace('\\\\', '\\')) + "§" + str(q.solution.replace('\\\\', '\\'))
