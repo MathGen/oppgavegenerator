@@ -46,8 +46,8 @@ def generate_task(user, template_extra, desired_type=''):
     random_domain_list = q.random_domain
     task = str(q.question_text)
     task = task.replace('\\\\', '\\') # Replaces double \\ with \
-    task = task.replace('(', 'parenthesisleft')  # Done to preserve original parenthesis
-    task = task.replace(')', 'parenthesisright')  # Done to preserve original parenthesis
+    task = task.replace('(', '+parenthesisleft+')  # Done to preserve original parenthesis
+    task = task.replace(')', '+parenthesisright+')  # Done to preserve original parenthesis
     print(1)
     print(task)
     template_type = desired_type
