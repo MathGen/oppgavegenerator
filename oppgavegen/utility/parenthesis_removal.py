@@ -14,7 +14,6 @@ def parenthesis_removal(s):
     s_list = splitter(s, split_list)
     new_s = ''
     for x in range(0, len(s_list), 2):
-        print(x)
         if x > len(s_list) - 1:
             break
         new_s += parenthesis_remover(s_list[x])
@@ -87,7 +86,7 @@ def remove_character(s, position):
 
 def find_pairs(s, one, two):
     """
-    :param string: The string to look for pairs in.
+    :param s: The string to look for pairs in.
     :param one: The first of a pair.
     :param two: The second of a pair.
     :return: returns a list of pairs.
