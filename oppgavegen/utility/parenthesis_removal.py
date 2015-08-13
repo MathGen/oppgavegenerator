@@ -54,8 +54,8 @@ def parenthesis_remover(s):
 
     s = remove_all_from_list(s, removable)
     #s = replace_key_with_value(s, replace_dict)
-    s = s.replace('parenthesisleft', '(')
-    s = s.replace('parenthesisright', ')')
+    s = s.replace('+parenthesisleft+', '(')
+    s = s.replace('+parenthesisright+', ')')
     s = s.replace('+erlik+', '=')
     s = s.replace('+paragraftegn+', '§')
 
