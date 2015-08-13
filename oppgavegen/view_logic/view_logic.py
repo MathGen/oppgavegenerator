@@ -153,6 +153,7 @@ def submit_template(template, user, update, newtags=None):
         template.rating = calculate_start_rating(template.difficulty)
         template.fill_rating = calculate_start_rating(template.difficulty_blanks)
         template.choice_rating = calculate_start_rating(template.difficulty_multiple)
+        template.multifill_rating = 1200
         template.times_failed = 0
         template.times_solved = 0
         template.creation_date = datetime.now()
