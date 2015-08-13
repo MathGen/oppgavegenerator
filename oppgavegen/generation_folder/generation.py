@@ -162,8 +162,8 @@ def generate_level(user, level_id):
     task = task.replace('\\\\', '\\') # Replaces double \\ with \
     template_type = desired_type
     choices = q.choices.replace('\\\\', '\\')
-    choices = choices.replace('(', 'parenthesisleft')
-    choices = choices.replace(')', 'parenthesisright')
+    choices = choices.replace('(', '+parenthesisleft+')
+    choices = choices.replace(')', '+parenthesisright+')
     conditions = q.conditions.replace('\\\\', '\\')
     dictionary = q.dictionary
     answer = q.answer.replace('\\\\', '\\')
@@ -205,8 +205,8 @@ def generate_level(user, level_id):
         new_choices = new_choices.split('§')
         for x in range(len(new_choices)):
             new_choices[x] = parenthesis_removal(new_choices[x])
-            new_choices[x] = new_choices[x].replace('parenthesisleft', '(')
-            new_choices[x] = new_choices[x].replace('parenthesisright', ')')
+            new_choices[x] = new_choices[x].replace('+parenthesisleft+', '(')
+            new_choices[x] = new_choices[x].replace('+parenthesisright+', ')')
             new_choices[x] = parse_solution(new_choices[x], q.random_domain)
         new_choices.append(parse_solution(new_answer, q.random_domain).replace('§', 'og'))
         shuffle(new_choices)  # Shuffles the choices so that the answer is not always in the same place.
