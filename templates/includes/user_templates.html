@@ -1,0 +1,47 @@
+{# TEMPLATE TAG INCLUSION TEMPLATE #}
+
+{% for template in templates %}
+
+<div class="row">
+
+    <ul class="list-inline">
+        <li>
+            <button class="btn btn-primary btn-xs btn-copy-object" title="Kopier og legg til"
+                    data-object-type="template" data-object-id="{{ template.id }}">
+
+            <span class="glypicon glyphicon-plus"></span>
+            </button>
+                    <button class="btn btn-xs btn-default preview-button" title="Forhåndsvisning"
+                data-template_id="{{ template.id }}" data-template_title="{{ template.name|title }}" type="button">
+            <span class="glyphicon glyphicon-eye-open"></span>
+        </button>
+
+        </li>
+        <li><strong>
+        {% if template.name %}
+                        {{ template.name|title }}
+                    {% else %}
+                        Uten Tittel
+                    {% endif %}
+        </strong>
+        </li>
+        <li>
+            <span title="Rating" class="rating">{{ template.rating }}</span>
+            {% ifequal True template.multiple_support %}
+            / Multiple Choice
+            {% endifequal %}
+            {% ifequal True template.fill_in_support %}
+            / Fill in the Blanks
+            {% endifequal %}
+        </li>
+    </ul>
+
+
+
+</div>
+
+{% empty %}
+
+    Ingen oppgavemaler knyttet til brukeren din
+
+{% endfor %}

@@ -1,12 +1,32 @@
-{# CHAPTER MINISEARCH RESULT SNIPPET #}
-<div class="chapter_result">
-    {{ result.object.name|capfirst }}, kapittel laget av {{ result.object.creator|capfirst }}.
-    {% if result.object.id not in user.extendeduser.current_set_chapter_ids %}
-    <li>
-        <a id="search_content_{{ result.object.id }}"  class="btn_add_content">
-        <span id="search_url_{{ result.object.id }}" hidden>{% url 'add_chapter_to_set' user.extendeduser.current_set.id result.object.id %}</span>
-        Legg til: "{{ user.extendeduser.current_set.name }}"
-        </a>
-    </li>
-    {% endif %}
+{# MINISEARCH SET RESULT SNIPPET #}
+
+<div class="row">
+
+    <ul class="list-inline">
+        <li>
+            
+            <button class="btn btn-primary btn-xs btn-copy-object" data-object-type="chapter" data-object-id="{{ result.pk }}"
+            title="Kopier Kapittelet">
+            <span class="glypicon glyphicon-plus"></span>
+            </button>
+
+        </li>
+        <li><strong>
+        {% if result.name %}
+                        {{ result.name|title }}
+                    {% else %}
+                        Uten Tittel
+                    {% endif %}
+        </strong>
+        </li>
+        <li>
+            <span class="glyphicon glyphicon-user"></span>
+
+                {{ result.editor|capfirst }}
+
+        </li>
+    </ul>
+
+
+
 </div>

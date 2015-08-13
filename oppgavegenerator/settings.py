@@ -91,8 +91,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-# Static files on production server. Edit this accordingly. Should not be the same as STATIC_URL
-STATIC_ROOT = '/var/www/oppgavegenerator/collectstatic/'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 

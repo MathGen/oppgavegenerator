@@ -1,81 +1,114 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% load bootstrap3 %}
+{% load app_filters %}
 
 {% block panels %}
     <div class="panel panel-default">
         <div class="panel-body">
 
             <div class="col-md-8">
-                <h1>{{ level.name }} <small>Oppgavemaler</small></h1>
-                <hr>
+                <h1><span id=current_object_title>{{ level.name|title }} </span>
+                    <small>Oppgavemaler</small>
+                </h1>
+                <hr style="margin: 5px 0">
+                <div style="margin-bottom: 10px">
+                    <button class="btn btn-default btn-xs btn-edit-title">
+                        Endre tittel
+                    </button>
+                    <button class="btn btn-default btn-xs btn-edit-kfactor">
+                        Endre progresjonsfaktor
+                    </button>
+                    <span id="save_success" class="glyphicon glyphicon-ok text-success"
+                          style="margin-left: 10px;display:none"></span>
+                </div>
 
+                <div id="object_container" class="edit_templates">
+                    {% for template in object_list %}
+                        <div class="panel panel-default editable-object">
+                            <div class="panel-body">
 
-                {% for template in object_list %}
-                    <div class="panel panel-default">
-                        <div class="panel-body">
+                                <strong class="text-left">
+                                    {% if template.name %}
+                                        {{ template.name|title }}
+                                    {% else %}
+                                        <span class="text-danger text-left">Uten Tittel</span>
+                                    {% endif %}
+                                </strong>
 
-                            <strong class="text-left">
-                                {% if template.name %}
-                                {{ template.name|title }}
-                                {% else %}
-                                <span class="text-danger text-left">Uten Tittel</span>
-                                {% endif %}
-                            </strong>
-
-                            <div class="btn-group btn-group-sm pull-right" role="group">
-                                <button class="btn btn-default">
-                                    <span class="glyphicon glyphicon-eye-open"></span>
-                                </button>
-                                <a href="{% url 'edit_template' template.id %}" class="btn btn-default">
-                                    <span class="glyphicon glyphicon-pencil"></span>
-                                </a>
-                                <button class="btn btn-danger">
-                                    <span class="glyphicon glyphicon-trash"></span>
-                                </button>
+                                <div class="btn-group btn-group-sm pull-right" role="group">
+                                    <button class="btn btn-default">
+                                        <span class="glyphicon glyphicon-eye-open"></span>
+                                    </button>
+                                    <a href="{% url 'edit_template' template.id %}" class="btn btn-default">
+                                        <span class="glyphicon glyphicon-pencil"></span>
+                                    </a>
+                                    <button class="btn btn-danger">
+                                        <span class="glyphicon glyphicon-trash btn-delete-object"
+                                            data-object-type="template" data-object-id="{{ template.id }}"></span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                {% empty %}
-                    <div class="alert alert-info text-center">
-                        Ingen oppgaver i nivået enda.
-                    </div>
-                {% endfor %}
+                    {% empty %}
+                        <div class="alert alert-info text-center">
+                            Ingen oppgaver i nivået enda.
+                        </div>
+                    {% endfor %}
+                </div>
 
-                        <table class="table table-condensed">
-                <tbody>
-                    <tr>
-                        <td class="col-sm-4" style="vertical-align: middle; text-align: right; height: 41px">Tall for progressjonshastighet:</td>
-                        <td class="col-sm-6" style="vertical-align: middle"><div id="k_factor_slider"></div></td>
-                        <td class="col-sm-2" style="vertical-align: middle"><span id="k_factor_amount">{{ level.k_factor }}</span></td>
-                    </tr>
-                </tbody>
-            </table>
+                <hr>
 
-
-<hr>
-
-            <a href="{% url 'levels_by_chapter' user.extendeduser.current_chapter.id %}" class="btn btn-primary">
-                <span class="glyphicon glyphicon-arrow-left"></span>
-                {{ user.extendeduser.current_chapter.name }}
-            </a>
+                <a href="{% url 'levels_by_chapter' user.extendeduser.current_chapter.id %}" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-arrow-left"></span>
+                    {{ user.extendeduser.current_chapter.name }}
+                </a>
 
             </div>
 
             <div class="col-md-4">
                 <h1>Kopiering</h1>
-                <hr>
+                <hr style="margin: 5px 0">
+
+                <ul class="nav nav-pills nav-justified" role="tablist">
+                    <li role="presentation" class="active">
+                        <a href="#search" aria-controls="search" role="tab"
+                           data-toggle="pill">Søk</a></li>
+                    <li role="presentation">
+                        <a href="#userobjects" aria-controls="userobjects" role="tab"
+                           data-toggle="pill">Mine Maler</a></li>
+                </ul>
+
+                <div class="tab-content">
+
+                    <div role="tabpanel" class="tab-pane fade in active" id="search">
+
                 <div class="form-group">
                     <div class="input-group">
-                        <input id="search_input" type="search" class="form-control input-sm" placeholder="Søk i oppgavemaler...">
+                        <input id="search_input" type="search" class="form-control input-sm"
+                               placeholder="Søk i oppgavemaler...">
             <span class="input-group-btn">
-                <button id="search_submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-search"></span>
+                <button id="search_submit" class="btn btn-primary btn-sm"><span
+                        class="glyphicon glyphicon-search"></span>
                 </button>
             </span>
                     </div>
                 </div>
-                <div id="search_templates" class="panel panel-default search_container" style="display: none;"></div>
+                        <a href="{% url 'templates_search' %}" class="btn btn-primary btn-xs pull-right">Avansert
+                            Søk</a>
+                <div id="search_templates" class="panel panel-default search_container" style="display: none; border: none"></div>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane fade" id="userobjects">
+                        <h4>Mine Maler</h4>
+                        <div class="container panel panel-default"
+                             style="border:none;max-width:100%;max-height: 500px;overflow-y: scroll;overflow-x: hidden">
+
+                        {% get_user_templates user %}
+                        </div>
+                    </div>
+                </div>
             </div>
 
 
@@ -86,20 +119,10 @@
 
 {% block modals %}
 
-    <div id="deleteModal" class="modal fade bs-example-modal-sm confirm-delete-modal" tabindex="-1" role="dialog"
-         aria-labelledby="mySmallModalLabel">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="modal-alert alert alert-danger"></div>
-                    <a id="cancelModal" class="btn btn-sm btn-primary">Avbryt</a>
-                    <button id="confirmDelete" class="btn btn-sm btn-danger" data-object-type="" data-object-id="">
-                        Slett
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% include 'sets/includes/deletemodal.html' %}
+    {% include 'sets/includes/edit_title_modal.html' %}
+    {% include 'sets/includes/preview_modal.html' %}
+    {% include 'sets/includes/progression_modal.html' %}
 
 {% endblock %}
 
@@ -107,7 +130,7 @@
 
 {% block js %}
     <script>
-    current_level = {{ user.extendeduser.current_level.id }} ;
+        var current_level = {{ user.extendeduser.current_level.id }};
     </script>
     <script src="{% static "js/set_edit_functions.js" %}"></script>
 {% endblock %}

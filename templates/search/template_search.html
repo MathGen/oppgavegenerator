@@ -125,28 +125,12 @@
         {% endif %}
 
     </div>
+    
+    {% block modals %}
 
-    <div class="modal fade" id="previewModal" role="dialog" aria-labelledby="">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="previewModalTitle">Modal title</h4>
-                </div>
-                <div class="modal-body">
-                    <h4>Oppgavetekst</h4>
-                    <div id="modal_template_text"></div>
-                    <hr>
-                    <h4>Løsningsforslag</h4>
-                    <div id="modal_template_solution"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Lukk</button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+        {% include 'sets/includes/preview_modal.html' %}
+
+    {% endblock %}
 
 {% endblock %}
 

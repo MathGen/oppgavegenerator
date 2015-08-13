@@ -400,6 +400,14 @@ input.calc_variable:focus{
 }
 
 /**** SET-EDITOR ****/
+#new_title_input {
+	text-transform: capitalize;
+}
+
+#current_object_title {
+    text-transform: capitalize;
+}
+
 .btn_content_del{
 	position: absolute;
 	background-color: transparent;
@@ -429,6 +437,10 @@ input.calc_variable:focus{
 	color: #D1C3A6;
 	text-shadow: -1px 0 #222222, 0 1px #222222, 1px 0 #222222, 0 -1px #222222;
 	background-color: transparent;
+}
+
+.editable-object{
+	margin-bottom: 10px;
 }
 
 /**** SLIDERS ****/

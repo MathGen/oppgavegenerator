@@ -5,8 +5,6 @@
     <ul class="list-inline">
         <li>
 
-{#            <a id="search_content_{{ result.pk }}"  class="btn btn-primary btn-xs btn_add_content" title="Kopier og legg til">#}
-{#            <span id="search_url_{{ result.pk }}" hidden>#</span>#}
             <button class="btn btn-primary btn-xs btn-copy-object" data-object-type="set" data-object-id="{{ result.pk }}"
             title="Kopier Settet">
             <span class="glypicon glyphicon-plus"></span>
@@ -24,7 +22,7 @@
         <li>
             <span class="glyphicon glyphicon-user"></span>
 
-                {{ result.object.creator|capfirst }}
+                {{ result.editor|capfirst }}
 
         </li>
     </ul>

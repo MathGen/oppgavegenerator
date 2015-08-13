@@ -8,7 +8,7 @@
 
             <div class="col-md-8">
                 <h1>Mine Oppgavesett</h1>
-                <hr>
+                <hr style="margin: 5px 0">
 
                 <div id="object_container">
                     {% include 'sets/includes/set_list.html' %}
@@ -22,7 +22,7 @@
 
             <div class="col-md-4">
                 <h1>Kopiering</h1>
-                <hr>
+                <hr style="margin: 5px 0">
                 <div class="form-group">
                     <div class="input-group">
                         <input id="search_input" type="search" class="form-control input-sm"
@@ -46,22 +46,7 @@
 {% endblock %}
 
 {% block modals %}
-    <div id="deleteModal" class="modal fade bs-example-modal-sm confirm-delete-modal" tabindex="-1" role="dialog"
-         aria-labelledby="mySmallModalLabel">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="modal-alert alert alert-danger text-center"></div>
-                    <a id="cancelModal" class="btn btn-sm btn-primary hidemodal">Avbryt</a>
-                    <button id="confirmDelete" class="btn btn-sm btn-danger" data-object-type="0" data-object-id="0">
-                        Slett
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
+    {% include 'sets/includes/deletemodal.html' %}
 
 {% endblock %}
 

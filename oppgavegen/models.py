@@ -50,7 +50,7 @@ class Template(models.Model):
     difficulty = models.PositiveSmallIntegerField(default=14, blank=True)
     difficulty_multiple = models.PositiveSmallIntegerField(default=14, blank=True)
     difficulty_blanks = models.PositiveSmallIntegerField(default=14, blank=True)
-    difficulty_multifill = models.PositiveSmallIntegerField(default=14, blank=True, null=True)
+
 
     choices = models.CharField(max_length=700, blank=True, null=True)  # Holds the choices for multiple choice.
     dictionary = models.CharField(max_length=10000, blank=True, null=True, default="")
@@ -61,7 +61,7 @@ class Template(models.Model):
     required = models.CharField(max_length=5000, blank=True, null=True, default="")
     multiple_support = models.BooleanField(default=False)  # Denotes whether the template supports multiple choice.
     fill_in_support = models.BooleanField(default=False)  # Denotes whether the template supports fill in the blanks.
-    multifill_support = models.BooleanField(default=False)  # Denotes whether the template supports multifill.
+
     margin_of_error = models.CharField(default='0', max_length=20, null=True, blank=True)
     copy = models.BooleanField(default=False)
 
@@ -74,7 +74,7 @@ class Template(models.Model):
     solution_latex = models.CharField(max_length=10000, blank=True, null=True)
     answer_latex = models.CharField(max_length=200, blank=True, null=True)
     choices_latex = models.CharField(max_length=10000, blank=True, null=True)
-    multifill_latex =models.CharField(max_length=10000, blank=True, null=True)
+
     conditions_latex = models.CharField(max_length=10000, blank=True, null=True, default="")
     fill_in_latex = models.CharField(max_length=10000, blank=True, null=True, default="")
     calculation_ref = models.CharField(max_length=1000, blank=True, null=True)
@@ -84,9 +84,18 @@ class Template(models.Model):
     unchanged_graph = models.CharField(max_length=4500, null=True, blank=True)
     graph_settings = models.CharField(max_length=100000, null=True, blank=True)
 
+    difficulty_multifill = models.PositiveSmallIntegerField(default=14, blank=True, null=True)
+    multifill_support = models.BooleanField(default=False)  # Denotes whether the template supports multifill.
+    multifill_latex =models.CharField(max_length=10000, blank=True, null=True)
+    multifill_rating = models.PositiveSmallIntegerField(blank=True, null=True, default=1150)  # Rating for fill.
+
     def __str__(self):  # Makes it so that self.question_text shows up instead of topic(object)
         """Returns the question_text field of the object"""
         return str(self.pk) + ':   ' + self.question_text
+
+    def editor_to_creator(self):
+        """ Recover old templates without editor to set editor to creator """
+        self.editor = self.creator
 
 
 class Level(models.Model):

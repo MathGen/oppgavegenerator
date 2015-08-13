@@ -1,28 +1,39 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% load bootstrap3 %}
+{% load app_filters %}
 
 {% block panels %}
     <div class="panel panel-default">
         <div class="panel-body">
 
             <div class="col-md-8">
-                <h1>{{ chapter.name }}
+                <h1> <span id=current_object_title>{{ chapter.name|title }} </span>
                     <small>Nivåer</small>
                 </h1>
-                <hr>
+                <hr style="margin: 5px 0">
+                <div style="margin-bottom: 10px">
+                <button class="btn btn-default btn-xs btn-edit-title">
+                    Endre tittel
+                </button>
+                <button class="btn btn-default btn-xs btn-edit-order">
+                    Endre rekkefølge
+                </button>
+                    <span id="save_success" class="glyphicon glyphicon-ok text-success"
+                          style="margin-left: 10px;display:none"></span>
+                </div>
 
-                <div id="object_container" class="sortable">
+                <div id="object_container" class="sortable edit_levels">
                     {% for level in object_list %}
-                        <div class="panel panel-default" data-object_id="{{ level.id }}">
+                        <div class="panel panel-default editable-object" data-object_id="{{ level.id }}">
                             <div class="panel-body">
 
                                 <strong class="text-left">{{ level.name|title }}</strong>
 
                                 <div class="btn-group btn-group-sm pull-right" role="group">
-                                    <button class="btn btn-default">
+                                    <a class="btn btn-default" href="{% url 'level_stats' level.id %}">
                                         <span class="glyphicon glyphicon-stats"></span>
-                                    </button>
+                                    </a>
                                     <a href="{% url 'templates_by_level' level.id %}" class="btn btn-default">
                                         <span class="glyphicon glyphicon-pencil"></span>
                                     </a>
@@ -52,19 +63,51 @@
 
             <div class="col-md-4">
                 <h1>Kopiering</h1>
-                <hr>
-                <div class="form-group">
-                    <div class="input-group">
-                        <input id="search_input" type="search" class="form-control input-sm"
-                               placeholder="Søk i nivåer...">
-            <span class="input-group-btn">
-                <button id="search_submit" class="btn btn-primary btn-sm"><span
-                        class="glyphicon glyphicon-search"></span>
-                </button>
-            </span>
-                    </div>
-                </div>
-                <div id="search_levels" class="panel panel-default search_container" style="display:none"></div>
+                <hr style="margin: 5px 0">
+                <ul class="nav nav-pills nav-justified" role="tablist">
+                        <li role="presentation" class="active">
+                        <a href="#search" aria-controls="search" role="tab"
+                           data-toggle="pill">Søk</a></li>
+                        <li role="presentation">
+                        <a href="#userobjects" aria-controls="userobjects" role="tab"
+                           data-toggle="pill">Mine Nivå</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+
+                        <div role="tabpanel" class="tab-pane fade in active" id="search">
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input id="search_input" type="search" class="form-control input-sm"
+                                           placeholder="Søk i nivå...">
+
+                                    <span class="input-group-btn">
+                                    <button id="search_submit" class="btn btn-primary btn-sm"><span
+                                            class="glyphicon glyphicon-search"></span>
+                                    </button>
+                                    </span>
+                                </div>
+                            </div>
+{# TODO: ADVANCED SEARH FOR CHAPTERS <a href="{% url 'templates_search' %}" class="btn btn-primary btn-xs pull-right">Avansert Søk</a>#}
+                        <div id="search_levels" class="panel panel-default search_container"
+                                 style="display:none;border:none;margin-top:-5px;max-height: 500px;overflow-y: scroll"></div>
+
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane fade" id="userobjects">
+                            <h4>Mine Nivå</h4>
+
+                            <div class="container panel panel-default"
+                                 style="border:none;max-width:100%;max-height:500px;overflow-y: scroll;overflow-x: hidden">
+
+                                {% get_user_objects user=user object_type='level' %}
+
+                            </div>
+                        </div>
+
+                        </div>
+
             </div>
 
 
@@ -75,27 +118,17 @@
 {% endblock %}
 
 {% block modals %}
-    <div id="deleteModal" class="modal fade bs-example-modal-sm confirm-delete-modal" tabindex="-1" role="dialog"
-         aria-labelledby="mySmallModalLabel">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="modal-alert alert alert-danger"></div>
-                    <a id="cancelModal" class="btn btn-sm btn-primary">Avbryt</a>
-                    <button id="confirmDelete" class="btn btn-sm btn-danger" data-object-type="" data-object-id="">
-                        Slett
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+
+    {% include 'sets/includes/deletemodal.html' %}
+    {% include 'sets/includes/edit_title_modal.html' %}
+
 {% endblock %}
 
 
 
 {% block js %}
     <script>
-        current_chapter = {{ user.extendeduser.current_chapter.id }};
+        var current_chapter = {{ user.extendeduser.current_chapter.id }};
     </script>
     <script src="{% static "js/set_edit_functions.js" %}"></script>
 {% endblock %}

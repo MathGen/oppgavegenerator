@@ -1,32 +1,61 @@
 $(document).ready(function () {
+
     var container = $('#object_container');
     var modal = "";
     var delete_url = "";
     var load_url = "";
     var sortable = false;
+    var templateText_latex = "";
+    var templateSolution_latex = {};
+    var text_wrapper = $('#modal_template_text');
+    var solution_wrapper = $('#modal_template_solution');
 
-    set_title('#content_title', $('#get_content_title').text());
+    $(document).on('click', '.preview-button', function () {
 
-    //init_sortable();
+        var button = $(this);
+        var template_id = button.data('template_id'); // Extract info from data-* attributes
+        var template_title = button.data('template_title');
+        var json_url = '/template/' + template_id + '/preview/';
+
+        $.getJSON(json_url, function (data) {
+            templateText_latex = data.template_text;
+            templateSolution_latex = data.template_solution.split('§');
+            console.log('getJSON - template_text: ' + templateText_latex + ", solution: " + templateSolution_latex);
+        });
+
+        $('#previewModal').modal('show').on('shown.bs.modal', function () {
+            modal = $('#previewModal');
+            text_wrapper.children().remove();
+            solution_wrapper.children().remove();
+            text_wrapper.append('<div class="input_field"><span id="preview_template_text" class="static-math input_mathquill"></span>');
+            MathQuill.StaticMath($('#preview_template_text')[0]).latex(templateText_latex);
+            for (var s = 0; s < templateSolution_latex.length; s++) {
+                solution_wrapper.append('<div class="input_field"><div id="preview_solution_step_' + s + '" class="static-math"></div></div><br/>');
+                MathQuill.StaticMath($('#preview_solution_step_' + s)[0]).latex(templateSolution_latex[s]);
+            }
+            modal.find('.modal-title').text('Forhåndsvisning av ' + '"' + template_title + '"');
+            redraw_mathquill_elements();
+        });
+    });
 
     $(document).on('click', '.btn-edit-order', function () {
         init_sortable();
         var button = $(this);
         button.toggleClass('btn-default btn-primary');
         button.toggleClass('btn-edit-order btn-save-order');
-        button.text('Lagre Rekkefølge');
+        button.text('Lagre rekkefølge');
     });
 
-    $(document).on('click', '.btn-save-order', function() {
+    $(document).on('click', '.btn-save-order', function () {
         $('.sortable').sortable({
             disabled: true
         });
         var button = $(this);
         button.toggleClass('btn-default btn-primary');
         button.toggleClass('btn-save-order btn-edit-order');
+        button.text('Endre rekkefølge');
+        $('.object-options').fadeIn();
         save_changes();
-        button.html('Endre Rekkefølge')
-        $('#order_success').fadeIn().delay(500).fadeOut();
     });
 
     // Open delete confirmation modal
@@ -66,21 +95,29 @@ $(document).ready(function () {
             $('#deleteModal').modal('hide');
             //$(document).find('#object_id_' + del_object_id).effect("drop", "fast");
             container.load(load_url);
-            init_sortable();
             window.console.log(result);
         });
 
     });
 
-    $(document).on('click', '.btn-edit-title', function() {
+    $(document).on('click', '.btn-edit-title', function () {
         modal = $('#titleModal');
+        $('.new-title').val($('#current_object_title').text());
         console.log(modal);
         modal.modal('show');
     });
 
-    $(document).on('focusout', 'newtitle', function() {
-       title = $('newtitle').val();
-        console.log(title);
+    // Change title and save changes if new object title is input
+    $(document).on('click', '#confirmTitleChange', function () {
+        title_input = $('.new-title');
+        new_title = title_input.val();
+        console.log('new title: ' + new_title);
+        $('#current_object_title').text(new_title);
+        modal.modal('hide');
+        save_changes();
+        title_input.val("");
+    }).on('keyup', '.new-title', function (e) {
+        if (/(13)/.test(e.which)) $('#confirmTitleChange').click(); // Change title on key press
     });
 
     $('.hidemodal').click(function () {
@@ -110,7 +147,7 @@ $(document).ready(function () {
         if (/(13)/.test(e.which)) $('#search_submit').click();
     });
 
-    $(document).on('click','.btn-copy-object', function() {
+    $(document).on('click', '.btn-copy-object', function () {
         var button = $(this);
         var add_url = "";
         var object_type = button.data('object-type');
@@ -118,7 +155,18 @@ $(document).ready(function () {
         if (object_type == 'set') {
             add_url = '/set/' + object_id + '/add/';
             load_url = '/user/sets/ #object_container > *';
-        } else { console.log('not yet'); }
+        } else if (object_type == 'chapter') {
+            add_url = '/set/' + current_set + '/chapter/' + object_id + '/add/';
+            load_url = '/set/' + current_set + '/chapters/ #object_container > *';
+        } else if (object_type == 'level') {
+            add_url = '/chapter/' + current_chapter + '/level/' + object_id + '/add/';
+            load_url = '/chapter/' + current_chapter + '/levels/ #object_container > *';
+        } else if (object_type == 'template') {
+            add_url = '/level/' + current_level + '/template/' + object_id + '/add/';
+            load_url = '/level/' + current_level + '/templates/ #object_container > *';
+        } else {
+            console.log("Unkown object type: " + object_type);
+        }
 
         $.post(add_url, {'csrfmiddlewaretoken': getCookie('csrftoken')}, function (result) {
             console.log(result);
@@ -129,6 +177,16 @@ $(document).ready(function () {
 
     $(document).on('click', '.btn-add', function () {
         add_new_content_from_search($(this).attr('id').replace(/search_content_/g, ''));
+    });
+
+    $(document).on('click', '.btn-edit-kfactor', function () {
+        modal = $('#progressionModal');
+        modal.modal('show')
+    });
+
+    $(document).on('click', '#confirmProgression', function () {
+        modal.modal('hide');
+        save_changes();
     });
 
     init_k_factor_slider();
@@ -148,7 +206,7 @@ function add_new_content_from_search(content_id) {
 function save_changes() {
     var valid_form = true;
     var form_submit = {};
-    var title = $('#current_content_title').text();
+    var title = $('#current_object_title').text();
     var order = get_content_order();
     var content = $('#object_container');
     if (content.hasClass('edit_chapters')) {
@@ -158,12 +216,12 @@ function save_changes() {
         form_submit['order'] = order;
     } else if (content.hasClass('edit_levels')) {
         content = 'chapter';
-        form_submit['chapter_id'] = $('#chapter_id').text();
+        form_submit['chapter_id'] = current_chapter;
         form_submit['title'] = title;
         form_submit['order'] = order;
     } else if (content.hasClass('edit_templates')) {
         content = 'level';
-        form_submit['level_id'] = $('#level_id').text();
+        form_submit['level_id'] = current_level;
         form_submit['title'] = title;
         form_submit['k_factor'] = $('#k_factor_amount').text();
     } else {
@@ -173,13 +231,8 @@ function save_changes() {
     if (valid_form) {
         form_submit["csrfmiddlewaretoken"] = getCookie('csrftoken');
         $.post('/' + content + '/update/', form_submit, function (result) {
-            if (result[0] == 'S') {
-                $('#update_text').text(result);
-                $('#update_success').show(100).delay(5000).hide(100);
-            }
-            else {
-                window.console.log('Failed to update: ' + result);
-            }
+            console.log(result);
+            success_indicator();
         });
     }
 }
@@ -316,6 +369,7 @@ function init_sortable() {
     //TODO: make it switchable (from list to grid)
     sortable = true;
     var container = $('.sortable');
+    $('.object-options').fadeOut();
     container.sortable({
         disabled: false,
         placeholder: "list_content_highlight",
@@ -327,8 +381,6 @@ function init_sortable() {
     //$('#chapter_container').sortable({containment:"#chapter_container"}).disableSelection();
     //$('.list_chapter').draggable({containment:"#chapter_container", axis:"y"});
 }
-
-function disable_sortable() {}
 
 function search_for(search_string) {
     var search_container = $('.search_container');
@@ -344,6 +396,10 @@ function refresh_navbar_breadcrumb() {
     breadcrumb_container.load('/ajax/currentsets/refresh/', function (result) {
         breadcrumb_container.html(result);
     });
+}
+
+function success_indicator() {
+    $('#save_success').show(100).delay(500).hide(500);
 }
 
 
@@ -366,4 +422,15 @@ function getCookie(name) {
         }
     }
     return cookieValue;
+}
+
+function refresh_preview() {
+    text_wrapper.children().remove();
+    solution_wrapper.children().remove();
+    text_wrapper.append('<div class="input_field"><span id="preview_template_text" class="static-math input_mathquill"></span>');
+    MathQuill.StaticMath($('#preview_template_text')[0]).latex(templateText_latex);
+    for (var s = 0; s < templateSolution_latex.length; s++) {
+        solution_wrapper.append('<div class="input_field"><div id="preview_solution_step_' + s + '" class="static-math"></div></div><br/>');
+        MathQuill.StaticMath($('#preview_solution_step_' + s)[0]).latex(templateSolution_latex[s]);
+    }
 }
