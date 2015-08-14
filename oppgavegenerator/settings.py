@@ -19,12 +19,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 INSTALLED_APPS = (
     'oppgavegen',
-    #'django_admin_bootstrapped.bootstrap3',
     'django_admin_bootstrapped',
     'django.contrib.admin',         # django admin panel
     'django.contrib.auth',          # needed for registration
     'django.contrib.sites',         # needed for registration
-    'django.contrib.contenttypes',
     'django.contrib.humanize',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -32,8 +30,7 @@ INSTALLED_APPS = (
     'bootstrap3',                   # django-bootstrap-3
     'registration',                 # django-registration-redux
     'gunicorn',                     # gunicorn (for unix deployment)
-    'haystack',
-    'selectable'
+    'haystack',                     # django-haystack ( search engine )
 )
 
 MIDDLEWARE_CLASSES = (

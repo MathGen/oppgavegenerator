@@ -533,7 +533,7 @@ class UserSetListView(LoginRequiredMixin,ListView):
     template_name = 'sets/user_set_list.html'
 
     def get_queryset(self):
-        return Set.objects.filter(creator=self.request.user)
+        return Set.objects.filter(editor=self.request.user)
 
 class SetChapterListView(LoginRequiredMixin,ListView):
     """List Chapters in Set"""
@@ -563,8 +563,17 @@ class ChapterLevelsListView(LoginRequiredMixin,ListView):
     template_name = 'sets/chapter_level_list.html'
 
     def get_queryset(self):
+        levels = []
         self.chapter = get_object_or_404(Chapter, id=self.args[0])
-        return self.chapter.levels.all()
+        order = self.chapter.order
+
+        for x in order.split(','):
+            for level in self.chapter.levels.all():
+                if level.pk == int(x):
+                    levels.append(level)
+                    break
+
+        return levels
 
     def get_context_data(self, **kwargs):
         context = super(ChapterLevelsListView, self).get_context_data(**kwargs)

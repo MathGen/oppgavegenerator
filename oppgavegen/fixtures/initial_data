@@ -35,8 +35,8 @@
       "groups": [
         1
       ],
-      "email": "ranie_666@hotmail.com",
-      "username": "einar",
+      "email": "email@example.com",
+      "username": "username",
       "is_staff": true
     }
   }

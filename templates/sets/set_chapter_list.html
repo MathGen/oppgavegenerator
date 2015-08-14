@@ -4,21 +4,22 @@
 {% load app_filters %}
 
 {% block panels %}
+    <a href="{% url 'user_sets' %}" class="btn btn-xs btn-default back-button">
+    <span class="glyphicon glyphicon-arrow-left"></span>
+    Mine Oppgavesett
+    </a>
+
     <div class="panel panel-default">
 
         <div class="panel-body" style="padding: 0 15px 15px">
 
             <div class="col-md-8">
                 <h1>
-                    <span id=current_object_title>{{ set.name|title }}</span>
+                    <span id="current_object_title">{{ set.name|title }}</span>
                     <small>Kapitler</small>
                 </h1>
                 <hr style="margin: 5px 0">
                 <div style="margin-bottom: 10px">
-                <a href="{% url 'user_sets' %}" class="btn btn-xs btn-primary">
-                <span class="glyphicon glyphicon-arrow-left"></span>
-                    Mine Oppgavesett
-                </a>
                 <button class="btn btn-default btn-xs btn-edit-title">
                     Endre tittel
                 </button>

@@ -443,6 +443,21 @@ input.calc_variable:focus{
 	margin-bottom: 10px;
 }
 
+.back-button {
+    margin-top:0;
+    margin-bottom:-25px;
+    border-bottom-style: none;
+    -webkit-border-radius: 3px;
+    -webkit-border-bottom-right-radius: 0;
+    -webkit-border-bottom-left-radius: 0;
+    -moz-border-radius: 3px;
+    -moz-border-radius-bottomright: 0;
+    -moz-border-radius-bottomleft: 0;
+    border-radius: 3px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
 /**** SLIDERS ****/
 .ui-slider{
 	background-color: lightgrey;

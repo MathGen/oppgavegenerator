@@ -73,19 +73,23 @@ urlpatterns = patterns('',
     # Mini search views (for jquery.load-situations)
     url(r'^minisearch/sets/$', search_view_factory(
         template='search/mini_search.html',
-        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.set', copy=False)
+        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.set', copy=False),
+        results_per_page=100
     )),
     url(r'^minisearch/chapters/$', search_view_factory(
         template='search/mini_search.html',
         searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.chapter', copy=False),
+        results_per_page=100
         )),
    url(r'^minisearch/levels/$', search_view_factory(
         template='search/mini_search.html',
         searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.level', copy=False),
+       results_per_page=100
         )),
     url(r'^minisearch/templates/$', search_view_factory(
         template='search/mini_search.html',
         searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.template', copy=False),
+        results_per_page=200
         )),
 
     # Search in sets, chapters or levels
