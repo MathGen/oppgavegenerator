@@ -48,15 +48,18 @@ def generate_task(user, template_extra, desired_type=''):
     task = task.replace('\\\\', '\\') # Replaces double \\ with \
     task = task.replace('(', '+parenthesisleft+')  # Done to preserve original parenthesis
     task = task.replace(')', '+parenthesisright+')  # Done to preserve original parenthesis
-    print(1)
-    print(task)
+
     template_type = desired_type
     choices = q.choices.replace('\\\\', '\\')
+    choices = choices.replace('(', '+parenthesisleft+')  # Done to preserve original parenthesis
+    choices = choices.replace(')', '+parenthesisright+')  # Done to preserve original parenthesis
     conditions = q.conditions.replace('\\\\', '\\')
     dictionary = q.dictionary
     answer = q.answer.replace('\\\\', '\\') #todo: parenthesis parsing here as well.
     primary_key = q.pk
     fill_in = q.fill_in.replace('\\\\', '\\')
+    fill_in = fill_in.replace('(', '+parenthesisleft+')  # Done to preserve original parenthesis
+    fill_in = fill_in.replace(')', '+parenthesisright+')  # Done to preserve original parenthesis
     template_specific = ""  # A variable that holds the extra values for a given type. ie. choices for multiple.
     variables_used = ""  # Sends a splitable string since dictionaries can't be passed between layers.
     replacing_words = ''  # The words that got replaced, and the words that replaced them
@@ -103,6 +106,7 @@ def generate_task(user, template_extra, desired_type=''):
         new_choices.append(parse_solution(new_answer, q.random_domain).replace('§', 'og'))
         shuffle(new_choices)  # Shuffles the choices so that the answer is not always in the same place.
         new_choices = '§'.join(new_choices)
+        new_choices = parenthesis_removal(new_choices)
         template_specific = new_choices
         #template_specific = remove_pm_and_add_parenthesis(template_specific)
     elif template_type == 'blanks':
@@ -114,6 +118,7 @@ def generate_task(user, template_extra, desired_type=''):
         template_specific = fill_in_dict['hole_positions']
     elif template_type == 'multifill':
         new_choices = choices + '§' + answer.replace('§', 'og')
+        new_choices = parenthesis_removal(new_choices)
         template_specific = multifill(new_choices, variable_dict)
 
     if dictionary is not None:
@@ -130,8 +135,7 @@ def generate_task(user, template_extra, desired_type=''):
     print(new_task)
 
     new_task = parenthesis_removal(new_task)
-    new_task = new_task.replace('+parenthesisleft+', '(')  # Done to preserve original parenthesis
-    new_task = new_task.replace('+parenthesisright+', ')')  # Done to preserve original parenthesis
+
 
     print(3)
     print(new_task)
@@ -160,6 +164,8 @@ def generate_level(user, level_id):
     random_domain_list = q.random_domain
     task = str(q.question_text)
     task = task.replace('\\\\', '\\') # Replaces double \\ with \
+    task = task.replace('(', '+parenthesisleft+')  # Done to preserve original parenthesis
+    task = task.replace(')', '+parenthesisright+')  # Done to preserve original parenthesis
     template_type = desired_type
     choices = q.choices.replace('\\\\', '\\')
     choices = choices.replace('(', '+parenthesisleft+')
@@ -169,6 +175,8 @@ def generate_level(user, level_id):
     answer = q.answer.replace('\\\\', '\\')
     primary_key = q.pk
     fill_in = q.fill_in.replace('\\\\', '\\')
+    fill_in = fill_in.replace('(', '+parenthesisleft+')  # Done to preserve original parenthesis
+    fill_in = fill_in.replace(')', '+parenthesisright+')  # Done to preserve original parenthesis
     template_specific = ""  # A variable that holds the extra values for a given type. ie. choices for multiple.
     variables_used = ""
     replacing_words = ''  # The words that got replaced, and the words that replaced them
@@ -211,6 +219,7 @@ def generate_level(user, level_id):
         new_choices.append(parse_solution(new_answer, q.random_domain).replace('§', 'og'))
         shuffle(new_choices)  # Shuffles the choices so that the answer is not always in the same place.
         new_choices = '§'.join(new_choices)
+        new_choices = parenthesis_removal(new_choices)
         template_specific = new_choices
         template_specific = remove_pm_and_add_parenthesis(template_specific)
     elif template_type == 'blanks':
@@ -233,7 +242,10 @@ def generate_level(user, level_id):
     if graph != None and graph != '':  # to prevent error if none
         graph = json.dumps(graph)
     new_task = parse_solution(new_task, q.random_domain)
-    new_task = remove_pm_and_add_parenthesis(new_task)
+    # new_task = remove_pm_and_add_parenthesis(new_task)
+
+    new_task = parenthesis_removal(new_task)
+
     return_dict = {'question': new_task, 'variable_dictionary': variables_used, 'template_type': template_type,
                    'template_specific': template_specific, 'primary_key': primary_key,
                    'number_of_answers': number_of_answers, 'replacing_words': replacing_words,

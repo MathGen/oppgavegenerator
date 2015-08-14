@@ -7,6 +7,8 @@ from oppgavegen.latex_translator import latex_to_sympy
 def parenthesis_removal(s):
 
     s = s.replace('\\text{ }', ' ')
+    # empty text fields sometimes get into equations, this will split the equation and result in incorrect
+    # parenthesis removal. Which is why the empty text fields are replaced.
     split_list = ['=', '§', '\\arrow', '\\and', '\\or', '\\union', '\\intersection', '\\rightarrow', '\\leftarrow'
                   '\\leftrightarrow']
     replace_dict = make_replace_text_dict(s)
@@ -224,6 +226,7 @@ def find_occurrences(s, left, right,  left_skip='', right_skip=''):
 
     return position_list
 
+
 def splitter(s, split_list):
     """ Splits string into smaller substring according to a list. """
     # Note: This function won't work correctly if there exists splittable substrings of other splittable strings
@@ -251,3 +254,9 @@ def splitter(s, split_list):
     # new_list = filter(None, new_list)
     return new_list
 
+
+def remove_text(s, text_list):
+    """Removes substrings of a string (s) from a list"""
+    for c in text_list:
+        s.replace(c, '')
+    return s

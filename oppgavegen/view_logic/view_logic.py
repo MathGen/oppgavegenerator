@@ -72,7 +72,7 @@ def make_answer_context_dict(form_values):
 
     if template_type != 'blanks':
         answer = replace_variables_from_array(variable_dictionary, q.answer.replace('\\\\', '\\'))
-        answer = add_phantom_minus(answer)
+        #answer = add_phantom_minus(answer)
     else:
         answer = get_values_from_position(template_specific, q.solution.replace('\\\\', '\\'))
         answer = replace_variables_from_array(variable_dictionary, answer)
