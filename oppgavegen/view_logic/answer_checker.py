@@ -32,7 +32,7 @@ def check_answer(user_answer, answer, template_type, margin_for_error=0):
                         del user_answer[s]
                         break
 
-    #  Todo: try catch? could also do different things depending on errors, for instance typeError for equalities
+    #  Todo: exceptions? could also do different things depending on errors, for instance typeError for equalities
     else:
         for s in answer:
             for us in user_answer:
@@ -52,7 +52,7 @@ def check_answer(user_answer, answer, template_type, margin_for_error=0):
                     user_answer.remove(us)
                     break
 
-    if user_answer == []:  # Can not be written as user_answer is [], so don't pep this.
+    if user_answer == []:  # Can not be written as user_answer is [], even though pep says otherwise.
         right_answer = True
     else:
         right_answer = False

@@ -4,21 +4,41 @@ from sympy.parsing.sympy_parser import (parse_expr, standard_transformations,
 from oppgavegen.latex_translator import latex_to_sympy
 
 
+def parenthesis_removal(s):
+
+    s = s.replace('\\text{ }', ' ')
+    # empty text fields sometimes get into equations, this will split the equation and result in incorrect
+    # parenthesis removal. Which is why the empty text fields are replaced.
+    split_list = ['=', '§', '\\arrow', '\\and', '\\or', '\\union', '\\intersection', '\\rightarrow', '\\leftarrow'
+                  '\\leftrightarrow']
+    replace_dict = make_replace_text_dict(s)
+    print('b<<')
+    print(replace_dict)
+    s = replace_value_with_key(s, replace_dict)
+    split_list.extend(replace_dict.keys())
+    s_list = splitter(s, split_list)
+    new_s = ''
+    for x in range(0, len(s_list), 2):
+        if x > len(s_list) - 1:
+            break
+        new_s += parenthesis_remover(s_list[x])
+        if x < len(s_list) - 1:
+            new_s += s_list[x+1]
+
+    new_s = replace_key_with_value(new_s, replace_dict)
+    new_s = fix_multiply_minus(new_s)
+    return new_s
+
+
 def parenthesis_remover(s):
     """removes parenthesises from expressions and checks if the expression is still valid."""
-    replace_dict = make_replace_text_dict(s)
-    s = replace_value_with_key(s, replace_dict)
+    #replace_dict = make_replace_text_dict(s)
+    #s = replace_value_with_key(s, replace_dict)
     s = s.replace(')(', ')*(')
-    s = s.replace('=', '+erlik+')
     s = s.replace('§', '+paragraftegn+')
     s = s.replace('(+', '(')
     s = s.replace('(+', '(')
-    #what signs need to be replaced? text might have to be replaced as , can't be removed willy nilly?
-    #Which means there needs to exist a function that replaces text with placeholder, and puts it back together.
-    # = and § are examples of symbols that needs to be replaced
-    #todo: Make better exception, find a logical way to split the string and try changing every string
-    #todo: That way 1 bad apple won't spoil the bunch.
-    #todo: one way is split spaces and also by text, the main problem here is functions though
+
     pairs = find_pairs(s, '(', ')')
     removable = []
     for pair in pairs:
@@ -34,12 +54,10 @@ def parenthesis_remover(s):
             print(s)
             print('^ string that failed. end of exception.')
 
-
-
     s = remove_all_from_list(s, removable)
-    s = replace_key_with_value(s, replace_dict)
-    s = s.replace('parenthesisleft', '(')
-    s = s.replace('parenthesisright', ')')
+    #s = replace_key_with_value(s, replace_dict)
+    s = s.replace('+parenthesisleft+', '(')
+    s = s.replace('+parenthesisright+', ')')
     s = s.replace('+erlik+', '=')
     s = s.replace('+paragraftegn+', '§')
 
@@ -53,9 +71,6 @@ def parenthesis_remover(s):
     s = s.replace('^{+', '^{')
     s = s.replace('(+', '(')
 
-    s = fix_multiply_minus(s)
-    print(s)
-    print('here')
     return s
 
 
@@ -75,7 +90,7 @@ def remove_character(s, position):
 
 def find_pairs(s, one, two):
     """
-    :param string: The string to look for pairs in.
+    :param s: The string to look for pairs in.
     :param one: The first of a pair.
     :param two: The second of a pair.
     :return: returns a list of pairs.
@@ -105,6 +120,7 @@ def make_replace_text_dict(s):
     """Makes a dictionary used for replacing latex text in a string"""
     #Technicly this function isn't perfect, for instance if someone put a stray } or { inside their text.
     #However if they did it would also break mathquill/latex so the function is good enough (heuristic).
+    print(s)
     record = False
     count = 0
     start = 0
@@ -120,13 +136,15 @@ def make_replace_text_dict(s):
             if count == 0:
                 end = i+1  # Redundant
                 text_dict['+text' + str(start) + '+'] = s[start:end]
-
+                record = False
             else:
                 count -= 1
 
         elif record is True and s[i] == '{':
             count += 1
 
+    print('a<<')
+    print(text_dict)
     return text_dict
 
 
@@ -149,6 +167,7 @@ def remove_redudant_pluss(s):
         s = s[1:]
 
     return s
+
 
 def fix_multiply_minus(s):
     # Fixes instances where *-... appears. (It should be *(-...)  )
@@ -205,6 +224,39 @@ def find_occurrences(s, left, right,  left_skip='', right_skip=''):
         elif record is True and s[i] == right_skip:
             count += 1
 
-
-
     return position_list
+
+
+def splitter(s, split_list):
+    """ Splits string into smaller substring according to a list. """
+    # Note: This function won't work correctly if there exists splittable substrings of other splittable strings
+    # An example would be if 'banana' was a split string and 'nana' also was one.
+    # However there is no practical example where this is the case, ie. the function works for all current cases.
+    # (Since most cases are latex this won't really happen as all of latex functions start with \)
+    # for example 'or' is a substring that would occur in a lot of places, but '\or' won't.
+    # The people making latex probably had this in mind when designing their language.
+    split_dict = {}
+    split_indexes = []
+    new_list = []
+    for split in split_list:
+       for i in range(len(s)):
+           if s.startswith(split, i):
+               split_indexes.append(i)
+               split_dict[i] = split
+
+    start = 0
+    split_indexes.sort()
+    for split_index in split_indexes:
+        new_list.append(s[start:split_index])
+        new_list.append(split_dict[split_index])
+        start = split_index + len(split_dict[split_index])
+    new_list.append(s[start:])
+    # new_list = filter(None, new_list)
+    return new_list
+
+
+def remove_text(s, text_list):
+    """Removes substrings of a string (s) from a list"""
+    for c in text_list:
+        s.replace(c, '')
+    return s

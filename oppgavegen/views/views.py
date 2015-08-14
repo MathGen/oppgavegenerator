@@ -145,14 +145,20 @@ def answers(request, level=1):
             except ValueError:
                 required = []
             print('wth')
-            if cheat_check(user_answer, disallowed, form_values['variable_dictionary'].split('§')) and \
-                    not (form_values['template_type'] == 'multiple'):
-                return render_to_response(render_to, {'answer': cheat_message}, context)
-            if required_check(user_answer, required, form_values['variable_dictionary'].split('§')) and \
-                    not (form_values['template_type'] == 'multiple'):
-                return render_to_response(render_to, {'answer': required_message}, context)
+
 
             context_dict = make_answer_context_dict(form_values)
+
+            if cheat_check(user_answer, disallowed, form_values['variable_dictionary'].split('§')) and \
+                    not (form_values['template_type'] == 'multiple'):
+                context_dict['answer'] = cheat_message
+                return render_to_response(render_to, context_dict, context)
+            if required_check(user_answer, required, form_values['variable_dictionary'].split('§')) and \
+                    not (form_values['template_type'] == 'multiple'):
+                context_dict['answer'] = required_message
+                return render_to_response(render_to, context_dict, context)
+
+
             if request.is_ajax():
                 new_user_rating, new_star = change_level_rating(template, request.user, context_dict['user_won'],
                                                                 form_values['template_type'], level)

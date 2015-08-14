@@ -7,11 +7,13 @@ to expressions compatible with SymPy
 
 def latex_to_sympy(expr):
     """Takes a latex expression and returns a expression sympy can use"""
+    expr = expr.replace('\\MathQuillMathField{}', '1')
     expr = expr.replace('\\ne', '!=')
     expr = expr.replace('{', '(') # SymPy doesn't really use {} in most cases.
     expr = expr.replace('}', ')')
-    expr = expr.replace('parenthesisleft', '(')
-    expr = expr.replace('parenthesisright', ')')
+    expr = expr.replace('+parenthesisleft+', '(')
+    expr = expr.replace('+parenthesisright+', ')')
+    expr = expr.replace('+)', ')')
     expr = expr.replace('\\cdot', '*')
     expr = expr.replace('\\times', '*')
     expr = expr.replace('\\left[\\begin(matrix)', '\\begin(matrix)')

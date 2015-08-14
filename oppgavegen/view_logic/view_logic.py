@@ -8,7 +8,7 @@ import json
 
 from oppgavegen.latex_translator import remove_pm_and_add_parenthesis, add_phantom_minus
 from oppgavegen.models import Template, Tag
-from oppgavegen.utility.parenthesis_removal import parenthesis_remover
+from oppgavegen.utility.parenthesis_removal import parenthesis_removal
 from oppgavegen.view_logic.answer_checker import check_answer
 from oppgavegen.generation_folder.calculate_parse_solution import parse_solution, calculate_array, parse_answer
 from oppgavegen.generation_folder.fill_in import get_values_from_position
@@ -72,25 +72,25 @@ def make_answer_context_dict(form_values):
 
     if template_type != 'blanks':
         answer = replace_variables_from_array(variable_dictionary, q.answer.replace('\\\\', '\\'))
-        answer = add_phantom_minus(answer)
+        #answer = add_phantom_minus(answer)
     else:
         answer = get_values_from_position(template_specific, q.solution.replace('\\\\', '\\'))
         answer = replace_variables_from_array(variable_dictionary, answer)
 
     original_user_answer = user_answer.replace('§', '\\text{ og }')
     #answer = remove_pm_and_add_parenthesis(answer) # Replace with new parenthesis parsing
-    answer = parenthesis_remover(answer)
     answer = parse_answer(answer, random_domain)
+    answer = parenthesis_removal(answer)
     answer = answer.replace('`', '')
     answer = answer.split('§')
     solution = str(q.question_text.replace('\\\\', '\\')) + "§" + str(q.solution.replace('\\\\', '\\'))
     #solution = add_phantom_minus(solution)
-    solution = solution.replace('(', 'parenthesisleft')  # Done to preserve original parenthesis
-    solution = solution.replace(')', 'parenthesisright')  # Done to preserve original parenthesis
+    solution = solution.replace('(', '+parenthesisleft+')  # Done to preserve original parenthesis
+    solution = solution.replace(')', '+parenthesisright+')  # Done to preserve original parenthesis
     solution = replace_variables_from_array(variable_dictionary, solution)
     #solution = remove_pm_and_add_parenthesis(solution)
     solution = parse_solution(solution, random_domain)
-    solution = parenthesis_remover(solution)
+    solution = parenthesis_removal(solution)
     if len(replacing_words) > 0:
         solution = replace_words(solution, replacing_words)['sentence']
     user_answer = user_answer.split('§')  # If a string doesn't contain the character it returns a list with 1 element
@@ -107,10 +107,9 @@ def make_answer_context_dict(form_values):
     if correct_answer:
         answer_text = "\\text{Du har svart riktig!}"
 
-
     answer_text = latex_exceptions(answer_text)
 
-    graph = q.graph  # took out .replace('\\\\', '\\')
+    graph = q.graph
     if graph:
         graph = json.loads(graph)
 
@@ -153,6 +152,7 @@ def submit_template(template, user, update, newtags=None):
         template.rating = calculate_start_rating(template.difficulty)
         template.fill_rating = calculate_start_rating(template.difficulty_blanks)
         template.choice_rating = calculate_start_rating(template.difficulty_multiple)
+        template.multifill_rating = 1200
         template.times_failed = 0
         template.times_solved = 0
         template.creation_date = datetime.now()
