@@ -107,10 +107,9 @@ def make_answer_context_dict(form_values):
     if correct_answer:
         answer_text = "\\text{Du har svart riktig!}"
 
-
     answer_text = latex_exceptions(answer_text)
 
-    graph = q.graph  # took out .replace('\\\\', '\\')
+    graph = q.graph
     if graph:
         graph = json.loads(graph)
 
