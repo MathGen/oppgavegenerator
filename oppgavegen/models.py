@@ -139,10 +139,15 @@ class Set(models.Model):
     order = models.CharField(max_length=400, default='')
     copy = models.BooleanField(default=False)
     users = models.ManyToManyField(User, blank=True)
+    is_public = models.BooleanField(default=False) # Set by a teacher when a Set is ready to be played by students
 
     def __str__(self):  # Makes it so that self.name shows up instead of set(object)
         """Returns the set name"""
         return self.name
+
+    def user_count(self):
+        count = self.users.count()
+        return count
 
 
 class UserLevelProgress(models.Model):

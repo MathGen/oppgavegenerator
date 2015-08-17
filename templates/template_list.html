@@ -13,15 +13,25 @@
 
         <div class="panel-heading">
 
+        <div class="pull-right">
+
+                <a href="{% url 'templates_search' %}" id="nav_search_button" class="btn btn-primary btn-xs"
+                   title="Søk i oppgavemaler" data-toggle="tooltip" data-placement="left"
+                   aria-haspopup="true" aria-expanded="false" style="min-width:100px">
+                <span class="glyphicon glyphicon-search"></span> Søk
+                </a>
+
             {% if user.extendeduser.current_level %}
 
-                <button id="current_level_button" class="btn btn-default btn-xs pull-right"
+                <button id="current_level_button" class="btn btn-default btn-xs"
                         title="Oppgaver vil bli lagt til dette settet" data-toggle="tooltip" data-placement="left"
                         aria-haspopup="true" aria-expanded="false" style="min-width:100px">
                     {{ user.extendeduser.current_level.name|title }}
                 </button>
 
             {% endif %}
+
+        </div>
 
             <h3 class="panel-title" style="padding-right: 10px">{{ panel_title }}</h3>
             {#        <a href="{% url 'templates_search' %}">Søk i maler</a>#}

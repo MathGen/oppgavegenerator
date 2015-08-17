@@ -134,6 +134,8 @@ def add_set_to_user_view(request, set_id):
             set = Set.objects.get(pk=set_id)
             user = request.user
             new_set = make_copy(set, user)
+            new_set.is_public = False
+            new_set.save()
             msg = {'id': new_set.id, 'name': new_set.name}
             msg = json.dumps(msg)
     except Exception as e:

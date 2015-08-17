@@ -57,6 +57,8 @@ urlpatterns = patterns('',
 
     url(r'^set/(\d+)/$', set_detail_view, name='set_detail'),
     url(r'^set/(\d+)/chapters/$', SetChapterListView.as_view(), name='chapters_by_set'),
+    url(r'^set/(\d+)/setpublic/$', set_public, name='set_to_public'),
+    url(r'^set/(\d+)/setprivate/$', set_private, name='set_to_private'),
     url(r'^chapter/(\d+)/levels/$', ChapterLevelsListView.as_view(), name='levels_by_chapter'),
     url(r'^level/(\d+)/templates/$', LevelsTemplatesListView.as_view(), name='templates_by_level'),
 
@@ -94,11 +96,11 @@ urlpatterns = patterns('',
 
     # Search in sets, chapters or levels
 
-    # url(r'^sets/search/$', SetSearch(
-    #    template='search/search.html',
-    #    searchqueryset=SearchQuerySet().models(Set),
-    #    form_class=SetsSearchForm
-    #    ), name='set_search'),
+    url(r'^sets/search/$', search_view_factory(
+        template='search/search.html',
+        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.set', copy=False),
+        form_class=SetsSearchForm
+        ), name='set_search'),
     # url(r'^chapters/search/$', SearchView(
     #     template='search/search.html',
     #     searchqueryset=SearchQuerySet().models(Chapter),

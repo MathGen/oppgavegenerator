@@ -7,11 +7,12 @@ Defines views, and renders data to html templates.
 import json
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.template import RequestContext
-from django.shortcuts import render_to_response, HttpResponse, get_object_or_404
+from django.shortcuts import render_to_response, HttpResponse, get_object_or_404, redirect
 from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import render
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
+from django.db.models import Count
 from oppgavegen.utility.sortable_listview import SortableListView
 
 from django.views.decorators.cache import cache_control
@@ -195,8 +196,16 @@ def edit_template(request, template_id):
 
 @login_required
 def index(request):
-    """Returns the index view with a list of topics"""
-    return render(request, "index.html")
+    """
+    The MathGen Front Page. Shows a lists of Sets ordered by popularity or creation date.
+    """
+    #TODO: Implement search functionality from front page and include instructions on how to find sets by your teacher
+    context = {}
+    sets = Set.objects.all().filter(is_public=True)
+    context['popular'] = sets.annotate(num_users=Count('users')).order_by('-num_users')[:20]
+    context['latest'] = sets.order_by('-creation_date')[:20]
+
+    return render(request, "index.html", context)
 
 
 ### GAME ###
@@ -540,6 +549,27 @@ class UserSetListView(LoginRequiredMixin,ListView):
 
     def get_queryset(self):
         return Set.objects.filter(editor=self.request.user)
+
+@login_required
+def set_public(request, set_id):
+    set = Set.objects.get(pk=set_id)
+    if set.editor == request.user:
+        set.is_public = True
+        set.save()
+        return redirect('chapters_by_set', set_id)
+    else:
+        return redirect('index')
+
+@login_required
+def set_private(request, set_id):
+    set = Set.objects.get(pk=set_id)
+    if set.editor == request.user:
+        set.is_public = False
+        set.save()
+        return redirect('chapters_by_set', set_id)
+    else:
+        return redirect('index')
+
 
 class SetChapterListView(LoginRequiredMixin,ListView):
     """List Chapters in Set"""

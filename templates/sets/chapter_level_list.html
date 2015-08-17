@@ -4,6 +4,10 @@
 {% load app_filters %}
 
 {% block panels %}
+    <a href="{% url 'chapters_by_set' user.extendeduser.current_set.id %}" class="btn btn-xs btn-default back-button">
+    <span class="glyphicon glyphicon-arrow-left"></span>
+                        {{ user.extendeduser.current_set.name }}
+    </a>
     <div class="panel panel-default">
         <div class="panel-body">
 
@@ -30,7 +34,7 @@
 
                                 <strong class="text-left">{{ level.name|title }}</strong>
 
-                                <div class="btn-group btn-group-sm pull-right" role="group">
+                                <div class="btn-group btn-group-sm pull-right object-options" role="group">
                                     <a class="btn btn-default" href="{% url 'level_stats' level.id %}">
                                         <span class="glyphicon glyphicon-stats"></span>
                                     </a>
@@ -40,6 +44,10 @@
                                     <button class="btn btn-danger">
                                         <span class="glyphicon glyphicon-trash"></span>
                                     </button>
+                                </div>
+
+                                <div class="sortable-handle pull-right text-muted" style="display: none">
+                                    <span class="glyphicon glyphicon-resize-vertical"></span>
                                 </div>
                             </div>
                         </div>
@@ -53,11 +61,6 @@
 
                 <input id="input_new_set" type="text" class="list_input form-control new_content input-level-name"
                        placeholder="Opprett nytt nivå...">
-                <hr>
-                <a href="{% url 'chapters_by_set' user.extendeduser.current_set.id %}" class="btn btn-primary">
-                    <span class="glyphicon glyphicon-arrow-left"></span>
-                    {{ user.extendeduser.current_set.name }}
-                </a>
 
             </div>
 

@@ -61,6 +61,7 @@ $(document).ready(function () {
         button.toggleClass('btn-default btn-primary');
         button.toggleClass('btn-save-order btn-edit-order');
         button.text('Endre rekkefølge');
+        $('.sortable-handle').hide();
         $('.object-options').fadeIn();
         save_changes();
     });
@@ -72,7 +73,7 @@ $(document).ready(function () {
         var object_id = button.data('object-id');
         var object_title = button.data('object-title');
         var object_type = button.data('object-type');
-
+        console.log("Confirming deletion of object type: " + object_type + " with id: " + object_id);
         if (object_type == 'set') {
             delete_url = '/set/' + object_id + '/remove/';
             load_url = '/user/sets/ #object_container > *';
@@ -83,15 +84,16 @@ $(document).ready(function () {
             delete_url = '/chapter/' + current_chapter + '/level/' + object_id + '/remove/';
             load_url = '/chapter/' + current_chapter + '/levels/ #object_container > *'
         } else if (object_type == "template") {
-            delete_url = '/level/' + current_level + '/template/' + object_id + '/remove';
+            delete_url = '/level/' + current_level + '/template/' + object_id + '/remove/';
             load_url = '/level/' + current_level + '/templates/ #object_container > *'
         } else {
             console.log('Error: Requested object has no type.');
         }
 
         modal.find('.modal-alert').text('Bekreft sletting av "' + object_title + '."');
-        console.log('opening confirm deletion modal for object-id: ' + object_id);
-        console.log('current deletion url is: ' + delete_url);
+        // debug:
+        //console.log('opening confirm deletion modal for object-id: ' + object_id);
+        //console.log('current deletion url is: ' + delete_url);
         modal.modal('show');
     });
 
@@ -128,7 +130,7 @@ $(document).ready(function () {
 
     // Close current open Bootstrap modal
     $('.hidemodal').click(function () {
-        console.log('closing modal: ' + modal);
+        console.log('closing modal');
         modal.modal('hide');
         //delete_content($(this).closest('li'));
     });
@@ -304,7 +306,7 @@ function add_new_content(input) {
 function init_sortable() {
     //TODO: make it switchable (from list to grid)
     var container = $('.sortable');
-    $('.object-options').fadeOut();
+    $('.object-options').fadeOut(400, function() {$('.sortable-handle').fadeIn()});
     container.sortable({
         disabled: false,
         placeholder: "list_content_highlight",
