@@ -10,7 +10,7 @@ def parenthesis_removal(s):
     # empty text fields sometimes get into equations, this will split the equation and result in incorrect
     # parenthesis removal. Which is why the empty text fields are replaced.
     split_list = ['=', '§', '\\arrow', '\\and', '\\or', '\\union', '\\intersection', '\\rightarrow', '\\leftarrow'
-                  '\\leftrightarrow']
+                  '\\leftrightarrow', '.']
     replace_dict = make_replace_text_dict(s)
     print('b<<')
     print(replace_dict)

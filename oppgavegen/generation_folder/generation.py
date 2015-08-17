@@ -81,15 +81,8 @@ def generate_task(user, template_extra, desired_type=''):
         variable_dict = generate_valid_numbers(task, random_domain_list, conditions, False)
         variables_used = dict_to_string(variable_dict)  # Get a string with the variables used
         new_task = string_replace(task, variable_dict)
-        print(1.1)
-        print(new_task)
         new_answer = string_replace(answer, variable_dict)
         new_choices = string_replace(choices, variable_dict)
-        print('variable_dict:')
-        print(variable_dict)
-        print('choices, then new_choices:')
-        print(choices)
-        print(new_choices)
 
         for x in range(0, len(graph)):
             graph[x] = string_replace(graph[x], variable_dict)
@@ -131,14 +124,8 @@ def generate_task(user, template_extra, desired_type=''):
         graph = json.dumps(graph)
     new_task = parse_solution(new_task, q.random_domain)
     #new_task = remove_pm_and_add_parenthesis(new_task)
-    print(2)
-    print(new_task)
-
     new_task = parenthesis_removal(new_task)
 
-
-    print(3)
-    print(new_task)
     return_dict = {'question': new_task,
                    'variable_dictionary': variables_used, 'template_type': template_type,
                    'template_specific': template_specific, 'primary_key': primary_key,
@@ -212,16 +199,13 @@ def generate_level(user, level_id):
     if template_type.lower() == 'multiple':
         new_choices = new_choices.split('§')
         for x in range(len(new_choices)):
-            new_choices[x] = parenthesis_removal(new_choices[x])
-            new_choices[x] = new_choices[x].replace('+parenthesisleft+', '(')
-            new_choices[x] = new_choices[x].replace('+parenthesisright+', ')')
             new_choices[x] = parse_solution(new_choices[x], q.random_domain)
         new_choices.append(parse_solution(new_answer, q.random_domain).replace('§', 'og'))
         shuffle(new_choices)  # Shuffles the choices so that the answer is not always in the same place.
         new_choices = '§'.join(new_choices)
         new_choices = parenthesis_removal(new_choices)
         template_specific = new_choices
-        template_specific = remove_pm_and_add_parenthesis(template_specific)
+        #template_specific = remove_pm_and_add_parenthesis(template_specific)
     elif template_type == 'blanks':
         fill_in_dict = fill_in_the_blanks(fill_in)
         # new_task = new_task + '\n' + fill_in_dict['fill_in'].replace('\\n', '\n')
