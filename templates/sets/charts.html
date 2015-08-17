@@ -50,6 +50,7 @@
     <script src="/static/js/morris.min.js"></script>
     <script>
 
+        {% if players %}
         new Morris.Bar({
             element: 'student-rating-chart',
             data: [
@@ -61,7 +62,8 @@
             ykeys: ['studenter'],
             labels: ['Studenter']
         });
-
+        {% endif %}
+        {% if templates %}
         new Morris.Bar({
             element: 'templates-rating-chart',
             data: [
@@ -74,6 +76,7 @@
             labels: ['Oppgaver']
         });
 
+
         new Morris.Bar({
             element: 'templates-original-chart',
             data: [
@@ -85,7 +88,7 @@
             ykeys: ['oppgaver'],
             labels: ['Oppgaver']
         });
-
+        {% endif %}
 
     </script>
 

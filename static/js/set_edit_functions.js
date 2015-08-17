@@ -1,19 +1,24 @@
+/**
+ * @file Manages user interaction in the level editor and handles ajax server-requests for saving changes.
+ * Requires jQuery / MathQuill / Bootstrap
+ * The file is used in the following HTML-files: todo: list files here
+ */
+
 $(document).ready(function () {
 
     var container = $('#object_container');
     var modal = "";
     var delete_url = "";
     var load_url = "";
-    var sortable = false;
     var templateText_latex = "";
     var templateSolution_latex = {};
     var text_wrapper = $('#modal_template_text');
     var solution_wrapper = $('#modal_template_solution');
 
+    // Button listener for previewing items in search results box
     $(document).on('click', '.preview-button', function () {
-
         var button = $(this);
-        var template_id = button.data('template_id'); // Extract info from data-* attributes
+        var template_id = button.data('template_id'); // Extract info from button data-* attributes
         var template_title = button.data('template_title');
         var json_url = '/template/' + template_id + '/preview/';
 
@@ -38,6 +43,7 @@ $(document).ready(function () {
         });
     });
 
+    // Initialize object order-sorting
     $(document).on('click', '.btn-edit-order', function () {
         init_sortable();
         var button = $(this);
@@ -46,6 +52,7 @@ $(document).ready(function () {
         button.text('Lagre rekkefølge');
     });
 
+    // Commit changes to object order on click
     $(document).on('click', '.btn-save-order', function () {
         $('.sortable').sortable({
             disabled: true
@@ -90,16 +97,15 @@ $(document).ready(function () {
 
     // Confirm deletion of object ( Modal delete button )
     $(document).on('click', '#confirmDelete', function () {
-
         $.post(delete_url, {'csrfmiddlewaretoken': getCookie('csrftoken')}, function (result) {
             $('#deleteModal').modal('hide');
-            //$(document).find('#object_id_' + del_object_id).effect("drop", "fast");
             container.load(load_url);
             window.console.log(result);
         });
 
     });
 
+    // Open object title-editing modal
     $(document).on('click', '.btn-edit-title', function () {
         modal = $('#titleModal');
         $('.new-title').val($('#current_object_title').text());
@@ -120,20 +126,15 @@ $(document).ready(function () {
         if (/(13)/.test(e.which)) $('#confirmTitleChange').click(); // Change title on key press
     });
 
+    // Close current open Bootstrap modal
     $('.hidemodal').click(function () {
         console.log('closing modal: ' + modal);
         modal.modal('hide');
         //delete_content($(this).closest('li'));
     });
 
-    // Save changes
-    $('#btn_update').click(function (e) {
-        e.preventDefault();
-        save_changes();
-    });
-
     // Adding new content from the input-field. Posting to server.
-    $(document).on('focusout', '.new_content', function () { //TODO: make grid element if in grid-view.
+    $(document).on('focusout', '.new_content', function () {
         add_new_content($(this));
     }).on('keyup', '.new_content', function (e) {
         if (/(13)/.test(e.which)) $(this).focusout(); // Add chapter if one of these keys are pressed.
@@ -141,12 +142,13 @@ $(document).ready(function () {
 
     // Sends the search-query when either the search-button or 'enter' key is pressed.
     $(document).on('click', '#search_submit', function () {
-        search_for($('#search_input').val());
-        load_search_results();
+        object_search($('#search_input').val());
+        //load_search_results();
     }).on('keyup', '#search_input', function (e) {
         if (/(13)/.test(e.which)) $('#search_submit').click();
     });
 
+    // Button listener for copying objects from the search-result box
     $(document).on('click', '.btn-copy-object', function () {
         var button = $(this);
         var add_url = "";
@@ -172,36 +174,36 @@ $(document).ready(function () {
             console.log(result);
             container.load(load_url);
         });
-
     });
 
     $(document).on('click', '.btn-add', function () {
         add_new_content_from_search($(this).attr('id').replace(/search_content_/g, ''));
     });
 
+    // Open modal for editing progression factor (level-editor)
     $(document).on('click', '.btn-edit-kfactor', function () {
+        init_k_factor_slider();
         modal = $('#progressionModal');
         modal.modal('show')
     });
 
+    // Commit changes on click
     $(document).on('click', '#confirmProgression', function () {
         modal.modal('hide');
         save_changes();
     });
 
-    init_k_factor_slider();
 });
 
 function add_new_content_from_search(content_id) {
     $.get($('#search_url_' + content_id).text(), function (result) {
         window.console.log(result);
-
         $('#object_container').load(window.location.pathname + "#object_container > *");
     });
 }
 
 /**
- * Saves changes such as content-order and content-title to the server.
+ * Save changes to object.
  */
 function save_changes() {
     var valid_form = true;
@@ -232,7 +234,7 @@ function save_changes() {
         form_submit["csrfmiddlewaretoken"] = getCookie('csrftoken');
         $.post('/' + content + '/update/', form_submit, function (result) {
             console.log(result);
-            success_indicator();
+            show_success_indicator();
         });
     }
 }
@@ -251,7 +253,7 @@ function get_content_order() {
 }
 
 /**
- * Init the slider which sets the progression-speed for the level.
+ * Initialize the slider which sets the progression-speed for the level.
  */
 function init_k_factor_slider() {
     var k_value = $('#k_factor_amount').text();
@@ -267,15 +269,6 @@ function init_k_factor_slider() {
             $('#k_factor_amount').text(ui.value);
         }
     });
-}
-
-/**
- * Set the title of the set/chapter/level
- * @param {string} input - which input-field to write to.
- * @param {string} title - the title.
- */
-function set_title(input, title) {
-    $(input).val(title);
 }
 
 /**
@@ -306,68 +299,10 @@ function add_new_content(input) {
 }
 
 /**
- * Delete the specific content.
- * @param {object} content - the content selector
- */
-function delete_content(content) {
-    var container = $('#edit_container');
-    var content_id = content.attr('id').match(/\d+/);
-    if (content_id) {
-        var content_path = '/set/' + content_id + '/remove_set/';
-        if (container.hasClass('edit_chapters')) {
-            content_path = '/set/' + $('#set_id').text() + '/chapter/' + content_id + '/remove_chapter/';
-        } else if (container.hasClass('edit_levels')) {
-            content_path = '/chapter/' + $('#chapter_id').text() + '/level/' + content_id + '/remove_level/';
-        }
-        $.post(content_path, {'csrfmiddlewaretoken': getCookie('csrftoken')}, function (result) {
-            if (result[0] == 's') { // if success, delete the visual content.
-                content.remove();
-            }
-            window.console.log(result);
-        });
-    }
-}
-
-/**
- * Loads the search view, with the specific search-filter for each chapters/levels/templates.
- */
-function load_search_results() { // TODO: make the search result load with AJAX.
-    var search_container = $('.search_container');
-    var type = search_container.attr('id').replace(/search_/g, "");
-    switch (type) {
-        case 'sets':
-            search_container.load('/minisearch/chapters', function () {
-                //callback function
-                $('#search_input').attr("placeholder", "Søk etter oppgavesett...").blur()
-            });
-            break;
-        case 'chapters':
-            search_container.load('/minisearch/chapters', function () {
-                //callback function
-                $('#search_input').attr("placeholder", "Søk etter kapitler...").blur()
-            });
-            break;
-        case 'levels':
-            search_container.load('/minisearch/levels', function () {
-                //callback function
-                $('#search_input').attr("placeholder", "Søk etter nivå...").blur()
-            });
-            break;
-        case 'templates':
-            search_container.load('/minisearch/templates', function () {
-                //callback function
-                $('#search_input').attr("placeholder", "Søk etter oppgavemaler...").blur()
-            });
-            break;
-    }
-}
-
-/**
  * Initialize the drag-and-drop functionality for the listed contents. Sortable.
  */
 function init_sortable() {
     //TODO: make it switchable (from list to grid)
-    sortable = true;
     var container = $('.sortable');
     $('.object-options').fadeOut();
     container.sortable({
@@ -377,31 +312,21 @@ function init_sortable() {
         axis: "y",
         cursor: "move"
     }).disableSelection();
-
-    //$('#chapter_container').sortable({containment:"#chapter_container"}).disableSelection();
-    //$('.list_chapter').draggable({containment:"#chapter_container", axis:"y"});
 }
 
-function search_for(search_string) {
+function object_search(search_string) {
     var search_container = $('.search_container');
     var type = search_container.attr('id').replace(/search_/g, "");
     search_container.load('/minisearch/' + type + '?q=' + search_string + ' .search_container > *', function (result) {
+        // Show the search results
         search_container.html(result);
         search_container.show("fade", {'direction': 'up'});
     });
 }
 
-function refresh_navbar_breadcrumb() {
-    var breadcrumb_container = $('#navbar_current_sets');
-    breadcrumb_container.load('/ajax/currentsets/refresh/', function (result) {
-        breadcrumb_container.html(result);
-    });
-}
-
-function success_indicator() {
+function show_success_indicator() {
     $('#save_success').show(100).delay(500).hide(500);
 }
-
 
 /**
  *Gets a cookie and returns its value
@@ -422,15 +347,4 @@ function getCookie(name) {
         }
     }
     return cookieValue;
-}
-
-function refresh_preview() {
-    text_wrapper.children().remove();
-    solution_wrapper.children().remove();
-    text_wrapper.append('<div class="input_field"><span id="preview_template_text" class="static-math input_mathquill"></span>');
-    MathQuill.StaticMath($('#preview_template_text')[0]).latex(templateText_latex);
-    for (var s = 0; s < templateSolution_latex.length; s++) {
-        solution_wrapper.append('<div class="input_field"><div id="preview_solution_step_' + s + '" class="static-math"></div></div><br/>');
-        MathQuill.StaticMath($('#preview_solution_step_' + s)[0]).latex(templateSolution_latex[s]);
-    }
 }
