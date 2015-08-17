@@ -1,4 +1,5 @@
 .idea
+/oppgavegen/migrations
 /oppgavegenerator/settings_secret.py
 docs
 oppgavegenerator/whoosh_index
