@@ -1,5 +1,5 @@
 {% load app_filters %}
-<script src="/static/js/solution.js?02"></script>
+<script src="/static/js/solution.js?04"></script>
 <link href="/static/css/stud_style.css" rel="stylesheet">
 <div id="new_star" hidden>{{ new_star }}</div>
 <div id="new_medal" hidden>{{ new_medal }}</div>
@@ -77,17 +77,17 @@
             <div class="modal-body">
                 <h3>Gratulerer!</h3>
                 {% if new_medal == 1 %}
-                    <h4><small>Du har fått en bronse medalje innenfor dette kapittelet.</small></h4>
+                    <h4><small>Du har fått en bronsemedalje innenfor dette kapittelet.</small></h4>
                     <div class="ribbon medal_bronze chapter_ribbon">
                         <div class="star-5-points"></div>
                     </div>
                 {% elif new_medal == 2 %}
-                    <h4><small>Du har fått en sølv medalje innenfor dette kapittelet.</small></h4>
+                    <h4><small>Du har fått en sølvmedalje innenfor dette kapittelet.</small></h4>
                     <div class="ribbon medal_silver chapter_ribbon">
                         <div class="star-5-points"></div>
                     </div>
                 {% elif new_medal == 3 %}
-                    <h4><small>Du har fått en gull medalje innenfor dette kapittelet.</small></h4>
+                    <h4><small>Du har fått en gullmedalje innenfor dette kapittelet.</small></h4>
                     <div class="ribbon medal_gold chapter_ribbon">
                         <div class="star-5-points"></div>
                     </div>
