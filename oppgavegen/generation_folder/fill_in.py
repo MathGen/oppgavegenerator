@@ -98,3 +98,7 @@ def get_values_from_position(position_string, solution):
     print('values after values are gotten from position')
     print(values)
     return values[1:]
+
+
+def get_fillin_answers():
+    pass
