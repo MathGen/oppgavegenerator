@@ -26,6 +26,15 @@
                 <button class="btn btn-default btn-xs btn-edit-order">
                     Endre rekkefølge
                 </button>
+                    {% if set.is_public %}
+                <a href="{% url 'set_to_private' set.id %}" class="btn btn-danger btn-xs btn-unpublish-set">
+                    <span class="glyphicon glyphicon-cog"></span> Gjør Privat
+                </a>
+                    {% else %}
+                <a href="{% url 'set_to_public' set.id %}" class="btn btn-primary btn-xs btn-publish-set">
+                    <span class="glyphicon glyphicon-cog"></span> Publisér
+                </a>
+                    {% endif %}
                     <span id="save_success" class="glyphicon glyphicon-ok text-success"
                           style="margin-left: 10px;display:none"></span>
                 </div>
@@ -46,6 +55,11 @@
                                         <span class="glyphicon glyphicon-trash"></span>
                                     </button>
                                 </div>
+
+                                <div class="sortable-handle pull-right text-muted" style="display: none">
+                                    <span class="glyphicon glyphicon-resize-vertical"></span>
+                                </div>
+
                             </div>
                         </div>
 

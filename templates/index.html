@@ -3,21 +3,62 @@
 {# Load CSS and JavaScript #}
 {% bootstrap_css %}
 {% bootstrap_javascript %}
-{% block title %}Mathgen index{% endblock %}
+{% block title %}{% endblock %}
 {% load app_filters %}
 
 {% block panels %}
     <div class="jumbotron">
         <h2 class="front_header" style="color: #EAD7AF">Velkommen til MathGen</h2>
-        <h4 class="front_description" style="color: #EAD7AF"> Velg et oppgavesett:</h4>
-        <ul class='list-ul' style="padding-left: 0">
-{#            {% for item in list %}#}
-                <li class="list-group-item" style="background: none; border:none;">
-                    <a href="game/1">
-                        <button class="btn btn-primary btn-lg">R1</button>
-                    </a>
-                </li>
-{#            {% endfor %}#}
-        </ul>
+        <p style="color: #EAD7AF"> Velg et oppgavesett for å sette i gang. </p>
+    </div>
+
+    <div class="col-md-4">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            Populære Oppgavesett
+        </div>
+        <div class="panel-body">
+            <div class="container">
+            {% for set in popular %}
+                <div class="row">
+                  <a href="{% url 'game' set.id %}">{{ set.name }}</a> - {{ set.num_users }} brukere
+                </div>
+                {% empty %}
+                Ingen oppgavesett enda.
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="col-md-4">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            Nyeste oppgavesett
+        </div>
+        <div class="panel-body">
+            <div class="container">
+            {% for set in latest %}
+                <div class="row">
+                  <a href="{% url 'game' set.id %}">{{ set.name }}</a> - {{ set.creation_date|date:"d/m/y" }}
+                </div>
+                {% empty %}
+                Ingen oppgavesett enda.
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+    <div class="col-md-4">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            Finn oppgavesett
+        </div>
+        <div class="panel-body">
+            Søkeboks
+        </div>
+    </div>
     </div>
 {% endblock %}

@@ -444,6 +444,7 @@ input.calc_variable:focus{
 }
 
 .back-button {
+    z-index: 999;
     margin-top:0;
     margin-bottom:-25px;
     border-bottom-style: none;

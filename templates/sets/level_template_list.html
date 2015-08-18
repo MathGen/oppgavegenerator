@@ -4,6 +4,10 @@
 {% load app_filters %}
 
 {% block panels %}
+    <a href="{% url 'levels_by_chapter' user.extendeduser.current_chapter.id %}" class="btn btn-xs btn-default back-button">
+    <span class="glyphicon glyphicon-arrow-left"></span>
+                    {{ user.extendeduser.current_chapter.name }}
+    </a>
     <div class="panel panel-default">
         <div class="panel-body">
 
@@ -37,15 +41,17 @@
                                 </strong>
 
                                 <div class="btn-group btn-group-sm pull-right" role="group">
-                                    <button class="btn btn-default">
+                                    <button class="btn btn-default preview-button"
+                                            data-template_id="{{ template.id }}" data-template_title="{{ template.name|title }}" type="button">
                                         <span class="glyphicon glyphicon-eye-open"></span>
                                     </button>
                                     <a href="{% url 'edit_template' template.id %}" class="btn btn-default">
                                         <span class="glyphicon glyphicon-pencil"></span>
                                     </a>
-                                    <button class="btn btn-danger">
-                                        <span class="glyphicon glyphicon-trash btn-delete-object"
-                                            data-object-type="template" data-object-id="{{ template.id }}"></span>
+<button class="btn btn-danger btn-delete-object"
+        data-object-type="template" data-object-id="{{ template.id }}"
+        data-object-title="{% if template.name %}{{ template.name }}{% else %}Uten Tittel{% endif %}">
+                                        <span class="glyphicon glyphicon-trash"></span>
                                     </button>
                                 </div>
                             </div>
@@ -57,13 +63,6 @@
                         </div>
                     {% endfor %}
                 </div>
-
-                <hr>
-
-                <a href="{% url 'levels_by_chapter' user.extendeduser.current_chapter.id %}" class="btn btn-primary">
-                    <span class="glyphicon glyphicon-arrow-left"></span>
-                    {{ user.extendeduser.current_chapter.name }}
-                </a>
 
             </div>
 

@@ -19,7 +19,7 @@ class TemplateIndex(indexes.SearchIndex, indexes.Indexable):
     rating = indexes.IntegerField(model_attr='rating', indexed=False)
     choice_rating = indexes.IntegerField(model_attr='choice_rating', indexed=False)
     fill_rating = indexes.IntegerField(model_attr='fill_rating', indexed=False)
-    multifill_rating = indexes.IntegerField(model_attr='multifill_rating', indexed=False)
+    #multifill_rating = indexes.IntegerField(model_attr='multifill_rating', indexed=False)
     multiple_support = indexes.CharField(model_attr='multiple_support', indexed=False)
     fill_in_support = indexes.CharField(model_attr='fill_in_support', indexed=False)
     multifill_support = indexes.CharField(model_attr='multifill_support', indexed=False)

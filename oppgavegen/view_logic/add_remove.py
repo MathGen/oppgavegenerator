@@ -89,7 +89,7 @@ def remove_template_from_level(level_id, template_id, user):
     template = Template.objects.get(pk=template_id)
     success_message = 'Failed to remove ' + template.name + ' from set.'
     if user == level.editor:
-        level.chapters.remove(template)
+        level.templates.remove(template)
         level.save()
         success_message = 'successfully removed ' + template.name + ' from set.'
 

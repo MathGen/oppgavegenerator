@@ -19,11 +19,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 INSTALLED_APPS = (
     'oppgavegen',
+    #'django_admin_bootstrapped.bootstrap3',
     'django_admin_bootstrapped',
     'django.contrib.admin',         # django admin panel
     'django.contrib.auth',          # needed for registration
     'django.contrib.sites',         # needed for registration
-    'django.contrib.humanize',
+    'django.contrib.contenttypes',  # used by django admin and auth
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -110,3 +111,4 @@ LOGOUT_URL = '/user/logout/'
 LOGIN_REDIRECT_URL = '/'
 INCLUDE_REGISTER_URL = False
 
+DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer'
