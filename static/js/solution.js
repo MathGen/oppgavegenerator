@@ -24,7 +24,9 @@ $(document).ready(function () {
     var solution = $('#get_solution').text();
     solution = solution.split('§');
     for(var s = 0; s < solution.length; s++){
-        $('#mathquill_field').append('<div class="input_field"><div id="mathquill_solution_'+s+'" class="static-math input_mathquill">'+solution[s]+'</div></div><br/>');
+        if(document.getEllementById("mathquill_solution_" + s) == null) {
+            $('#mathquill_field').append('<div class="input_field"><div id="mathquill_solution_' + s + '" class="static-math input_mathquill">' + solution[s] + '</div></div><br/>');
+        }
         //$('#mathquill_solution_' + s).mathquill().mathquill('latex', solution[s]);
     }
 });
