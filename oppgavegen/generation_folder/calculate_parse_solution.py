@@ -51,8 +51,6 @@ def parse_solution(solution, domain):
     :return: A parsed version of the input string (solution)
     """
 
-    # ..? won't this break if s is '@?2+2?@ - @?1+1?@
-    # todo: check if this was needed for something
     # if solution[0] == '@' and solution[1] == '?' and solution[-1] == '@' and solution[-2] == '?':
     #     solution = solution.replace('@?', '')
     #     solution = solution.replace('?@', '')
@@ -86,8 +84,10 @@ def parse_solution(solution, domain):
                 pass
         else:
             count += 1
-    print(new_solution)
-    print('exiting parse solution')
+
+    if '@?' in new_solution:
+        new_solution = parse_solution(new_solution, domain)
+
     return new_solution
 
 
