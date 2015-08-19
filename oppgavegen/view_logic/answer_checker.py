@@ -18,7 +18,7 @@ def check_answer(user_answer, answer, template_type, margin_for_error=0):
     :return: Boolean of whether the answer is correct
     """
     if (margin_for_error is None) or (margin_for_error == ''):
-        margin_for_error = 0
+        margin_for_error = '0'
 
     if template_type != 'normal':
         # Reverse iteration to avoid index out of bounds when elements get deleted.
@@ -27,11 +27,11 @@ def check_answer(user_answer, answer, template_type, margin_for_error=0):
                     if s == '':
                         del user_answer[s]
 
-                    elif parse_using_sympy_simplify(latex_to_sympy(user_answer[s] + ' - ' + margin_for_error) + '<=' + latex_to_sympy(answer[s]) +
-                       '<=' + latex_to_sympy(user_answer[s] + ' + '+ margin_for_error)):
+                    elif parse_using_sympy_simplify(latex_to_sympy('(' + user_answer[s] + ') - ' + str(margin_for_error)) + ' <= ' + latex_to_sympy(answer[s]) +
+                       ' <= ' + latex_to_sympy('(' + user_answer[s] + ') + '+ str(margin_for_error))):
                         del user_answer[s]
                 except TypeError or SyntaxError:
-                    if parse_using_sympy_simplify(latex_to_sympy(answer[s]) + '==' + latex_to_sympy(user_answer[s])):
+                    if parse_using_sympy_simplify(latex_to_sympy(answer[s]) + ' == ' + latex_to_sympy(user_answer[s])):
                         del user_answer[s]
                         break
 
@@ -43,15 +43,15 @@ def check_answer(user_answer, answer, template_type, margin_for_error=0):
                 print(margin_for_error)
                 if margin_for_error != 0:
                     try:
-                        if parse_using_sympy_simplify(latex_to_sympy(us + ' - ' + margin_for_error) + '<=' + latex_to_sympy(s) +
-                           '<=' + latex_to_sympy(us + ' + '+ margin_for_error)):
+                        if parse_using_sympy_simplify(latex_to_sympy('(' + us + ') - ' + margin_for_error) + ' <= ' + latex_to_sympy(s) +
+                           ' <= ' + latex_to_sympy('(' + us + ') + '+ margin_for_error)):
                             user_answer.remove(us)
                             break
                     except TypeError:
-                        if parse_using_sympy_simplify(latex_to_sympy(s) + '==' + latex_to_sympy(us)):
+                        if parse_using_sympy_simplify(latex_to_sympy(s) + ' == ' + latex_to_sympy(us)):
                             user_answer.remove(us)
                             break
-                elif parse_using_sympy_simplify(latex_to_sympy(s) + '==' + latex_to_sympy(us)):
+                elif parse_using_sympy_simplify(latex_to_sympy(s) + ' == ' + latex_to_sympy(us)):
                     user_answer.remove(us)
                     break
 

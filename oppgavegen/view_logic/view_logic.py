@@ -202,10 +202,14 @@ def required_check(user_answer, required, variables):
             print('this')
             print(parse_solution(s, ''))
             t_s = parse_solution(s, '')
+            t_s = parenthesis_removal(t_s)
+            print(t_s)
+            print(user_answer)
+            print('thas')
             if t_s in user_answer:
                 break
-            elif parse_using_sympy(latex_to_sympy(t_s) + '+0' + '==' + latex_to_sympy(user_answer) + '+0'):
-                break
+            #elif parse_using_sympy(latex_to_sympy(t_s) + '+0' + '==' + latex_to_sympy(user_answer) + '+0'):
+            #    break
             return_value = True
 
         except Exception as e:
