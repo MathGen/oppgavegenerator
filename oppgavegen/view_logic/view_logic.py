@@ -79,6 +79,8 @@ def make_answer_context_dict(form_values):
     else:
         #answer = get_values_from_position(template_specific, q.solution.replace('\\\\', '\\'))
         answer = get_fillin_answers(q.fill_in.replace('\\\\', '\\'))
+        answer = answer.replace('(', '+parenthesisleft+')  # Done to preserve original parenthesis
+        answer = answer.replace(')', '+parenthesisright+')  # Done to preserve original parenthesis
         answer = replace_variables_from_array(variable_dictionary, answer)
 
     original_user_answer = user_answer.replace('§', '\\text{ og }')
