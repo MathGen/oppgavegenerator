@@ -11,7 +11,7 @@ from oppgavegen.models import Template, Tag
 from oppgavegen.utility.parenthesis_removal import parenthesis_removal, parse_using_sympy
 from oppgavegen.view_logic.answer_checker import check_answer
 from oppgavegen.generation_folder.calculate_parse_solution import parse_solution, calculate_array, parse_answer
-from oppgavegen.generation_folder.fill_in import get_values_from_position
+from oppgavegen.generation_folder.fill_in import get_values_from_position, get_fillin_answers
 from oppgavegen.utility.utility import after_equal_sign, replace_words, replace_variables_from_array, string_replace
 from oppgavegen.generation_folder.template_validation import template_validation
 
@@ -77,7 +77,8 @@ def make_answer_context_dict(form_values):
         answer = replace_variables_from_array(variable_dictionary, answer)
         #answer = add_phantom_minus(answer)
     else:
-        answer = get_values_from_position(template_specific, q.solution.replace('\\\\', '\\'))
+        #answer = get_values_from_position(template_specific, q.solution.replace('\\\\', '\\'))
+        answer = get_fillin_answers(q.fill_in.replace('\\\\', '\\'))
         answer = replace_variables_from_array(variable_dictionary, answer)
 
     original_user_answer = user_answer.replace('§', '\\text{ og }')

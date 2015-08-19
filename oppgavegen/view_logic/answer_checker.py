@@ -35,7 +35,6 @@ def check_answer(user_answer, answer, template_type, margin_for_error=0):
                         del user_answer[s]
                         break
 
-    #  Todo: exceptions? could also do different things depending on errors, for instance typeError for equalities
     else:
         for s in answer:
             for us in user_answer:

@@ -100,5 +100,11 @@ def get_values_from_position(position_string, solution):
     return values[1:]
 
 
-def get_fillin_answers():
-    pass
+def get_fillin_answers(s):
+    """extracts the answer according to order from the fillin string"""
+    s = s.split('@xxxx@')
+    answers = []
+    for x in range(0, len(s)):
+        if x % 2 == 1:
+            answers.append(s[x])
+    return array_to_string(answers)
