@@ -23,7 +23,7 @@
 
 
                     <li><a href="{% url 'newtemplate' %}">Ny Mal</a></li>
-                    <li><a href="{% url 'templates' %}">Maler</a></li>
+                    <li><a href="{% url 'all_templates_list' %}">Maler</a></li>
                 {% endif %}
                 <!--USER AUTH ITEMS-->
                 {% if user.is_authenticated %}

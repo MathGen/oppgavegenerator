@@ -4,14 +4,13 @@
 {% load app_filters %}
 
 {% block panels %}
-    <a href="{% url 'user_sets' %}" class="btn btn-xs btn-default back-button">
-    <span class="glyphicon glyphicon-arrow-left"></span>
-    Mine Oppgavesett
-    </a>
+    <a href="{% url 'user_sets' %}"
+       class="btn btn-xs btn-default back-button">
+    <span class="glyphicon glyphicon-arrow-left"></span> Mine Oppgavesett </a>
 
     <div class="panel panel-default">
 
-        <div class="panel-body" style="padding: 0 15px 15px">
+        <div class="panel-body">
 
             <div class="col-md-8">
                 <h1>
@@ -38,36 +37,8 @@
                     <span id="save_success" class="glyphicon glyphicon-ok text-success"
                           style="margin-left: 10px;display:none"></span>
                 </div>
-{#                <hr style="display:none">#}
                 <div id="object_container" class="sortable edit_chapters">
-                    {% for chapter in object_list %}
-                        <div class="panel panel-default editable-object" data-object_id="{{ chapter.id }}">
-                            <div class="panel-body">
-
-                                <strong class="text-left">{{ chapter.name|title }}</strong>
-
-                                <div class="btn-group btn-group-sm pull-right object-options" role="group">
-                                    <a href="{% url 'levels_by_chapter' chapter.id %}" class="btn btn-default">
-                                        <span class="glyphicon glyphicon-pencil"></span>
-                                    </a>
-                                    <button class="btn btn-danger btn-delete-object" data-object-title="{{ chapter.name }}"
-                        data-object-type="chapter" data-object-id="{{ chapter.id }}">
-                                        <span class="glyphicon glyphicon-trash"></span>
-                                    </button>
-                                </div>
-
-                                <div class="sortable-handle pull-right text-muted" style="display: none">
-                                    <span class="glyphicon glyphicon-resize-vertical"></span>
-                                </div>
-
-                            </div>
-                        </div>
-
-                    {% empty %}
-                        <div class="alert alert-info text-center">
-                            Ingen kapitler i settet enda.
-                        </div>
-                    {% endfor %}
+                    {% include 'sets/includes/editor_chapter_list.html' %}
                 </div>
 
                 <input id="input_new_set" type="text" class="list_input form-control new_content input-chapter-name"
@@ -104,7 +75,7 @@
                                     </span>
                                 </div>
                             </div>
-            {# AVANSERT SØK <a href="{% url 'templates_search' %}" class="btn btn-primary btn-xs pull-right">Avansert Søk</a>#}
+            {# ADVANCED SEARCH <a href="{% url 'chapters_search' %}" class="btn btn-primary btn-xs pull-right">Avansert Søk</a>#}
                         <div id="search_chapters" class="panel panel-default search_container"
                                  style="display:none;border:none;margin-top:-5px;max-height: 500px;overflow-y: scroll"></div>
 

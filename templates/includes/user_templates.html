@@ -12,14 +12,14 @@
             <span class="glypicon glyphicon-plus"></span>
             </button>
                     <button class="btn btn-xs btn-default preview-button" title="Forhåndsvisning"
-                data-template_id="{{ template.id }}" data-template_title="{{ template.name|title }}" type="button">
+                data-template_id="{{ template.id }}" data-template_title="{{ template.name|title|default:'Uten Tittel' }}" type="button">
             <span class="glyphicon glyphicon-eye-open"></span>
         </button>
 
         </li>
         <li><strong>
         {% if template.name %}
-                        {{ template.name|title }}
+                        {{ template.name|title|truncatechars:20 }}
                     {% else %}
                         Uten Tittel
                     {% endif %}

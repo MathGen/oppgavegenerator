@@ -1,0 +1,37 @@
+{# LEVEL EDITOR SET CHAPTERS LIST SNIPPET - INCLUDED IN user_set_list.html #}
+
+{% for chapter in object_list %}
+    <div class="panel panel-default editable-object" data-object_id="{{ chapter.id }}">
+
+        {% ifequal chapter.copy True %}
+            <div class="panel-body object-copy">
+            <strong class="text-left">
+                {{ chapter.name|title }}
+            </strong> - <span class="text-muted">originalt opprettet av {{ chapter.creator|title }}</span>
+        {% else %}
+            <div class="panel-body">
+            <strong class="text-left">{{ chapter.name|title }}</strong>
+        {% endifequal %}
+
+        <div class="btn-group btn-group-sm pull-right object-options" role="group">
+            <a href="{% url 'levels_by_chapter' chapter.id %}" class="btn btn-default">
+                <span class="glyphicon glyphicon-pencil"></span>
+            </a>
+            <button class="btn btn-danger btn-delete-object" data-object-title="{{ chapter.name }}"
+                    data-object-type="chapter" data-object-id="{{ chapter.id }}">
+                <span class="glyphicon glyphicon-trash"></span>
+            </button>
+        </div>
+
+        <div class="sortable-handle pull-right text-muted" style="display: none">
+            <span class="glyphicon glyphicon-resize-vertical"></span>
+        </div>
+
+        </div>
+        </div>
+
+        {% empty %}
+        <div class="alert alert-info text-center">
+            Ingen kapitler i settet enda.
+        </div>
+{% endfor %}

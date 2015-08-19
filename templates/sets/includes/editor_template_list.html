@@ -1,0 +1,45 @@
+{# LEVEL EDITOR LEVEL TEMPLATE LIST SNIPPET - INCLUDED IN level_template_list.html #}
+
+{% for template in object_list %}
+    <div class="panel panel-default editable-object">
+
+        {% ifequal template.copy True %}
+
+            <div class="panel-body object-copy">
+
+                <strong class="text-left">
+                    {{ template.name|default:"Uten Tittel" }}
+                </strong> - <span class="text-muted">originalt opprettet av {{ template.creator|title }}</span>
+
+        {% else %}
+
+            <div class="panel-body">
+            <strong class="text-left">
+                    {{ template.name|default:"Uten Tittel" }}
+            </strong>
+
+        {% endifequal %}
+
+        <div class="btn-group btn-group-sm pull-right" role="group">
+            <button class="btn btn-default preview-button"
+                    data-template_id="{{ template.id }}" data-template_title="{{ template.name|title }}"
+                    type="button">
+                <span class="glyphicon glyphicon-eye-open"></span>
+            </button>
+            <a href="{% url 'edit_template' template.id %}" class="btn btn-default">
+                <span class="glyphicon glyphicon-pencil"></span>
+            </a>
+            <button class="btn btn-danger btn-delete-object"
+                    data-object-type="template" data-object-id="{{ template.id }}"
+                    data-object-title="{% if template.name %}{{ template.name }}{% else %}Uten Tittel{% endif %}">
+                <span class="glyphicon glyphicon-trash"></span>
+            </button>
+        </div>
+        </div>
+        </div>
+
+        {% empty %}
+        <div class="alert alert-info text-center">
+            Ingen oppgaver i nivået enda.
+        </div>
+{% endfor %}

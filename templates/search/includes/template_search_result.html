@@ -1,4 +1,5 @@
-{# TEMPLATE LIST RENDER #}
+{# TEMPLATE SEARCH RESULT SNIPPET #}
+
 {% load app_filters %}
 
     <div class="col-md-6">
@@ -53,7 +54,7 @@
         <li>
             <span title="Lagringsdato">
             <span class="glyphicon glyphicon-calendar"></span>
-                {{ template.creation_date|date:"SHORT_DATE_FORMAT" }}
+                {{ template.creation_date|date:"d/m/y" }}
             </span>
         </li>
     </ul>
@@ -64,38 +65,32 @@
 
 
     <div class="col-md-6" >
-    <div class="btn-group pull-right" role="group" style="padding-top:0px">
-
+    <div class="pull-right">
+    <span id="object_copied_indicator_{{ template.pk }}" class="text-success" style="display:none;">
+        <span class="glyphicon glyphicon-ok" title="Oppgavemalen ble kopiert til {{ user.extendeduser.current_level.name }}"></span>
+    </span>
+    <div class="btn-group" role="group" style="padding-top:0">
         <button class="btn btn-sm btn-default preview-button" title="Forhåndsvisning"
                 data-template_id="{{ template.pk }}" data-template_title="{{ template.name|title }}" type="button">
             <span class="glyphicon glyphicon-eye-open"></span>
         </button>
-
-        {% if user.username == template.editor %}
 
             <a href="{% url 'edit_template' template.pk %}" class="btn btn-sm btn-default edit-button" title="Rediger"
                role="button">
                 <span class="glyphicon glyphicon-pencil"></span>
             </a>
 
-            {% if template.pk in user.extendeduser.current_level_template_ids %}
+        {% if user.extendeduser.current_level %}
 
-                <button id="toggle_button_id_{{ template.pk }}" title="Fjern fra level"
-                        class="btn btn-sm btn-danger ajax-toggle-button"
-                        data-template_id="{{ template.pk }}">
-                    <span class="glyphicon glyphicon-minus"></span>
-                </button>
+                    <button title="Kopier og legg til {{ user.extendeduser.current_level.name }}"
+                            class="btn btn-sm btn-primary btn-copy-template"
+                            data-template-id="{{ template.pk }}">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </button>
 
-            {% else %}
 
-                <button id="toggle_button_id_{{ template.pk }}" title="Legg til level"
-                        class="btn btn-sm btn-primary ajax-toggle-button"
-                        data-template_id="{{ template.pk }}">
-                    <span class="glyphicon glyphicon-plus"></span>
-                </button>
-
-            {% endif %}
         {% endif %}
 
+    </div>
     </div>
     </div>

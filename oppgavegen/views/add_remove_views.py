@@ -15,9 +15,9 @@ def new_set_view(request, set_name='Navn på sett'):
     return HttpResponse(set.pk)
 
 def remove_set_view(request, set_id):
-    """View for creating a new set"""
+    """View for deleting a set"""
     user = request.user
-    msg = remove_set(set_id, user)
+    msg = delete_set_and_related_copies(set_id,user)
 
     return HttpResponse(msg)
 
@@ -62,25 +62,26 @@ def new_level_for_chapter(request, chapter_id, level_name):
 
 def remove_template_from_level_view(request, level_id, template_id):
     msg = remove_template_from_level(level_id, template_id, request.user)
+    remove_template(template_id,request.user)
     return HttpResponse(msg)
 
 
 def remove_chapter_from_set_view(request, set_id, chapter_id):
     """Deletes a chapter from a set"""
-    msg = remove_chapter_from_set(set_id, chapter_id, request.user)
-    remove_chapter(chapter_id, request.user)
+    remove_chapter_from_set(set_id, chapter_id, request.user)
+    msg = delete_chapter_and_related_copies(chapter_id, request.user)
 
     return HttpResponse(msg)
 
 
 def remove_level_from_chapter_view(request, chapter_id, level_id):
     """Deletes a chapter from a set"""
-    msg = remove_level_from_chapter(chapter_id, level_id, request.user)   # Todo: only remove if original creator.
-    remove_level(level_id, request.user)
+    remove_level_from_chapter(chapter_id, level_id, request.user)
+    msg = delete_level_and_related_copies(level_id, request.user)
     return HttpResponse(msg)
 
 def add_template_to_level_view(request, level_id, template_id):
-    msg = 'failed to add template to level.'
+    msg = 'Failed to add template to level.'
     level = Level.objects.get(pk=level_id)
     template = Template.objects.get(pk=template_id)
     user = request.user
@@ -95,29 +96,30 @@ def add_template_to_level_view(request, level_id, template_id):
 
 def add_level_to_chapter_view(request, chapter_id, level_id):
     """Add a level fo a specified chapter"""
-    msg = 'Failed to add chapter'
+    msg = 'Failed to add level to chapter'
     if request.is_ajax():
         chapter = Chapter.objects.get(pk=chapter_id)
         user = request.user
         level = Level.objects.get(pk=level_id)
         if chapter.editor == user:
-            level = make_copy(level, user)
+            level = make_level_copy(level, user)
             add_level_to_chapter(level, chapter)
             msg = {'id': level.id, 'name': level.name}
             msg = json.dumps(msg)
-        return HttpResponse(msg)
+
+    return HttpResponse(msg)
 
 
 def add_chapter_to_set_view(request, set_id, chapter_id):
     """Add a chapter fo a specified set"""
-    msg = 'Failed to add chapter'
+    msg = 'Failed to add chapter to set'
     try:
         if request.is_ajax():
             set = Set.objects.get(pk=set_id)
             user = request.user
             chapter = Chapter.objects.get(pk=chapter_id)
             if set.editor == user:
-                chapter = make_copy(chapter, user)
+                chapter = make_chapter_copy(chapter, user)
                 add_chapter_to_set(chapter, set)
                 msg = {'id': chapter.id, 'name': chapter.name}
                 msg = json.dumps(msg)
@@ -133,10 +135,23 @@ def add_set_to_user_view(request, set_id):
         if request.is_ajax():
             set = Set.objects.get(pk=set_id)
             user = request.user
-            new_set = make_copy(set, user)
-            new_set.is_public = False
-            new_set.save()
+            new_set = make_set_copy(set, user)
             msg = {'id': new_set.id, 'name': new_set.name}
+            msg = json.dumps(msg)
+    except Exception as e:
+        print(e)
+
+    return HttpResponse(msg)
+
+def copy_set_as_requirement(request,set_id):
+    """ Copy a set and mark it as a requirement """
+    msg = 'Failed to create requirement from set'
+    try:
+        if request.is_ajax():
+            set = Set.objects.get(pk=set_id)
+            user = request.user
+            req_set = make_set_copy(original_set=set, user=user, copy_as_requirement=True)
+            msg = {'id': req_set.id, 'name': req_set.name}
             msg = json.dumps(msg)
     except Exception as e:
         print(e)

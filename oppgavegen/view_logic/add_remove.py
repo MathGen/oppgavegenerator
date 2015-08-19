@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from oppgavegen.models import Level, Template, Set, Chapter
 from datetime import datetime
 from oppgavegen.models import ExtendedUser
+from copy import deepcopy
 
 
 def new_chapter(chapter_name, user):
@@ -21,6 +22,15 @@ def new_set(set_name, user):
     set.save()
     return set
 
+def remove_level(level_id, user):
+    level = Level.objects.get(pk=level_id)
+    success_string = 'Failed to delete chapter ' + level.name + '.'
+    if level.editor == user:
+        success_string = 'Chapter sucessfully deleted' + level.name + '.'
+        reset_current_level(user)
+        level.delete()
+    return success_string
+
 
 def remove_chapter(chapter_id, user):
     chapter = Chapter.objects.get(pk=chapter_id)
@@ -32,16 +42,6 @@ def remove_chapter(chapter_id, user):
     return success_string
 
 
-def remove_level(level_id, user):
-    level = Level.objects.get(pk=level_id)
-    success_string = 'Failed to delete chapter ' + level.name + '.'
-    if level.editor == user:
-        success_string = 'Chapter sucessfully deleted' + level.name + '.'
-        reset_current_level(user)
-        level.delete()
-    return success_string
-
-
 def remove_set(set_id, user):
     set = Set.objects.get(pk=set_id)
     success_string = 'failed to delete set: "' + set.name + '".'
@@ -49,6 +49,108 @@ def remove_set(set_id, user):
         success_string = 'set sucessfully deleted: "' + set.name + '".'
         reset_current_set(user)
         set.delete()
+    return success_string
+
+def delete_set_and_related_copies(set_id,user):
+    set = Set.objects.get(pk=set_id)
+    chapters_to_delete = []
+    c_count = 0
+    levels_to_delete = []
+    l_count = 0
+    templates_to_delete = []
+    t_count = 0
+    success_string = "Set deletion failed."
+    if set.editor == user:
+        chapter_ids = set.order
+        if len(chapter_ids) > 0:
+            for c_id in chapter_ids.split(','):
+                chapter = Chapter.objects.get(pk=int(c_id))
+                if chapter.copy == True:
+                    chapters_to_delete.append(chapter)
+                level_ids = chapter.order
+                if len(level_ids) > 0:
+                    for l_id in level_ids.split(','):
+                        level = Level.objects.get(pk=int(l_id))
+                        if level.copy == True:
+                            levels_to_delete.append(level)
+                        template_ids = level.templates.values_list('id',flat=True)
+                        if len(template_ids) > 0:
+                            for t_id in template_ids:
+                                template = Template.objects.get(pk=int(t_id))
+                                if template.copy == True:
+                                    templates_to_delete.append(template)
+
+        for t in templates_to_delete:
+            t_count+=1
+            t.delete()
+        for l in levels_to_delete:
+            l_count+=1
+            l.delete()
+        for c in chapters_to_delete:
+            c_count+=1
+            c.delete()
+        reset_current_set(user)
+        set.delete()
+        success_string = 'successfully deleted set ' + set.name + ', ' \
+                     + str(t_count) + ' templates, ' \
+                     + str(l_count) + ' levels, and ' \
+                     + str(c_count) + ' chapters.'
+    return success_string
+
+def delete_chapter_and_related_copies(chapter_id,user):
+    chapter = Chapter.objects.get(pk=chapter_id)
+    levels_to_delete = []
+    l_count = 0
+    templates_to_delete = []
+    t_count = 0
+    success_string = "Chapter deletion failed."
+    if chapter.editor == user:
+        level_ids = chapter.order
+        if len(level_ids) > 0:
+            for l_id in level_ids.split(','):
+                level = Level.objects.get(pk=int(l_id))
+                if level.copy == True:
+                    levels_to_delete.append(level)
+                template_ids = level.templates.values_list('id',flat=True)
+                if len(template_ids) > 0:
+                    for t_id in template_ids:
+                        template = Template.objects.get(pk=int(t_id))
+                        if template.copy == True:
+                            templates_to_delete.append(template)
+
+        for t in templates_to_delete:
+            t_count+=1
+            t.delete()
+        for l in levels_to_delete:
+            l_count+=1
+            l.delete()
+        reset_current_chapter(user)
+        chapter.delete()
+        success_string = 'successfully deleted chapter ' + chapter.name + ', ' \
+                     + str(t_count) + ' templates, and ' \
+                     + str(l_count) + ' levels.'
+    return success_string
+
+def delete_level_and_related_copies(level_id,user):
+    level = Level.objects.get(pk=level_id)
+    templates_to_delete = []
+    t_count = 0
+    success_string = "Level deletion failed."
+    if level.editor == user:
+        template_ids = level.templates.values_list('id',flat=True)
+        if len(template_ids) > 0:
+            for t_id in template_ids:
+                template = Template.objects.get(pk=int(t_id))
+                if template.copy == True:
+                    templates_to_delete.append(template)
+
+        for t in templates_to_delete:
+            t_count+=1
+            t.delete()
+        reset_current_level(user)
+        level.delete()
+        success_string = 'successfully deleted level ' + level.name + ', and ' \
+                         + str(t_count) + ' templates.'
     return success_string
 
 
@@ -140,6 +242,76 @@ def make_copy(original, user):
     copy.save()
     return copy
 
+
+def make_set_copy(original_set, user, copy_as_requirement=False):
+    set_copy = original_set
+    set_copy.pk = None
+    set_copy.editor = user
+    set_copy.copy = True
+    set_copy.is_public = False
+    if copy_as_requirement == True:
+        set_copy.is_requirement = True
+    set_copy.save()
+    chapter_ids = set_copy.order
+    set_copy.order = ""
+    if len(chapter_ids) > 0:
+        for c_id in chapter_ids.split(','): # get chapters id's from set order list
+            chapter = Chapter.objects.get(pk=int(c_id))
+            c_copy = make_copy(chapter,user)
+            level_ids = c_copy.order
+            c_copy.order = ""
+            c_copy.save()
+            add_chapter_to_set(c_copy,set_copy)
+            if len(level_ids) > 0:
+                for l_id in level_ids.split(','):
+                    level = Level.objects.get(pk=int(l_id))
+                    templates = level.templates.all()
+                    template_ids = templates.values_list('id', flat=True)
+                    l_copy = make_copy(level,user)
+                    add_level_to_chapter(l_copy,c_copy)
+                    if len(template_ids) > 0:
+                        for t_id in template_ids:
+                            template = Template.objects.get(pk=int(t_id))
+                            t_copy = make_copy(template,user)
+                            add_template_to_level(t_copy,l_copy,user)
+    return set_copy
+
+def make_chapter_copy(original_chapter, user):
+    c_copy = original_chapter
+    c_copy.pk = None
+    c_copy.copy = True
+    c_copy.editor = user
+    level_ids = c_copy.order
+    c_copy.order = ""
+    c_copy.save()
+    if len(level_ids) > 0:
+        for l_id in level_ids.split(','):
+            level = Level.objects.get(pk=int(l_id))
+            templates = level.templates.all()
+            template_ids = templates.values_list('id', flat=True)
+            l_copy = make_copy(level,user)
+            add_level_to_chapter(l_copy,c_copy)
+            if len(template_ids) > 0:
+                for t_id in template_ids:
+                    template = Template.objects.get(pk=int(t_id))
+                    t_copy = make_copy(template,user)
+                    add_template_to_level(t_copy,l_copy,user)
+    return c_copy
+
+def make_level_copy(original_level, user):
+    l_copy = original_level
+    l_copy.pk = None
+    l_copy.copy = True
+    l_copy.editor = user
+    templates = original_level.templates.all()
+    template_ids = templates.values_list('id', flat=True)
+    l_copy.save()
+    if len(template_ids) > 0:
+        for t_id in template_ids:
+            template = Template.objects.get(pk=int(t_id))
+            t_copy = make_copy(template,user)
+            add_template_to_level(t_copy,l_copy,user)
+    return l_copy
 
 def update_chapter_or_set(set_or_chapter, title, order, user):
     msg = 'Failed update.'

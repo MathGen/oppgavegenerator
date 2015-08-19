@@ -8,6 +8,7 @@ $(document).ready(function () {
 
     var container = $('#object_container');
     var modal = "";
+    var req_url = "";
     var delete_url = "";
     var load_url = "";
     var templateText_latex = "";
@@ -103,6 +104,7 @@ $(document).ready(function () {
             $('#deleteModal').modal('hide');
             container.load(load_url);
             window.console.log(result);
+            show_success_indicator();
         });
 
     });
@@ -175,6 +177,25 @@ $(document).ready(function () {
         $.post(add_url, {'csrfmiddlewaretoken': getCookie('csrftoken')}, function (result) {
             console.log(result);
             container.load(load_url);
+            show_success_indicator();
+        });
+    });
+
+    $(document).on('click', '.btn-req-copy', function () {
+        modal = $('#reqModal');
+        var button = $(this);
+        var set_id = button.data('object-id');
+        req_url = '/set/' + set_id + '/newreq/';
+        load_url = '/user/sets/ #object_container > *';
+        modal.modal('show')
+    });
+
+    $(document).on('click', '#confirmReq', function () {
+        $.post(req_url, {'csrfmiddlewaretoken': getCookie('csrftoken')}, function (result) {
+        modal.modal('hide');
+        container.load(load_url);
+        window.console.log(result);
+        show_success_indicator();
         });
     });
 
@@ -201,6 +222,7 @@ function add_new_content_from_search(content_id) {
     $.get($('#search_url_' + content_id).text(), function (result) {
         window.console.log(result);
         $('#object_container').load(window.location.pathname + "#object_container > *");
+        show_success_indicator();
     });
 }
 
@@ -294,7 +316,6 @@ function add_new_content(input) {
         $.post(content_path, {'csrfmiddlewaretoken': getCookie('csrftoken')}, function (result) {
             console.log(result);
             container.load(load_url);
-            init_sortable();
         });
     }
     input.val("");
@@ -306,7 +327,7 @@ function add_new_content(input) {
 function init_sortable() {
     //TODO: make it switchable (from list to grid)
     var container = $('.sortable');
-    $('.object-options').fadeOut(400, function() {$('.sortable-handle').fadeIn()});
+        $('.object-options').fadeOut(400, function() {$('.sortable-handle').fadeIn()});
     container.sortable({
         disabled: false,
         placeholder: "list_content_highlight",

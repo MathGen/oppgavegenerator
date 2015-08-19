@@ -65,11 +65,12 @@
 
                 {% if user.extendeduser.current_level %}
 
-                    <button id="current_level_button" class="btn btn-default btn-xs pull-right"
-                            title="Oppgaver vil bli lagt til dette settet" data-toggle="tooltip" data-placement="left"
-                            aria-haspopup="true" aria-expanded="false" style="min-width:100px">
+                    <a href="{% url 'templates_by_level' user.extendeduser.current_level.id %}" id="current_level_button" class="btn btn-default btn-xs pull-right"
+                       title="Kopierte oppgavemaler vil bli lagt til dette nivået" data-toggle="tooltip" data-placement="left"
+                       aria-haspopup="true" aria-expanded="false" style="min-width:100px">
                         {{ user.extendeduser.current_level.name|title }}
-                    </button>
+                        <span id="objects_added_container" class="label label-success" style="display:none">+<span id="objects_added_amount"></span></span>
+                    </a>
 
                 {% endif %}
 
@@ -82,7 +83,7 @@
 
                 {% for template in page.object_list %}
                        <div class="row">
-                        {% include 'search/includes/template_result.html' %}
+                        {% include 'search/includes/template_search_result.html' %}
                         </div>
                     <hr style="margin-top: 5px; margin-bottom: 5px">
                 {% empty %}
@@ -135,6 +136,11 @@
 {% endblock %}
 
 {% block js %}
+    {% if user.extendeduser.current_level %}
+    <script>
+    var current_level = {{ user.extendeduser.current_level.id }};
+    </script>
+    {% endif %}
     <script src="{% static "js/underscore-min.js" %}"></script>
     <script src="{% static "js/search_functions.js" %}"></script>
 {% endblock %}

@@ -11,7 +11,7 @@
                 <hr style="margin: 5px 0">
 
                 <div id="object_container">
-                    {% include 'sets/includes/set_list.html' %}
+                    {% include 'sets/includes/editor_set_list.html' %}
                 </div>
 
                 <input id="input_new_object_title" type="text" title="Skriv inn tittel på nytt oppgavesett"
@@ -47,6 +47,7 @@
 
 {% block modals %}
     {% include 'sets/includes/deletemodal.html' %}
+    {% include 'sets/includes/new_requirement_modal.html' %}
 
 {% endblock %}
 

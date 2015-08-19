@@ -4,9 +4,9 @@
 {% load app_filters %}
 
 {% block panels %}
-    <a href="{% url 'chapters_by_set' user.extendeduser.current_set.id %}" class="btn btn-xs btn-default back-button">
-    <span class="glyphicon glyphicon-arrow-left"></span>
-                        {{ user.extendeduser.current_set.name }}
+    <a href="{% url 'chapters_by_set' user.extendeduser.current_set.id %}"
+       class="btn btn-xs btn-default back-button">
+    <span class="glyphicon glyphicon-arrow-left"></span> {{ user.extendeduser.current_set.name }}
     </a>
     <div class="panel panel-default">
         <div class="panel-body">
@@ -28,35 +28,7 @@
                 </div>
 
                 <div id="object_container" class="sortable edit_levels">
-                    {% for level in object_list %}
-                        <div class="panel panel-default editable-object" data-object_id="{{ level.id }}">
-                            <div class="panel-body">
-
-                                <strong class="text-left">{{ level.name|title }}</strong>
-
-                                <div class="btn-group btn-group-sm pull-right object-options" role="group">
-                                    <a class="btn btn-default" href="{% url 'level_stats' level.id %}">
-                                        <span class="glyphicon glyphicon-stats"></span>
-                                    </a>
-                                    <a href="{% url 'templates_by_level' level.id %}" class="btn btn-default">
-                                        <span class="glyphicon glyphicon-pencil"></span>
-                                    </a>
-                                    <button class="btn btn-danger">
-                                        <span class="glyphicon glyphicon-trash"></span>
-                                    </button>
-                                </div>
-
-                                <div class="sortable-handle pull-right text-muted" style="display: none">
-                                    <span class="glyphicon glyphicon-resize-vertical"></span>
-                                </div>
-                            </div>
-                        </div>
-
-                    {% empty %}
-                        <div class="alert alert-info text-center">
-                            Ingen nivå i kapittelet enda.
-                        </div>
-                    {% endfor %}
+                    {% include 'sets/includes/editor_level_list.html' %}
                 </div>
 
                 <input id="input_new_set" type="text" class="list_input form-control new_content input-level-name"
