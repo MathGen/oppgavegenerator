@@ -191,6 +191,7 @@ def cheat_check(user_answer, disallowed, variables):
 
 
 def required_check(user_answer, required, variables):
+    """Checks if the user answer meets the requirements set by the teacher"""
     return_value = False
     for x in range(0, len(required)):
         required[x] = replace_variables_from_array(variables, required[x])
