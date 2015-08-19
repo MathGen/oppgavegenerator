@@ -185,7 +185,7 @@ def cheat_check(user_answer, disallowed, variables):
         standard_disallowed.append(parse_solution(replaced_x, ''))
 
     for s in standard_disallowed:
-        if s in user_answer:
+        if str(s) in str(user_answer):
             return True
     return False
 
@@ -206,7 +206,7 @@ def required_check(user_answer, required, variables):
             print(t_s)
             print(user_answer)
             print('thas')
-            if t_s in user_answer:
+            if str(t_s).replace(' ', '') in str(user_answer):
                 break
             #elif parse_using_sympy(latex_to_sympy(t_s) + '+0' + '==' + latex_to_sympy(user_answer) + '+0'):
             #    break
@@ -215,7 +215,7 @@ def required_check(user_answer, required, variables):
         except Exception as e:
             print('in exception ')
             print(e)
-            if s not in user_answer:
+            if str(s) not in str(user_answer):
                 return_value = True
                 break
     return return_value
