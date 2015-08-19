@@ -151,12 +151,12 @@ def answers(request, level=1):
 
             context_dict = make_answer_context_dict(form_values)
 
-            if cheat_check(user_answer, disallowed, form_values['variable_dictionary'].split('§')) and \
-                    not (form_values['template_type'] == 'multiple') and context_dict['user_won']:
+            if (cheat_check(user_answer, disallowed, form_values['variable_dictionary'].split('§'))) and\
+                    (form_values['template_type'] == 'normal') and (context_dict['user_won']):
                 context_dict['answer'] = cheat_message
                 return render_to_response(render_to, context_dict, context)
-            if required_check(user_answer, required, form_values['variable_dictionary'].split('§')) and \
-                    not (form_values['template_type'] == 'multiple') and context_dict['user_won']:
+            elif (required_check(user_answer, required, form_values['variable_dictionary'].split('§'))) and \
+                    (form_values['template_type'] == 'normal') and (context_dict['user_won']):
                 context_dict['answer'] = required_message
                 return render_to_response(render_to, context_dict, context)
 

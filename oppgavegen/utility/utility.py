@@ -67,6 +67,7 @@ def array_to_string(array):
         string += '§' + s
     return string[1:]  # Use [1:] to remove unnecessary § from the start
 
+
 @Debugger
 def string_replace(string, variable_dict):
     """Replaces variables in a string with numbers from a dict
@@ -79,6 +80,7 @@ def string_replace(string, variable_dict):
 
         string = string.replace(key, '(' + str(variable_dict[key]) + ')')
     return string
+
 
 @Debugger
 def replace_variables_from_array(arr, s):

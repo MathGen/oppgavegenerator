@@ -6,12 +6,12 @@ Defines reusable functions often called from views.py
 from datetime import datetime
 import json
 
-from oppgavegen.latex_translator import remove_pm_and_add_parenthesis, add_phantom_minus
+from oppgavegen.latex_translator import remove_pm_and_add_parenthesis, add_phantom_minus, latex_to_sympy
 from oppgavegen.models import Template, Tag
-from oppgavegen.utility.parenthesis_removal import parenthesis_removal
+from oppgavegen.utility.parenthesis_removal import parenthesis_removal, parse_using_sympy
 from oppgavegen.view_logic.answer_checker import check_answer
 from oppgavegen.generation_folder.calculate_parse_solution import parse_solution, calculate_array, parse_answer
-from oppgavegen.generation_folder.fill_in import get_values_from_position
+from oppgavegen.generation_folder.fill_in import get_values_from_position, get_fillin_answers
 from oppgavegen.utility.utility import after_equal_sign, replace_words, replace_variables_from_array, string_replace
 from oppgavegen.generation_folder.template_validation import template_validation
 
@@ -71,10 +71,16 @@ def make_answer_context_dict(form_values):
     random_domain = q.random_domain
 
     if template_type != 'blanks':
-        answer = replace_variables_from_array(variable_dictionary, q.answer.replace('\\\\', '\\'))
+        answer = q.answer.replace('\\\\', '\\')
+        answer = answer.replace('(', '+parenthesisleft+')  # Done to preserve original parenthesis
+        answer = answer.replace(')', '+parenthesisright+')  # Done to preserve original parenthesis
+        answer = replace_variables_from_array(variable_dictionary, answer)
         #answer = add_phantom_minus(answer)
     else:
-        answer = get_values_from_position(template_specific, q.solution.replace('\\\\', '\\'))
+        #answer = get_values_from_position(template_specific, q.solution.replace('\\\\', '\\'))
+        answer = get_fillin_answers(q.fill_in.replace('\\\\', '\\'))
+        answer = answer.replace('(', '+parenthesisleft+')  # Done to preserve original parenthesis
+        answer = answer.replace(')', '+parenthesisright+')  # Done to preserve original parenthesis
         answer = replace_variables_from_array(variable_dictionary, answer)
 
     original_user_answer = user_answer.replace('§', '\\text{ og }')
@@ -182,12 +188,13 @@ def cheat_check(user_answer, disallowed, variables):
         standard_disallowed.append(parse_solution(replaced_x, ''))
 
     for s in standard_disallowed:
-        if s in user_answer:
+        if str(s).replace(' ', '') in str(user_answer):
             return True
     return False
 
 
 def required_check(user_answer, required, variables):
+    """Checks if the user answer meets the requirements set by the teacher"""
     return_value = False
     for x in range(0, len(required)):
         required[x] = replace_variables_from_array(variables, required[x])
@@ -197,14 +204,21 @@ def required_check(user_answer, required, variables):
         try:
             print('this')
             print(parse_solution(s, ''))
-            print(s)
-            if parse_solution(s, '') not in user_answer:
-                return_value = True
+            t_s = parse_solution(s, '')
+            t_s = parenthesis_removal(t_s)
+            print(t_s)
+            print(user_answer)
+            print('thas')
+            if str(t_s).replace(' ', '') in str(user_answer):
                 break
+            #elif parse_using_sympy(latex_to_sympy(t_s) + '+0' + '==' + latex_to_sympy(user_answer) + '+0'):
+            #    break
+            return_value = True
+
         except Exception as e:
             print('in exception ')
             print(e)
-            if s not in user_answer:
+            if str(s) not in str(user_answer):
                 return_value = True
                 break
     return return_value
