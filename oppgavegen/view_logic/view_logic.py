@@ -185,7 +185,7 @@ def cheat_check(user_answer, disallowed, variables):
         standard_disallowed.append(parse_solution(replaced_x, ''))
 
     for s in standard_disallowed:
-        if str(s) in str(user_answer):
+        if str(s).replace(' ', '') in str(user_answer):
             return True
     return False
 
