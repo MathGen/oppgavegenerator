@@ -14,27 +14,45 @@
         <div class="panel-heading">
 
         <div class="pull-right">
-
+            {% if include_copies %}
+                <a href="{% url 'all_templates_list' %}" class="btn btn-default btn-xs"
+                   title="Vis alle oppgavemaler" data-toggle="tooltip" data-placement="bottom"
+                   aria-haspopup="true" aria-expanded="false" style="min-width:100px">
+                    Alle Maler
+                </a>
+                <a href="{% url 'user_original_templates_list' %}" class="btn btn-default btn-xs"
+                   title="Gjem oppgavemaler du har kopiert" data-toggle="tooltip" data-placement="bottom"
+                   aria-haspopup="true" aria-expanded="false" style="min-width:100px">
+                    Ikke vis kopier
+                </a>
+                {% else %}
+                <a href="{% url 'user_templates_list' %}" class="btn btn-default btn-xs"
+                   title="Vis alle dine oppgavemaler, inkludert de du har kopiert" data-toggle="tooltip" data-placement="bottom"
+                   aria-haspopup="true" aria-expanded="false" style="min-width:100px">
+                    Mine maler
+                </a>
+            {% endif %}
                 <a href="{% url 'templates_search' %}" id="nav_search_button" class="btn btn-primary btn-xs"
-                   title="Søk i oppgavemaler" data-toggle="tooltip" data-placement="left"
+                   title="Søk i oppgavemaler" data-toggle="tooltip" data-placement="bottom"
                    aria-haspopup="true" aria-expanded="false" style="min-width:100px">
                 <span class="glyphicon glyphicon-search"></span> Søk
                 </a>
 
             {% if user.extendeduser.current_level %}
 
-                <button id="current_level_button" class="btn btn-default btn-xs"
-                        title="Oppgaver vil bli lagt til dette settet" data-toggle="tooltip" data-placement="left"
+                <a href="{% url 'templates_by_level' user.extendeduser.current_level.id %}" id="current_level_button" class="btn btn-default btn-xs"
+                        title="Kopierte oppgavemaler vil bli lagt til dette nivået" data-toggle="tooltip" data-placement="bottom"
                         aria-haspopup="true" aria-expanded="false" style="min-width:100px">
                     {{ user.extendeduser.current_level.name|title }}
-                </button>
+                    <span id="objects_added_container" class="label label-success" style="display:none">+<span id="objects_added_amount"></span></span>
+                </a>
 
             {% endif %}
 
         </div>
 
             <h3 class="panel-title" style="padding-right: 10px">{{ panel_title }}</h3>
-            {#        <a href="{% url 'templates_search' %}">Søk i maler</a>#}
+
         </div>
 
         <div class="panel-body">
@@ -157,6 +175,11 @@
 {% endblock %}
 
 {% block js %}
+    {% if user.extendeduser.current_level %}
+    <script>
+    var current_level = {{ user.extendeduser.current_level.id }};
+    </script>
+    {% endif %}
     <script src="{% static "js/underscore-min.js" %}"></script>
     <script src="{% static "js/search_functions.js" %}"></script>
 {% endblock %}

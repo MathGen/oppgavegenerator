@@ -131,15 +131,16 @@ class Chapter(models.Model):
 
 class Set(models.Model):
     """Stores sets of chapters"""
-    name = models.CharField(max_length=200)  # Name of the topic.
+    name = models.CharField(max_length=200)  # Name of the set.
     chapters = models.ManyToManyField(Chapter, related_name='sets', blank=True)
     creator = models.ForeignKey(User, blank=True, null=True, related_name='sets_created')
-    editor = models.ForeignKey(User, blank=True, null=True, related_name='sets_edited')  # Editor of template
+    editor = models.ForeignKey(User, blank=True, null=True, related_name='sets_edited')  # Editor of set
     creation_date = models.DateTimeField('date created', blank=True, null=True, auto_now_add=True)  # Date and time of creation
     order = models.CharField(max_length=400, default='')
     copy = models.BooleanField(default=False)
-    users = models.ManyToManyField(User, blank=True)
+    users = models.ManyToManyField(User, blank=True, related_name='sets_joined')
     is_public = models.BooleanField(default=False) # Set by a teacher when a Set is ready to be played by students
+    is_requirement = models.BooleanField(default=False)
 
     def __str__(self):  # Makes it so that self.name shows up instead of set(object)
         """Returns the set name"""

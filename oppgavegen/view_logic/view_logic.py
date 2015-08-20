@@ -145,7 +145,7 @@ def submit_template(template, user, update, newtags=None):
         template.creation_date = q.creation_date
         template.creator = q.creator
         template.editor = user
-        template.copy = q.copy  # todo: maybe set this to False if something is edited.
+        template.copy = False  # An updated template is no longer marked as a copy
         if template.name == '':
             template.name = q.name
         if template.difficulty != q.difficulty:

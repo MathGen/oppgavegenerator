@@ -20,7 +20,7 @@ urlpatterns = patterns('',
     url(r'^$', index, name='index'),
 
     url(r'^answers/', answers, name='answers'),
-    url(r'^templates/$', TemplatesListView.as_view(), name='templates'),
+    url(r'^templates/$', TemplatesListView.as_view(), name='all_templates_list'),
     url(r'^newtemplate/', new_template, name='newtemplate'),
     url(r'^submit/', submit, name='submit'),
     url(r'^admin/', include(admin.site.urls)),
@@ -29,15 +29,18 @@ urlpatterns = patterns('',
     url(r"^task/(\d+)/([\w ]+)/$", task_by_id_and_type, name='task_by_id_and_type'),
     url(r"^edit/(\d+)/$", edit_template, name='edit_template'),
 
+    url(r'^template/(\d+)/copy/next/([\w ]+)/$', confirm_template_copy, name='confirm_template_copy'),
+
     url(r'^user/', include('registration.backends.default.urls')),
     url(r'^user/register/$', RegistrationView.as_view(form_class=NamedUserRegistrationForm), name='registration_register'),
     url(r'^user/settings/$', UserSettingsView.as_view(), name='user_settings'),
     url(r'^user/settings/deactivate/$', user_deactivate, name='user_deactivate'),
     url(r'^user/templates/$', UserTemplatesListView.as_view(), name='user_templates_list'),
+    url(r'^user/templates/nocopies/$', UserTemplatesListViewNoCopies.as_view(), name='user_original_templates_list'),
 
 
 
-    # Game
+    # Game urls
     url(r'^game/(\d+)/$', game, name='game'),
     url(r'^game/(\d+)/levels/$', levels, name='levels'),
     url(r'^game/(\d+)/chapters/$', chapters, name='chapters'),
@@ -90,7 +93,7 @@ urlpatterns = patterns('',
         )),
     url(r'^minisearch/templates/$', search_view_factory(
         template='search/mini_search.html',
-        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.template', copy=False),
+        searchqueryset=SearchQuerySet().filter(django_ct='oppgavegen.template', copy=False).order_by('-creation_date'),
         results_per_page=200
         )),
 
@@ -124,13 +127,14 @@ urlpatterns = patterns('',
     # Toggle template/level relationship for users current level
     #url(r'^user/level/template/(\d+)/toggle/$', toggle_template_level, name='current_level_toggle'),
     url(r'^user/level/template/(\d+)/toggle/$', toggle_template_level_membership, name='current_level_toggle'),
-    url(r'^user/level/template/(\d+)/add/$', add_template_to_current_level, name='current_level_add'),
+    #url(r'^user/level/template/(\d+)/add/$', add_template_to_current_level, name='current_level_add'),
     url(r'^user/level/template/(\d+)/remove/$', remove_template_from_current_level, name='current_level_remove'),
 
     # Urls for sets, chapters and levels.
     url(r'^set/$', set_list, name='set'),  # A list over sets and the possibility of adding or editing them.
     url(r'^set/([\w ]+)/new_set/$', new_set_view, name='new_set_view'),
     url(r'^set/([\w ]+)/add/$', add_set_to_user_view, name='add_set_view'),
+    url(r'^set/([\w ]+)/newreq/$', copy_set_as_requirement, name='copy_set_as_requirement'),
     url(r'^set/(\d+)/remove/$', remove_set_view, name='remove_set_view'),
     url(r'^set/(\d+)/([\w ]+)/new_chapter/$', new_chapter_for_set, name='new_chapter_for_set'),
     url(r'^set/(\d+)/chapter/(\d+)/add/$', add_chapter_to_set_view, name='add_chapter_to_set'),

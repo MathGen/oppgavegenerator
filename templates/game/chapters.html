@@ -16,6 +16,13 @@
 {% endfor %}
 
 {% else %}
-   <button class="btn btn_add_user_to_set">Bli med i sett</button>
+    {% if is_requirement %}
+        <p class="alert alert-info text-center">
+        Ved å bli med i dette settet gir du eieren av settet full tillatelse til å se ditt fulle navn som du registrerte deg med, samt din framdrift.
+        </p>
+        <button class="btn btn_add_user_to_set">Bli med i sett</button>
+        {% else %}
+        <button class="btn btn_add_user_to_set">Bli med i sett</button>
+    {% endif %}
 
 {% endif %}

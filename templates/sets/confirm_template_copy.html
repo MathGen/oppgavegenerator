@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block panels %}
+
+        <section class="panel panel-default center center-block">
+            <div class="panel-heading"><h3 class="panel-title">Kopier Oppgavemal</h3></div>
+            <div class="panel-body">
+                <div class="alert alert-info text-center">
+                    <p>
+                        Du prøvde å redigere oppgavemalen <b>{{ template.name|title|default:"Uten Tittel" }}.</b><br>
+                        For å redigere denne malen må du lage en kopi først.<br>
+                    </p>
+                    <p>
+                        Ved å bekrefte kopieringen vil den bli lagt til din samling av oppgavemaler, merket som en kopi.
+                        Du vil senere kunne finne den under "Mine Maler" og redigere den derfra.<br>
+                        Ved å redigere og lagre endringene vil den miste "kopi"-merkingen og fungere som en original oppgavemal laget av deg.<br>
+                    </p>
+                </div>
+                <p class="text-center">
+                <a href="{% url 'confirm_template_copy' template.id "list" %}" class="btn btn-primary">Kopier til mine maler</a>
+                <a href="{% url 'confirm_template_copy' template.id "edit" %}" class="btn btn-primary">Kopier og rediger</a>
+                </p>
+            </div>
+        </section>
+
+{% endblock %}

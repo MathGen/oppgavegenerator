@@ -1,0 +1,84 @@
+{# LEVEL EDITOR USER SETS LIST SNIPPET - INCLUDED IN user_set_list.html #}
+
+{% for set in object_list %}
+
+    {% ifequal set.is_requirement True %}
+
+        <div id="object_id_{{ set.id }}" class="panel panel-default editable-object">
+            <div class="panel-body object-req">
+
+                <strong class="text-left">{{ set.name|title }} <span class="glyphicon glyphicon-education" title="Arbeidskrav"></span></strong>
+
+                <div class="pull-right">
+                <div class="btn-group btn-group-sm object-options" role="group">
+                    <a class="btn btn-default" href="{% url 'chapters_by_set' set.id %}"
+                       title="Rediger">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                    <a href="{% url 'set_stats' set.id %}" class="btn btn-default"
+                            title="Se framdriftsrapport">
+                        <span class="glyphicon glyphicon-stats"></span>
+                    </a>
+                    <button class="btn btn-danger btn-delete-object" data-object-title="{{ set.name }}"
+                            data-object-type="set" data-object-id="{{ set.id }}">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </button>
+                </div>
+                </div>
+            </div>
+        </div>
+
+    {% else %}
+
+        {% ifequal set.copy True %}
+
+            <div id="object_id_{{ set.id }}" class="panel panel-default editable-object">
+            <div class="panel-body object-copy">
+
+            <strong class="text-left">
+                {{ set.name|title }}
+            </strong> - <span class="text-muted">originalt opprettet
+                av {{ set.creator|title }}</span>
+
+
+        {% else %}
+
+            <div id="object_id_{{ set.id }}" class="panel panel-default editable-object">
+            <div class="panel-body">
+
+            <strong class="text-left">{{ set.name|title }}</strong>
+
+        {% endifequal %}
+
+
+    <div class="btn-group btn-group-sm pull-right object-options" role="group">
+        <a class="btn btn-default" href="{% url 'chapters_by_set' set.id %}"
+           title="Rediger">
+            <span class="glyphicon glyphicon-pencil"></span>
+        </a>
+        <button class="btn btn-warning btn-req-copy" title="Opprett som arbeidskrav"
+                data-object-id="{{ set.id }}">
+            <span class="glyphicon glyphicon-education"></span>
+        </button>
+        <button class="btn btn-danger btn-delete-object" data-object-title="{{ set.name }}"
+                data-object-type="set" data-object-id="{{ set.id }}">
+            <span class="glyphicon glyphicon-trash"></span>
+        </button>
+    </div>
+    </div>
+    </div>
+
+
+    {% endifequal %}
+
+
+
+
+
+{% empty %}
+
+<div class="alert alert-info text-center">
+    Fant ingen oppgavesett knyttet til brukeren din.
+</div>
+
+{% endfor %}

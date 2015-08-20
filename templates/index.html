@@ -7,27 +7,25 @@
 {% load app_filters %}
 
 {% block panels %}
-    <div class="jumbotron">
+    <div class="jumbotron text-center">
         <h2 class="front_header" style="color: #EAD7AF">Velkommen til MathGen</h2>
-        <p style="color: #EAD7AF"> Velg et oppgavesett for å sette i gang. </p>
+        <p style="color: #EAD7AF"> Velg et oppgavesett for å sette i gang.</p>
     </div>
 
     <div class="col-md-4">
     <div class="panel panel-primary">
         <div class="panel-heading">
-            Populære Oppgavesett
+            Populære oppgavesett
         </div>
-        <div class="panel-body">
-            <div class="container">
+            <ul class="list-group">
             {% for set in popular %}
-                <div class="row">
-                  <a href="{% url 'game' set.id %}">{{ set.name }}</a> - {{ set.num_users }} brukere
-                </div>
+                <li class="list-group-item">
+                  <a style="color: #337ab7; font-weight: normal" href="{% url 'game' set.id %}">{{ set.name }}</a> - {{ set.num_users }} brukere
+                </li>
                 {% empty %}
                 Ingen oppgavesett enda.
             {% endfor %}
-            </div>
-        </div>
+            </ul>
     </div>
     </div>
 
@@ -36,17 +34,15 @@
         <div class="panel-heading">
             Nyeste oppgavesett
         </div>
-        <div class="panel-body">
-            <div class="container">
+            <ul class="list-group">
             {% for set in latest %}
-                <div class="row">
-                  <a href="{% url 'game' set.id %}">{{ set.name }}</a> - {{ set.creation_date|date:"d/m/y" }}
-                </div>
+                <li class="list-group-item">
+                  <a style="color: #337ab7; font-weight: normal" href="{% url 'game' set.id %}">{{ set.name }}</a> - {{ set.creation_date|date:"d/m/y" }}
+                </li>
                 {% empty %}
                 Ingen oppgavesett enda.
             {% endfor %}
-            </div>
-        </div>
+            </ul>
     </div>
     </div>
 
@@ -54,11 +50,17 @@
     <div class="col-md-4">
     <div class="panel panel-primary">
         <div class="panel-heading">
-            Finn oppgavesett
+            Oppgavesett du har jobbet med
         </div>
-        <div class="panel-body">
-            Søkeboks
-        </div>
+            <ol class="list-group">
+            {% for set in user_sets %}
+                <li class="list-group-item">
+                <a style="color: #337ab7; font-weight: normal" href="{% url 'game' set.id %}">{{ set.name }}</a>
+                </li>
+                {% empty %}
+                Oppgavesett du jobber med vil vises her.
+            {% endfor %}
+            </ol>
     </div>
     </div>
 {% endblock %}

@@ -25,10 +25,10 @@
         <li>
             <span title="Forfatter">
             <span class="glyphicon glyphicon-user"></span>
-                {% ifequal template.creator user %}
-                    {{ template.creator|capfirst }}
+                {% ifequal template.editor user %}
+                    <span class="text-success">{{ template.editor|capfirst }}</span>
                 {% else %}
-                    {{ template.creator|capfirst }}
+                    {{ template.editor|capfirst }}
                 {% endifequal %}
             </span>
         </li>
@@ -53,7 +53,7 @@
         <li>
             <span title="Lagringsdato">
             <span class="glyphicon glyphicon-calendar"></span>
-                {{ template.creation_date|date:"SHORT_DATE_FORMAT" }}
+                {{ template.creation_date|date:"d/m/y" }}
             </span>
         </li>
     </ul>
@@ -64,38 +64,38 @@
 
 
     <div class="col-md-6" >
-    <div class="btn-group pull-right" role="group" style="padding-top:0px">
+    <div class="pull-right">
+    <span id="object_copied_indicator_{{ template.id }}" class="text-success" style="display:none;">
+        <span class="glyphicon glyphicon-ok" title="Oppgavemalen ble kopiert til {{ user.extendeduser.current_level.name }}"></span>
+    </span>
+    <div class="btn-group" role="group" style="padding-top:0px">
 
         <button class="btn btn-sm btn-default preview-button" title="Forhåndsvisning"
                 data-template_id="{{ template.id }}" data-template_title="{{ template.name|title }}" type="button">
             <span class="glyphicon glyphicon-eye-open"></span>
         </button>
 
-        {% if user == template.editor %}
+
 
             <a href="{% url 'edit_template' template.id %}" class="btn btn-sm btn-default edit-button" title="Rediger"
                role="button">
                 <span class="glyphicon glyphicon-pencil"></span>
             </a>
 
-            {% if template.id in user.extendeduser.current_level_template_ids %}
 
-                <button id="toggle_button_id_{{ template.id }}" title="Fjern fra level"
-                        class="btn btn-sm btn-danger ajax-toggle-button"
-                        data-template_id="{{ template.id }}">
-                    <span class="glyphicon glyphicon-minus"></span>
-                </button>
 
-            {% else %}
 
-                <button id="toggle_button_id_{{ template.id }}" title="Legg til level"
-                        class="btn btn-sm btn-primary ajax-toggle-button"
-                        data-template_id="{{ template.id }}">
-                    <span class="glyphicon glyphicon-plus"></span>
-                </button>
+        {% if user.extendeduser.current_level %}
 
-            {% endif %}
+                    <button title="Kopier og legg til {{ user.extendeduser.current_level.name }}"
+                            class="btn btn-sm btn-primary btn-copy-template"
+                            data-template-id="{{ template.id }}">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+
+
         {% endif %}
 
+    </div>
     </div>
     </div>

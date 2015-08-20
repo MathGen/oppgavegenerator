@@ -92,3 +92,6 @@ li.list-group-item:hover {
 .numberinput {
     width: 100px;
 }
+
+/* transfer effect style */
+.ui-effects-transfer { border: 2px dotted gray; }

@@ -1,0 +1,41 @@
+{# LEVEL EDITOR CHAPTER LEVEL LIST SNIPPET - INCLUDED IN chapter_level_list.html #}
+
+{% for level in object_list %}
+    <div class="panel panel-default editable-object" data-object_id="{{ level.id }}">
+        {% ifequal level.copy True %}
+
+            <div class="panel-body object-copy">
+            <strong class="text-left">{{ level.name|title }}
+            </strong> - <span class="text-muted">originalt opprettet av {{ level.creator|title }}</span>
+
+        {% else %}
+
+            <div class="panel-body">
+            <strong class="text-left">{{ level.name|title }}</strong>
+
+        {% endifequal %}
+
+        <div class="btn-group btn-group-sm pull-right object-options" role="group">
+            <a class="btn btn-default" href="{% url 'level_stats' level.id %}">
+                <span class="glyphicon glyphicon-stats"></span>
+            </a>
+            <a href="{% url 'templates_by_level' level.id %}" class="btn btn-default">
+                <span class="glyphicon glyphicon-pencil"></span>
+            </a>
+            <button class="btn btn-danger btn-delete-object" data-object-title="{{ level.name }}"
+                    data-object-type="level" data-object-id="{{ level.id }}">
+                <span class="glyphicon glyphicon-trash"></span>
+            </button>
+        </div>
+
+        <div class="sortable-handle pull-right text-muted" style="display: none">
+            <span class="glyphicon glyphicon-resize-vertical"></span>
+        </div>
+        </div>
+        </div>
+
+        {% empty %}
+        <div class="alert alert-info text-center">
+            Ingen nivå i kapittelet enda.
+        </div>
+{% endfor %}

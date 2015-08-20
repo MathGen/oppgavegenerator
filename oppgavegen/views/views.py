@@ -26,6 +26,7 @@ from oppgavegen.view_logic.progress import calculate_progress, chapter_progress,
 from oppgavegen.view_logic.view_logic import *
 from oppgavegen.view_logic.current_work import *
 from oppgavegen.view_logic.statistics import *
+from oppgavegen.view_logic.add_remove import make_copy
 
 from registration.views import RegistrationView
 
@@ -190,8 +191,26 @@ def new_template(request):
 def edit_template(request, template_id):
     """Returns a render of edit.html used for editing existing templates"""
     context = RequestContext(request)
-    context_dict = make_edit_context_dict(template_id)
-    return render_to_response('edit.html', context_dict, context)
+    template = Template.objects.get(pk=template_id)
+    if template.editor == request.user:
+        context_dict = make_edit_context_dict(template_id)
+        return render_to_response('edit.html', context_dict, context)
+    else:
+        #If the user isn not listed as the template editor open dialogue to confirm template cloning
+        context_dict={}
+        context_dict['template'] = template
+        return render_to_response('sets/confirm_template_copy.html',context_dict, context)
+
+@login_required
+@user_passes_test(is_teacher, '/')
+def confirm_template_copy(request, template_id, goto_next="edit"):
+    original_template = Template.objects.get(pk=template_id)
+    new_template = make_copy(original_template, request.user)
+    if goto_next == "edit":
+        go_to = redirect('edit', template_id=new_template.id)
+    else:
+        go_to = redirect('user_templates_list')
+    return go_to
 
 
 @login_required
@@ -202,8 +221,10 @@ def index(request):
     #TODO: Implement search functionality from front page and include instructions on how to find sets by your teacher
     context = {}
     sets = Set.objects.all().filter(is_public=True)
+    user_sets = request.user.sets_joined.all()
     context['popular'] = sets.annotate(num_users=Count('users')).order_by('-num_users')[:20]
     context['latest'] = sets.order_by('-creation_date')[:20]
+    context['user_sets'] = user_sets
 
     return render(request, "index.html", context)
 
@@ -219,6 +240,7 @@ def game(request, set_id):
 def chapters(request, set_id):
     if request.is_ajax():
         game_set = Set.objects.get(pk=set_id)
+        is_requirement = game_set.is_requirement
         set_chapters = game_set.chapters.all()
         context = RequestContext(request)
         medals = [] # Both lists get updated in chapter_progress
@@ -236,7 +258,7 @@ def chapters(request, set_id):
         return render_to_response('game/chapters.html',
                                   {'chapters': set_chapters_ordered, 'medals': json.dumps(medals),
                                    'completed': json.dumps(completed), 'progress_number': progress_number,
-                                   'set_id': set_id}, context)
+                                   'set_id': set_id, "is_requirement": is_requirement}, context)
     else:
         return HttpResponseForbidden()
 
@@ -489,6 +511,7 @@ class TemplatesListView(LoginRequiredMixin,SortableListView):
     queryset = Template.objects.filter(copy=False)
     default_sort_field = 'creation_date'
     panel_title = "Alle maler"
+    include_copies = False
 
     allowed_sort_fields = (
         (default_sort_field, {'default_direction': '-', 'verbose_name': 'Dato'}),
@@ -501,10 +524,9 @@ class TemplatesListView(LoginRequiredMixin,SortableListView):
 
     template_name = 'template_list.html'
     allow_empty = True
-    paginate_by = 15
-    paginate_orphans = 20
+    paginate_by = 20
+    paginate_orphans = 3
     context_object_name = 'template_list'
-    model = Template
 
     def get_queryset(self):
         qs = super(SortableListView, self).get_queryset()
@@ -518,12 +540,14 @@ class TemplatesListView(LoginRequiredMixin,SortableListView):
         context['current_querystring'] = self.get_querystring()
         context['sort_link_list'] = self.sort_link_list
         context['panel_title'] = self.panel_title
+        context['include_copies'] = self.include_copies
         return context
 
 class UserTemplatesListView(TemplatesListView):
-    #queryset = Template.objects.all()
+    queryset = Template.objects.all()
     panel_title = "Mine Maler"
     default_sort_field = 'creation_date'
+    include_copies = True
 
     allowed_sort_fields = (
         (default_sort_field, {'default_direction': '-', 'verbose_name': 'Dato'}),
@@ -534,15 +558,15 @@ class UserTemplatesListView(TemplatesListView):
     )
 
     def get_queryset(self):
-        #qs = super(UserTemplatesListView, self).get_queryset()
-        #qs.filter(creator=self.request.user)
-        qs = Template.objects.order_by(self.sort).filter(editor=self.request.user)
-        return qs
+        qs = super(SortableListView, self).get_queryset()
+        qs = qs.order_by(self.sort)
+        return qs.filter(editor=self.request.user)
 
-
-class UserTemplatesSearchView(SearchView):
-    template_name = 'search/template_search.html'
-    queryset = SearchQuerySet()
+class UserTemplatesListViewNoCopies(UserTemplatesListView):
+    queryset = Template.objects.all().filter(copy=False)
+    panel_title = "Mine Maler (kun originale)"
+    default_sort_field = 'creation_date'
+    include_copies = False
 
 class UserSetListView(LoginRequiredMixin,ListView):
     template_name = 'sets/user_set_list.html'
@@ -580,7 +604,7 @@ class SetChapterListView(LoginRequiredMixin,ListView):
         self.set = get_object_or_404(Set, id=self.args[0])
         order = self.set.order
 
-        for x in order.split(','):
+        for x in order.split(','): # get chapters in chapterlist in order
             for chapter in self.set.chapters.all():
                 if chapter.pk == int(x):
                     chapters.append(chapter)
