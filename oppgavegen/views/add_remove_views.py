@@ -97,15 +97,15 @@ def add_template_to_level_view(request, level_id, template_id):
 def add_level_to_chapter_view(request, chapter_id, level_id):
     """Add a level fo a specified chapter"""
     msg = 'Failed to add level to chapter'
-    if request.is_ajax():
-        chapter = Chapter.objects.get(pk=chapter_id)
-        user = request.user
-        level = Level.objects.get(pk=level_id)
-        if chapter.editor == user:
-            level = make_level_copy(level, user)
-            add_level_to_chapter(level, chapter)
-            msg = {'id': level.id, 'name': level.name}
-            msg = json.dumps(msg)
+    #if request.is_ajax():
+    chapter = Chapter.objects.get(pk=chapter_id)
+    user = request.user
+    level = Level.objects.get(pk=level_id)
+    if chapter.editor == user:
+        level = make_level_copy(level, user)
+        add_level_to_chapter(level, chapter)
+        msg = {'id': level.id, 'name': level.name}
+        msg = json.dumps(msg)
 
     return HttpResponse(msg)
 

@@ -123,6 +123,7 @@ class Chapter(models.Model):
     creation_date = models.DateTimeField('date created', blank=True, null=True, auto_now_add=True)  # Date and time of creation
     order = models.CharField(max_length=400, default='', blank=True) #CSV list of the order of levels.
     copy = models.BooleanField(default=False)
+    in_requirement_set = models.BooleanField(default=False)
 
     def __str__(self):  # Makes it so that self.name shows up instead of set(object)
         """Returns the chapter name"""

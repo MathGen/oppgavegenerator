@@ -28,6 +28,18 @@ $(document).ready(function () {
             load_template(level_id);
         }
     });
+
+    // Load a task from the specific level in a requirement type set
+    $(document).on('click', '.btn_level_req', function(e){
+        e.preventDefault();
+        var level_title = $(this).find('.level_title').text();
+        $('#level_title').text(" - " + level_title);
+        var level_id = $(this).attr('id').match(/\d+/);
+        current_level = level_id;
+        console.log(current_level);
+        load_template(level_id);
+    });
+
     // Go back to main-page (chapter-picker)
     $('.btn_game_back').click(function(e){
         e.preventDefault();
@@ -68,7 +80,7 @@ function load_chapters(){
             display_loading_icon(false);
             var progress_number = $('#progress_number');
             level_progress = progress_number.text();
-            progress_number.remove();
+            //progress_number.remove();
             unlock_contents('.btn_chapter', level_progress);
             update_medals();
             append_medal_star();
@@ -91,8 +103,9 @@ function load_levels(chapter_id){
             display_loading_icon(false);
             var progress_number = $('#progress_number');
             level_progress = progress_number.text();
-            progress_number.remove();
+            //progress_number.remove();
             unlock_contents('.btn_level', level_progress);
+            unlock_contents('.btn_level_req', level_progress);
             get_stars_per_level(level_progress);
             disable_game_contents();
             $(this).fadeIn('fast', function(){

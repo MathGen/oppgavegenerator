@@ -260,6 +260,8 @@ def make_set_copy(original_set, user, copy_as_requirement=False):
             c_copy = make_copy(chapter,user)
             level_ids = c_copy.order
             c_copy.order = ""
+            if copy_as_requirement: # this is the only case where this should be set to true
+                c_copy.in_requirement_set = True
             c_copy.save()
             add_chapter_to_set(c_copy,set_copy)
             if len(level_ids) > 0:
@@ -300,11 +302,11 @@ def make_chapter_copy(original_chapter, user):
 
 def make_level_copy(original_level, user):
     l_copy = original_level
-    l_copy.pk = None
     l_copy.copy = True
     l_copy.editor = user
     templates = original_level.templates.all()
     template_ids = templates.values_list('id', flat=True)
+    l_copy.pk = None
     l_copy.save()
     if len(template_ids) > 0:
         for t_id in template_ids:

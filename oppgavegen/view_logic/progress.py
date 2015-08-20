@@ -132,8 +132,7 @@ def check_chapter_completion(user, chapter):
             except UserLevelProgress.DoesNotExist:
                 break
             if q.stars < 3:
-                break
-            counter += 1
+                counter += 1
     except ValueError:
         # This happens if no levels are added to the chapter.
         pass

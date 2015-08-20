@@ -245,7 +245,11 @@ def chapters(request, set_id):
         context = RequestContext(request)
         medals = [] # Both lists get updated in chapter_progress
         completed = []
-        progress_number = chapter_progress(request.user, game_set, medals, completed)
+        if is_requirement:
+            # In case we want to do something special if the set is a requirement type set
+            progress_number = chapter_progress(request.user, game_set, medals, completed)
+        else:
+            progress_number = chapter_progress(request.user, game_set, medals, completed)
         order = game_set.order
         set_chapters_ordered = []
 
@@ -267,10 +271,14 @@ def levels(request, chapter_id):
 
     if request.is_ajax():
         game_chapter = Chapter.objects.get(pk=chapter_id)
+        in_requirement_set = game_chapter.in_requirement_set
         chapter_levels = game_chapter.levels.all()
         chapter_title = game_chapter.name
         context = RequestContext(request)
-        progress_number = calculate_progress(request.user, game_chapter)
+        if in_requirement_set:
+            progress_number = len(chapter_levels)
+        else:
+            progress_number = calculate_progress(request.user, game_chapter)
         star_per_level = get_stars_per_level(request.user, game_chapter)
 
         order = game_chapter.order
@@ -284,7 +292,8 @@ def levels(request, chapter_id):
 
         return render_to_response('game/levels.html',
                                   {'levels': chapter_levels_ordered, 'chapter_title': chapter_title,
-                                   'progress_number': progress_number, 'spl': star_per_level, 'chapter_id': chapter_id},
+                                   'progress_number': progress_number, 'spl': star_per_level, 'chapter_id': chapter_id,
+                                   'in_requirement_set':in_requirement_set},
                                   context)
     else:
         return HttpResponseForbidden()
