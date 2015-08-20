@@ -110,14 +110,8 @@ def round_answer(domain, answer):
     """returns a rounded version of the answer given."""
     answer = float(answer)  # Cast it to float. if it is a integer, it will get rounded back to a integer.
     rounding_number = 0
-    # domain = domain.split('§')
-    # for s in domain:
-    #     s = s.split()
-    #     try:
-    #         if rounding_number < int(s[2]):
-    #             rounding_number = int(s[2])
-    #     except IndexError:
-    #         pass
+    # If the domain is made up of only lists of variables the rounding function will round to 0, which might not be
+    # desired.
     for key in domain:
         s = domain[key][0]
         if not domain[key][1]:

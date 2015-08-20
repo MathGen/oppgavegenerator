@@ -10,11 +10,6 @@ from oppgavegen.generation_folder.multifill import *
 from oppgavegen.generation_folder.template_validation import *
 from oppgavegen.generation_folder.calculate_parse_solution import *
 
-
-
-
-
-
 def setup():
         management.call_command('loaddata', 'initial_data.json', verbosity=0)
 
@@ -52,24 +47,27 @@ class TemplateGenerationTest(TestCase):
         calculate_answer() should return a calculated version of the input string.
         The function also rounds the answer according to domain using round_answer()
         """
-        self.assertEqual(calculate_answer(1+1, self.template1.random_domain), '2')
-        self.assertEqual(calculate_answer(1.25+1, '1 2 2'), '2.25')
-        self.assertEqual(calculate_answer(1.50+1.50, '1 2 2'), '3') #check to se if 3.00 gets converted to 3.
+        r_domain1 = json.dumps({'R1R' : [[0, 0 , 0], False]})
+        r_domain2 = json.dumps({'R1R' : [[0, 0 , 2], False]})
+        r_domain3 = json.dumps({'R1R' : [[0, 0 , 0], False]})
+        self.assertEqual(calculate_answer(1+1, r_domain1), '2')
+        self.assertEqual(calculate_answer(1.25+1, r_domain2), '2.25')
+        self.assertEqual(calculate_answer(1.50+1.50, r_domain3), '3') #check to se if 3.00 gets converted to 3.
 
     def test_round_answer(self):
         """
         round_answer() rounds a number according to domain
         """
-        self.assertEqual(round_answer('2 5 0', 1.25), 1)
-        self.assertEqual(round_answer('2 5 1', 1.25), 1.3)
-        self.assertEqual(round_answer('2 5 2', 1.25), 1.25)
+        self.assertEqual(round_answer({'R1R' : [[0, 0 , 0], False]}, 1.25), 1)
+        self.assertEqual(round_answer({'R1R' : [[0, 0 , 1], False]}, 1.25), 1.3)
+        self.assertEqual(round_answer({'R1R' : [[0, 0 , 2], False]}, 1.25), 1.25)
 
     def test_parse_solution(self):
         """
         Checks if parse_solution works properly by parsing/calculating text between @? and ?@
         """
         self.assertEqual(parse_solution('teststring @?2+2?@ and @?2+3?@', self.template1.random_domain),
-                         'teststring 4 and 5')
+                         'teststring (4) and (5)')
 
     def test_replace_words(self):
         """
@@ -88,10 +86,10 @@ class TemplateGenerationTest(TestCase):
 
     def test_replace_variables_from_array(self):
         test_string = replace_variables_from_array(['R1R', '1', 'R2R', '2'], self.template1.question_text)
-        self.assertEqual(test_string, '\\text{hva er} 1 + 2')
+        self.assertEqual(test_string, '\\text{hva er} (1) + (2)')
 
     def test_parse_answer(self):
-        self.assertEqual(parse_answer('@?1+1?@§@?1+2?@', self.template1.random_domain), '2§3')
+        self.assertEqual(parse_answer('@?1+1?@§@?1+2?@', self.template1.random_domain), '(2)§(3)')
 
     def test_dict_to_string(self):
         dict = {'R1R' : '1', 'R2R' : '2'}
@@ -115,7 +113,7 @@ class TemplateGenerationTest(TestCase):
     def test_string_replace(self):
         dict = {'R1R' : '1', 'R2R' : '2'}
         string = self.template1.answer
-        self.assertEqual(string_replace(string,dict),'1+2')
+        self.assertEqual(string_replace(string,dict),'(1)+(2)')
 
     def test_is_number(self):
         self.assertEqual(is_number('test'), False)
@@ -132,12 +130,7 @@ class TemplateGenerationTest(TestCase):
         self.assertEqual(make_number(domain3),1.25)
 
     def test_check_conditions(self):
-        condition1 = '(R1R > R2R) & (R1R == 2)'
-        condition2 = '(R1R > R2R) & (R1R != 2)'
-        variabel_dict = {'R1R' : 2, 'R2R' : 1}
-        domain_dict = {'R1R' : [0, 10, 0], 'R2R' : [0, 10, 0]}
-        self.assertEqual(check_conditions(condition1, variabel_dict, domain_dict) == {'R1R' : 2, 'R2R' : 1},True)
-        self.assertEqual(check_conditions(condition2, variabel_dict, domain_dict) == {'R1R' : 2, 'R2R' : 1},False)
+        pass
 
     def test_new_random_value(self):
         domain_dict = {'R1R' : [1, 1, 0], 'R2R' : [0, 10, 0]}
@@ -181,12 +174,6 @@ class LatexTranslatorTest(TestCase):
     def test_latex_to_sympy(self):
         string1 = '\\frac{\\sqrt{1}}{\\frac{2}{3}\cdot4}'
         self.assertEqual(latex_to_sympy(string1),'(sqrt(1))/((2)/(3)*4) ')
-
-    def test_parenthesis_around_minus(self):
-        string1 = '-1*-2+3'
-        string2 = '1--2+x-1'
-        self.assertEqual(parenthesis_around_minus(string1), '-1*(-2)+3 ')
-        self.assertEqual(parenthesis_around_minus(string2), '1-(-2)+x-1 ')
 
     def test_find_indexes(self):
         test_string1 = '\\begin{pmatrix}1&2\\\\3&4\\\\5&6\\end{pmatrix} test ' \
