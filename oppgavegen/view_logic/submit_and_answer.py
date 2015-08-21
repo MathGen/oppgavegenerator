@@ -1,6 +1,6 @@
 """
 
-Defines reusable functions often called from views.py
+makes context dictionary for submit, edit and answer view.
 
 """
 from datetime import datetime
