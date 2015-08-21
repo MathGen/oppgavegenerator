@@ -23,7 +23,7 @@ from oppgavegen.view_logic.rating import change_elo, change_level_rating, get_us
 from oppgavegen.generation_folder.generation import generate_task, generate_level
 from oppgavegen.view_logic.progress import calculate_progress, chapter_progress, get_stars_per_level, \
     get_user_rating_for_level, get_user_stars_for_level, check_for_level_skip
-from oppgavegen.view_logic.view_logic import *
+from oppgavegen.view_logic.submit_and_answer import *
 from oppgavegen.view_logic.current_work import *
 from oppgavegen.view_logic.statistics import *
 from oppgavegen.view_logic.add_remove import make_copy
