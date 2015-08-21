@@ -75,7 +75,6 @@ def latex_to_sympy(expr):
     i = 0
     counter = 0
     recorder = False
-    # Todo: Make a function that does this that can be used for both frac and binom
     while i < len(expr):  # Logic for inserting a / in fractals
         if expr[i] == 'c' and expr[i-1] == 'a' and expr[i-2] == 'r' and expr[i-3] == 'f' and expr[i-4] == '\\':
             recorder = True

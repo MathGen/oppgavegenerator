@@ -202,7 +202,7 @@ def fix_multiply_minus(s):
     return new_s
 
 
-def find_occurrences(s, left, right,  left_skip='', right_skip=''):
+def find_occurrences(s, left,  left_skip='', right_skip=''):
     # Finds a occurrence (left, right) in a string and returns a list of start and end positions.
     # left and right skip are used for occurrences that have some sort of nesting.
     # For instance \text{} needs to check for nesting of {} and end the occurrence when a } is found at the outer level.
