@@ -1,3 +1,6 @@
+"""py file for multifill"""
+# todo: this should be reworked, how is described in the documentation.
+
 from random import shuffle
 
 from oppgavegen.utility.decorators import Debugger
