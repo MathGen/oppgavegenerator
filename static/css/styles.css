@@ -313,7 +313,8 @@ ol li.list-group-item {
 }
 
 .btn_chapter,
-.btn_level {
+.btn_level,
+.btn_level_req {
     position: relative;
     border-radius: 8px;
     border-width: 3px;

@@ -33,7 +33,8 @@ class ChapterAdmin(admin.ModelAdmin):
 
 
 class SetAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name')
+    list_display = ('id', 'name', 'is_requirement')
+    exclude = ('copy','is_requirement',)
 
 
 class TagAdmin(admin.ModelAdmin):
