@@ -1,5 +1,8 @@
+### This file should be used for holding various decorators used in the project ###
+
 class Debugger(object):
-    enabled = False
+    """A debugger decorator, will print args in and out of every function with the decorator"""
+    enabled = False  # Set this to True to enable the decorator.
     def __init__(self, func):
         self.func = func
 
