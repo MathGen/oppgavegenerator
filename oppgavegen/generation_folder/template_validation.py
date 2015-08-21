@@ -1,6 +1,6 @@
 from sympy import *
 
-from oppgavegen.latex_translator import latex_to_sympy
+from oppgavegen.parsing.latex_translator import latex_to_sympy
 from oppgavegen.models import Template
 from oppgavegen.utility.decorators import Debugger
 from oppgavegen.utility.utility import remove_unnecessary, string_replace

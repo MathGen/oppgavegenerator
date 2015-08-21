@@ -1,14 +1,13 @@
 from math import copysign
+import json
 
 from sympy import *
-
 from sympy.parsing.sympy_parser import (parse_expr, standard_transformations,
                                         implicit_multiplication_application, convert_xor)
 
 from oppgavegen.utility.decorators import Debugger
 from oppgavegen.utility.utility import is_number, remove_unnecessary
-from oppgavegen.latex_translator import latex_to_sympy
-import json
+from oppgavegen.parsing.latex_translator import latex_to_sympy
 
 @Debugger
 def calculate_answer(s, domain):

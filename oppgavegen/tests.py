@@ -3,12 +3,12 @@ from django.test import TestCase
 from django.core import management
 
 from oppgavegen.generation_folder.generation import *
-from oppgavegen.latex_translator import *
+from oppgavegen.parsing.latex_translator import *
 from oppgavegen.utility.utility import *
 from oppgavegen.generation_folder.fill_in import *
-from oppgavegen.generation_folder.multifill import *
 from oppgavegen.generation_folder.template_validation import *
 from oppgavegen.generation_folder.calculate_parse_solution import *
+
 
 def setup():
         management.call_command('loaddata', 'initial_data.json', verbosity=0)

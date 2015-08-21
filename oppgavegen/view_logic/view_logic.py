@@ -6,13 +6,12 @@ Defines reusable functions often called from views.py
 from datetime import datetime
 import json
 
-from oppgavegen.latex_translator import remove_pm_and_add_parenthesis, add_phantom_minus, latex_to_sympy
 from oppgavegen.models import Template, Tag
-from oppgavegen.utility.parenthesis_removal import parenthesis_removal, parse_using_sympy
+from oppgavegen.parsing import parenthesis_removal
 from oppgavegen.view_logic.answer_checker import check_answer
-from oppgavegen.generation_folder.calculate_parse_solution import parse_solution, calculate_array, parse_answer
-from oppgavegen.generation_folder.fill_in import get_values_from_position, get_fillin_answers
-from oppgavegen.utility.utility import after_equal_sign, replace_words, replace_variables_from_array, string_replace
+from oppgavegen.generation_folder.calculate_parse_solution import parse_solution, parse_answer
+from oppgavegen.generation_folder.fill_in import get_fillin_answers
+from oppgavegen.utility.utility import after_equal_sign, replace_words, replace_variables_from_array
 from oppgavegen.generation_folder.template_validation import template_validation
 
 
@@ -125,7 +124,6 @@ def make_answer_context_dict(form_values):
 
     if graph != None and graph != '':  # to prevent error if none
         graph = json.dumps(graph)
-    print(solution)
     context_dict = {'title': "Oppgavegen", 'answer': str(answer_text),
                     'solution': solution, 'user_won': correct_answer, 'graph': graph,
                     'graph_color' : q.graph_color, 'graph_settings': q.graph_settings}
@@ -198,17 +196,10 @@ def required_check(user_answer, required, variables):
     return_value = False
     for x in range(0, len(required)):
         required[x] = replace_variables_from_array(variables, required[x])
-    print('in required check:')
-    print(required)
     for s in required:
         try:
-            print('this')
-            print(parse_solution(s, ''))
             t_s = parse_solution(s, '')
             t_s = parenthesis_removal(t_s)
-            print(t_s)
-            print(user_answer)
-            print('thas')
             if str(t_s).replace(' ', '') in str(user_answer):
                 break
             #elif parse_using_sympy(latex_to_sympy(t_s) + '+0' + '==' + latex_to_sympy(user_answer) + '+0'):

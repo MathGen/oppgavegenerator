@@ -146,7 +146,6 @@ def answers(request, level=1):
                 required = json.loads(template.required)
             except ValueError:
                 required = []
-            print('wth')
 
 
             context_dict = make_answer_context_dict(form_values)
@@ -299,9 +298,7 @@ def get_template(request):
         context_dict = {'message': 'Noe har gått feil.'}
         if request.method == 'POST':
             form = request.POST
-            print(form)
             level_id = int(form['level_id[]'])
-            print(level_id)
             chapter_id = int(form['chapter_id'])
             #if check_for_level_skip(request.user, Chapter.objects.get(pk=chapter_id), level_id):
             #    return render_to_response('game/template.html', context_dict, context)

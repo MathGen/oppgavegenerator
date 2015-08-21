@@ -5,18 +5,21 @@ Handles task generation from templates.
 """
 
 from random import uniform, shuffle, choice
+import json
+
 from sympy import sympify
+
 from sympy.parsing.sympy_parser import (parse_expr, standard_transformations,
                                         implicit_multiplication_application, convert_xor)
-from oppgavegen.latex_translator import latex_to_sympy, add_phantom_minus, remove_pm_and_add_parenthesis
+
+from oppgavegen.parsing.latex_translator import latex_to_sympy
 from oppgavegen.models import Level
 from oppgavegen.generation_folder.multifill import multifill
 from oppgavegen.generation_folder.fill_in import fill_in_the_blanks
-from oppgavegen.utility.parenthesis_removal import parenthesis_removal
+from oppgavegen.parsing import parenthesis_removal
 from oppgavegen.utility.utility import *
 from oppgavegen.generation_folder.calculate_parse_solution import parse_solution
 from oppgavegen.generation_folder.get_question import get_question, get_level_question
-import json
 
 
 @Debugger
@@ -254,7 +257,6 @@ def generate_valid_numbers(template, random_domain, conditions, test):
     domain_dict = {}
     domain_list = {}
     variable_dict = {}
-    counter = 0
     try:
         random_domain = json.loads(random_domain)
         # Loops through all possible variable names, and generate a random number for it.
@@ -270,17 +272,6 @@ def generate_valid_numbers(template, random_domain, conditions, test):
     except ValueError:
         pass
 
-    # for i in range(len(hardcoded_variables)):
-    #     if template.count(hardcoded_variables[i]) > 0:
-    #         try:  # In case of index out of bounds it just uses the first element of the array
-    #             random_domain = random_domain_list[counter].split()
-    #         except IndexError:
-    #             # Uses the first domain in case one was not provided.
-    #             random_domain = random_domain_list[0].split()
-    #         random_number = str(make_number(random_domain))
-    #         domain_dict[hardcoded_variables[i]] = random_domain
-    #         variable_dict[hardcoded_variables[i]] = random_number
-    #         counter += 1  # Counter to iterate through the random domains
     if len(conditions) > 1:
         variable_dict = check_conditions(conditions, variable_dict, domain_dict, domain_list)
 
@@ -293,10 +284,10 @@ def generate_valid_numbers(template, random_domain, conditions, test):
 @Debugger
 def check_conditions(conditions, variable_dict, domain_dict, domain_list):
     """A function that checks if the generated variables pass the conditions and generates new ones until they do.
-
     :param conditions: The conditions of the template.
     :param variable_dict: List of variables.
     :param domain_dict: the domain of the variables.
+    :param domain_list: a dict with the domain list.
     :return: List of variables that pass the conditions of the given template.
     """
     conditions = remove_unnecessary(conditions)

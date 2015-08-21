@@ -1,7 +1,7 @@
-from sympy import simplify
 from sympy.parsing.sympy_parser import (parse_expr, standard_transformations,
                                         implicit_multiplication_application, convert_xor)
-from oppgavegen.latex_translator import latex_to_sympy
+
+from oppgavegen.parsing.latex_translator import latex_to_sympy
 
 
 def parenthesis_removal(s):

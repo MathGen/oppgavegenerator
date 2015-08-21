@@ -6,7 +6,8 @@ Defines functions needed to evaluate user input
 from sympy import simplify
 from sympy.parsing.sympy_parser import (parse_expr, standard_transformations,
                                         implicit_multiplication_application, convert_xor)
-from oppgavegen.latex_translator import latex_to_sympy
+
+from oppgavegen.parsing.latex_translator import latex_to_sympy
 
 
 def check_answer(user_answer, answer, template_type, margin_for_error=0):
