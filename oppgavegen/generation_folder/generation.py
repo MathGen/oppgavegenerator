@@ -58,7 +58,7 @@ def generate_task(user, template_extra, desired_type=''):
     choices = choices.replace(')', '+parenthesisright+')  # Done to preserve original parenthesis
     conditions = q.conditions.replace('\\\\', '\\')
     dictionary = q.dictionary
-    answer = q.answer.replace('\\\\', '\\') #todo: parenthesis parsing here as well.
+    answer = q.answer.replace('\\\\', '\\')
     primary_key = q.pk
     fill_in = q.fill_in.replace('\\\\', '\\')
     fill_in = fill_in.replace('(', '+parenthesisleft+')  # Done to preserve original parenthesis
@@ -238,8 +238,6 @@ def generate_level(user, level_id):
                    'number_of_answers': number_of_answers, 'replacing_words': replacing_words,
                    'graph': graph, 'graph_settings': q.graph_settings, 'graph_color': q.graph_color}
     return return_dict
-
-#todo new parenthesis parsing for fillin/template specific
 
 @Debugger
 def generate_valid_numbers(template, random_domain, conditions, test):

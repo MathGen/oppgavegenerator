@@ -257,10 +257,9 @@ def lesser_than(string, domain_dict, variable_dict):
             change = 1
 
         if change == 0 and len(variables_left) > 0: #change the left side of <
-            #todo add exception for the sympify
-            #todo add compatability with float numbers as well (random.uniform(1.2,1.9))
+
             variable_to_change = variables_left[randint(0,len(variables_left)-1)]
-            new_value = new_random_value(variable_to_change,domain_dict, ceil(solve_inequality(string,variable_dict, variable_to_change)),'left') #todo ceil is only really good for templates with integers.
+            new_value = new_random_value(variable_to_change,domain_dict, ceil(solve_inequality(string,variable_dict, variable_to_change)),'left')
             variable_dict[variable_to_change] = new_value
         elif change == 1 and len(variables_right) > 0: #change the right side of <
             variable_to_change = variables_right[randint(0,len(variables_right)-1)]

@@ -35,7 +35,7 @@ def chapter_progress(user, set, medals, completed):
         chapters = set.order
     except set.order.DoesNotExist:
         print('no chapter order exists for this set')
-    chapters = chapters.split(',') # Todo error handling
+    chapters = chapters.split(',')
     for i in chapters:
         level_star_count = 0
         levels_completed = 0

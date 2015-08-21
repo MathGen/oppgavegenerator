@@ -682,7 +682,6 @@ class UserCurrentSetsEdit(LoginRequiredMixin, UpdateView):
         success_url = self.request.GET.get('next', '')
         return success_url
 
-    # todo: filter dropdowns for objects made by current user
     # class based views are weird about this
     # def get_form_class(self, form_class=form_class):
     #     form_class.fields['current_level'].queryset = Level.objects.filter(creator=self.request.user)
