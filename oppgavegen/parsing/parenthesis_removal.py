@@ -5,7 +5,12 @@ from oppgavegen.parsing.latex_translator import latex_to_sympy
 
 
 def parenthesis_removal(s):
-
+    """
+    The main function used for removing redundant parenthesis
+    This function splits up the string at logical places and uses the parenthesis_remover function on the substrings.
+    :param s: a string to remove parenthesis from
+    :return: returns the string with redundant parenthesis removed
+    """
     s = s.replace('\\text{ }', ' ')
     # empty text fields sometimes get into equations, this will split the equation and result in incorrect
     # parenthesis removal. Which is why the empty text fields are replaced.
@@ -34,8 +39,6 @@ def parenthesis_removal(s):
 
 def parenthesis_remover(s):
     """removes parenthesises from expressions and checks if the expression is still valid."""
-    #replace_dict = make_replace_text_dict(s)
-    #s = replace_value_with_key(s, replace_dict)
     s = s.replace(')(', ')*(')
     s = s.replace('§', '+paragraftegn+')
     s = s.replace('(+', '(')
@@ -114,6 +117,7 @@ def find_pairs(s, one, two):
 
 
 def parse_using_sympy(s):
+    """Runs sympy on a string using the specified transformations"""
     transformations = standard_transformations + (convert_xor, implicit_multiplication_application,)
     return parse_expr(s, transformations=transformations, global_dict=None, evaluate=True)
 
