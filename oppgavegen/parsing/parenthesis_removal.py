@@ -26,8 +26,8 @@ def parenthesis_removal(s):
             new_s += s_list[x+1]
 
     new_s = replace_key_with_value(new_s, replace_dict)
-    s = s.replace('+parenthesisleft+', '(')
-    s = s.replace('+parenthesisright+', ')')
+    new_s = new_s.replace('+parenthesisleft+', '(')
+    new_s = new_s.replace('+parenthesisright+', ')')
     new_s = fix_multiply_minus(new_s)
     return new_s
 
