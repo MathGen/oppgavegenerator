@@ -317,7 +317,7 @@ def make_level_copy(original_level, user):
 
 def update_chapter_or_set(set_or_chapter, title, order, user):
     msg = 'Failed update.'
-    if set_or_chapter.creator == user:
+    if set_or_chapter.editor == user:
         set_or_chapter.name = title
         set_or_chapter.order = order
         set_or_chapter.save()
@@ -327,7 +327,7 @@ def update_chapter_or_set(set_or_chapter, title, order, user):
 
 def update_level(level, title, user, k_factor):
     msg = 'Failed update.'
-    if level.creator == user:
+    if level.editor == user:
         level.name = title
         level.k_factor = k_factor
         level.save()

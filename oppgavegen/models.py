@@ -136,7 +136,7 @@ class Set(models.Model):
     chapters = models.ManyToManyField(Chapter, related_name='sets', blank=True)
     creator = models.ForeignKey(User, blank=True, null=True, related_name='sets_created')
     editor = models.ForeignKey(User, blank=True, null=True, related_name='sets_edited')  # Editor of set
-    creation_date = models.DateTimeField('date created', blank=True, null=True, auto_now_add=True)  # Date and time of creation
+    creation_date = models.DateTimeField('date created', blank=True, null=True)  # Date and time of creation
     order = models.CharField(max_length=400, default='')
     copy = models.BooleanField(default=False)
     users = models.ManyToManyField(User, blank=True, related_name='sets_joined')

@@ -24,7 +24,7 @@ $(document).ready(function () {
         $('#level_title').text(" - " + level_title);
         var level_id = $(this).attr('id').match(/\d+/);
         var level_index = $(this).index()-1; // TODO: fix the level_index so it's not affected by other elements than .btn_level.
-        console.log("level_progress: " + level_progress + "level_index: " + level_index);
+        console.log("level_progress: " + level_progress + " level_index: " + level_index);
         if(level_index <= level_progress + 1){
             console.log("if setning");
             current_level = level_id;
