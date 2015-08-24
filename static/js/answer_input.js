@@ -118,7 +118,7 @@ $(document).ready(function () {
                 post_answer(submit_dict);
             }
             else{
-                post(/answers/, submit_dict);
+                post('/answers/', submit_dict);
             }
         }
 

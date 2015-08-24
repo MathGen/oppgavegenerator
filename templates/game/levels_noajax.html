@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block panels %}
+    {% block js %}
+        <script src="/static/js/graph.js?011"></script>
+        <script src="https://www.desmos.com/api/v0.6/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"
+                async></script>
+    {% endblock %}
+    <script src="/static/js/game.js?031"></script>
+    <link href="/static/css/game.css?02" rel="stylesheet">
+    <div id="game_screen" class="jumbotron">
+        <div id="set_id" hidden>{{ set_id }}</div>
+        <h2 class="set_title">{{ set_title }}<span id="chapter_title"></span><span id="level_title"></span></h2>
+
+        <div id="game_loading" style="display: none"><img src="/static/img/loading.gif"></div>
+        <div id="game_content" style="display: none">
+
+            <div id="get_chapter_id" hidden>{{ chapter_id }}</div>
+            <div id="progress_number" hidden>{{ progress_number }}</div>
+            <div id="spl" hidden>{{ spl }}</div>
+
+            {% if in_requirement_set %}
+                {% for level in levels %}
+
+                    <div id="level_{{ level.id }}" class="btn btn_level_req">
+                        <h4 class="level_title">{{ level.name }}</h4>
+
+                        <h2 class="level_progress">
+                            <span class="progress_star glyphicon glyphicon-star-empty"></span>
+                            <span class="progress_star glyphicon glyphicon-star-empty"></span>
+                            <span class="progress_star glyphicon glyphicon-star-empty"></span>
+                            <span class="progress_star glyphicon glyphicon-star-empty"></span>
+                            <span class="progress_star glyphicon glyphicon-star-empty"></span>
+                        </h2>
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                {% for level in levels %}
+
+                    <div id="level_{{ level.id }}" class="btn btn_level btn_locked" disabled>
+                        <h4 class="level_title">{{ level.name }}</h4>
+
+                        <h2 class="level_progress">
+                            <span class="progress_star glyphicon glyphicon-star-empty"></span>
+                            <span class="progress_star glyphicon glyphicon-star-empty"></span>
+                            <span class="progress_star glyphicon glyphicon-star-empty"></span>
+                            <span class="progress_star glyphicon glyphicon-star-empty"></span>
+                            <span class="progress_star glyphicon glyphicon-star-empty"></span>
+                        </h2>
+                    </div>
+
+                {% endfor %}
+            {% endif %}
+
+        </div>
+        <div id="game_nav" style="display: none">
+            <a class="btn btn-link"><span class="btn_game_back glyphicon glyphicon-arrow-left"></span></a>
+        </div>
+    </div>
+{% endblock %}

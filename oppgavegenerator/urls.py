@@ -63,7 +63,7 @@ urlpatterns = patterns('',
     url(r'^game/(\d+)/levels/$', levels, name='levels'), # JS: game.js
     url(r'^game/(\d+)/chapters/$', chapters, name='chapters'), # JS: game.js
     url(r'^game/template/$', get_template, name='get_template'), # JS: game.js
-    url(r'^game/(\d+)/answer/$', answers, name='get_answer'), # JS: game.js
+    url(r'^game/(\d+)/answer/$', get_solution, name='get_answer'), # JS: game.js
     url(r'^add-user-to-set/', add_user_to_set_view, name='add_user_to_set'), # JS: game.js
 
     # JS: set_edit_functions.js, search_functions.js

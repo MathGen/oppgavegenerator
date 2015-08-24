@@ -27,7 +27,7 @@ $(document).ready(function () {
         console.log("level_progress: " + level_progress + " level_index: " + level_index);
         if(level_index <= level_progress + 1){
             current_level = level_id;
-            load_template(level_id);
+            load_level_template(level_id);
         }
     });
 
@@ -38,7 +38,7 @@ $(document).ready(function () {
         $('#level_title').text(" - " + level_title);
         var level_id = $(this).attr('id').match(/\d+/);
         current_level = level_id;
-        load_template(level_id);
+        load_level_template(level_id);
     });
 
     // Go back to main-page (chapter-picker)
@@ -47,7 +47,7 @@ $(document).ready(function () {
         load_chapters();
     });
     $(document).on('click', '#v_new_question', function(){
-        load_template(current_level);
+        load_level_template(current_level);
     });
 });
 
@@ -147,6 +147,23 @@ function load_template(level_id){
             });
         });
     });
+}
+
+/**
+ * Loads a template given by the selected level without ajax to avoid
+ * multiple answers being sent.
+ * @param {number} level_id - The id of the selected level.
+ */
+function load_level_template(level_id){
+    console.log("loading a template");
+    var submit_dict = {};
+    current_chapter = $('#get_chapter_id').text();
+    current_set = $('#set_id').text();
+    submit_dict['set_id'] = current_set;
+    submit_dict['chapter_id'] = current_chapter;
+    submit_dict['level_id'] = level_id;
+    submit_dict['csrfmiddlewaretoken'] = getCookie('csrftoken');
+    post('/game/template/', submit_dict)
 }
 
 /**
