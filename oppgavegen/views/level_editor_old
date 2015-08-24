@@ -1,0 +1,65 @@
+### SET, CHAPTER, LEVEL MANAGEMENT VIEWS ###
+@login_required
+def set_list(request):
+    context = RequestContext(request)
+    context_dict = {'set_list': True}
+    render_to = 'sets/container.html'
+
+    sets = Set.objects.all().filter(editor=request.user)
+    context_dict['sets'] = sets
+
+    return render_to_response(render_to, context_dict, context)
+
+@login_required
+def set_edit(request, set_id=""):
+    context = RequestContext(request)
+    set_title = ""
+    chapters = []
+    if set_id:
+        edit_set = Set.objects.get(pk=set_id)
+        set_current_set(request.user, edit_set)
+        set_title = edit_set.name
+        order = edit_set.order
+
+        for x in order.split(','):
+            for chapter in edit_set.chapters.all():
+                if chapter.pk == int(x):
+                    chapters.append(chapter)
+                    break
+    return render_to_response('sets/container.html', {'set_id': set_id, 'chapters': chapters,
+                                                      'set_edit': True, 'set_title': set_title}, context)
+
+
+def chapter_edit(request, chapter_id=""):
+    context = RequestContext(request)
+    chapter_title = ""
+    levels = []
+    if chapter_id:
+        edit_chapter = Chapter.objects.get(pk=chapter_id)
+        set_current_chapter(request.user, edit_chapter)
+        chapter_title = edit_chapter.name
+        order = edit_chapter.order
+
+        for x in order.split(','):
+            for level in edit_chapter.levels.all():
+                if level.pk == int(x):
+                    levels.append(level)
+                    break
+    return render_to_response('sets/container.html', {'chapter_id': chapter_id, 'levels': levels,
+                                                      'chapter_edit': True, 'chapter_title': chapter_title}, context)
+
+
+def level_edit(request, level_id=""):
+    context = RequestContext(request)
+    get_templates = ""
+    level_title = ""
+    k_factor = 3
+    if level_id:
+        edit_level = Level.objects.get(pk=level_id)
+        set_current_level(request.user, edit_level)
+        level_title = edit_level.name
+        k_factor = edit_level.k_factor
+        get_templates = edit_level.templates.all()
+    return render_to_response('sets/container.html', {'level_id': level_id, 'templates': get_templates,
+                                                      'level_edit': True, 'level_title': level_title,
+                                                      'k_factor': k_factor}, context)

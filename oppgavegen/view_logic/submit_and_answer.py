@@ -7,7 +7,7 @@ from datetime import datetime
 import json
 
 from oppgavegen.models import Template, Tag
-from oppgavegen.parsing import parenthesis_removal
+from oppgavegen.parsing.parenthesis_removal import *
 from oppgavegen.view_logic.answer_checker import check_answer
 from oppgavegen.generation_folder.calculate_parse_solution import parse_solution, parse_answer
 from oppgavegen.generation_folder.fill_in import get_fillin_answers

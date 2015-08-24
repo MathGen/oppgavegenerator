@@ -1,4 +1,5 @@
 """
+Implementation of the Django Listview
 Unused pull-request from django-sortable-listview. Allows ordering of sort fields.
 https://github.com/aptivate/django-sortable-listview/pull/9
 """

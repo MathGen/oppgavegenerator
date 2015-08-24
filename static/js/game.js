@@ -18,12 +18,15 @@ $(document).ready(function () {
     });
     // Load a task from the specific level
     $(document).on('click', '.btn_level', function(e){
+        console.log("btn_level clicked");
         e.preventDefault();
         var level_title = $(this).find('.level_title').text();
         $('#level_title').text(" - " + level_title);
         var level_id = $(this).attr('id').match(/\d+/);
         var level_index = $(this).index()-1; // TODO: fix the level_index so it's not affected by other elements than .btn_level.
+        console.log("level_progress: " + level_progress + "level_index: " + level_index);
         if(level_index <= level_progress + 1){
+            console.log("if setning");
             current_level = level_id;
             load_template(level_id);
         }
@@ -80,7 +83,7 @@ function load_chapters(){
             display_loading_icon(false);
             var progress_number = $('#progress_number');
             level_progress = progress_number.text();
-            //progress_number.remove();
+            progress_number.remove();
             unlock_contents('.btn_chapter', level_progress);
             update_medals();
             append_medal_star();
@@ -103,9 +106,9 @@ function load_levels(chapter_id){
             display_loading_icon(false);
             var progress_number = $('#progress_number');
             level_progress = progress_number.text();
-            //progress_number.remove();
+            progress_number.remove();
             unlock_contents('.btn_level', level_progress);
-            unlock_contents('.btn_level_req', level_progress);
+            //unlock_contents('.btn_level_req', level_progress);
             get_stars_per_level(level_progress);
             disable_game_contents();
             $(this).fadeIn('fast', function(){
@@ -227,7 +230,7 @@ function update_progress_bar(){
  */
 function update_progress_bar_level(){
     var stars = parseInt($('#num_stars').text());
-    var rating = $('#get_ulp').text();
+    var rating = $('#get_ulp').text(); // ulp = user level progress
     switch(stars){
         case 1:
             rating_from = 1250;

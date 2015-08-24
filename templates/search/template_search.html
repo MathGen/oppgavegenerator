@@ -44,7 +44,6 @@
                             <br>
                             {% bootstrap_field form.multiple_support %}
                             {% bootstrap_field form.fill_in_support %}
-                            {% bootstrap_field form.multifill_support %}
                         </div>
                         <button type="button" data-toggle="collapse" data-target="#advanced-search" class="btn btn-default pull-right" aria-expanded="false">
                         {% bootstrap_icon "chevron-up" %}
@@ -81,7 +80,7 @@
 
 
 
-                {% for template in page.object_list %}
+                {% for result in page.object_list %}
                        <div class="row">
                         {% include 'search/includes/template_search_result.html' %}
                         </div>

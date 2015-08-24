@@ -6,14 +6,14 @@
     <strong>
 
         {% if user|is_superuser %}
-            {{ template.pk }}
+            {{ result.pk }}
         {% endif %}
 
-        <a href="{% url 'task_by_extra' template.pk %}">
-                <span class="template_title_id_{{ template.pk }}">
+        <a href="{% url 'task_by_extra' result.pk %}">
+                <span class="template_title_id_{{ result.pk }}">
 
-                    {% if template.name %}
-                        {{ template.name|title }}
+                    {% if result.name %}
+                        {{ result.name|title }}
                     {% else %}
                         Uten Tittel
                     {% endif %}
@@ -26,35 +26,35 @@
         <li>
             <span title="Forfatter">
             <span class="glyphicon glyphicon-user"></span>
-                {% ifequal template.creator user %}
-                    {{ template.creator|capfirst }}
+                {% ifequal result.creator user %}
+                    {{ result.creator|capfirst }}
                 {% else %}
-                    {{ template.creator|capfirst }}
+                    {{ result.creator|capfirst }}
                 {% endifequal %}
             </span>
         </li>
         <li>
             <span title="Rating">
                 <span class="glyphicon glyphicon-stats"></span>
-                {{ template.rating }}
-                {% ifequal "True" template.multiple_support %}/
-                    <a href="{% url 'task_by_id_and_type' template.pk 'multiple' %}">Flervalg:</a>
-                    {{ template.choice_rating }}
+                {{ result.rating }}
+                {% ifequal "True" result.multiple_support %}/
+                    <a href="{% url 'task_by_id_and_type' result.pk 'multiple' %}">Flervalg:</a>
+                    {{ result.choice_rating }}
                 {% endifequal %}
-                {% ifequal "True" template.fill_in_support %}/
-                    <a href="{% url 'task_by_id_and_type' template.pk 'blanks' %}">Utfylling:</a>
-                    {{ template.fill_rating }}
+                {% ifequal "True" result.fill_in_support %}/
+                    <a href="{% url 'task_by_id_and_type' result.pk 'blanks' %}">Utfylling:</a>
+                    {{ result.fill_rating }}
                 {% endifequal %}
-                {% ifequal "True" template.multifill_support %}/
-                    <a href="{% url 'task_by_id_and_type' template.pk 'multifill' %}">Flerutfylling:</a>
-                    {{ template.multifill_rating }}
+                {% ifequal "True" result.multifill_support %}/
+                    <a href="{% url 'task_by_id_and_type' result.pk 'multifill' %}">Flerutfylling:</a>
+                    {{ result.multifill_rating }}
                 {% endifequal %}
             </span>
         </li>
         <li>
             <span title="Lagringsdato">
             <span class="glyphicon glyphicon-calendar"></span>
-                {{ template.creation_date|date:"d/m/y" }}
+                {{ result.creation_date|date:"d/m/y" }}
             </span>
         </li>
     </ul>
@@ -66,16 +66,16 @@
 
     <div class="col-md-6" >
     <div class="pull-right">
-    <span id="object_copied_indicator_{{ template.pk }}" class="text-success" style="display:none;">
+    <span id="object_copied_indicator_{{ result.pk }}" class="text-success" style="display:none;">
         <span class="glyphicon glyphicon-ok" title="Oppgavemalen ble kopiert til {{ user.extendeduser.current_level.name }}"></span>
     </span>
     <div class="btn-group" role="group" style="padding-top:0">
         <button class="btn btn-sm btn-default preview-button" title="Forhåndsvisning"
-                data-template_id="{{ template.pk }}" data-template_title="{{ template.name|title }}" type="button">
+                data-template_id="{{ result.pk }}" data-template_title="{{ result.name|title }}" type="button">
             <span class="glyphicon glyphicon-eye-open"></span>
         </button>
 
-            <a href="{% url 'edit_template' template.pk %}" class="btn btn-sm btn-default edit-button" title="Rediger"
+            <a href="{% url 'edit_template' result.pk %}" class="btn btn-sm btn-default edit-button" title="Rediger"
                role="button">
                 <span class="glyphicon glyphicon-pencil"></span>
             </a>
@@ -84,7 +84,7 @@
 
                     <button title="Kopier og legg til {{ user.extendeduser.current_level.name }}"
                             class="btn btn-sm btn-primary btn-copy-template"
-                            data-template-id="{{ template.pk }}">
+                            data-template-id="{{ result.pk }}">
                         <span class="glyphicon glyphicon-plus"></span>
                     </button>
 

@@ -16,7 +16,7 @@ from oppgavegen.parsing.latex_translator import latex_to_sympy
 from oppgavegen.models import Level
 from oppgavegen.generation_folder.multifill import multifill
 from oppgavegen.generation_folder.fill_in import fill_in_the_blanks
-from oppgavegen.parsing import parenthesis_removal
+from oppgavegen.parsing.parenthesis_removal import *
 from oppgavegen.utility.utility import *
 from oppgavegen.generation_folder.calculate_parse_solution import parse_solution
 from oppgavegen.generation_folder.get_question import get_question, get_level_question

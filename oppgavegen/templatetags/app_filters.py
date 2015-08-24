@@ -1,14 +1,20 @@
 from django import template
-from django.contrib.auth.models import Group
-from django.contrib.auth.models import User
-from oppgavegen.models import ExtendedUser, Set, Chapter, Level, Template
-from django.core.paginator import Paginator
+
+from oppgavegen.models import User, ExtendedUser, Set, Chapter, Level, Template
+
 register = template.Library()
 
 
 @register.filter
 def is_teacher(user):
     """Returns True/False depending on if the user is a teacher"""
+    if user.is_superuser:
+        return True
+    return user.groups.filter(name='Teacher').exists()
+
+@register.filter
+def is_member(user):
+    """Returns true/false depending on if the user is a member of the teacher group (or is a superuser)"""
     if user.is_superuser:
         return True
     return user.groups.filter(name='Teacher').exists()
@@ -71,11 +77,20 @@ def user_in_set(user, set_id):
 
 @register.inclusion_tag('includes/user_templates.html')
 def get_user_templates(user):
+    """
+    Render a compact list of a user's templates
+    example: {% get_user_templates user=user %}
+    """
     templates = Template.objects.all().filter(editor=user,copy=False)
     return {'templates':templates}
 
 @register.inclusion_tag('includes/user_sets.html')
 def get_user_objects(user, object_type):
+    """
+    Render a compact list of a user's templates
+    example: {% get_user_objects user=user object_type='set' %}
+    will render the current logged in user's sets
+    """
     types = ['set','chapter','level']
     objects = ""
     if object_type == 'set':

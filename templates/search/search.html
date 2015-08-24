@@ -1,19 +1,18 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
-{% load static %}
+{% load staticfiles %}
 {% block head %}
-    <link href="/static/css/search.css" rel="stylesheet">
+    <link href="{% static "css/search.css" %}" rel="stylesheet">
 {% endblock %}
 {% block title %}{% endblock %}
 
 {% block panels %}
 
-    <section class="panel panel-default">
-        <div class="panel-heading"><h3 class="panel-title">Søk</h3></div>
+    <div class="panel panel-default">
+        <div class="panel-heading"><h3 class="panel-title">Søk i oppgavemaler</h3></div>
         <div class="panel-body">
 
-            <div class="form-group inline">
-                <form method="get" action=".">
+           <form method="get" action=".">
 
                     {% bootstrap_form form %}
 
@@ -22,52 +21,91 @@
                     </button>
 
                 </form>
-            </div>
         </div>
+    </div>
 
         {% if query %}
-            <ul class="list-group">
-                {% for result in page.object_list %}
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+
+
+
+                <h3 class="panel-title">Resultater</h3></div>
+        <div class="panel-body">
+
+
+
+
+        {% for result in page.object_list %}
                     {% if result.content_type == "oppgavegen.set" %}
-                        <li class="list-group-item clearfix">{% include 'search/includes/set.html' %}</li>
+                        <div class="row">{% include 'search/includes/set_search_result.html' %}</div>
                     {% endif %}
                     {% if result.content_type == "oppgavegen.chapter" %}
-                        <li class="list-group-item clearfix">{% include 'search/includes/chapter.html' %}</li>
+                        <div class="row">{% include 'search/includes/chapter_search_result.html' %}</div>
                     {% endif %}
                     {% if result.content_type == "oppgavegen.level" %}
-                        <li class="list-group-item clearfix">{% include 'search/includes/level.html' %}</li>
+                        <div class="row">{% include 'search/includes/level_search_result.html' %}</div>
                     {% endif %}
                     {% if result.content_type == "oppgavegen.template" %}
-                        <li class="list-group-item clearfix">{% include 'search/includes/template_result.html' %}</li>
+                        <div class="row">{% include 'search/includes/template_search_result.html' %}</div>
                     {% endif %}
+            <hr style="margin-top: 5px; margin-bottom: 5px">
                 {% empty %}
                     <p>Fant ingenting.</p>
                 {% endfor %}
-            </ul>
-            {% if page.has_previous or page.has_next %}
-                <div>
-                    {% if page.has_previous %}
-                        <a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous
-                    {% if page.has_previous %}</a>{% endif %}
-                    |
-                    {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}
-                    Next &raquo;{% if page.has_next %}</a>{% endif %}
-                </div>
-            {% endif %}
 
         {% else %}
             {# Show some example queries to run, maybe query syntax, something else? #}
         {% endif %}
 
-        </form>
-    </section>
+        {% if page.has_previous or page.has_next %}
+            <nav class="text-center">
 
-    {% block js %}
-        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-        <script src="/static/js/search_functions.js"></script>
+
+            <ul class="pagination pagination-centered">
+                {% if page.has_previous %}
+                    <li><a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                    </li>
+                {% endif %}
+
+                {% for i in paginator.page_range %}
+                    <li {% if page.number == i %} class="active" {% endif %}>
+                        <a href="?q={{ query }}&amp;page={{ i }}">
+                            {{ i }}
+                        </a>
+                    </li>
+                {% endfor %}
+
+                {% if page.has_next %}
+                    <li>
+                        <a href="?q={{ query }}&amp;page={{ page.next_page_number }}">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+            </nav>
+        {% endif %}
+
+    </div>
+    
+    {% block modals %}
+
+        {% include 'sets/includes/preview_modal.html' %}
+
     {% endblock %}
 
+{% endblock %}
 
-
+{% block js %}
+    {% if user.extendeduser.current_level %}
+    <script>
+    var current_level = {{ user.extendeduser.current_level.id }};
+    </script>
+    {% endif %}
+    <script src="{% static "js/underscore-min.js" %}"></script>
+    <script src="{% static "js/search_functions.js" %}"></script>
 {% endblock %}

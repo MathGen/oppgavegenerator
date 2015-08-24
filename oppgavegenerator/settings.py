@@ -30,7 +30,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'bootstrap3',                   # django-bootstrap-3
     'registration',                 # django-registration-redux
-    'gunicorn',                     # gunicorn (for unix deployment)
+    'gunicorn',                     # gunicorn ( wsgi application server for unix deployment)
     'haystack',                     # django-haystack ( search engine )
 )
 

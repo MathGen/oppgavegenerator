@@ -1,11 +1,9 @@
 """For views that either add or remove something from the database"""
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render_to_response
-from django.template import RequestContext
-from oppgavegen.models import Level, Template, Set, Chapter
-from oppgavegen.view_logic.add_remove import *
+
 import json
-from django.utils.encoding import force_text
+
+from oppgavegen.view_logic.add_remove import *
+
 
 def new_set_view(request, set_name='Navn på sett'):
     """View for creating a new set"""
@@ -181,18 +179,9 @@ def update_set_view(request):
 
     return HttpResponse(msg)
 
-def update_object_name(request, object):
-    "Set an object name"
-    if object.editor == request.user:
-        if request.method == 'POST':
-            form = request.post
-            title = form['title']
-            object.update(name=title)
-
-    return HttpResponse(object.title)
 
 def update_level_view(request):
-    msg = 'Noe gikk galt'
+    msg = 'Failed updating level'
     if request.method == 'POST':
         form = request.POST
         title = form['title']
@@ -203,9 +192,8 @@ def update_level_view(request):
     return HttpResponse(msg)
 
 def add_user_to_set_view(request):
-    print("it's a start")
+    msg = 'Failed adding user to set'
     try:
-        msg = 'noe gikk galt'
         if request.method == 'POST':
             form = request.POST
             set_id = int(form['set_id'])
@@ -213,26 +201,4 @@ def add_user_to_set_view(request):
     except Exception as e:
         print('error')
         print(e)
-    return HttpResponse(msg)
-
-def toggle_template_level_membership(request, template_id):
-    """"
-    Toggle template->level membership via ajax POST without making a copy.
-    For Advanced Search-results where the user is the editor (owner).
-    """
-    msg = ''
-    level = request.user.extendeduser.current_level
-    if request.method == 'POST':
-        try:
-            template = Template.objects.get(pk=template_id)
-        except Template.DoesNotExist as e:
-            raise ValueError("Unknown template.id=" + str(template_id) + "or level.id=" +
-                             str(level.id) + ". Original error: " + str(e))
-        if template in level.templates.all():
-            level.templates.remove(template)
-            level.save()
-            msg = "Template " + str(template.id) + " removed from " + level.name
-        else:
-            level.templates.add(template)
-            msg = "Template " + str(template.id) + " added to " + level.name
     return HttpResponse(msg)

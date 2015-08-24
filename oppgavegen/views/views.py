@@ -4,66 +4,67 @@ Defines views, and renders data to html templates.
 
 """
 
-import json
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.template import RequestContext
-from django.shortcuts import render_to_response, HttpResponse, get_object_or_404, redirect
-from django.http import HttpResponseForbidden, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response, redirect
+from django.http import JsonResponse
 from django.views.generic.edit import UpdateView
-from django.views.generic.list import ListView
 from django.db.models import Count
-from oppgavegen.utility.sortable_listview import SortableListView
-
 from django.views.decorators.cache import cache_control
+from registration.views import RegistrationView
+from haystack.generic_views import SearchView
 
+from oppgavegen.views.sortable_listview import SortableListView
+from oppgavegen.views.login_required_mixin import LoginRequiredMixin
 from oppgavegen.templatetags.app_filters import is_teacher
-from oppgavegen.models import Set, Chapter, Level, Template
 from oppgavegen.view_logic.rating import change_elo, change_level_rating, get_user_rating
-from oppgavegen.generation_folder.generation import generate_task, generate_level
-from oppgavegen.view_logic.progress import calculate_progress, chapter_progress, get_stars_per_level, \
-    get_user_rating_for_level, get_user_stars_for_level, check_for_level_skip
+from oppgavegen.generation_folder.generation import generate_task
 from oppgavegen.view_logic.submit_and_answer import *
-from oppgavegen.view_logic.current_work import *
 from oppgavegen.view_logic.statistics import *
 from oppgavegen.view_logic.add_remove import make_copy
-
-from registration.views import RegistrationView
-
-# Search Views and Forms
-from haystack.forms import SearchForm
-from haystack.generic_views import SearchView
-from haystack.query import SearchQuerySet
 from oppgavegen.forms import *
 
-# Pre-defined renders of add/remove-buttons for toggle-action views
-add_button = render_to_response('search/includes/add_button_ajax.html')
-remove_button = render_to_response('search/includes/remove_button_ajax.html')
+
+@login_required
+def index(request):
+    """ The application front page. Shows a lists of Sets ordered by popularity or creation date. """
+    context = {}
+    sets = Set.objects.all().filter(is_public=True)
+    user_sets = request.user.sets_joined.all()
+    context['popular'] = sets.annotate(num_users=Count('users')).order_by('-num_users')[:20]
+    context['latest'] = sets.order_by('-creation_date')[:20]
+    context['user_sets'] = user_sets
+    return render(request, "index.html", context)
 
 
-class LoginRequiredMixin(object):
-    """ Generic @login_required Mixin for class-based views  """
-    @classmethod
-    def as_view(cls, **initkwargs):
-        view = super(LoginRequiredMixin, cls).as_view(**initkwargs)
-        return login_required(view)
+@login_required
+@user_passes_test(is_teacher, '/')
+def new_template(request):
+    """Returns a render of edit.html used for creating new templates"""
+    context = RequestContext(request)
+    # Retrieves a list of topics and passes them to the view.
+    return render_to_response('template_editor.html', context)
 
 
-def is_member(user):
-    """Returns true/false depending on if the user is a member of the teacher group (or is a superuser)"""
-    if user.is_superuser:
-        return True
-    return user.groups.filter(name='Teacher').exists()
-
-
-class MathGenRegistrationView(RegistrationView):
-    form_class = NamedUserRegistrationForm
-
+@login_required
+@user_passes_test(is_teacher, '/')
+def edit_template(request, template_id):
+    """Returns a render of edit.html used for editing existing templates"""
+    context = RequestContext(request)
+    template = Template.objects.get(pk=template_id)
+    if template.editor == request.user:
+        context_dict = make_edit_context_dict(template_id)
+        return render_to_response('template_editor.html', context_dict, context)
+    else:
+        #If the user is not listed as the template editor open dialogue to confirm template cloning
+        context_dict={}
+        context_dict['template'] = template
+        return render_to_response('sets/confirm_template_copy.html',context_dict, context)
 
 @cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)
 @login_required
 def task(request):
-    """Returns a render of taskview.html with a rating apropriate math question"""
+    """Returns a render of taskview.html with a rating appropriate math problem"""
     context = RequestContext(request)
     question_type = request.GET.get('q', '')
     if question_type != "":
@@ -95,29 +96,6 @@ def task_by_extra(request, template_extra):
     context_dict = generate_task(request.user, template_extra)
     context_dict['rating'] = get_user_rating(request.user)
     return render_to_response('taskview.html', context_dict, context)
-
-@login_required
-@user_passes_test(is_teacher, '/')
-def submit(request):
-    """Returns a render of submit html. Different depending on if the submission goes through ot not"""
-    message = 'don\'t come here'
-    if request.method == 'POST':
-        message = 'Det har skjedd noe feil ved innsending av form'
-        form = TemplateForm(request.POST)
-        if form.is_valid():
-            newtags = form.cleaned_data['tags_list']
-            template = form.save(commit=False)
-            if request.REQUEST['pk'] != '':  # Can this be written as v = req != ''?
-                template.pk = request.REQUEST['pk']  # Workaround, template doesn't automatically get template.pk
-                update = True
-            else:
-                update = False
-            message = submit_template(template, request.user, update, newtags)
-
-        else:
-            print(form.errors)
-    context = RequestContext(request)
-    return render_to_response('submit.html', {'message': message}, context)
 
 
 @login_required
@@ -178,316 +156,46 @@ def answers(request, level=1):
 
 @login_required
 @user_passes_test(is_teacher, '/')
-def new_template(request):
-    """Returns a render of edit.html used for creating new templates"""
+def submit(request):
+    """Returns a render of submit html. Different depending on if the submission goes through ot not"""
+    message = 'don\'t come here'
+    if request.method == 'POST':
+        message = 'Det har skjedd noe feil ved innsending av form'
+        form = TemplateForm(request.POST)
+        if form.is_valid():
+            newtags = form.cleaned_data['tags_list']
+            template = form.save(commit=False)
+            if request.REQUEST['pk'] != '':  # Can this be written as v = req != ''?
+                template.pk = request.REQUEST['pk']  # Workaround, template doesn't automatically get template.pk
+                update = True
+            else:
+                update = False
+            message = submit_template(template, request.user, update, newtags)
+
+        else:
+            print(form.errors)
     context = RequestContext(request)
-    # Retrieves a list of topics and passes them to the view.
-    return render_to_response('edit.html', context)
+    return render_to_response('submit.html', {'message': message}, context)
 
 
-@login_required
-@user_passes_test(is_teacher, '/')
-def edit_template(request, template_id):
-    """Returns a render of edit.html used for editing existing templates"""
-    context = RequestContext(request)
-    template = Template.objects.get(pk=template_id)
-    if template.editor == request.user:
-        context_dict = make_edit_context_dict(template_id)
-        return render_to_response('edit.html', context_dict, context)
-    else:
-        #If the user isn not listed as the template editor open dialogue to confirm template cloning
-        context_dict={}
-        context_dict['template'] = template
-        return render_to_response('sets/confirm_template_copy.html',context_dict, context)
+
 
 @login_required
 @user_passes_test(is_teacher, '/')
 def confirm_template_copy(request, template_id, goto_next="edit"):
+    """ On template clone confirm, either go to editing the cloned template, or return to a list of the users templates """
     original_template = Template.objects.get(pk=template_id)
     new_template = make_copy(original_template, request.user)
     if goto_next == "edit":
-        go_to = redirect('edit', template_id=new_template.id)
+        url = '/edit/' + str(new_template.id)
+        go_to = redirect(url)
     else:
         go_to = redirect('user_templates_list')
     return go_to
 
 
-@login_required
-def index(request):
-    """
-    The MathGen Front Page. Shows a lists of Sets ordered by popularity or creation date.
-    """
-    #TODO: Implement search functionality from front page and include instructions on how to find sets by your teacher
-    context = {}
-    sets = Set.objects.all().filter(is_public=True)
-    user_sets = request.user.sets_joined.all()
-    context['popular'] = sets.annotate(num_users=Count('users')).order_by('-num_users')[:20]
-    context['latest'] = sets.order_by('-creation_date')[:20]
-    context['user_sets'] = user_sets
-
-    return render(request, "index.html", context)
-
-
-### GAME ###
-@login_required
-def game(request, set_id):
-    context = RequestContext(request)
-    set_title = Set.objects.get(pk=set_id).name
-    return render_to_response('game/screen.html', {'set_id': set_id, 'set_title': set_title}, context)
-
-
-def chapters(request, set_id):
-    if request.is_ajax():
-        game_set = Set.objects.get(pk=set_id)
-        is_requirement = game_set.is_requirement
-        set_chapters = game_set.chapters.all()
-        context = RequestContext(request)
-        medals = [] # Both lists get updated in chapter_progress
-        completed = []
-        if is_requirement:
-            # In case we want to do something special if the set is a requirement type set
-            progress_number = chapter_progress(request.user, game_set, medals, completed)
-        else:
-            progress_number = chapter_progress(request.user, game_set, medals, completed)
-        order = game_set.order
-        set_chapters_ordered = []
-
-        for x in order.split(','):
-            for chapter in set_chapters:
-                if chapter.pk == int(x):
-                    set_chapters_ordered.append(chapter)
-                    break
-
-        return render_to_response('game/chapters.html',
-                                  {'chapters': set_chapters_ordered, 'medals': json.dumps(medals),
-                                   'completed': json.dumps(completed), 'progress_number': progress_number,
-                                   'set_id': set_id, "is_requirement": is_requirement}, context)
-    else:
-        return HttpResponseForbidden()
-
-
-def levels(request, chapter_id):
-
-    if request.is_ajax():
-        game_chapter = Chapter.objects.get(pk=chapter_id)
-        in_requirement_set = game_chapter.in_requirement_set
-        chapter_levels = game_chapter.levels.all()
-        chapter_title = game_chapter.name
-        context = RequestContext(request)
-        if in_requirement_set:
-            progress_number = len(chapter_levels)
-        else:
-            progress_number = calculate_progress(request.user, game_chapter)
-        star_per_level = get_stars_per_level(request.user, game_chapter)
-
-        order = game_chapter.order
-        chapter_levels_ordered = []
-
-        for x in order.split(','):
-            for chapter in chapter_levels:
-                if chapter.pk == int(x):
-                    chapter_levels_ordered.append(chapter)
-                    break
-
-        return render_to_response('game/levels.html',
-                                  {'levels': chapter_levels_ordered, 'chapter_title': chapter_title,
-                                   'progress_number': progress_number, 'spl': star_per_level, 'chapter_id': chapter_id,
-                                   'in_requirement_set':in_requirement_set},
-                                  context)
-    else:
-        return HttpResponseForbidden()
-
-@login_required
-def get_template(request):
-    """Gets a template for a given level"""
-    # if request.is_ajax():
-    #   if request.method == 'GET':
-    try:
-        context = RequestContext(request)
-        context_dict = {'message': 'Noe har gått feil.'}
-        if request.method == 'POST':
-            form = request.POST
-            level_id = int(form['level_id[]'])
-            chapter_id = int(form['chapter_id'])
-            #if check_for_level_skip(request.user, Chapter.objects.get(pk=chapter_id), level_id):
-            #    return render_to_response('game/template.html', context_dict, context)
-            context_dict = generate_level(request.user, level_id)
-            context_dict['rating'] = get_user_rating(request.user)
-            level = Level.objects.get(pk=level_id)
-            context_dict['stars'] = get_user_stars_for_level(request.user, level)
-            context_dict['ulp'] = get_user_rating_for_level(request.user, level)
-
-        return render_to_response('game/template.html', context_dict, context)
-    except Exception as e:
-        print(e)
-
-
-### SET, CHAPTER, LEVEL MANAGEMENT VIEWS ###
-@login_required
-def set_list(request):
-    context = RequestContext(request)
-    context_dict = {'set_list': True}
-    render_to = 'sets/container.html'
-
-    sets = Set.objects.all().filter(editor=request.user)
-    context_dict['sets'] = sets
-
-    return render_to_response(render_to, context_dict, context)
-
-@login_required
-def set_edit(request, set_id=""):
-    context = RequestContext(request)
-    set_title = ""
-    chapters = []
-    if set_id:
-        edit_set = Set.objects.get(pk=set_id)
-        set_current_set(request.user, edit_set)
-        set_title = edit_set.name
-        order = edit_set.order
-
-        for x in order.split(','):
-            for chapter in edit_set.chapters.all():
-                if chapter.pk == int(x):
-                    chapters.append(chapter)
-                    break
-    return render_to_response('sets/container.html', {'set_id': set_id, 'chapters': chapters,
-                                                      'set_edit': True, 'set_title': set_title}, context)
-
-
-def chapter_edit(request, chapter_id=""):
-    context = RequestContext(request)
-    chapter_title = ""
-    levels = []
-    if chapter_id:
-        edit_chapter = Chapter.objects.get(pk=chapter_id)
-        set_current_chapter(request.user, edit_chapter)
-        chapter_title = edit_chapter.name
-        order = edit_chapter.order
-
-        for x in order.split(','):
-            for level in edit_chapter.levels.all():
-                if level.pk == int(x):
-                    levels.append(level)
-                    break
-    return render_to_response('sets/container.html', {'chapter_id': chapter_id, 'levels': levels,
-                                                      'chapter_edit': True, 'chapter_title': chapter_title}, context)
-
-
-def level_edit(request, level_id=""):
-    context = RequestContext(request)
-    get_templates = ""
-    level_title = ""
-    k_factor = 3
-    if level_id:
-        edit_level = Level.objects.get(pk=level_id)
-        set_current_level(request.user, edit_level)
-        level_title = edit_level.name
-        k_factor = edit_level.k_factor
-        get_templates = edit_level.templates.all()
-    return render_to_response('sets/container.html', {'level_id': level_id, 'templates': get_templates,
-                                                      'level_edit': True, 'level_title': level_title,
-                                                      'k_factor': k_factor}, context)
-
-
-class SetsSearchView(SearchView):
-    """ Search view for all set-type content """
-
-    template_name = 'search/search.html'
-    form_class = SetsSearchForm
-
-    def get_queryset(self):
-        queryset = super(SetsSearchView, self).get_queryset()
-        return queryset
-
-
-class SetSearch(SetsSearchView):
-    title = 'set'
-    extra_content = {'title':title }
-
-
 class MiniSearchView(SearchView):
-    template_name = 'search/mini_search.html'
-
-
-def level_add_template(request, level_id, template_id):
-    """Add a template fo a specified level"""
-    response_data = {} # ajax response data
-    level = Level.objects.get(pk=level_id)
-    template = Template.objects.get(pk=template_id)
-    if level.creator == request.user:
-        level.templates.add(template)
-        response_data['result'] = 'Template added to Level!'
-        return HttpResponse("Template added to level!")
-    else:
-        return HttpResponse('You need to be the owner of the level you\'re editing!')
-
-
-def add_template_to_current_level(request, template_id):
-    """Add a template to the current level a teacher user is working on."""
-    level = request.user.extendeduser.current_level
-    template = Template.objects.get(pk=template_id)
-    if level.creator == request.user:
-        level.templates.add(template)
-        return HttpResponse('Template added to level "'
-                            + level.name +
-                            '". (This will be a background process eventually.)')
-    else:
-        return HttpResponse('You need to be the owner of the level you\'re editing!')
-
-
-def toggle_template_level(request, template_id):
-    """"
-    Render a button to either add or remove a template to/from a level.
-    For Haystack Search-results.
-    """
-    level = request.user.extendeduser.current_level
-    try:
-        template = Template.objects.get(pk=template_id)
-    except Template.DoesNotExist as e:
-        raise ValueError("Unknown template.id=" + str(template_id) + "or level.id=" +
-                         str(level.id) + ". Original error: " + str(e))
-    if template in level.templates.all():
-        level.templates.remove(template)
-        level.save()
-        button = add_button
-    else:
-        level.templates.add(template)
-        button = remove_button
-    return button
-
-
-def toggle_chapter_level(request, level_id):
-    """"
-    Render a button to either add or remove a level to/from a chapter.
-    For Haystack Search-results.
-    """
-    chapter = request.user.extendeduser.current_chapter
-    try:
-        level = Template.objects.get(pk=level_id)
-    except Template.DoesNotExist as e:
-        raise ValueError("Unknown level.id=" + str(level_id) + "or chapter.id=" +
-                         str(chapter.id) + ". Original error: " + str(e))
-    if level in chapter.levels.all():
-        level.templates.remove(level)
-        chapter.save()
-        button = add_button
-    else:
-        chapter.levels.add(level)
-        button = remove_button
-    return button
-
-
-def remove_template_from_current_level(request, template_id):
-    """Remove a template from the current level a teacher user is working on."""
-    level = request.user.extendeduser.current_level
-    template = Template.objects.get(pk=template_id)
-    if level.creator == request.user:
-        level.templates.remove(template)
-        return HttpResponse('Template removed from level "'
-                            + level.name +
-                            '". (This will be a background process eventually.)')
-    else:
-        return HttpResponse('Du må være eier a levelet for å legge til level')
+    template_name = 'search/compact_search.html'
 
 
 def preview_template(request, template_id):
@@ -498,24 +206,10 @@ def preview_template(request, template_id):
     dict['template_solution'] = str(q.solution_latex.replace('\\\\', '\\'))
     return JsonResponse(dict)
 
-def set_detail_view(request, set_id):
-    """ List titles for all chapters, levels and templates in a set. """
-    detailed_set = Set.objects.get(pk=set_id)
-    set_chapters = detailed_set.chapters.all()
-    #chapter_levels = set_chapters.levels.all()
-    ## level_templates = chapter_levels.templates.all()
-    set_title = detailed_set.name
-
-    return render_to_response(
-        'sets/user_set_details.html', { 'set' : detailed_set,
-                                        'chapters': set_chapters,
-                                        #'levels': chapter_levels, 'templates': level_templates,
-                                        }, context_instance=RequestContext(request))
-
 
 class TemplatesListView(LoginRequiredMixin,SortableListView):
     queryset = Template.objects.filter(copy=False)
-    default_sort_field = 'creation_date'
+    default_sort_field = 'id'
     panel_title = "Alle maler"
     include_copies = False
 
@@ -550,9 +244,10 @@ class TemplatesListView(LoginRequiredMixin,SortableListView):
         return context
 
 class UserTemplatesListView(TemplatesListView):
+    """ Renders a list of the logged in user's templates """
     queryset = Template.objects.all()
     panel_title = "Mine Maler"
-    default_sort_field = 'creation_date'
+    default_sort_field = 'id'
     include_copies = True
 
     allowed_sort_fields = (
@@ -569,159 +264,16 @@ class UserTemplatesListView(TemplatesListView):
         return qs.filter(editor=self.request.user)
 
 class UserTemplatesListViewNoCopies(UserTemplatesListView):
+    """ Renders a list of the logged in user's templates. Does not display copies """
     queryset = Template.objects.all().filter(copy=False)
     panel_title = "Mine Maler (kun originale)"
-    default_sort_field = 'creation_date'
+    default_sort_field = 'id'
     include_copies = False
 
-class UserSetListView(LoginRequiredMixin,ListView):
-    template_name = 'sets/user_set_list.html'
 
-    def get_queryset(self):
-        return Set.objects.filter(editor=self.request.user)
+class MathGenRegistrationView(RegistrationView):
+    form_class = NamedUserRegistrationForm
 
-@login_required
-def set_public(request, set_id):
-    set = Set.objects.get(pk=set_id)
-    if set.editor == request.user:
-        set.is_public = True
-        set.save()
-        return redirect('chapters_by_set', set_id)
-    else:
-        return redirect('index')
-
-@login_required
-def set_private(request, set_id):
-    set = Set.objects.get(pk=set_id)
-    if set.editor == request.user:
-        set.is_public = False
-        set.save()
-        return redirect('chapters_by_set', set_id)
-    else:
-        return redirect('index')
-
-
-class SetChapterListView(LoginRequiredMixin,ListView):
-    """List Chapters in Set"""
-    template_name = 'sets/set_chapter_list.html'
-
-    def get_queryset(self):
-        chapters = []
-        self.set = get_object_or_404(Set, id=self.args[0])
-        order = self.set.order
-
-        for x in order.split(','): # get chapters in chapterlist in order
-            for chapter in self.set.chapters.all():
-                if chapter.pk == int(x):
-                    chapters.append(chapter)
-                    break
-        return chapters
-
-    def get_context_data(self, **kwargs):
-        context = super(SetChapterListView, self).get_context_data(**kwargs)
-        context['set'] = self.set
-        set_current_set(self.request.user, self.set)
-        return context
-
-
-class ChapterLevelsListView(LoginRequiredMixin,ListView):
-    """List levels in chapter"""
-    template_name = 'sets/chapter_level_list.html'
-
-    def get_queryset(self):
-        levels = []
-        self.chapter = get_object_or_404(Chapter, id=self.args[0])
-        order = self.chapter.order
-
-        for x in order.split(','):
-            for level in self.chapter.levels.all():
-                if level.pk == int(x):
-                    levels.append(level)
-                    break
-
-        return levels
-
-    def get_context_data(self, **kwargs):
-        context = super(ChapterLevelsListView, self).get_context_data(**kwargs)
-        context['chapter'] = self.chapter
-        set_current_chapter(self.request.user, self.chapter)
-        return context
-
-
-class LevelsTemplatesListView(LoginRequiredMixin, ListView):
-    """List templates in level"""
-    template_name = 'sets/level_template_list.html'
-
-    def get_queryset(self):
-        self.level = get_object_or_404(Level, id=self.args[0])
-        return self.level.templates.all()
-
-    def get_context_data(self, **kwargs):
-        context = super(LevelsTemplatesListView, self).get_context_data(**kwargs)
-        context['level'] = self.level
-        set_current_level(self.request.user, self.level)
-        context['k_factor'] = self.level.k_factor
-        return context
-
-
-class UserCurrentSetsEdit(LoginRequiredMixin, UpdateView):
-    template_name = 'sets/user_current_sets_form.html'
-
-    def get_object(self, queryset=None):
-        obj = ExtendedUser.objects.get(user=self.request.user)
-        return obj
-
-    def get_form_class(self):
-        form = UserCurrentSetsForm
-        form.current_set.queryset = Set.objects.all().filter(editor=self.request.user)
-        form.current_chapter.queryset = Chapter.objects.all().filter(editor=self.request.user)
-        form.current_level.queryset = Level.objects.all().filter(editor=self.request.user)
-        return form
-
-    def get_success_url(self):
-        success_url = self.request.GET.get('next', '')
-        return success_url
-
-    # class based views are weird about this
-    # def get_form_class(self, form_class=form_class):
-    #     form_class.fields['current_level'].queryset = Level.objects.filter(creator=self.request.user)
-    #     form_class.fields['current_chapter'].queryset = Chapter.objects.filter(creator=self.request.user)
-    #     #self.fields['current_chapter'].queryset = Chapter.objects.filter(creator=self.request.user)
-    #     #self.fields['current_set'].queryset = Set.objects.filter(creator=self.request.user)
-    #     return form_class
-
-
-def refresh_navbar(request):
-    return render(request,'includes/current_sets_snippet.html')
-
-def refresh_user_sets(request):
-    context = {}
-    context['object_list'] = Set.objects.get(editor=request.user)
-    return render(request,'sets/includes/set_list.html', context)
-
-def level_stats(request, level_id):
-    """
-    Prepares rating statistics for a level by counting student level. / template-ratings within specific intervals.
-    Designed with morris.js bar chart in mind (see charts.html)
-    The range is from 0 to 2400, and the measuring interval is 100 counting from 1100 and up.
-    """
-
-    context_dict = {}
-    level = Level.objects.get(pk=level_id)
-    context_dict['level_name'] = level.name
-    stats = level.student_progresses.all()
-
-    studentratings = stats.values_list('level_rating', flat=True) # list of all ratings
-
-    if studentratings:
-        context_dict['players'] = len(studentratings)
-        context_dict['average'] = int(sum(studentratings)/context_dict['players'])
-
-    context_dict['student_entries'] = get_level_student_statistics(level)
-    context_dict['templates'] = level.templates.exists()
-    context_dict['template_entries'] = get_level_template_statistics(level)
-    context_dict['template_original'] = get_level_template_original_statistics(level)
-    return render(request, 'sets/charts.html', context_dict)
 
 class UserSettingsView(UpdateView):
     form_class = NamedUserDetailsForm
@@ -734,4 +286,5 @@ class UserSettingsView(UpdateView):
 
 
 def user_deactivate(request):
+    #TODO: Unfinished. Users will have to be manually deactivated by an admin.
     return render(request, 'registration/user_deactivate_account.html')

@@ -10,11 +10,12 @@ from haystack.forms import SearchForm
 from registration.users import UserModel
 from registration.forms import RegistrationFormUniqueEmail
 
-from .models import Set, Chapter, Level, Template, ExtendedUser, Tag
+from oppgavegen.models import Set, Chapter, Level, Template, Tag
 
 User = UserModel()
 
 class NamedUserRegistrationForm(RegistrationFormUniqueEmail):
+    """ Registration form that requires the users full name and a unique e-mail address """
     required_css_class = 'required'
     username = forms.CharField(label="Brukernavn", required=True, max_length=30)
     email = forms.EmailField(label="E-postadresse", required=True)
@@ -26,6 +27,7 @@ class NamedUserRegistrationForm(RegistrationFormUniqueEmail):
         fields = ("username", "email", "first_name", "last_name")
 
 class NamedUserDetailsForm(ModelForm):
+    """ Form for updating user's own details """
     first_name = forms.CharField(label="Fornavn", required=False)
     last_name = forms.CharField(label="Etternavn", required=False)
     email = forms.EmailField(label="E-postadresse", required=False)
@@ -40,7 +42,6 @@ class TagField(forms.CharField):
     Return a list of Tag-objects.
     Creates new Tag-objects if they don't already exist in the database.
     """
-    # def prepare_value(self, value):
     def clean(self, value):
         value = super(TagField, self).clean(value)
         values = value.split('§')
@@ -75,7 +76,7 @@ class TemplateSearchForm(SearchForm):
                                                                     'max': '9999', 'placeholder' : 'Maximum'}))
     multiple_support = forms.BooleanField(required=False, label='Flervalg')
     fill_in_support = forms.BooleanField(required=False, label='Utfylling')
-    multifill_support = forms.BooleanField(required=False, label='Flervalg med utfylling')
+    # multifill_support = forms.BooleanField(required=False, label='Flervalg med utfylling')
 
     def search(self):
         # First, store the SearchQuerySet received from other processing.
@@ -102,18 +103,15 @@ class TemplateSearchForm(SearchForm):
 
         # Check for multiple-choice filter
         if self.cleaned_data['multiple_support']:
-            #sqs = sqs.filter(multiple_support=self.cleaned_data['multiple'])
             sqs = sqs.filter(multiple_support='True')
 
         # Check for fill-in filter
         if self.cleaned_data['fill_in_support']:
-            #sqs = sqs.filter(fill_in_support=self.cleaned_data['fill_in'])
             sqs = sqs.filter(fill_in_support='True')
 
         # Check for multifill filter
-        if self.cleaned_data['multifill_support']:
-            #sqs = sqs.filter(fill_in_support=self.cleaned_data['fill_in'])
-            sqs = sqs.filter(multifill_support='True')
+        # if self.cleaned_data['multifill_support']:
+        #    sqs = sqs.filter(multifill_support='True')
 
         return sqs
 
@@ -181,6 +179,7 @@ class LevelCreateForm(ModelForm):
 
 
 class QuestionForm(forms.Form):
+    """ Math problem answer submission form """
     user_answer = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400)
     primary_key = forms.IntegerField()
     variable_dictionary = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400, required=False)
@@ -218,11 +217,3 @@ class TemplateForm(ModelForm):
     def save(self, commit=True):
         self.fields['tags'] = self.cleaned_data['tags_list']
         return super(TemplateForm, self).save(commit=commit)
-
-class UserCurrentSetsForm(ModelForm):
-    current_set = forms.ModelChoiceField
-    current_chapter = forms.ModelChoiceField
-    current_level = forms.ModelChoiceField
-    class Meta:
-        model = ExtendedUser
-        fields = ('current_set', 'current_chapter', 'current_level',)
