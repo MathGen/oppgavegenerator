@@ -124,7 +124,7 @@ def check_for_new_star(user, level_id):
     stars = user_progress.stars
     r = [1300, 1450, 1600, 1800, 2000]
     if (rating > r[0] and stars == 0) or (rating > r[1] and stars == 1) or (rating > r[2] and stars == 2)\
-            or (rating > r[3] and stars == 3) or (rating > r[3] and stars == 3):
+            or (rating > r[3] and stars == 3) or (rating > r[4] and stars == 4):
         add_star(user_progress)
         new_star = 1
     return new_star
