@@ -134,7 +134,7 @@ function load_template(level_id){
         $.post('../template/', submit_dict, function (result) { //AJAX load
             display_loading_icon(false);
             $('#game_content').html(result).fadeIn('fast', function(){
-                setup_answer_input();
+                //setup_answer_input();
                 update_progress_bar_level();
                 draw_level_stars();
                 var graph_expressions = $('#get_graph').text();
