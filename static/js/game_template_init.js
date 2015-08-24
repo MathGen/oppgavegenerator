@@ -14,7 +14,7 @@ $(document).ready(function () {
     $(document).on('click', '#v_new_question', function(){
         load_level_template(current_level);
     });
-
+    redraw_mathquill_elements()
 });
 
 /**

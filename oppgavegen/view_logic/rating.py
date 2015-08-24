@@ -148,5 +148,3 @@ def calculate_and_save_offset(rating_change, level, difficulty):
 
         level.offset += rating_change/num_templates
         level.save()
-
-
