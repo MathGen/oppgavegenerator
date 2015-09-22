@@ -28,6 +28,8 @@ from oppgavegen.views.game_views import *
 from oppgavegen.views.level_editor_views import *
 from oppgavegen.view_logic.db_format import format_domain
 
+from registration.backends.default.views import RegistrationView
+
 urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),

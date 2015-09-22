@@ -11,7 +11,6 @@ from django.http import JsonResponse
 from django.views.generic.edit import UpdateView
 from django.db.models import Count
 from django.views.decorators.cache import cache_control
-from registration.views import RegistrationView
 from haystack.generic_views import SearchView
 
 from oppgavegen.views.sortable_listview import SortableListView
@@ -56,10 +55,11 @@ def edit_template(request, template_id):
         context_dict = make_edit_context_dict(template_id)
         return render_to_response('template_editor.html', context_dict, context)
     else:
-        #If the user is not listed as the template editor open dialogue to confirm template cloning
-        context_dict={}
+        # If the user is not listed as the template editor open dialogue to confirm template cloning
+        context_dict = {}
         context_dict['template'] = template
-        return render_to_response('sets/confirm_template_copy.html',context_dict, context)
+        return render_to_response('sets/confirm_template_copy.html', context_dict, context)
+
 
 @cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)
 @login_required
@@ -75,7 +75,7 @@ def task(request):
     return render_to_response('taskview.html', context_dict, context)
 
 
-@cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True) # Doesn't cache the page
+@cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)  # Doesn't cache the page
 @login_required
 def task_by_id_and_type(request, template_extra, desired_type='normal'):
     """Returns a render of taskview with a specific math template with specified type"""
@@ -125,10 +125,9 @@ def answers(request, level=1):
             except ValueError:
                 required = []
 
-
             context_dict = make_answer_context_dict(form_values)
 
-            if (cheat_check(user_answer, disallowed, form_values['variable_dictionary'].split('§'))) and\
+            if (cheat_check(user_answer, disallowed, form_values['variable_dictionary'].split('§'))) and \
                     (form_values['template_type'] == 'normal') and (context_dict['user_won']):
                 context_dict['answer'] = cheat_message
                 return render_to_response(render_to, context_dict, context)
@@ -136,7 +135,6 @@ def answers(request, level=1):
                     (form_values['template_type'] == 'normal') and (context_dict['user_won']):
                 context_dict['answer'] = required_message
                 return render_to_response(render_to, context_dict, context)
-
 
             if request.is_ajax():
                 new_user_rating, new_star = change_level_rating(template, request.user, context_dict['user_won'],
@@ -178,8 +176,6 @@ def submit(request):
     return render_to_response('submit.html', {'message': message}, context)
 
 
-
-
 @login_required
 @user_passes_test(is_teacher, '/')
 def confirm_template_copy(request, template_id, goto_next="edit"):
@@ -207,7 +203,7 @@ def preview_template(request, template_id):
     return JsonResponse(dict)
 
 
-class TemplatesListView(LoginRequiredMixin,SortableListView):
+class TemplatesListView(LoginRequiredMixin, SortableListView):
     queryset = Template.objects.filter(copy=False)
     default_sort_field = 'id'
     panel_title = "Alle maler"
@@ -243,6 +239,7 @@ class TemplatesListView(LoginRequiredMixin,SortableListView):
         context['include_copies'] = self.include_copies
         return context
 
+
 class UserTemplatesListView(TemplatesListView):
     """ Renders a list of the logged in user's templates """
     queryset = Template.objects.all()
@@ -263,16 +260,13 @@ class UserTemplatesListView(TemplatesListView):
         qs = qs.order_by(self.sort)
         return qs.filter(editor=self.request.user)
 
+
 class UserTemplatesListViewNoCopies(UserTemplatesListView):
     """ Renders a list of the logged in user's templates. Does not display copies """
     queryset = Template.objects.all().filter(copy=False)
     panel_title = "Mine Maler (kun originale)"
     default_sort_field = 'id'
     include_copies = False
-
-
-class MathGenRegistrationView(RegistrationView):
-    form_class = NamedUserRegistrationForm
 
 
 class UserSettingsView(UpdateView):
@@ -286,5 +280,5 @@ class UserSettingsView(UpdateView):
 
 
 def user_deactivate(request):
-    #TODO: Unfinished. Users will have to be manually deactivated by an admin.
+    # TODO: Unfinished. Users will have to be manually deactivated by an admin.
     return render(request, 'registration/user_deactivate_account.html')
