@@ -146,5 +146,5 @@ def calculate_and_save_offset(rating_change, level, difficulty):
         num_templates += Template.objects.all().filter(difficulty_multiple__gt=lower, difficulty_multiple__lt=upper).count()
         num_templates += Template.objects.all().filter(difficulty_blanks__gt=lower, difficulty_blanks__lt=upper).count()
 
-        level.offset += rating_change/num_templates
+        level.offset -= rating_change/num_templates
         level.save()
