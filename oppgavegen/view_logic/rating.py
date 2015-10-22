@@ -71,19 +71,19 @@ def change_level_rating(template, user, user_won, type, level_id):
         template_rating = template.rating
         difficulty = template.difficulty
 
-    expected_user = (1+10**((template_rating-user_rating+offset)/400))**(-1)
-    expected_template = (1+10**((template_rating-user_rating+offset)/400))**(-1)
+    expected_user = (1+10**((template_rating-user_rating+offset)/400))**(-1) #the probability for user winning
+    #expected_template = (1+10**((template_rating-user_rating+offset)/400))**(-1)
     prefactor_user = 30  # This value should be adjusted according to elo of the user (lower for higher ratings..)
     prefactor_template = 16  # This value should be adjusted according to elo of the user (lower for higher ratings..)
     minimum_answered_questions = 20  # Amount of questions the user needs to have answered for template rating to change
 
     if user_won:
         new_user_rating = user_rating + prefactor_user*(1-expected_user)*k_factor
-        new_template_rating = template_rating + prefactor_template*(0-expected_template)
+        new_template_rating = template_rating - prefactor_template*(1-expected_user)
         template.times_solved += 1
     else:
-        new_user_rating = user_rating + prefactor_user*(0-expected_user)*k_factor
-        new_template_rating = template_rating + prefactor_template*(1-expected_template)
+        new_user_rating = user_rating - prefactor_user*(expected_user)*k_factor
+        new_template_rating = template_rating + prefactor_template*(expected user)
         template.times_failed += 1
 
     new_user_rating = round(new_user_rating)
