@@ -4,10 +4,15 @@
 
     <ul class="list-inline">
         <li>
-            <a id="search_content_{{ result.pk }}"  class="btn btn-primary btn-xs btn_add_content" title="Kopier og legg til">
-            <span id="search_url_{{ result.pk }}" hidden>{% url 'add_template_to_level' user.extendeduser.current_level.id result.pk %}</span>
-            <span class="glypicon glyphicon-plus"></span>
-            </a>
+			
+			{% if user.extendeduser.current_level %}
+			<button title="Kopier og legg til {{ user.extendeduser.current_level.name }}"
+					class="btn btn-sm btn-primary btn-copy-template"
+					data-template-id="{{ result.pk }}">
+				<span class="glyphicon glyphicon-plus"></span>
+			</button>
+			{% endif %}
+		
             <button class="btn btn-xs btn-default preview-button" title="Forhåndsvisning"
                 data-template_id="{{ result.pk }}" data-template_title="{{ result.name|title }}" type="button">
             <span class="glyphicon glyphicon-eye-open"></span>
