@@ -7,8 +7,8 @@
 			
 			{% if user.extendeduser.current_level %}
 			<button title="Kopier og legg til {{ user.extendeduser.current_level.name }}"
-					class="btn btn-sm btn-primary btn-copy-template"
-					data-template-id="{{ result.pk }}">
+					class="btn btn-xs btn-primary btn-copy-object"
+					data-object-type="template" data-object-id="{{ result.pk }}">
 				<span class="glyphicon glyphicon-plus"></span>
 			</button>
 			{% endif %}
