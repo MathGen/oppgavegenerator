@@ -44,7 +44,7 @@ def get_level_student_statistics(level, start_interval=1100, end_interval=2300, 
 	
 	# Also fetch number of stars now that we have students
 	student_star_data = []
-	for student in students
+	for student in students:
 		student_star_data.append([student.user.first_name + ' ' + student.user.last_name] + [student.stars])
 	
     return morris_data, student_star_data
