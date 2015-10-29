@@ -74,7 +74,11 @@ def change_level_rating(template, user, user_won, type, level_id):
     expected_user = (1+10**((template_rating-user_rating+offset)/400))**(-1)
     expected_template = (1+10**((template_rating-user_rating+offset)/400))**(-1)
     prefactor_user = 30  # This value should be adjusted according to elo of the user (lower for higher ratings..)
-    prefactor_template = 16  # This value should be adjusted according to elo of the user (lower for higher ratings..)
+    # prefactor_template = 16  # This value should be adjusted according to elo of the user (lower for higher ratings..)
+    # TODO - Change this back to something positive
+    # This change is made because the rating system is not working properly, reducing problem rating inappropriately
+    # Changed on 2015-10-29 by Siebe and Girts
+    prefactor_template = 0  # This value should be adjusted according to elo of the user (lower for higher ratings..)
     minimum_answered_questions = 20  # Amount of questions the user needs to have answered for template rating to change
 
     if user_won:
