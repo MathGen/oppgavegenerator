@@ -13,6 +13,7 @@ from sympy.parsing.sympy_parser import (parse_expr, standard_transformations,
                                         implicit_multiplication_application, convert_xor)
 
 from oppgavegen.parsing.latex_translator import latex_to_sympy
+from oppgavegen.view_logic.rating import calculate_and_update_offset
 from oppgavegen.models import Level
 from oppgavegen.generation_folder.multifill import multifill
 from oppgavegen.generation_folder.fill_in import fill_in_the_blanks
@@ -147,6 +148,7 @@ def generate_level(user, level_id):
     :return: Returns a complete math question with generated numbers.
     """
     level = Level.objects.get(pk=level_id)
+    calculate_and_update_offset(level)
     get_question_dict = get_level_question(user, level)  # Gets a template from the DB
     q = get_question_dict['template']
     desired_type = get_question_dict['type']
