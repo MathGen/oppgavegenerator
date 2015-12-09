@@ -34,7 +34,7 @@ class ChapterAdmin(admin.ModelAdmin):
 
 class SetAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'is_requirement')
-    exclude = ('copy','is_requirement',) # These are excluded to prevent them from being set manually.
+    exclude = ('copy', 'is_requirement',)  # These are excluded to prevent them from being set manually.
     # Remove the exclude line if you need to set these manually for testing, however these should be excluded in deployment
 
 
