@@ -161,6 +161,7 @@ def calculate_and_update_offset(level, lower_difficulty=12, upper_difficulty=15)
     template_ratings = []
     template_difficulties = []
 
+    # check for templates in difficulty range and add them to lists
     for template in level.templates.all():
         if template.difficulty in range(lower_difficulty, upper_difficulty):
             template_ratings.append(template.rating)
@@ -172,8 +173,11 @@ def calculate_and_update_offset(level, lower_difficulty=12, upper_difficulty=15)
             template_ratings.append(template.choice_rating)
             template_difficulties.append(template.difficulty_multiple)
 
-    rating_average = round(sum(template_ratings)/len(template_ratings))
-    difficulty_average = round(50*(sum(template_difficulties)/len(template_difficulties)) + 950)
+    # todo: should offset not be calculated when there's no templates in range?
+    # calculate averages
+    if len(template_ratings) > 0 and len(template_difficulties) > 0: # lists must contain elements to avoid zero division error
+        rating_average = round(sum(template_ratings)/len(template_ratings))
+        difficulty_average = round(50*(sum(template_difficulties)/len(template_difficulties)) + 950)
 
-    level.offset = difficulty_average - rating_average
-    level.save()
+        level.offset = difficulty_average - rating_average
+        level.save()
