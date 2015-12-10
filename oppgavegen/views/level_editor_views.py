@@ -100,4 +100,5 @@ class LevelsTemplatesListView(LoginRequiredMixin, ListView):
         context['level'] = self.level
         set_current_level(self.request.user, self.level)
         context['k_factor'] = self.level.k_factor
+        context['k_factor_template'] = self.level.k_factor_template
         return context

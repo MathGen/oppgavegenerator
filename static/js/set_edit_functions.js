@@ -205,7 +205,7 @@ $(document).ready(function () {
 
     // Open modal for editing progression factor (level-editor)
     $(document).on('click', '.btn-edit-kfactor', function () {
-        init_k_factor_slider();
+        init_k_factor_sliders();
         modal = $('#progressionModal');
         modal.modal('show')
     });
@@ -249,7 +249,8 @@ function save_changes() {
         content = 'level';
         form_submit['level_id'] = current_level;
         form_submit['title'] = title;
-        form_submit['k_factor'] = $('#k_factor_amount').text();
+        form_submit['k_factor'] = $('#k_factor_user_amount').text();
+        form_submit['k_factor_template'] = $('#k_factor_template_amount').text();
     } else {
         window.console.log('#edit_container is missing a required class for POST.');
         valid_form = false;
@@ -279,18 +280,31 @@ function get_content_order() {
 /**
  * Initialize the slider which sets the progression-speed for the level.
  */
-function init_k_factor_slider() {
-    var k_value = $('#k_factor_amount').text();
-    if (k_value == '') {
-        k_value = 3;
-    }
-    $('#k_factor_slider').slider({
-        value: k_value,
-        min: 1,
-        max: 8,
+function init_k_factor_sliders() {
+    var k_value_user = $('#k_factor_user_amount').text();
+    if (k_value_user == '') {
+        k_value_user = 8 }
+
+    var k_value_template = $('#k_factor_template_amount').text();
+    if (k_value_template == '') {
+        k_value_template = 8 }
+
+    $('#k_factor_user_slider').slider({
+        value: k_value_user,
+        min: 4,
+        max: 64,
         step: 1,
         slide: function (event, ui) {
-            $('#k_factor_amount').text(ui.value);
+            $('#k_factor_user_amount').text(ui.value);
+        }
+    });
+    $('#k_factor_template_slider').slider({
+        value: k_value_template,
+        min: 0,
+        max: 64,
+        step: 1,
+        slide: function (event, ui) {
+            $('#k_factor_template_amount').text(ui.value);
         }
     });
 }

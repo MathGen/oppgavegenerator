@@ -25,13 +25,13 @@ from oppgavegen.generation_folder.get_question import get_question, get_level_qu
 
 @Debugger
 def generate_task(user, template_extra, desired_type=''):
-    """Makes a valid math question at the correct rating from a template in the database.
+    """ Generates a valid math problem at the correct rating from a template in the database.
 
     :param user: The user requesting a template
     :param template_extra: (optional) A id used for requesting a specific template.
     :param desired_type: (optional) A string for requesting a specific template type.
-    :return: Returns a complete math question with generated numbers.
-    """
+    :return: Returns a complete math question with generated numbers. """
+
     if template_extra == "":
         get_question_dict = get_question(user, '')  # Gets a question from the DB
     else:
@@ -241,6 +241,7 @@ def generate_level(user, level_id):
                    'graph': graph, 'graph_settings': q.graph_settings, 'graph_color': q.graph_color}
     return return_dict
 
+
 @Debugger
 def generate_valid_numbers(template, random_domain, conditions, test):
     """Generates valid numbers using each variables random domain.
@@ -341,6 +342,7 @@ def new_random_value(value, domain_dict, bonus=0, extra=''):
         new_value = randint(int(domain[0]), int(domain[1]))
     return new_value
 
+
 def make_number_from_list(domain):
     return sympify(latex_to_sympy(choice(domain)))
 
@@ -356,4 +358,3 @@ def make_number(domain):
     except IndexError:
         number = round(number)
     return number
-
