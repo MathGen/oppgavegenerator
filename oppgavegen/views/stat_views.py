@@ -21,7 +21,7 @@ def set_stats_view(request, set_id):
 @login_required
 def level_stats(request, level_id):
     """
-    Prepares rating statistics for a level by counting student level/template-ratings within specific intervals.
+    Prepares rating statistics for a level by counting student level/template ratings within specific intervals.
     Designed with morris.js bar chart in mind (see charts.html)
     The range is from 0 to 2400, and the measuring interval is 100 counting from 1100 and up.
     """
@@ -40,9 +40,11 @@ def level_stats(request, level_id):
         context_dict['players'] = len(student_ratings)
         context_dict['average'] = int(sum(student_ratings)/context_dict['players'])
 
+    context_dict['levelid'] = level_id
+    context_dict['user_is_owner'] = (level.editor == request.user) # check if current user can edit level
     context_dict['offset'] = offset
-    context_dict['student_entries'] = get_level_student_statistics(level)
+    context_dict['student_entries'] = get_level_student_statistics(level) #todo: should offset be included
     context_dict['templates'] = level.templates.exists()
-    context_dict['template_entries'] = get_level_template_statistics(level)
+    context_dict['template_entries'] = get_level_template_statistics(level, offset) #todo: offset?
     context_dict['template_original'] = get_level_template_original_statistics(level)
     return render(request, 'sets/charts.html', context_dict)

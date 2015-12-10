@@ -12,34 +12,40 @@
 
     <section class="panel panel-primary">
         <div class="panel-heading"><h3 class="panel-title">Statistikk for {{ level_name }}</h3></div>
-            <div class="panel-body" style="overflow-x:scroll;">
+        <div class="panel-body" style="overflow-x:scroll;">
 
-                <h3>Studentstatistikk</h3>
-                {% if players %}
+            {% if user_is_owner %}
+                <div class="left">
+                    <a href="{% url 'templates_by_level' levelid %}" class="btn btn-default btn-xs">Rediger nivå</a>
+                </div>
+            {% endif %}
+
+            <h3>Studentstatistikk</h3>
+            {% if players %}
 
                 <div id="student-rating-chart" style="height: 250px"></div>
 
                 <p>Studenter: {{ players }}</p>
                 <p>Gjennomsnittlig rating: {{ average }}</p>
 
-                {% else %}
-                    Ingen har begynt på {{ level_name }} enda.
-                {% endif %}
+            {% else %}
+                Ingen har begynt på {{ level_name }} enda.
+            {% endif %}
 
-                <h3>Oppgaver</h3>
+            <h3>Oppgaver</h3>
 
 
-                {% if templates %}
-                    <p>Nåværende rating</p>
-                    <div id="templates-rating-chart" style="height: 250px"></div>
-                    <p>Original rating</p>
-                    <div id="templates-original-chart" style="height: 250px"></div>
-                {% else %}
-                    Ingen oppgaver i {{ level_name }} enda.
+            {% if templates %}
+                <p>Nåværende rating</p>
+                <div id="templates-rating-chart" style="height: 250px"></div>
+                <p>Original rating</p>
+                <div id="templates-original-chart" style="height: 250px"></div>
+            {% else %}
+                Ingen oppgaver i {{ level_name }} enda.
 
-                {% endif %}
+            {% endif %}
 
-            </div>
+        </div>
     </section>
 
 {% endblock %}
@@ -51,43 +57,43 @@
     <script>
 
         {% if players %}
-        new Morris.Bar({
-            element: 'student-rating-chart',
-            data: [
-                {% for entry in student_entries %}
-                    {{ entry|safe }}
-                {% endfor %}
-            ],
-            xkey: 'rating',
-            ykeys: ['studenter'],
-            labels: ['Studenter']
-        });
+            new Morris.Bar({
+                element: 'student-rating-chart',
+                data: [
+                    {% for entry in student_entries %}
+                        {{ entry|safe }}
+                    {% endfor %}
+                ],
+                xkey: 'rating',
+                ykeys: ['studenter'],
+                labels: ['Studenter']
+            });
         {% endif %}
         {% if templates %}
-        new Morris.Bar({
-            element: 'templates-rating-chart',
-            data: [
-                {% for entry in template_entries %}
-                    {{ entry|safe }}
-                {% endfor %}
-            ],
-            xkey: 'rating',
-            ykeys: ['oppgaver'],
-            labels: ['Oppgaver']
-        });
+            new Morris.Bar({
+                element: 'templates-rating-chart',
+                data: [
+                    {% for entry in template_entries %}
+                        {{ entry|safe }}
+                    {% endfor %}
+                ],
+                xkey: 'rating',
+                ykeys: ['oppgaver'],
+                labels: ['Oppgaver']
+            });
 
 
-        new Morris.Bar({
-            element: 'templates-original-chart',
-            data: [
-                {% for entry in template_original %}
-                    {{ entry|safe }}
-                {% endfor %}
-            ],
-            xkey: 'rating',
-            ykeys: ['oppgaver'],
-            labels: ['Oppgaver']
-        });
+            new Morris.Bar({
+                element: 'templates-original-chart',
+                data: [
+                    {% for entry in template_original %}
+                        {{ entry|safe }}
+                    {% endfor %}
+                ],
+                xkey: 'rating',
+                ykeys: ['oppgaver'],
+                labels: ['Oppgaver']
+            });
         {% endif %}
 
     </script>

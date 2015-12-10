@@ -44,10 +44,13 @@ def get_level_student_statistics(level, start_interval=1100, end_interval=2300, 
     return morris_data
 
 
-def get_level_template_statistics(level, start_interval=1100, end_interval=2300, interval=100,
+def get_level_template_statistics(level, offset, start_interval=1100, end_interval=2300, interval=100,
                                   cutoff_min=800, cutoff_max=2400):
     morris_data = []
     templates = level.templates.all().values('rating','fill_rating','choice_rating')
+    for template in templates:
+        template += offset
+
     num_intervals = int((end_interval-start_interval)/interval)
 
     # Check for entries in lower cutoff range (from 0 to cutoffmin)
