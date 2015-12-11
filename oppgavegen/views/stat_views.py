@@ -1,22 +1,38 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.db.models import Prefetch
 
 from oppgavegen.view_logic.statistics import *
-from oppgavegen.models import Set, Level
+from oppgavegen.models import Set, Level, UserLevelProgress
 
 
 @login_required
 def set_stats_view(request, set_id):
     """Returns a render of statview.html with all the templates"""
+    # todo: clickable chapter names with link to in depth chapter stats
     set = Set.objects.get(pk=set_id)
     if set.is_requirement and set.editor == request.user:
         headers, user_stats = stats_for_set(int(set_id))
         print(headers)
         print(user_stats)
-        return render(request, "statview.html", {"headers": headers, "user_stats": user_stats,
-                                             'panel_title': 'Brukerstatistikk'})
+        return render(request, 'statview.html', {'headers': headers, 'user_stats': user_stats,
+                                             'panel_title': 'Arbeidskravstatistikk for sett' + ' - ' + set.name})
     else:
         return redirect('index')
+
+@login_required
+def detailed_chapter_stats(request, chapter_id):
+    chapter = Chapter.objects.get(id=chapter_id)
+    if chapter.in_requirement_set and chapter.editor == request.user:
+        headers, user_stats = stats_for_chapter_levels(chapter_id)
+
+        return render(request, "statview_levels.html", {"headers": headers, "user_stats": user_stats,
+                                                        'panel_title': 'Arbeidskravstistikk for kapittel' + ' - ' +
+                                                        chapter.name})
+
+    else:
+        return redirect('index')
+
 
 @login_required
 def level_stats(request, level_id):

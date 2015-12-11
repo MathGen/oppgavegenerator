@@ -42,7 +42,7 @@ class TagAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
 
 class UserLevelProgressAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'level')
+    list_display = ('id', 'user', 'level', 'stars')
 
 
 admin.site.unregister(User)

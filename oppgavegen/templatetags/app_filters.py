@@ -12,6 +12,7 @@ def is_teacher(user):
         return True
     return user.groups.filter(name='Teacher').exists()
 
+
 @register.filter
 def is_member(user):
     """Returns true/false depending on if the user is a member of the teacher group (or is a superuser)"""
@@ -84,6 +85,7 @@ def get_user_templates(user):
     templates = Template.objects.all().filter(editor=user,copy=False)
     return {'templates':templates}
 
+
 @register.inclusion_tag('includes/user_sets.html')
 def get_user_objects(user, object_type):
     """
@@ -102,3 +104,17 @@ def get_user_objects(user, object_type):
     else:
         objects = Set.objects.none()
     return {'objects': objects, 'type': object_type, 'types': types}
+
+
+@register.inclusion_tag('includes/draw_stars.html')
+def draw_stars(amount):
+    stars = int(amount)
+    return {'amount': stars}
+
+
+@register.filter
+def is_string(value):
+    is_string = False
+    if isinstance(value, str):
+        is_string = True
+    return is_string

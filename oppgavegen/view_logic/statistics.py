@@ -137,7 +137,7 @@ def stats_for_set(set_id):
     for user in users:
         stats.append([user.first_name + ' ' + user.last_name] + user_stats_for_set(user, set_id))
 
-    headers = ['Navn']
+    headers = ['Student']
     order = set.order
     order = order.split(',')
     for x in order:
@@ -145,3 +145,38 @@ def stats_for_set(set_id):
         chapter = Chapter.objects.get(pk=x)
         headers.append(chapter.name)
     return headers, stats
+
+
+def stats_for_chapter_levels(chapter_id):
+    """ Return a list of level names in a chapter and a list of students and their progress for all
+        levels in requirement chapter. The data is meant to be displayed in a table.
+        Since there's a unique entry for every student->level match we first need to create a clean list of users
+        from the associated UserLevelProgress-entries for all the levels in a chapter, and then extract the score for
+        every progress-entry that belongs that user """
+
+    levels = Level.objects.filter(chapters__id=chapter_id).order_by('pk').prefetch_related('student_progresses')
+    userscores = (l.student_progresses.all().select_related('user') for l in levels) # creates list in list?
+    all_users = []
+    stats = []
+    for u in userscores:
+        for n in u:
+            all_users.append(n.user)
+    users = list(set(all_users)) # remove duplicates
+    headers = ['Student']
+    for level in levels:
+        headers.append(level.name)
+    for user in users:
+        stats.append([user.get_full_name()] + user_scores_for_levels(user, levels))
+
+    return headers, stats
+
+def user_scores_for_levels(user, levels):
+    """
+    Filter one users scores from list of levels
+    """
+    userscores = []
+    for level in levels:
+        scores = level.student_progresses.filter(user=user,level_id=level.id)
+        for score in scores:
+            userscores.append(int(score.stars))
+    return userscores

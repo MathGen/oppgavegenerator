@@ -78,6 +78,7 @@ urlpatterns = patterns('',
     url(r'^set/(\d+)/setprivate/$', set_private, name='set_to_private'),
     url(r'^set/(\d+)/stats/$', set_stats_view, name='set_stats'),
     url(r'^chapter/(\d+)/levels/$', ChapterLevelsListView.as_view(), name='levels_by_chapter'),
+    url(r'^chapter/(\d+)/stats/$', detailed_chapter_stats, name='chapter_stats'),
     url(r'^level/(\d+)/templates/$', LevelsTemplatesListView.as_view(), name='templates_by_level'),
     url(r'^level/(\d+)/stats/', level_stats, name='level_stats'),
 
