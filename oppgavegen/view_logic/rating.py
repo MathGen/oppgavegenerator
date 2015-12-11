@@ -30,7 +30,7 @@ def change_elo(template, user, user_won, type):
         template.times_solved += 1
     else:
         new_user_rating = user_rating - prefactor_user*(expected_user)
-        new_template_rating = template_rating + prefactor_template*(expected user)
+        new_template_rating = template_rating + prefactor_template*(expected_user)
         template.times_failed += 1
     user.extendeduser.rating = new_user_rating
     user.extendeduser.save()
@@ -83,7 +83,7 @@ def change_level_rating(template, user, user_won, type, level_id):
         template.times_solved += 1
     else:
         new_user_rating = user_rating - prefactor_user*(expected_user)*k_factor
-        new_template_rating = template_rating + prefactor_template*(expected user)
+        new_template_rating = template_rating + prefactor_template*(expected_user)
         template.times_failed += 1
 
     new_user_rating = round(new_user_rating)
