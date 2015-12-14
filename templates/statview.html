@@ -15,7 +15,9 @@
                     <thead>
                     <tr>
                         {% for attr_head in headers %}
+                            {% autoescape off %}
                             <th>{{ attr_head }}</th>
+                            {% endautoescape %}
                         {% endfor %}
                     </tr>
                     </thead>

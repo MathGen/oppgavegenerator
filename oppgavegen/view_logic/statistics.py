@@ -48,8 +48,11 @@ def get_level_template_statistics(level, offset, start_interval=1100, end_interv
                                   cutoff_min=800, cutoff_max=2400):
     morris_data = []
     templates = level.templates.all().values('rating','fill_rating','choice_rating')
+    #add level offset to all template ratings
     for template in templates:
-        template += offset
+        template['rating'] += offset
+        template['fill_rating'] += offset
+        template['choice_rating'] += offset
 
     num_intervals = int((end_interval-start_interval)/interval)
 
@@ -131,7 +134,7 @@ def user_stats_for_set(user, set_id):
 def stats_for_set(set_id):
     """Returns the stats for all users in a set on the form {'name': [progress1, progress2],..}"""
     set = Set.objects.get(pk=set_id)
-    users = set.users.all()
+    users = set.users.all().order_by('last_name')
     stats = []
     print('1')
     for user in users:
@@ -143,25 +146,30 @@ def stats_for_set(set_id):
     for x in order:
         x = int(x)
         chapter = Chapter.objects.get(pk=x)
-        headers.append(chapter.name)
-    return headers, stats
+        headers.append('<a href="/chapter/%d/stats">%s</a>' % (chapter.id, chapter.name)) # clickable chapter names
+    return headers, stats                                                                 # links to chapter details
 
 
 def stats_for_chapter_levels(chapter_id):
-    """ Return a list of level names in a chapter and a list of students and their progress for all
-        levels in requirement chapter. The data is meant to be displayed in a table.
-        Since there's a unique entry for every student->level match we first need to create a clean list of users
-        from the associated UserLevelProgress-entries for all the levels in a chapter, and then extract the score for
-        every progress-entry that belongs that user """
+    """
+    Return a list of level names in a chapter and a list of students and their progress for all
+    levels in requirement chapter. The data is meant to be displayed in a table.
+    Since there's a unique entry for every student->level match we first need to create a clean list of users
+    from the associated UserLevelProgress-entries for all the levels in a chapter, and then extract the score for
+    every progress-entry that belongs that user. If a student skips a level it will leave a gap in the table
+    and put the score of the next level in the place of the skipped level.
+    """
 
+    # get all levels by filtering over chapter relation. this doesn't get them in the right order as defined in the
+    # chapter.order field but saves on needed queries
     levels = Level.objects.filter(chapters__id=chapter_id).order_by('pk').prefetch_related('student_progresses')
-    userscores = (l.student_progresses.all().select_related('user') for l in levels) # creates list in list?
+    userscores = (l.student_progresses.all().select_related('user') for l in levels) # creates list of scores in list of levels
     all_users = []
     stats = []
     for u in userscores:
         for n in u:
             all_users.append(n.user)
-    users = list(set(all_users)) # remove duplicates
+    users = sorted(list(set(all_users)), key=lambda user: user.last_name) # remove duplicates and sort by last name
     headers = ['Student']
     for level in levels:
         headers.append(level.name)
@@ -172,11 +180,23 @@ def stats_for_chapter_levels(chapter_id):
 
 def user_scores_for_levels(user, levels):
     """
-    Filter one users scores from list of levels
+    Filter one users scores from list of levels.
+    If a user hasn't started a level yet, add "0" as a record.
     """
     userscores = []
+
+
     for level in levels:
-        scores = level.student_progresses.filter(user=user,level_id=level.id)
+        scores = []
+        # If there's no userprogress-entry for a given level, add a 0 to the scorelist
+        if not level.student_progresses.filter(user=user,level_id=level.id).exists():
+            scores.append(0)
+        else:
+            scores.append(level.student_progresses.get(user=user,level_id=level.id))
         for score in scores:
-            userscores.append(int(score.stars))
+            # no entry means 0 score/stars
+            if score == 0:
+                userscores.append(0)
+            else:
+                userscores.append(int(score.stars))
     return userscores

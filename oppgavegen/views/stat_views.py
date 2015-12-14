@@ -49,8 +49,6 @@ def level_stats(request, level_id):
 
     offset = level.offset
     student_ratings = stats.values_list('level_rating', flat=True) # list of all ratings
-    for rating in student_ratings:
-        rating += offset
 
     if student_ratings:
         context_dict['players'] = len(student_ratings)
@@ -59,8 +57,8 @@ def level_stats(request, level_id):
     context_dict['levelid'] = level_id
     context_dict['user_is_owner'] = (level.editor == request.user) # check if current user can edit level
     context_dict['offset'] = offset
-    context_dict['student_entries'] = get_level_student_statistics(level) #todo: should offset be included
+    context_dict['student_entries'] = get_level_student_statistics(level)
     context_dict['templates'] = level.templates.exists()
-    context_dict['template_entries'] = get_level_template_statistics(level, offset) #todo: offset?
+    context_dict['template_entries'] = get_level_template_statistics(level, offset)
     context_dict['template_original'] = get_level_template_original_statistics(level)
     return render(request, 'sets/charts.html', context_dict)
