@@ -140,44 +140,6 @@ class SetsSearchForm(SearchForm):
         return sqs
 
 
-class SetForm(ModelForm):
-    class Meta:
-        model = Set
-        fields = ('name', 'chapters')
-
-
-class ChapterForm(ModelForm):
-    class Meta:
-        model = Chapter
-        fields = ('name', 'levels')
-
-class ChapterNameForm(ModelForm):
-    class Meta:
-        model = Chapter
-        fields = ('name',)
-
-class BaseChapterNameFormSet(BaseFormSet):
-    # Return a formset for all chapter names in spesific set
-    def __init__(self, *args, **kwargs):
-        super(BaseChapterNameFormSet, self).__init__(*args, **kwargs)
-        self.queryset = Set.chapters.all()
-
-# class LevelForm(ModelForm):
-#     class Meta:
-#         model = Level
-#         fields = ('name', 'templates')
-
-class LevelCreateForm(ModelForm):
-    templates = forms.ModelMultipleChoiceField(
-        queryset=Template.objects.all(),
-        widget = forms.CheckboxSelectMultiple
-    )
-
-    class Meta:
-        model = Level
-        fields = ('name', 'templates')
-
-
 class QuestionForm(forms.Form):
     """ Math problem answer submission form """
     user_answer = forms.CharField(widget=forms.widgets.HiddenInput(), max_length=400)
@@ -198,6 +160,7 @@ class QuestionForm(forms.Form):
               'replacing_words': self.cleaned_data['replacing_words'],
               'disallowed': self.cleaned_data['disallowed']}
         return cd
+
 
 class TemplateForm(ModelForm):
     tags_list = TagField(required=False)

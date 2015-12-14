@@ -8,29 +8,29 @@
 
 {% block panels %}
     <section id="table_panel" class="panel panel-primary">
-    <div class="table-container">
-    <div class="panel-heading"><h3 class="panel-title">{{ panel_title }}</h3></div>
-    <div class="panel-body" style="overflow-x:scroll;overflow-y:visible!important;">
-    <table class="table table-striped table-condensed table-hover">
-    <thead>
-    <tr>
-    {% for attr_head in headers %}
-       <th>{{ attr_head }}</th>
-    {% endfor %}
-    </tr>
-    </thead>
+        <div class="panel-heading"><h3 class="panel-title">{{ panel_title }}</h3></div>
+        <div class="panel-body" style="overflow-x:scroll;overflow-y:visible!important;">
+            <div class="table-container">
+                <table class="table table-striped table-condensed table-hover">
+                    <thead>
+                    <tr>
+                        {% for attr_head in headers %}
+                            <th>{{ attr_head }}</th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
 
-        <tbody>
-    {% for attr in user_stats %}
-        <tr>
-        {% for sub_attr in attr %}
-        <td>{{ sub_attr }}</td>
-        {% endfor %}
-        </tr>
-    {% endfor %}
-    </tbody>
-    </table>
-    </div>
-    </div>
+                    <tbody>
+                    {% for attr in user_stats %}
+                        <tr>
+                            {% for sub_attr in attr %}
+                                <td>{{ sub_attr }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </section>
 {% endblock %}
