@@ -205,7 +205,7 @@ $(document).ready(function() {
 			$(Q_INPUT).find('textarea').focus();
 		}
 		else{
-			alert('Ikke tillat med flere variabler.');
+			alert('Ikke tillatt med flere variabler.');
 		}
 	});
 
@@ -1938,12 +1938,13 @@ function refresh_variables(){
 function insert_editable_data(){
 	// Initialize valid variables
 	var var_str = $('#used_variables').text();
+	if(var_str != "0") { // 0 is the default if no variable has been defined for the template
 	var_str = var_str.split(' ');
 	for(var v = 0; v < var_str.length; v++){
 		var tmp_var = var_str[v].split('§');
 		VARIABLES[tmp_var[0]] = tmp_var.join('§');
         init_new_variable(tmp_var[1]);
-	}
+	}}
 	//window.console.log(VARIABLES);
 
 	// Inserting text-substitution
