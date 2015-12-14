@@ -1,32 +1,50 @@
 <div id="progressionModal" class="modal fade bs-example-modal-sm change-progression-modal" tabindex="-1" role="dialog"
      aria-labelledby="mySmallModalLabel">
-
     <div class="modal-dialog">
-
         <div class="modal-content">
-
-
             <div class="modal-body">
 
                 <div class="modal-alert alert alert-info text-center">
-                    Progresjonshastigheten bestemmer hvor raskt en student kan oppnå
-                    stjerner i nivået og dermed låse opp neste nivå i kapittelet.
+                    Progresjonshastigheten bestemmer hvor store endringer i rating en student eller en oppgave vil få
+                    når brukere svarer på oppgaver.<br>
+                    Om man setter progresjonshastigheten til oppgaver til 0 vil oppgaver bevare den originale
+                    vanskelighetsgraden den fikk tildelt når den ble lagd eller kopiert så lenge denne instillingen
+                    er satt til 0. En bruker må ha besvart 20 oppgaver i et nivå før ratingen til oppgavene vil
+                    justeres etter hvert svar.
                 </div>
 
-                <table class="table table-condensed">
-                    <tbody>
-                    <tr>
-                        <td class="col-sm-2" style="vertical-align: middle; text-align: right; height: 41px">Treg
-                        </td>
-                        <td class="col-sm-6" style="vertical-align: middle">
-                            <div id="k_factor_slider"></div>
-                        </td>
-                        <td class="col-sm-2" style="vertical-align: middle">Rask</td>
-                    </tr>
-                    </tbody>
-                </table>
-                <div class="hidden"><span
-                        id="k_factor_amount">{{ level.k_factor }}</span></div>
+                <div>
+                    <h4 class="text-left">Studenter</h4>
+                    <table id="kfactoruser_slider" class="table table-condensed">
+                        <tbody>
+                        <tr>
+                            <td class="col-sm-2" style="vertical-align: middle; text-align: right; height: 41px">Treg
+                            </td>
+                            <td class="col-sm-6" style="vertical-align: middle">
+                                <div id="k_factor_user_slider"></div>
+                            </td>
+                            <td class="col-sm-2" style="vertical-align: middle">Rask</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center lead"><span
+                            id="k_factor_user_amount">{{ level.k_factor }}</span></div>
+                    <h4 class="text-left">Oppgaver</h4>
+                    <table id="kfactorlevel_slider" class="table table-condensed">
+                        <tbody>
+                        <tr>
+                            <td class="col-sm-2" style="vertical-align: middle; text-align: right; height: 41px">Treg
+                            </td>
+                            <td class="col-sm-6" style="vertical-align: middle">
+                                <div id="k_factor_template_slider"></div>
+                            </td>
+                            <td class="col-sm-2" style="vertical-align: middle">Rask</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center lead"><span
+                            id="k_factor_template_amount">{{ level.k_factor_template }}</span></div>
+                </div>
             </div>
 
             <div class="modal-footer">

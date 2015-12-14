@@ -1,0 +1,39 @@
+<div class="level_progress_small">
+    {% if amount == 0 %}
+        <span class="progress_star glyphicon glyphicon-star-empty"></span>
+        <span class="progress_star glyphicon glyphicon-star-empty"></span>
+        <span class="progress_star glyphicon glyphicon-star-empty"></span>
+        <span class="progress_star glyphicon glyphicon-star-empty"></span>
+        <span class="progress_star glyphicon glyphicon-star-empty"></span>
+    {% elif amount == 1 %}
+        <span class="progress_star glyphicon glyphicon-star"></span>
+        <span class="progress_star glyphicon glyphicon-star-empty"></span>
+        <span class="progress_star glyphicon glyphicon-star-empty"></span>
+        <span class="progress_star glyphicon glyphicon-star-empty"></span>
+        <span class="progress_star glyphicon glyphicon-star-empty"></span>
+    {% elif amount == 2 %}
+        <span class="progress_star glyphicon glyphicon-star"></span>
+        <span class="progress_star glyphicon glyphicon-star"></span>
+        <span class="progress_star glyphicon glyphicon-star-empty"></span>
+        <span class="progress_star glyphicon glyphicon-star-empty"></span>
+        <span class="progress_star glyphicon glyphicon-star-empty"></span>
+    {% elif amount == 3 %}
+        <span class="progress_star glyphicon glyphicon-star"></span>
+        <span class="progress_star glyphicon glyphicon-star"></span>
+        <span class="progress_star glyphicon glyphicon-star"></span>
+        <span class="progress_star glyphicon glyphicon-star-empty"></span>
+        <span class="progress_star glyphicon glyphicon-star-empty"></span>
+    {% elif amount == 4 %}
+        <span class="progress_star glyphicon glyphicon-star"></span>
+        <span class="progress_star glyphicon glyphicon-star"></span>
+        <span class="progress_star glyphicon glyphicon-star"></span>
+        <span class="progress_star glyphicon glyphicon-star"></span>
+        <span class="progress_star glyphicon glyphicon-star-empty"></span>
+    {% elif amount == 5 %}
+        <span class="progress_star glyphicon glyphicon-star"></span>
+        <span class="progress_star glyphicon glyphicon-star"></span>
+        <span class="progress_star glyphicon glyphicon-star"></span>
+        <span class="progress_star glyphicon glyphicon-star"></span>
+        <span class="progress_star glyphicon glyphicon-star"></span>
+    {% endif %}
+</div>

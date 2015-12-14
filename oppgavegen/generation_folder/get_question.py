@@ -70,18 +70,18 @@ def get_question(user, template_id, topic=''):
 
 @Debugger
 def get_level_question(user, level):
-    """Gets a template from the database at a appropriate rating.
+    """ Gets a template from the database at a appropriate rating.
 
     :param user: The user requesting a template
     :param template_id: (optional) the id of a template
     :param topic: the topic of the template.
-    :return: Template object.
-    """
+    :return: Template object. """
     slack = 100
     increase = 15
     user_progress = add_level_to_user(user, level)
     offset = level.offset
-    user_rating = user_progress.level_rating + offset
+    user_rating = user_progress.level_rating - offset
+
     while True:
         q = level.templates.all()
         q = q.filter(rating__gt=(user_rating-slack))
@@ -106,6 +106,7 @@ def get_level_question(user, level):
         length_multiple = m.count()
         length_fill_in = f.count()
         length_total = length_fill_in + length_normal + length_multiple
+
         if length_total > 0:
             r_number = randint(1, length_total)
             if r_number <= length_fill_in and length_fill_in > 0:
