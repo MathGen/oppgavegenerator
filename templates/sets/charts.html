@@ -38,6 +38,24 @@
                     Ingen oppgaver i {{ level_name }} enda.
 
                 {% endif %}
+				
+				<div class ="table-container">
+					<table class="table table-striped table-condensed table-hover">
+						<thead>
+							<tr> <th> Navn </th><th> Antall stjerner </th> </tr>
+						</thead>
+						<tbody>
+							{% for data in student_namestar %}
+							<tr>
+							{% for entry in data %}
+							<td> {{entry}} </td>
+							{% endfor %}
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+
 
             </div>
     </section>
