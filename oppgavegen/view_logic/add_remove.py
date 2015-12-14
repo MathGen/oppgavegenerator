@@ -229,6 +229,9 @@ def add_chapter_to_set(chapter, set):
     add_to_level_order = ''
     if set.order != '':
         add_to_level_order = ','
+    if set.is_requirement:
+        chapter.in_requirement_set = True
+        chapter.save()
     set.order += add_to_level_order + str(chapter.pk)
     set.chapters.add(chapter)
     set.save()

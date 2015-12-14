@@ -105,7 +105,8 @@ class Level(models.Model):
     creator = models.ForeignKey(User, blank=True, null=True, related_name='levels_created')
     editor = models.ForeignKey(User, blank=True, null=True, related_name='levels_edited')  # Editor of template
     creation_date = models.DateTimeField('date created', blank=True, null=True, auto_now_add=True)  # Date and time of creation
-    k_factor = models.PositiveIntegerField(default=3, null=True, blank=True)  # Decides how fast a user progress
+    k_factor = models.PositiveIntegerField(default=8, null=True, blank=True)  # Decides how fast a user progress
+    k_factor_template = models.PositiveIntegerField(default=8)
     offset = models.IntegerField(default=0, null=True, blank=True)  # Offset for the level.
     copy = models.BooleanField(default=False)
 
@@ -160,14 +161,15 @@ class UserLevelProgress(models.Model):
     stars = models.IntegerField(default=0)
     questions_answered = models.PositiveIntegerField(default=0)
 
-    def __str__(self):  #  Returns the pk
-        return str(self.pk)
+    def __str__(self):
+        return self.user.get_full_name() + " - " + self.level.name + " - " + str(self.stars)
 
 class UserChapterProgress(models.Model):
     """Stores progress a user has in a chapter"""
     user = models.ForeignKey(User, blank=True, null=True)
     chapter = models.ForeignKey(Chapter, blank=True, null=True)
     medals = models.IntegerField(default=0)
+
 
 class ExtendedUser(models.Model):
     """Extends the default django user model with a one to one relation"""
