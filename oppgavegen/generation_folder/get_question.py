@@ -80,7 +80,7 @@ def get_level_question(user, level):
     increase = 15
     user_progress = add_level_to_user(user, level)
     offset = level.offset
-    user_rating = user_progress.level_rating - offset
+    user_rating = user_progress.level_rating - offset # adjust user rating by substracting (or) adding offset
 
     while True:
         q = level.templates.all()

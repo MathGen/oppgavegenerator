@@ -24,7 +24,6 @@ def change_elo(template, user, user_won, type):
     expected_user = (1+10**((template_rating-user_rating)/400))**(-1)
     expected_template = (1+10**((template_rating-user_rating)/400))**(-1)
     prefactor_user = 32  # This value could be adjusted according to elo of the user (lower for higher ratings..)
-    # TODO - Change this back to something positive
     # This change is made because the rating system is not working properly, reducing problem rating inappropriately
     # Changed on 2015-10-29 by Siebe and Girts
     # prefactor_template = 8  # This value could be adjusted according to elo of the user (lower for higher ratings..)
@@ -102,7 +101,9 @@ def change_level_rating(template, user, user_won, type, level_id):
         template.rating = new_template_rating
     template.save()
 
-    calculate_and_update_offset(level)
+    # updating offset is now done before a user gets a task from a level
+    # so the first user in a level doesn't get an unfair template
+    # calculate_and_update_offset(level)
 
     new_star = check_for_new_star(user, level_id)
     return (user_progress.level_rating, new_star)
@@ -139,7 +140,8 @@ def add_star(user_progress):
 
 def calculate_and_save_offset(rating_change, level, difficulty):
     """ Calculates and updates the offset for a given level incrementally based on how a templates rating was
-        increased or reduced after a user submits an answer """
+        increased or reduced after a user submits an answer.
+        Unused as of 14 dec 2015 but leaving it should incremental offset updating be desirable. """
 
     upper = 15  # The upper bound of templates used for offset
     lower = 11  # The lower bound of templates used for offset
@@ -151,6 +153,9 @@ def calculate_and_save_offset(rating_change, level, difficulty):
 
         level.offset += rating_change/num_templates
         level.save()
+
+    else:
+        pass
 
 
 def calculate_and_update_offset(level, lower_difficulty=12, upper_difficulty=15):
@@ -173,7 +178,7 @@ def calculate_and_update_offset(level, lower_difficulty=12, upper_difficulty=15)
             template_ratings.append(template.choice_rating)
             template_difficulties.append(template.difficulty_multiple)
 
-    # todo: should offset not be calculated when there's no templates in range?
+    # note: should offset not be calculated when there's no templates in range?
     # calculate averages
     if len(template_ratings) > 0 and len(template_difficulties) > 0: # lists must contain elements to avoid zero division error
         rating_average = round(sum(template_ratings)/len(template_ratings))
@@ -181,3 +186,6 @@ def calculate_and_update_offset(level, lower_difficulty=12, upper_difficulty=15)
 
         level.offset = difficulty_average - rating_average
         level.save()
+
+    else: # leave the offset as is if there's no elements in the lists
+        pass

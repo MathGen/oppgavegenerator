@@ -148,7 +148,7 @@ def generate_level(user, level_id):
     :return: Returns a complete math question with generated numbers.
     """
     level = Level.objects.get(pk=level_id)
-    calculate_and_update_offset(level)
+    calculate_and_update_offset(level) # make sure the level offset is correct before we get a template
     get_question_dict = get_level_question(user, level)  # Gets a template from the DB
     q = get_question_dict['template']
     desired_type = get_question_dict['type']
