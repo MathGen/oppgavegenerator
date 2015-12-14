@@ -152,6 +152,13 @@ def submit_template(template, user, update, newtags=None):
             template.fill_rating = calculate_start_rating(template.difficulty_blanks)
         if template.difficulty_multiple != q.difficulty_multiple:
             template.choice_rating = calculate_start_rating(template.difficulty_multiple)
+        print(template.solution_latex + " , " + q.solution_latex)
+        # if the solution is changed but not fill_in settings, remove fill_inn_support
+        if template.solution_latex != q.solution_latex and template.fill_in_latex == q.fill_in_latex:
+            print('forslag er ulik. fjerner fill-in.')    # remove fill-in support
+            template.fill_in = ''
+            template.fill_in_latex = ''
+            template.fill_in_support = False # remove fill-in support if solution is changed.
     else:
         template.rating = calculate_start_rating(template.difficulty)
         template.fill_rating = calculate_start_rating(template.difficulty_blanks)
