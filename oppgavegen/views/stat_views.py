@@ -37,8 +37,9 @@ def level_stats(request, level_id):
         context_dict['players'] = len(studentratings)
         context_dict['average'] = int(sum(studentratings)/context_dict['players'])
 
-    context_dict['student_entries'] = get_level_student_statistics(level)
+    context_dict['student_entries'], context_dict['student_namestar'] = get_level_student_statistics(level)
     context_dict['templates'] = level.templates.exists()
     context_dict['template_entries'] = get_level_template_statistics(level)
     context_dict['template_original'] = get_level_template_original_statistics(level)
+	
     return render(request, 'sets/charts.html', context_dict)
