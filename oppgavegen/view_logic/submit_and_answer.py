@@ -39,6 +39,8 @@ def make_edit_context_dict(template_id):
     unchanged_required = q.unchanged_required
     unchanged_disallowed = q.unchanged_disallowed
 
+    if len(used_variables) <= 0:
+        used_variables = "0"
     if unchanged_required == '' or unchanged_required == None:
         unchanged_required = []
     if unchanged_disallowed == '' or unchanged_disallowed == None:
@@ -155,7 +157,6 @@ def submit_template(template, user, update, newtags=None):
         print(template.solution_latex + " , " + q.solution_latex)
         # if the solution is changed but not fill_in settings, remove fill_inn_support
         if template.solution_latex != q.solution_latex and template.fill_in_latex == q.fill_in_latex:
-            print('forslag er ulik. fjerner fill-in.')    # remove fill-in support
             template.fill_in = ''
             template.fill_in_latex = ''
             template.fill_in_support = False # remove fill-in support if solution is changed.
