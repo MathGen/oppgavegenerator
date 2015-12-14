@@ -74,8 +74,8 @@ def change_level_rating(template, user, user_won, type, level_id):
     expected_user = (1+10**((template_rating-user_rating+offset)/400))**(-1)
     expected_template = (1+10**((user_rating-template_rating-offset)/400))**(-1)
 
-    prefactor_user = level.k_factor  # This value should be adjusted according to elo of the user (lower for higher ratings..)
-    prefactor_template = level.k_factor_template  # This value should be adjusted according to elo of the user (lower for higher ratings..)
+    prefactor_user = level.k_factor
+    prefactor_template = level.k_factor_template
     minimum_answered_questions = 20  # Amount of questions the user needs to have answered for template rating to change
 
     if user_won:
