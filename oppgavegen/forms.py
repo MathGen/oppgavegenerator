@@ -4,13 +4,12 @@ Contains various forms that are used in views
 
 """
 from django.forms import ModelForm
-from django.forms.formsets import BaseFormSet
 from django import forms
 from haystack.forms import SearchForm
 from registration.users import UserModel
 from registration.forms import RegistrationFormUniqueEmail
 
-from oppgavegen.models import Set, Chapter, Level, Template, Tag
+from oppgavegen.models import Template, Tag
 
 User = UserModel()
 
@@ -25,6 +24,7 @@ class NamedUserRegistrationForm(RegistrationFormUniqueEmail):
     class Meta:
         model = User
         fields = ("username", "email", "first_name", "last_name")
+
 
 class NamedUserDetailsForm(ModelForm):
     """ Form for updating user's own details """
