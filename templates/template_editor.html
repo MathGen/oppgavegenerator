@@ -261,7 +261,7 @@
                 <div class="col-md-4">
                     <div class="pull-right btn-group">
                         {% if template_id %}
-                        <button id="o_btn_delete_template" class="btn btn-danger" type="submit">Slett mal</button>
+                        <button id="o_btn_delete_template" class="btn btn-danger" data-toggle="modal" data-target="#delete_template_modal">Slett mal</button>
                         <button id="o_btn_save_new" class="btn btn-default" type="submit">Lagre som ny mal</button>
                         {% endif %}
                         <button id="o_btn_save" class="btn btn-primary" type="submit">
@@ -523,6 +523,7 @@
             </section>
         </div>
     </div>
+    {% if template_id %}
     <div id="delete_template_modal" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -533,8 +534,7 @@
                 </div>
                 <div class="modal-body">
                     <p>Vennligst bekreft at du vil slette denne oppgavemalen.
-                    Denne slettingen er permanent og malen vil ikke kunne
-                    hentes tilbake.</p>
+                    Denne slettingen er permanent og malen vil ikke kunne hentes tilbake.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Avbryt</button>
@@ -543,5 +543,6 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+    {% endif %}
 
 {% endblock %}
