@@ -10,9 +10,11 @@
         var current_chapter = {{ chapter_id }};
         var current_set = {{ set_id }};
         </script>
+        {% if graph|length > 2 %}
         <script src="/static/js/graph.js?011"></script>
         <script src="https://www.desmos.com/api/v0.6/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"
                 async></script>
+        {% endif %}
     {% endblock %}
 {#    <script src="/static/js/game_functions.js"></script>#}
     <script src="/static/js/game_template_init.js"></script>
@@ -77,7 +79,7 @@
                                 </div>
                                 <div class="col-md-5">
                                     <div id="graph_container" style="width: auto; height: 250px;"></div>
-                                    </br>
+                                    <br>
                                 </div>
                             </div>
                             <div id="w_target" class="row"></div>
