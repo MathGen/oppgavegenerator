@@ -4,9 +4,13 @@
 
 {% block panels %}
     {% block js %}
-        <script src="/static/js/graph.js?011"></script>
-        <script src="https://www.desmos.com/api/v0.6/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"
-                async></script>
+    {% comment %}
+    Since these graph javascript files add 2 seconds of loading time, i'll comment them out since they're loaded
+    in template_noajax.html if a graph has a graph anyway.
+
+    <script src="/static/js/graph.js?011"></script>
+    <script src="https://www.desmos.com/api/v0.6/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6" async></script>
+    {% endcomment %}
     {% endblock %}
     <script src="/static/js/game_functions.js"></script>
     <link href="/static/css/game.css?02" rel="stylesheet">
