@@ -1938,8 +1938,8 @@ function refresh_variables(){
 function insert_editable_data(){
 	// Initialize valid variables
 	var var_str = $('#used_variables').text();
-	if(var_str != "0") { // 0 is the default if no variable has been defined for the template
-	var_str = var_str.split(' ');
+	if(var_str != "0") { // 0 is the default if no variable has been defined for the template.
+	var_str = var_str.split(' '); // the check above prevents the editor from crashing when a template has no variables
 	for(var v = 0; v < var_str.length; v++){
 		var tmp_var = var_str[v].split('§');
 		VARIABLES[tmp_var[0]] = tmp_var.join('§');
