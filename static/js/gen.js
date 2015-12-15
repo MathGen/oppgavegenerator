@@ -1537,7 +1537,7 @@ function error_message(selector, message){
         element = $('#' + selector);
     }
 	$(document).ready(function(){
-		element.after('<p class="error_content">* '+message+'</p>');
+		element.after('<p class="error_content">'+message+'</p>');
 		$('.error_content').show(100).delay(5000).hide(100).queue(function(){
 			$(this).remove();
 		});

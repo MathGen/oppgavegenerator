@@ -161,7 +161,7 @@ function answer_validation(){
             if(get_latex_from_mathfield('#w_input_mathquill_' + bla) == ''){
                 valid = false;
                 $('#w_input_mathquill_' + bla).addClass('select_error');
-                error_message('#w_input_mathquill_' + bla, 'Fyll ut!');
+                error_message('#w_input_mathquill_' + bla, '!');
             }
         }
     }
