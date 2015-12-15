@@ -2,11 +2,15 @@
 {% load app_filters %}
 
 {% block title %}{{ title }}{% endblock %}
+{% block head %}
+    <link href="/static/css/game.css?02" rel="stylesheet">
+    <link href="/static/css/stud_style.css" rel="stylesheet">
+{% endblock %}
 
 {% block panels %}
     {#    <script src="/static/js/game_functions.js"></script>#}
-    <script src="/static/js/game_template_init.js"></script>
-    <link href="/static/css/game.css?02" rel="stylesheet">
+
+
     <div id="game_screen" class="jumbotron">
         <div id="set_id" hidden>{{ set_id }}</div>
         <h2 class="set_title">{{ set_title }}<span id="chapter_title"> - {{ chapter_title }}</span><span
@@ -24,12 +28,8 @@
             <div hidden id="get_graph">{{ graph }}</div>
             <div hidden id="get_graph_color">{{ graph_color }}</div>
             <div hidden id="get_graph_settings">{{ graph_settings }}</div>
-
-
-            <link href="/static/css/stud_style.css" rel="stylesheet">
-            <script src="/static/js/answer_input.js?025"></script>
             <div id="num_stars" hidden>{{ stars }}</div>
-            <div id="get_ulp" hidden>{{ ulp }}</div>
+            <div id="get_ulp" hidden>{{ ulp }}</div> {# user level progress #}
 
             <section class="panel panel-default">
                 <div class="panel-heading">
@@ -104,6 +104,8 @@
     </div>
 {% endblock %}
 {% block js %}
+    <script src="/static/js/game_template_init.js"></script>
+    <script src="/static/js/answer_input.js?025"></script>
     <script>
         var current_level = {{ level_id }};
         var current_chapter = {{ chapter_id }};
