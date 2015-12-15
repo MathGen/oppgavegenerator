@@ -42,11 +42,12 @@ urlpatterns = patterns('',
     url(r'^edit/(\d+)/$', edit_template, name='edit_template'),
     url(r'^submit/', submit, name='submit'), # JS: gen.js
 
-    # Template overview and copying
+    # Template overview and copy/delete
     url(r'^templates/$', TemplatesListView.as_view(), name='all_templates_list'),
     url(r'^user/templates/$', UserTemplatesListView.as_view(), name='user_templates_list'),
     url(r'^user/templates/nocopies/$', UserTemplatesListViewNoCopies.as_view(), name='user_original_templates_list'),
     url(r'^template/(\d+)/copy/next/([\w ]+)/$', confirm_template_copy, name='confirm_template_copy'),
+    url(r'^template/(\d+)/delete/$', delete_template, name='delete_template'),
 
     # Problem generation
     url(r'^task/$', task, name='task_by_user_rating'),

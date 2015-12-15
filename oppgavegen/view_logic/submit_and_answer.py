@@ -39,8 +39,8 @@ def make_edit_context_dict(template_id):
     unchanged_required = q.unchanged_required
     unchanged_disallowed = q.unchanged_disallowed
 
-    if len(used_variables) <= 0:
-        used_variables = "0"
+    if len(used_variables) <= 0: # when a template has no defined variables
+        used_variables = "0" # this prevents a template editor crash in gen.js - line 1941 (as of 15/12/15)
     if unchanged_required == '' or unchanged_required == None:
         unchanged_required = []
     if unchanged_disallowed == '' or unchanged_disallowed == None:
