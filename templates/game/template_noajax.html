@@ -4,24 +4,13 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block panels %}
-    {% block js %}
-        <script>
-        var current_level = {{ level_id }};
-        var current_chapter = {{ chapter_id }};
-        var current_set = {{ set_id }};
-        </script>
-        {% if graph|length > 2 %}
-        <script src="/static/js/graph.js?011"></script>
-        <script src="https://www.desmos.com/api/v0.6/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"
-                async></script>
-        {% endif %}
-    {% endblock %}
-{#    <script src="/static/js/game_functions.js"></script>#}
+    {#    <script src="/static/js/game_functions.js"></script>#}
     <script src="/static/js/game_template_init.js"></script>
     <link href="/static/css/game.css?02" rel="stylesheet">
     <div id="game_screen" class="jumbotron">
         <div id="set_id" hidden>{{ set_id }}</div>
-        <h2 class="set_title">{{ set_title }}<span id="chapter_title"> - {{ chapter_title }}</span><span id="level_title"> - {{ level_title }}</span></h2>
+        <h2 class="set_title">{{ set_title }}<span id="chapter_title"> - {{ chapter_title }}</span><span
+                id="level_title"> - {{ level_title }}</span></h2>
 
         <div id="game_loading" style="display: none"><img src="/static/img/loading.gif"></div>
         <div id="game_content">
@@ -109,7 +98,20 @@
             </section>
         </div>
         <div id="game_nav" style="display: none">
-            <a href="{% url 'game' set_id %}" class="btn btn-link"><span class="btn_game_back glyphicon glyphicon-arrow-left"></span></a>
+            <a href="{% url 'game' set_id %}" class="btn btn-link"><span
+                    class="btn_game_back glyphicon glyphicon-arrow-left"></span></a>
         </div>
     </div>
+{% endblock %}
+{% block js %}
+    <script>
+        var current_level = {{ level_id }};
+        var current_chapter = {{ chapter_id }};
+        var current_set = {{ set_id }};
+    </script>
+    {% if graph|length > 2 %}
+        <script src="/static/js/graph.js?011"></script>
+        <script src="https://www.desmos.com/api/v0.6/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"
+                async></script>
+    {% endif %}
 {% endblock %}

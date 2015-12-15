@@ -4,70 +4,78 @@
 {% load app_filters %}
 {% load staticfiles %}
 
-{% block panels %}
-<!-- QUESTION PANEL -->
-{% block js %}
-    <script src="/static/js/answer_input.js?025"></script>
-{% if graph|length > 2 %}
-    <script src="{% static "js/graph.js" %}/static/js/graph.js?011"></script>
-    <script src="https://www.desmos.com/api/v0.6/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6" defer></script> <!--FIXME: make async callback (draw graph when ready)-->
-{% endif %}
+{% block head %}
+    <link href="/static/css/stud_style.css" rel="stylesheet">
 {% endblock %}
-<link href="/static/css/stud_style.css" rel="stylesheet">
-<section class="panel panel-default">
-    <div class="panel-heading"><h3 class="panel-title">Oppgave</h3></div>
-    <div class="panel-body">
-        <form id="w_question_display" class="form-horizontal">
-            <!-- this might seem a bit redundant, but for some reason using var choices = {{choices}} did not work -->
-            <div hidden id="template_type">{{template_type}}</div>
-            <div hidden id="primary_key">{{primary_key}}</div>
-            <div hidden id="template_specific">{{template_specific}}</div>
-            <div hidden id="number_of_answers">{{number_of_answers}}</div>
-            <div hidden id="variable_dictionary">{{variable_dictionary}}</div>
-            <div hidden id="get_question">{{ question }}</div>
-            <div hidden id="replacing_words">{{ replacing_words }}</div>
-            <div hidden id="get_graph">{{ graph }}</div>
-            <div hidden id="get_graph_color">{{ graph_color }}</div>
-            <div hidden id="get_graph_settings">{{ graph_settings }}</div>
-            <div hidden id="task_view">true</div>
+
+{% block panels %}
+    <!-- QUESTION PANEL -->
 
 
-            {% if graph|length > 2 %}
-            <div class="row">
-                <div class="col-md-7">
+
+    <section class="panel panel-default">
+        <div class="panel-heading"><h3 class="panel-title">Oppgave</h3></div>
+        <div class="panel-body">
+            <form id="w_question_display" class="form-horizontal">
+                <!-- this might seem a bit redundant, but for some reason using var choices = {{choices}} did not work -->
+                <div hidden id="template_type">{{ template_type }}</div>
+                <div hidden id="primary_key">{{ primary_key }}</div>
+                <div hidden id="template_specific">{{ template_specific }}</div>
+                <div hidden id="number_of_answers">{{ number_of_answers }}</div>
+                <div hidden id="variable_dictionary">{{ variable_dictionary }}</div>
+                <div hidden id="get_question">{{ question }}</div>
+                <div hidden id="replacing_words">{{ replacing_words }}</div>
+                <div hidden id="get_graph">{{ graph }}</div>
+                <div hidden id="get_graph_color">{{ graph_color }}</div>
+                <div hidden id="get_graph_settings">{{ graph_settings }}</div>
+                <div hidden id="task_view">true</div>
+
+
+                {% if graph|length > 2 %}
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div id="mathquill_field" class="input_field"></div>
+                        </div>
+                        <div class="col-md-5">
+                            <div id="graph_container" style="width: auto; height: 250px;"></div>
+                        </div>
+                    </div>
+                    <hr><h4 id="w_answer_head" style="display: none">Ditt svar</h4>
+                {% else %}
                     <div id="mathquill_field" class="input_field"></div>
-                </div>
-                <div class="col-md-5">
-                    <div id="graph_container" style="width: auto; height: 250px;"></div>
-                </div>
-            </div>
-            <hr><h4 id="w_answer_head" style="display: none">Ditt svar</h4>
-            {% else %}
-            <div id="mathquill_field" class="input_field"></div><hr>
-            <h4 id="w_answer_head" style="display: none">Ditt svar</h4>
-            {% endif %}
+                    <hr>
+                    <h4 id="w_answer_head" style="display: none">Ditt svar</h4>
+                {% endif %}
 
-            <div id="w_target" class="row"></div>
-            <form>{% csrf_token %} </form>
-        </form>
-        <!-- LOADING: display loading icon when math is rendering -->
-        <form id="w_question_loading" class="loading" style="display:none"></form>
+                <div id="w_target" class="row"></div>
+                <form>{% csrf_token %} </form>
+            </form>
+            <!-- LOADING: display loading icon when math is rendering -->
+            <form id="w_question_loading" class="loading" style="display:none"></form>
 
-    </div>
-    <!-- USER-INPUT -->
-    <div class="panel-footer">
-        <div id="keypad_w" class="row keypad">
-            <div class="col-lg-9 keypad_answer">
-                {% include 'keypad/operators.html' %}
-            </div>
-            <div class="col-lg-3 pull-right">
-                <button id="submit_answer" class="btn btn-primary pull-right" type="submit">Svar</button>
+        </div>
+        <!-- USER-INPUT -->
+        <div class="panel-footer">
+            <div id="keypad_w" class="row keypad">
+                <div class="col-lg-9 keypad_answer">
+                    {% include 'keypad/operators.html' %}
+                </div>
+                <div class="col-lg-3 pull-right">
+                    <button id="submit_answer" class="btn btn-primary pull-right" type="submit">Svar</button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div style="display:none">
-        {% include 'keypad/custom_matrix.html' %}
-    </div>
-</section>
+        <div style="display:none">
+            {% include 'keypad/custom_matrix.html' %}
+        </div>
+    </section>
+{% endblock %}
+{% block js %}
+    <script src="/static/js/answer_input.js?025"></script>
+    {% if graph|length > 2 %}
+        <script src="{% static "js/graph.js" %}/static/js/graph.js?011"></script>
+        <script src="https://www.desmos.com/api/v0.6/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"
+                defer></script> <!--FIXME: make async callback (draw graph when ready) - w0pke@github-->
+    {% endif %}
 {% endblock %}
