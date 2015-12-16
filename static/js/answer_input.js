@@ -49,14 +49,17 @@ $(document).ready(function () {
         num_boxx = arr_output.length;
         for(var i = 0; i < arr_output.length; i++){
             if(i < 1){
-                $('#mathquill_field').append('<div class="input_field"><span id="mathquill_output_'+i+'" class="static-math output_mathquill">'+arr_output[i]+'</span></div><hr/>');
+                $('#mathquill_field').append('<div class="input_field"><span id="mathquill_output_'+i+'" class="static-math output_mathquill" style="width:100%">'+arr_output[i]+'</span></div><hr/>');
             }
             else{
-                $('#mathquill_field').append('<div class="input_field"><span id="mathquill_output_'+i+'" class="static-math output_mathquill">'+arr_output[i]+'</span></div><br/>');
+                $('#mathquill_field').append('<div class="input_field"><span id="mathquill_output_'+i+'" class="static-math output_mathquill" style="display:inline-block;min-width:700px">'+arr_output[i]+'</span></div><br/>');
             }
+            //$('#mathquill_output_'+i).css('display','inline'); // safari fix
             //$('.static-math').addClass('form-control blank_input');
         }
+
         redraw_mathquill_elements();
+        $('.input_field').css('display','inline-block'); // fix for safari
         $('.mq-editable-field').each(function(b){
             $(this).attr('id', 'w_input_mathquill_' + b).addClass('input_blanks');
         });
