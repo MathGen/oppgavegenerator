@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 
 from oppgavegen.models import Set, Chapter, Level
-from oppgavegen.views.mixins import LoginRequiredMixin, SiteInformationMixin
+from oppgavegen.views.mixins import LoginRequiredMixin
 from oppgavegen.view_logic.current_work import set_current_set, set_current_chapter, set_current_level
 from django.contrib.sites.models import Site
 
