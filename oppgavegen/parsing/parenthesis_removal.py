@@ -15,8 +15,8 @@ def parenthesis_removal(s):
     # empty text fields sometimes get into equations, this will split the equation and result in incorrect
     # parenthesis removal. Which is why the empty text fields are replaced.
     split_list = ['=', '§', '\\arrow', '\\and', '\\or', '\\union', '\\intersection', '\\rightarrow', '\\leftarrow'
-                  '\\leftrightarrow', '.'] #fixme: the '.' causes parenthesis removal to not work for floating point
-    replace_dict = make_replace_text_dict(s) # unsure of other cases where a "." could occur
+                  '\\leftrightarrow',]# '.'] #fixme: the '.' causes parenthesis removal to not work for floating point
+    replace_dict = make_replace_text_dict(s) # unsure of other cases where a "." could occur except end of sentences
     print('b<<')
     print(replace_dict)
     s = replace_value_with_key(s, replace_dict)

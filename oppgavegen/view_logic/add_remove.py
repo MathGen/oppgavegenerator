@@ -318,7 +318,24 @@ def make_level_copy(original_level, user):
             add_template_to_level(t_copy,l_copy,user)
     return l_copy
 
-def update_chapter_or_set(set_or_chapter, title, order, user):
+
+def update_set(set, title, order, password, user):
+    msg = 'Failed update.'
+    if set.editor == user:
+        set.name = title
+        set.order = order
+        if len(password) > 0:
+            set.password = password
+            set.password_protected = True
+        else:
+            set.password_protected = False
+        set.save()
+
+        msg = 'Successful update'
+    return msg
+
+
+def update_chapter(set_or_chapter, title, order, user):
     msg = 'Failed update.'
     if set_or_chapter.editor == user:
         set_or_chapter.name = title
@@ -327,6 +344,7 @@ def update_chapter_or_set(set_or_chapter, title, order, user):
 
         msg = 'Successful update'
     return msg
+
 
 def update_level(level, title, user, k_factor):
     msg = 'Failed update.'

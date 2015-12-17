@@ -558,6 +558,12 @@ ol li.list-group-item {
     border-bottom-left-radius: 0;
 }
 
+.set-url[readonly] {
+    cursor: text;
+    background-color: #fff;
+    opacity: 1;
+}
+
 /**** SLIDERS ****/
 .ui-slider {
     background-color: lightgrey;

@@ -14,7 +14,7 @@ from django.views.decorators.cache import cache_control
 from haystack.generic_views import SearchView
 
 from oppgavegen.views.sortable_listview import SortableListView
-from oppgavegen.views.login_required_mixin import LoginRequiredMixin
+from oppgavegen.views.mixins import LoginRequiredMixin
 from oppgavegen.templatetags.app_filters import is_teacher
 from oppgavegen.view_logic.rating import change_elo, change_level_rating, get_user_rating
 from oppgavegen.generation_folder.generation import generate_task

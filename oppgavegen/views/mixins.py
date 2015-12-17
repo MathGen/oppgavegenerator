@@ -1,4 +1,6 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.views.generic.detail import SingleObjectMixin
+from django.contrib.sites.models import Site
 
 class LoginRequiredMixin(object):
     """ Generic @login_required Mixin for class-based views  """
