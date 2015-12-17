@@ -156,27 +156,30 @@ def copy_set_as_requirement(request,set_id):
 
     return HttpResponse(msg)
 
+
+def update_set_view(request):
+    msg = 'Failed update of set'
+    if request.method == 'POST':
+        form = request.POST
+        title = form['title']
+        order = form['order']
+        password = form['password']
+        set_id = int(form['set_id'])
+        set = Set.objects.get(pk=set_id)
+        msg = update_set(set, title, order, password, request.user)
+
+    return HttpResponse(msg)
+
+
 def update_chapter_view(request):
-    msg = 'Noe gikk galt'
+    msg = 'Failed update of chapter'
     if request.method == 'POST':
         form = request.POST
         title = form['title']
         order = form['order']
         chapter_id = int(form['chapter_id'])
         chapter = Chapter.objects.get(pk=chapter_id)
-        msg = update_chapter_or_set(chapter, title, order, request.user)
-    return HttpResponse(msg)
-
-def update_set_view(request):
-    msg = 'Noe gikk galt'
-    if request.method == 'POST':
-        form = request.POST
-        title = form['title']
-        order = form['order']
-        set_id = int(form['set_id'])
-        set = Set.objects.get(pk=set_id)
-        msg = update_chapter_or_set(set, title, order, request.user)
-
+        msg = update_chapter(chapter, title, order, request.user)
     return HttpResponse(msg)
 
 

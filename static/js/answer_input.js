@@ -46,7 +46,6 @@ $(document).ready(function () {
         //submit_button.prop('disabled', true); // disable answer button
         var output = $('#get_question').text();
         var arr_output = output.split('§');
-        num_boxx = arr_output.length;
         for(var i = 0; i < arr_output.length; i++){
             if(i < 1){
                 $('#mathquill_field').append('<div class="input_field"><span id="mathquill_output_'+i+'" class="static-math output_mathquill" style="width:100%">'+arr_output[i]+'</span></div><hr/>');
@@ -85,10 +84,13 @@ $(document).ready(function () {
             user_answer = get_radio_value('answer_button');
         }
         else if(template_type == 'blanks'){
+            num_boxx = 0;
             $('#mathquill_field').find('.mq-editable-field').each(function(f){
+                num_boxx += 1;
                 if(f > 0) {
                     user_answer += '§';
                 }
+                console.log(this);
                 user_answer += get_latex_from_mathfield(this);
             });
         }
@@ -160,6 +162,7 @@ function answer_validation(){
         }
     }
     if(template_type == 'blanks'){
+        console.log('num boxx = ' + num_boxx);
         for(var bla = 0; bla < num_boxx; bla++){
             if(get_latex_from_mathfield('#w_input_mathquill_' + bla) == ''){
                 valid = false;

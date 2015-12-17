@@ -3,8 +3,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 
 from oppgavegen.models import Set, Chapter, Level
-from oppgavegen.views.login_required_mixin import LoginRequiredMixin
+from oppgavegen.views.mixins import LoginRequiredMixin, SiteInformationMixin
 from oppgavegen.view_logic.current_work import set_current_set, set_current_chapter, set_current_level
+from django.contrib.sites.models import Site
 
 
 class UserSetListView(LoginRequiredMixin, ListView):
@@ -34,6 +35,7 @@ class SetChapterListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(SetChapterListView, self).get_context_data(**kwargs)
         context['set'] = self.set
+        context['site'] = Site.objects.last()
         set_current_set(self.request.user, self.set)
         return context
 

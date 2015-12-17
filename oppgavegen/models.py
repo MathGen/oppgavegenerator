@@ -143,6 +143,8 @@ class Set(models.Model):
     users = models.ManyToManyField(User, blank=True, related_name='sets_joined')
     is_public = models.BooleanField(default=False) # Set by a teacher when a Set is ready to be played by students
     is_requirement = models.BooleanField(default=False)
+    password_protected = models.BooleanField(default=False)
+    password = models.CharField(max_length=20, blank=True)
 
     def __str__(self):  # Makes it so that self.name shows up instead of set(object)
         """Returns the set name"""

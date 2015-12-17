@@ -14,6 +14,7 @@
 
             <div class="col-md-8">
                 <h1>
+                    <span class="hidden">{{ site.domain }}</span>
                     <span id="current_object_title">{{ set.name|title }}</span>
                     <small>Kapitler</small>
                 </h1>
@@ -34,6 +35,9 @@
                     <span class="glyphicon glyphicon-cog"></span> Publisér
                 </a>
                     {% endif %}
+                <button class="btn btn-default btn-xs btn-sharing">
+                    Deling
+                </button>
                     <span id="save_success" class="glyphicon glyphicon-ok text-success"
                           style="margin-left: 10px;display:none"></span>
                 </div>
@@ -107,6 +111,7 @@
 
     {% include 'sets/includes/deletemodal.html' %}
     {% include 'sets/includes/edit_title_modal.html' %}
+    {% include 'sets/includes/sharing_modal.html' %}
 
 {% endblock %}
 
@@ -114,6 +119,11 @@
 {% block js %}
     <script>
         var current_set = {{ user.extendeduser.current_set.id }};
+        var set_url = '{{ site.domain }}' + '/game/' + current_set;
+        var set_password = '';
+        {% if set.password_protected %}
+        set_password = '{{ set.password }}';
+        {% endif %}
     </script>
     <script src="{% static "js/set_edit_functions.js" %}"></script>
 {% endblock %}
