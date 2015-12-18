@@ -55,7 +55,7 @@ def level_stats(request, level_id):
         context_dict['average'] = int(sum(student_ratings)/context_dict['players'])
 
     context_dict['levelid'] = level_id
-    context_dict['user_is_owner'] = (level.editor == request.user) # check if current user can edit level
+    context_dict['user_is_owner'] = (level.editor == request.user) # check if current user is level owner
     context_dict['offset'] = offset
     context_dict['student_entries'] = get_level_student_statistics(level)
     context_dict['templates'] = level.templates.exists()
