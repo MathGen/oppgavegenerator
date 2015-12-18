@@ -16,61 +16,42 @@
             <div id="chapters_completed" hidden>{{ completed }}</div>
             <div id="progress_number" hidden>{{ progress_number }}</div>
 
-            {% if user|user_in_set:set_id %}
 
-                {% if is_requirement %}
 
-                    {% for chapter in chapters %}
-                        {# Don't render chapters as locked if the set is a requirement type set #}
-                        <div id="chapter_{{ chapter.id }}" class="btn btn_chapter">
-                            <div class="ribbon"></div>
-                            <h3 class="content_title">{{ chapter.name }}</h3>
+            {% if is_requirement %}
 
-                            <div class="progress chapter_progress">
-                                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="100"
-                                     aria-valuemin="0" aria-valuemax="100" style="width: 0;"><span
-                                        class="chapter_completion"></span> / {{ chapter.levels.count }}</div>
-                            </div>
+                {% for chapter in chapters %}
+                    {# Don't render chapters as locked if the set is a requirement type set #}
+                    <div id="chapter_{{ chapter.id }}" class="btn btn_chapter">
+                        <div class="ribbon"></div>
+                        <h3 class="content_title">{{ chapter.name }}</h3>
+
+                        <div class="progress chapter_progress">
+                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="100"
+                                 aria-valuemin="0" aria-valuemax="100" style="width: 0;"><span
+                                    class="chapter_completion"></span> / {{ chapter.levels.count }}</div>
                         </div>
+                    </div>
 
-                    {% endfor %}
-
-                {% else %}
-
-                    {% for chapter in chapters %}
-                        <div id="chapter_{{ chapter.id }}" class="btn btn_chapter btn_locked" disabled>
-                            <div class="ribbon"></div>
-                            <h3 class="content_title">{{ chapter.name }}</h3>
-
-                            <div class="progress chapter_progress">
-                                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="100"
-                                     aria-valuemin="0" aria-valuemax="100" style="width: 0;"><span
-                                        class="chapter_completion"></span> / {{ chapter.levels.count }}</div>
-                            </div>
-                        </div>
-
-                    {% endfor %}
-
-                {% endif %}
+                {% endfor %}
 
             {% else %}
-                {% if is_requirement %}
-                    <p class="alert alert-info text-center">
-                        Ved å bli med i dette settet gir du eieren av settet full tillatelse til å se ditt fulle navn
-                        som du registrerte deg med, samt din framdrift.
-                    </p>
-                {% endif %}
-                {% if is_password_protected %}
-                    <p class="alert alert-info text-center">
-                        Oppgavesettet krever tilgangskode.
-                    </p>
-                    <input id="joinSetPassword" type="text" class="form-control joinset-password"
-                           placeholder="Tilgangskode">
-                {% endif %}
-                <button class="btn btn_add_user_to_set">Bli med i sett</button>
+
+                {% for chapter in chapters %}
+                    <div id="chapter_{{ chapter.id }}" class="btn btn_chapter btn_locked" disabled>
+                        <div class="ribbon"></div>
+                        <h3 class="content_title">{{ chapter.name }}</h3>
+
+                        <div class="progress chapter_progress">
+                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="100"
+                                 aria-valuemin="0" aria-valuemax="100" style="width: 0;"><span
+                                    class="chapter_completion"></span> / {{ chapter.levels.count }}</div>
+                        </div>
+                    </div>
+
+                {% endfor %}
 
             {% endif %}
-
 
         </div>
         <div id="game_nav" style="display: none">
@@ -80,12 +61,6 @@
 {% endblock %}
 
 {% block js %}
-    <script>
-        //var password_required = false;
-        {% if is_requirement %}
-           var password_required = true;
-        {% endif %}
-    </script>
     <!--<script src="/static/js/game_functions.js"></script>-->
     {% comment %}
     Since these graph javascript files add 2 seconds of loading time, i'll comment them out since they're loaded
