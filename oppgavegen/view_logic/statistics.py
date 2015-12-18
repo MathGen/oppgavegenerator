@@ -39,26 +39,24 @@ def get_level_student_statistics(level, start_interval=1100, end_interval=2300, 
     if students.filter(level_rating__range=(end_interval, cutoff_max)):
         count = students.filter(level_rating__range=(end_interval,cutoff_max)).count()
         morris_data.append('{rating: "%d-%d", studenter: %d },' % (end_interval, cutoff_max, count))
-
-    print(morris_data)
 	
-    # Also fetch number of stars now that we have students
-    student_star_data = []
-    for student in students:
-        student_star_data.append([student.user.first_name + ' ' + student.user.last_name] + [student.stars])
-	
-    return morris_data, student_star_data
+    return morris_data
 
 
-def get_level_template_statistics(level, offset, start_interval=1100, end_interval=2300, interval=100,
+def get_level_template_statistics(level, offset=0, start_interval=1100, end_interval=2300, interval=100,
                                   cutoff_min=800, cutoff_max=2400):
+    """ Prepares rating statistics for a level by counting student level/template ratings within specific intervals.
+    Designed with morris.js bar chart in mind (see charts.html)
+    The range is from 0 to 2400, and the measuring interval is 100 counting from 1100 and up. """
+
+
     morris_data = []
     templates = level.templates.all().values('rating','fill_rating','choice_rating')
     #add level offset to all template ratings
-    for template in templates:
-        template['rating'] += offset
-        template['fill_rating'] += offset
-        template['choice_rating'] += offset
+    #for template in templates:
+    #    template['rating'] += offset
+    #    template['fill_rating'] += offset
+    #    template['choice_rating'] += offset
 
     num_intervals = int((end_interval-start_interval)/interval)
 
@@ -187,7 +185,7 @@ def stats_for_chapter_levels(chapter_id):
 def user_scores_for_levels(user, levels):
     """
     Filter one users scores from list of levels.
-    If a user hasn't started a level yet, add "0" as a record.
+    If a user hasn't started a level yet (meaning no entry in the userprogress table exists,) add "0" as a record.
     """
     userscores = []
 
