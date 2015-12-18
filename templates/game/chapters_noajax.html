@@ -3,16 +3,7 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block panels %}
-    {% block js %}
-    {% comment %}
-    Since these graph javascript files add 2 seconds of loading time, i'll comment them out since they're loaded
-    in template_noajax.html if a graph has a graph anyway.
 
-    <script src="/static/js/graph.js?011"></script>
-    <script src="https://www.desmos.com/api/v0.6/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6" async></script>
-    {% endcomment %}
-    {% endblock %}
-    <script src="/static/js/game_functions.js"></script>
     <link href="/static/css/game.css?02" rel="stylesheet">
     <div id="game_screen" class="jumbotron">
         <div id="set_id" hidden>{{ set_id }}</div>
@@ -66,13 +57,17 @@
                 {% if is_requirement %}
                     <p class="alert alert-info text-center">
                         Ved å bli med i dette settet gir du eieren av settet full tillatelse til å se ditt fulle navn
-                        som du
-                        registrerte deg med, samt din framdrift.
+                        som du registrerte deg med, samt din framdrift.
                     </p>
-                    <button class="btn btn_add_user_to_set">Bli med i sett</button>
-                {% else %}
-                    <button class="btn btn_add_user_to_set">Bli med i sett</button>
                 {% endif %}
+                {% if is_password_protected %}
+                    <p class="alert alert-info text-center">
+                        Oppgavesettet krever tilgangskode.
+                    </p>
+                    <input id="joinSetPassword" type="text" class="form-control joinset-password"
+                           placeholder="Tilgangskode">
+                {% endif %}
+                <button class="btn btn_add_user_to_set">Bli med i sett</button>
 
             {% endif %}
 
@@ -83,3 +78,21 @@
         </div>
     </div>
 {% endblock %}
+
+{% block js %}
+    <script>
+        //var password_required = false;
+        {% if is_requirement %}
+           var password_required = true;
+        {% endif %}
+    </script>
+    <!--<script src="/static/js/game_functions.js"></script>-->
+    {% comment %}
+    Since these graph javascript files add 2 seconds of loading time, i'll comment them out since they're loaded
+    in template_noajax.html if a graph has a graph anyway.
+
+    <script src="/static/js/graph.js?011"></script>
+    <script src="https://www.desmos.com/api/v0.6/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6" async></script>
+    {% endcomment %}
+{% endblock %}
+

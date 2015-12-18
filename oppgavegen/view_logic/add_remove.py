@@ -373,12 +373,19 @@ def reset_current_level(user):
     euser.current_level = None
     euser.save()
 
-def add_user_to_set(user, set_id):
+def add_user_to_set(user, user_password, set_id):
     msg = 'success'
     try:
         set = Set.objects.get(pk=set_id)
-        set.users.add(user)
-        set.save()
+        if set.password_protected:
+            if set.password != user_password:
+                msg = 'bad password'
+            else:
+                set.users.add(user)
+                set.save()
+        else:
+            set.users.add(user)
+            set.save()
     except Exception as e:
         print('exception in add_user_to_set')
         print(e)
