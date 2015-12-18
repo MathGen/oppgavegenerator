@@ -200,7 +200,8 @@ def add_user_to_set_view(request):
         if request.method == 'POST':
             form = request.POST
             set_id = int(form['set_id'])
-            msg = add_user_to_set(request.user, set_id)
+            user_password = form['password']
+            msg = add_user_to_set(request.user, user_password, set_id)
     except Exception as e:
         print('error')
         print(e)

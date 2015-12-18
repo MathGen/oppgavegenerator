@@ -1,7 +1,10 @@
 var current_level = 0;
 var level_progress = 0;
+
 $(document).ready(function () {
+
     load_chapters();
+
     //Add current user to the set
     $(document).on('click', '.btn_add_user_to_set', function(e){
         e.preventDefault();
@@ -52,8 +55,15 @@ $(document).ready(function () {
 });
 
 function add_user_to_set(){
+    if(password_required == true){
+        if (password_input_field.val() == '') {
+            window.alert('Vennligst skriv inn passord!')
+        } else {
+            var user_password = password_input_field.val()
+        }
+    }
     var set_id = $('#set_id').text();
-    $.post('/add-user-to-set/', {'csrfmiddlewaretoken': getCookie('csrftoken'), 'set_id': set_id}, function(result){
+    $.post('/add-user-to-set/', {'csrfmiddlewaretoken': getCookie('csrftoken'), 'set_id': set_id, 'password': user_password}, function(result){
         console.log(result);
         location.reload();
     });
