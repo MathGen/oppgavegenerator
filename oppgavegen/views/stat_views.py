@@ -20,6 +20,7 @@ def set_stats_view(request, set_id):
     else:
         return redirect('index')
 
+
 @login_required
 def detailed_chapter_stats(request, chapter_id):
     chapter = Chapter.objects.get(id=chapter_id)
@@ -29,7 +30,6 @@ def detailed_chapter_stats(request, chapter_id):
         return render(request, "statview_levels.html", {"headers": headers, "user_stats": user_stats,
                                                         'panel_title': 'Arbeidskravstistikk for kapittel' + ' - ' +
                                                         chapter.name})
-
     else:
         return redirect('index')
 
@@ -61,4 +61,5 @@ def level_stats(request, level_id):
     context_dict['templates'] = level.templates.exists()
     context_dict['template_entries'] = get_level_template_statistics(level, offset)
     context_dict['template_original'] = get_level_template_original_statistics(level)
+
     return render(request, 'sets/charts.html', context_dict)
