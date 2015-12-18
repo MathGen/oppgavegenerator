@@ -104,3 +104,10 @@ class LevelsTemplatesListView(LoginRequiredMixin, ListView):
         context['k_factor'] = self.level.k_factor
         context['k_factor_template'] = self.level.k_factor_template
         return context
+
+@login_required
+def set_students_view(request, set_id):
+    # get an editable list of students in a set
+    set = Set.objects.get(id=set_id)
+    students = set.users.all()
+    pass
