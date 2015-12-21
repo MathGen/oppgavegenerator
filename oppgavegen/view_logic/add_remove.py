@@ -397,18 +397,23 @@ def remove_user_from_set(user, set_id):
     # to clean up statistics views
     msg = 'success'
     # get the set and prefetch related chapters, levels and student level progress-entries
-    set = Set.objects.filter(id__exact=set_id).prefetch_related('chapters','chapters__levels',
-                                                                'chapters__levels__student_progresses')
-    chapters = set[0].chapters.all()
-    level_lists = []
-    progress_entry_lists = [] # lists of progress entries to delete
-    for chapter in chapters:
-        level_lists.append(chapter.levels.all()) # add lists of levels to level list
-        for level_list in level_lists:
-            for level in level_list:
-                progress_entry_lists.append(level.student_progresses.filter(user_id=user.id))
-    for entry_list in progress_entry_lists:
-        for entry in entry_list:
-            entry.delete() # delete level progress entries
-    set.users.remove(user) # remove the set/user relation
+    try:
+        set = Set.objects.filter(id__exact=set_id).prefetch_related('chapters','chapters__levels',
+                                                                    'chapters__levels__student_progresses')
+        chapters = set[0].chapters.all()
+        level_lists = []
+        progress_entry_lists = [] # lists of progress entries to delete
+        for chapter in chapters:
+            level_lists.append(chapter.levels.all()) # add lists of levels to level list
+            for level_list in level_lists:
+                for level in level_list:
+                    progress_entry_lists.append(level.student_progresses.filter(user_id=user.id))
+        for entry_list in progress_entry_lists:
+            for entry in entry_list:
+                entry.delete() # delete level progress entries
+        set.users.remove(user) # remove the set/user relation
+    except Exception as e:
+        print('exception in remove_user_to_set')
+        print(e)
+        msg = 'failed to remove user from set'
     return msg
