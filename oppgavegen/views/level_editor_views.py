@@ -1,6 +1,6 @@
 from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 
 from oppgavegen.models import Set, Chapter, Level
 from oppgavegen.views.mixins import LoginRequiredMixin
@@ -106,8 +106,13 @@ class LevelsTemplatesListView(LoginRequiredMixin, ListView):
         return context
 
 @login_required
-def set_students_view(request, set_id):
+def set_students_admin(request, set_id):
     # get an editable list of students in a set
     set = Set.objects.get(id=set_id)
-    students = set.users.all()
-    pass
+    if set.editor == request.user and set.is_requirement:
+        students = set.users.all().order_by('last_name')
+        goto = render(request, 'sets/set_students_admin.html', {'set': set, 'students': students})
+    else:
+        goto = redirect('index')
+    return goto
+

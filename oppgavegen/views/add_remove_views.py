@@ -3,6 +3,7 @@
 import json
 
 from oppgavegen.view_logic.add_remove import *
+from oppgavegen.models import User
 
 
 def new_set_view(request, set_name='Navn på sett'):
@@ -202,6 +203,20 @@ def add_user_to_set_view(request):
             set_id = int(form['set_id'])
             user_password = form['password']
             msg = add_user_to_set(request.user, user_password, set_id)
+    except Exception as e:
+        print('error')
+        print(e)
+    return HttpResponse(msg)
+
+def remove_user_from_set_view(request):
+    msg = 'Failed removing user from set'
+    try:
+        if request.method == 'POST':
+            form = request.POST
+            set_id = int(form['set_id'])
+            user_id = int(form['user_id'])
+            user = User.objects.get(pk=user_id)
+            msg = remove_user_from_set(set_id, user)
     except Exception as e:
         print('error')
         print(e)

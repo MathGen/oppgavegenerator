@@ -4,9 +4,9 @@
 {% load app_filters %}
 
 {% block panels %}
-    <a href="{% url 'user_sets' %}"
+    <a href="{% url 'chapters_by_set' set.id %}"
        class="btn btn-xs btn-default back-button">
-    <span class="glyphicon glyphicon-arrow-left"></span> Mine Oppgavesett </a>
+    <span class="glyphicon glyphicon-arrow-left"></span> {{ set.name|title }} </a>
 
     <div class="panel panel-default">
 
@@ -16,15 +16,12 @@
                 <h1>
                     <span class="hidden">{{ site.domain }}</span>
                     <span id="current_object_title">{{ set.name|title }}</span>
-                    <small>Kapitler</small>
+                    <small>Studenter</small>
                 </h1>
                 <hr style="margin: 5px 0">
                 <div style="margin-bottom: 10px">
                 <button class="btn btn-default btn-xs btn-edit-title">
                     Endre tittel
-                </button>
-                <button class="btn btn-default btn-xs btn-edit-order">
-                    Endre rekkefølge
                 </button>
                     {% if set.is_public %}
                 <a href="{% url 'set_to_private' set.id %}" class="btn btn-danger btn-xs btn-unpublish-set">
@@ -38,20 +35,12 @@
                 <button class="btn btn-default btn-xs btn-sharing">
                     Deling
                 </button>
-                {% if set.is_requirement %}
-                <a href="{% url 'students_by_set' set.id %}" class="btn btn-default btn-xs btn-students-admin">
-                    <span class="glyphicon glyphicon-user"></span> Studenter
-                </a>
-                {% endif %}
                     <span id="save_success" class="glyphicon glyphicon-ok text-success"
                           style="margin-left: 10px;display:none"></span>
                 </div>
-                <div id="object_container" class="sortable edit_chapters">
-                    {% include 'sets/includes/editor_chapter_list.html' %}
+                <div id="object_container" class="edit_chapters">
+                    {% include 'sets/includes/editor_student_list.html' %}
                 </div>
-
-                <input id="input_new_set" type="text" class="list_input form-control new_content input-chapter-name"
-                       placeholder="Opprett nytt kapittel...">
 
             </div>
 
