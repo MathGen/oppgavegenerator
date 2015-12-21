@@ -75,6 +75,7 @@ urlpatterns = patterns('',
     # Sets, chapters and level management urls
     url(r'^user/sets/$', UserSetListView.as_view(), name='user_sets'),
     url(r'^set/(\d+)/chapters/$', SetChapterListView.as_view(), name='chapters_by_set'),
+    url(r'^set/(\d+)/useradmin/$', set_students_admin, name='students_by_set'),
     url(r'^set/(\d+)/setpublic/$', set_public, name='set_to_public'),
     url(r'^set/(\d+)/setprivate/$', set_private, name='set_to_private'),
     url(r'^set/(\d+)/stats/$', set_stats_view, name='set_stats'),
