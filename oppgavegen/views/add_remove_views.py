@@ -209,14 +209,15 @@ def add_user_to_set_view(request):
     return HttpResponse(msg)
 
 def remove_user_from_set_view(request):
+    # "admin" function for removing students from requirement-type sets.
     msg = 'Failed removing user from set'
     try:
         if request.method == 'POST':
             form = request.POST
             set_id = int(form['set_id'])
+            #request_user_id = request.user.id
             user_id = int(form['user_id'])
-            user = User.objects.get(pk=user_id)
-            msg = remove_user_from_set(set_id, user)
+            msg = remove_user_from_set(user_id, set_id)
     except Exception as e:
         print('error')
         print(e)

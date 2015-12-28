@@ -103,7 +103,7 @@
 
 {% block modals %}
 
-    {% include 'sets/includes/deletemodal.html' %}
+    {% include 'sets/includes/user_remove_modal.html' %}
     {% include 'sets/includes/edit_title_modal.html' %}
     {% include 'sets/includes/sharing_modal.html' %}
 
@@ -112,7 +112,7 @@
 
 {% block js %}
     <script>
-        var current_set = {{ user.extendeduser.current_set.id }};
+        var current_set = {{ set.id }};
         var set_url = '{{ site.domain }}' + '/game/' + current_set;
         var set_password = '';
         {% if set.password_protected %}
@@ -120,4 +120,5 @@
         {% endif %}
     </script>
     <script src="{% static "js/set_edit_functions.js" %}"></script>
+    <script src="{% static "js/set_membership_functions.js" %}"></script>
 {% endblock %}
