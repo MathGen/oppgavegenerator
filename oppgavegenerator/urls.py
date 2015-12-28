@@ -67,7 +67,9 @@ urlpatterns = patterns('',
     url(r'^game/(\d+)/chapters/$', chapters, name='chapters'), # JS: game.js
     url(r'^game/template/$', get_template, name='get_template'), # JS: game.js
     url(r'^game/(\d+)/answer/$', get_solution, name='get_answer'), # JS: game.js
-    url(r'^add-user-to-set/', add_user_to_set_view, name='add_user_to_set'), # JS: game.js
+    url(r'^add-user-to-set/', add_user_to_set_view, name='add_user_to_set'), # JS: set_membership_functions.js
+    url(r'^remove-user-from-set/', remove_user_from_set_view, name='remove_user_from_set'), #JS: set_membership_funcs.js
+
 
     # JS: set_edit_functions.js, search_functions.js
     url(r'^template/([\w ]+)/preview/$', preview_template, name='preview_template'),
