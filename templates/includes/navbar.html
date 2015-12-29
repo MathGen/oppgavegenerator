@@ -16,10 +16,10 @@
 
                 {% if user|is_teacher %}
 
-                    <ol id="navbar_current_sets" class="breadcrumb inverse"
+                    <ul id="navbar_current_sets" class="breadcrumb inverse"
                         style="float:left; margin: 7px 10px; background: #222;">
                         {% include 'includes/current_sets_snippet.html' %}
-                    </ol>
+                    </ul>
 
 
                     <li><a href="{% url 'newtemplate' %}">Ny Mal</a></li>
