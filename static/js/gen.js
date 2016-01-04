@@ -242,6 +242,7 @@ $(document).ready(function() {
 		$('#o_adv_' + id).remove();
 		refresh_all_char_colors();
 		refresh_variables();
+		build_overview();
 		e.stopPropagation();
 	});
 
@@ -499,6 +500,7 @@ $(document).ready(function() {
 		delete dict_calc[id];
 		delete dict_calc_unchanged[id];
 		refresh_all_char_colors();
+		build_overview();
 		e.stopPropagation();
 	});
 
@@ -1015,6 +1017,7 @@ function init_new_variable(variable){
     update_variable_count();
     refresh_all_char_colors();
     refresh_variables();
+	build_overview();
 }
 
 /**

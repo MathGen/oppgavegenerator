@@ -6,7 +6,9 @@
  *  displaying everything correctly. */
 
 $(document).ready(function () {
-    build_overview()
+    build_overview();
+    $('#draggable-overview').draggable();
+    $('#variable-overview').resizable({handles: "n,s,e,w"})
 });
 
 var overview = $('#variable-overview');
@@ -44,7 +46,7 @@ function build_overview() {
             });
             calc_overview.append(
                 '<div class="overview-calc-entry">' +
-                '<a class="pull-right btn_calc_edit btn_calc_edit_' + c_index + '"><span class="glyphicon glyphicon-pencil"></span></a>' +
+                '<button class="pull-right btn btn-xs btn-success btn_calc_edit btn_calc_edit_' + c_index + '"><span class="glyphicon glyphicon-pencil"></span></button>' +
                 '<div class="pull-left content_calc">' +
                 '<div class="input_field">' +
                 '<span class="static-math input_mathquill mq-math-mode">' +
