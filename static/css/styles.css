@@ -648,14 +648,21 @@ ol li.list-group-item {
     cursor: hand;
 }
 
+#draggable-overview {
+    position: fixed !important;
+    right:0;
+    width: auto;
+    height: auto;
+    z-index: 1040;
+}
+
 #variable-overview {
     font-size: small;
-    width: 400px;
-    position: fixed;
-    right:0;
+    width: auto;
+    /*position: fixed;*/
+    right: 0;
     top: 50px;
     display: none;
-    z-index: 1040;
 }
 
 #variable-overview .panel-body {
@@ -666,7 +673,12 @@ ol li.list-group-item {
 #variable-overview .btn_calc_edit {
     position: relative;
     top: 0;
-    left: 0;
+    bottom: auto;
+    right: auto;
+    width: auto;
+    height: auto;
+    border-radius: 3px;
+    font-size: 0.80em;
 }
 
 #variable-overview .mq-math-mode {
@@ -675,6 +687,8 @@ ol li.list-group-item {
 }
 
 #variable-overview .input_field {
+    margin-left: 5px;
+    margin-top: 5px;
     /* line-height: 5px; */
 }
 
