@@ -715,6 +715,7 @@ $(document).ready(function() {
 		    delete dict_calc[edit_calc_id];
 		    delete dict_calc_unchanged[edit_calc_id];
             edit_calc = false;
+			build_overview();
         }
 		if(get_latex_from_mathfield(C_INPUT) != "") {
             var calc_var = $('.calc_variable');
@@ -727,6 +728,7 @@ $(document).ready(function() {
                     } else {
                         init_new_calculation(variable, id);
                         $('#calc_modal').modal('hide');
+						build_overview();
                     }
                     calc_var.val("");
                 } else {
