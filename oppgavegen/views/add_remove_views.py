@@ -190,9 +190,11 @@ def update_level_view(request):
         form = request.POST
         title = form['title']
         k_factor = form['k_factor']
+        k_factor_template = form['k_factor_template']
+        randomness = form['randomness']
         level_id = int(form['level_id'])
         level = Level.objects.get(pk=level_id)
-        msg = update_level(level, title, request.user, k_factor)
+        msg = update_level(level, title, request.user, k_factor, k_factor_template, randomness)
     return HttpResponse(msg)
 
 def add_user_to_set_view(request):

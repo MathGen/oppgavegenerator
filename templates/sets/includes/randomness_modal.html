@@ -1,0 +1,42 @@
+<div id="randomnessModal" class="modal fade bs-example-modal-sm change-progression-modal" tabindex="-1" role="dialog"
+     aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <div class="modal-alert alert alert-info text-center">
+                    Still inn sjansen for at oppgaver fra nivået blir valgt fra alle oppgaver fra 0 opp til brukerens
+                    ratingnivå. 0 vil gjøre at oppgaver alltid blir valgt etter brukerens rating, mens 1
+                    vil garantere at hver oppgave er tilfeldig, men fortsatt ikke over brukerens rating.
+                </div>
+
+
+                <h4 class="text-left">Tilfeldighet</h4>
+                <table id="randomness_slider" class="table table-condensed">
+                    <tbody>
+                    <tr>
+                        <td class="col-sm-2" style="vertical-align: middle; text-align: right; height: 41px">Treg
+                        </td>
+                        <td class="col-sm-6" style="vertical-align: middle">
+                            <div id="randomness_slider_handle"></div>
+                        </td>
+                        <td class="col-sm-2" style="vertical-align: middle">Rask</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="text-center lead"><span
+                        id="randomness_amount">{{ level.randomness }}</span></div>
+
+            </div>
+
+            <div class="modal-footer">
+                <a id="cancelModal" class="btn btn-sm btn-default hidemodal">Avbryt</a>
+
+                <button id="confirmRandomness" class="btn btn-sm btn-primary">
+                    Lagre
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
