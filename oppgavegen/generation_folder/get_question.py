@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, uniform
 
 from oppgavegen.models import Template, UserLevelProgress, User
 from oppgavegen.utility.decorators import Debugger
@@ -79,8 +79,14 @@ def get_level_question(user, level):
     slack = 100
     increase = 15
     user_progress = add_level_to_user(user, level)
+    randomness = level.randomness
     offset = level.offset
     user_rating = user_progress.level_rating - offset # adjust user rating by substracting (or) adding offset
+
+    # use level randomness chance to set user rating to random rating between 0 and original user rating
+    # for a chance to get a task outside the regular slack range
+    if randomness > uniform(0,1):
+        user_rating = randint(0, user_rating)
 
     while True:
         q = level.templates.all()
