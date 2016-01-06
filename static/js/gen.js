@@ -1051,8 +1051,29 @@ function init_new_calculation(variable, id){
         trigger: 'hover',
         container: 'body'
     });
+    update_calculations();
     refresh_all_char_colors();
 }
+
+
+/**
+ * Update all calculations to avoid dependencies giving wrong results using the "unchanged" dictionary
+ * this is called every time a calculation is edited.
+ * Given C = A + B
+ * Updating A should update C since C originally meant (the content of A) + (content of B)
+ * this function updates C to (the new content of A) + (new content of B)
+ * */
+ function update_calculations() {
+    for (var c in dict_calc) {
+        var la = dict_calc_unchanged[c];
+        la = convert_variables(la);
+        la = la.replace(/\?/g, '');
+        la = la.replace(/@/g, '');
+        dict_calc[c] = '@?(' + la + ')?@';
+    }
+
+}
+
 
 /**
  * Initialize the difficulty sliders, with either the default value or the given value from the server.
