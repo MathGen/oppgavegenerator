@@ -665,6 +665,11 @@ ol li.list-group-item {
     display: none;
 }
 
+#variable-overview input {
+    max-width: 65px;
+    margin-left: 5px;
+}
+
 #variable-overview .panel-body {
     max-height: 650px;
     overflow-y: scroll;

@@ -558,7 +558,7 @@ $(document).ready(function() {
 		}
 	});
 
-	// Domain input-insertion to advanced settings
+	// Domain input-insertion to advanced settings and overview panel
 	$('#opt_domain_from').on('input', function(){
 		$('.opt_domain_from').val($('#opt_domain_from').val());
         build_overview();
@@ -568,7 +568,7 @@ $(document).ready(function() {
         build_overview();
 	});
 	$('#opt_domain_dec').on('input', function(){
-		//$('.opt_domain_dec').val($('#opt_domain_dec').val());
+		$('.opt_domain_dec').val($('#opt_domain_dec').val());
         build_overview();
 	});
     $('.opt_domain_from').on('input', function(){

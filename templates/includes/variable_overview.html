@@ -1,10 +1,13 @@
 <button class="btn btn-xs btn-default variable-overview-show">
-    <span class="glyphicon glyphicon-menu-left"></span>Variabler
+    Variabler <span class="glyphicon glyphicon-cog"></span>
 </button>
 
 <div id="draggable-overview">
     <div id="variable-overview" class="panel panel-default">
-        <div class="panel-heading clearfix"><h3 class="panel-title pull-left">Variabler</h3>
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left" style="cursor: move">
+                Variabler
+            </h3>
             <div class="pull-right">
                 <a class="variable-overview-refresh">
                     <span title="Oppdater" class="glyphicon glyphicon-refresh"></span>
@@ -15,11 +18,16 @@
         </div>
 
         <div class="panel-body">
-            <h4>Utregninger</h4>
-            <div id="calculations_overview">
+            <h4>Utregninger <button class="btn btn-xs btn-success btn_calc_open" data-toggle="modal" data-target="#calc_modal">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button></h4>
 
+            <div id="calculations_overview">
             </div>
-            <h4>Variabler</h4>
+
+            <h4>Variabler <button class="btn btn-xs btn-danger btn_var">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button></h4>
             <div id="vars_overview">
 
             </div>
