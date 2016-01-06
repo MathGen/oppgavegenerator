@@ -39,6 +39,8 @@ def make_edit_context_dict(template_id):
     unchanged_required = q.unchanged_required
     unchanged_disallowed = q.unchanged_disallowed
 
+    if len(used_variables) <= 0: # when a template has no defined variables
+        used_variables = "0" # this prevents a template editor crash in gen.js - line 1941 (as of 15/12/15)
     if unchanged_required == '' or unchanged_required == None:
         unchanged_required = []
     if unchanged_disallowed == '' or unchanged_disallowed == None:
@@ -152,6 +154,12 @@ def submit_template(template, user, update, newtags=None):
             template.fill_rating = calculate_start_rating(template.difficulty_blanks)
         if template.difficulty_multiple != q.difficulty_multiple:
             template.choice_rating = calculate_start_rating(template.difficulty_multiple)
+        print(template.solution_latex + " , " + q.solution_latex)
+        # if the solution is changed but not fill_in settings, remove fill_inn_support
+        if template.solution_latex != q.solution_latex and template.fill_in_latex == q.fill_in_latex:
+            template.fill_in = ''
+            template.fill_in_latex = ''
+            template.fill_in_support = False # remove fill-in support if solution is changed.
     else:
         template.rating = calculate_start_rating(template.difficulty)
         template.fill_rating = calculate_start_rating(template.difficulty_blanks)

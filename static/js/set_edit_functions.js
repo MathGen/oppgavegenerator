@@ -15,6 +15,8 @@ $(document).ready(function () {
     var templateSolution_latex = {};
     var text_wrapper = $('#modal_template_text');
     var solution_wrapper = $('#modal_template_solution');
+    var set_url_field = $('#sharingLink');
+    var set_password_field = $('#setPassword');
 
     // Button listener for previewing items in search results box
     $(document).on('click', '.preview-button', function () {
@@ -130,6 +132,23 @@ $(document).ready(function () {
         if (/(13)/.test(e.which)) $('#confirmTitleChange').click(); // Change title on key press
     });
 
+    // Open set sharing settings modal
+    $(document).on('click', '.btn-sharing', function() {
+        modal = $('#sharingModal');
+        modal.modal('show')
+    });
+
+    $(document).on('click', '#confirmSharingChange', function() {
+        password_input = $('#setPassword');
+        if(password_input.val() == '') {
+            set_password = ''
+        } else {
+        set_password = password_input.val();
+            }
+        modal.modal('hide');
+        save_changes();
+    });
+
     // Close current open Bootstrap modal
     $('.hidemodal').click(function () {
         console.log('closing modal');
@@ -216,6 +235,22 @@ $(document).ready(function () {
         save_changes();
     });
 
+    // Open modal for editing progression factor (level-editor)
+    $(document).on('click', '.btn-edit-randomness', function () {
+        init_randomness_slider();
+        modal = $('#randomnessModal');
+        modal.modal('show')
+    });
+
+    // Commit changes on click
+    $(document).on('click', '#confirmRandomness', function () {
+        modal.modal('hide');
+        save_changes();
+    });
+
+    set_url_field.val( set_url_field.val() + set_url );
+    set_password_field.val( set_password_field.val() + set_password );
+
 });
 
 function add_new_content_from_search(content_id) {
@@ -240,6 +275,8 @@ function save_changes() {
         form_submit['set_id'] = current_set;
         form_submit['title'] = title;
         form_submit['order'] = order;
+        form_submit['password'] = set_password;
+        console.log(form_submit)
     } else if (content.hasClass('edit_levels')) {
         content = 'chapter';
         form_submit['chapter_id'] = current_chapter;
@@ -251,6 +288,7 @@ function save_changes() {
         form_submit['title'] = title;
         form_submit['k_factor'] = $('#k_factor_user_amount').text();
         form_submit['k_factor_template'] = $('#k_factor_template_amount').text();
+        form_submit['randomness'] = $('#randomness_amount').text();
     } else {
         window.console.log('#edit_container is missing a required class for POST.');
         valid_form = false;
@@ -305,6 +343,25 @@ function init_k_factor_sliders() {
         step: 1,
         slide: function (event, ui) {
             $('#k_factor_template_amount').text(ui.value);
+        }
+    });
+}
+
+/**
+ * Initialize the slider which sets the progression-speed for the level.
+ */
+function init_randomness_slider() {
+    var randomness = $('#randomness_amount').text();
+    if (randomness == '') {
+        randomness = 0.5 }
+
+    $('#randomness_slider_handle').slider({
+        value: randomness,
+        min: 0,
+        max: 1,
+        step: 0.05,
+        slide: function (event, ui) {
+            $('#randomness_amount').text(ui.value);
         }
     });
 }

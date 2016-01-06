@@ -14,14 +14,20 @@ from oppgavegen.view_logic.submit_and_answer import *
 @login_required
 def game(request, set_id):
     context = RequestContext(request)
-    set_title = Set.objects.get(pk=set_id).name
-    return render_to_response('game/screen.html', {'set_id': set_id, 'set_title': set_title}, context)
+    set = Set.objects.get(pk=set_id)
+    set_title = set.name
+    if request.user in set.users.all():
+        goto = render_to_response('game/screen.html', {'set_id': set_id, 'set_title': set_title}, context)
+    else:
+        goto = render_to_response('game/set_notmember.html', {'set': set}, context)
+    return goto
 
 
 def chapters(request, set_id):
     game_set = Set.objects.get(pk=set_id)
     set_title = game_set.name
     is_requirement = game_set.is_requirement
+    is_password_protected = game_set.password_protected
     set_chapters = game_set.chapters.all()
     context = RequestContext(request)
     medals = [] # Both lists get updated in chapter_progress
@@ -43,12 +49,14 @@ def chapters(request, set_id):
         response = render_to_response('game/chapters.html',
                                   {'chapters': set_chapters_ordered, 'medals': json.dumps(medals),
                                    'completed': json.dumps(completed), 'progress_number': progress_number,
-                                   'set_id': set_id, "is_requirement": is_requirement}, context)
+                                   'set_id': set_id, 'is_requirement': is_requirement,
+                                   'is_password_protected': is_password_protected}, context)
     else:
         response = render_to_response('game/chapters_noajax.html',
                                   {'chapters': set_chapters_ordered, 'medals': json.dumps(medals),
                                    'completed': json.dumps(completed), 'progress_number': progress_number,
-                                   'set_id': set_id, "set_title": set_title, "is_requirement": is_requirement}, context)
+                                   'set_id': set_id, "set_title": set_title, "is_requirement": is_requirement,
+                                   'is_password_protected': is_password_protected}, context)
     return response
 
 

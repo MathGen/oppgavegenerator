@@ -14,13 +14,13 @@ from django.views.decorators.cache import cache_control
 from haystack.generic_views import SearchView
 
 from oppgavegen.views.sortable_listview import SortableListView
-from oppgavegen.views.login_required_mixin import LoginRequiredMixin
+from oppgavegen.views.mixins import LoginRequiredMixin
 from oppgavegen.templatetags.app_filters import is_teacher
 from oppgavegen.view_logic.rating import change_elo, change_level_rating, get_user_rating
 from oppgavegen.generation_folder.generation import generate_task
 from oppgavegen.view_logic.submit_and_answer import *
 from oppgavegen.view_logic.statistics import *
-from oppgavegen.view_logic.add_remove import make_copy
+from oppgavegen.view_logic.add_remove import make_copy, remove_template_from_level
 from oppgavegen.forms import *
 
 
@@ -59,6 +59,25 @@ def edit_template(request, template_id):
         context_dict = {}
         context_dict['template'] = template
         return render_to_response('sets/confirm_template_copy.html', context_dict, context)
+
+@login_required
+@user_passes_test(is_teacher, '/')
+def delete_template(request, template_id):
+    """ Get a template, delete all relations and the template itself. """
+    go_to = redirect('user_templates_list')
+    context = RequestContext(request)
+    query = Template.objects.filter(id__exact=template_id).prefetch_related('levels') #use filter to prefetch any levels
+    template = query[0] #get the template from the query
+    if template.editor == request.user:
+        if template.levels.exists(): # check if any template->level relations exist
+            # get the (single) level. there should be no possible way for a template to belong to several levels
+            # unless the level has been defined via the admin interface
+            level = template.levels.all()[0]
+            remove_template_from_level(level_id=level.id,template_id=template_id, user=request.user)
+        template.delete()
+    else:
+        go_to = redirect(index)
+    return go_to
 
 
 @cache_control(max_age=0, no_cache=True, no_store=True, must_revalidate=True)

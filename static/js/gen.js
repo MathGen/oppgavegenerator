@@ -205,7 +205,7 @@ $(document).ready(function() {
 			$(Q_INPUT).find('textarea').focus();
 		}
 		else{
-			alert('Ikke tillat med flere variabler.');
+			alert('Ikke tillatt med flere variabler.');
 		}
 	});
 
@@ -242,6 +242,7 @@ $(document).ready(function() {
 		$('#o_adv_' + id).remove();
 		refresh_all_char_colors();
 		refresh_variables();
+		build_overview();
 		e.stopPropagation();
 	});
 
@@ -499,6 +500,7 @@ $(document).ready(function() {
 		delete dict_calc[id];
 		delete dict_calc_unchanged[id];
 		refresh_all_char_colors();
+		build_overview();
 		e.stopPropagation();
 	});
 
@@ -715,6 +717,7 @@ $(document).ready(function() {
 		    delete dict_calc[edit_calc_id];
 		    delete dict_calc_unchanged[edit_calc_id];
             edit_calc = false;
+			build_overview();
         }
 		if(get_latex_from_mathfield(C_INPUT) != "") {
             var calc_var = $('.calc_variable');
@@ -727,6 +730,7 @@ $(document).ready(function() {
                     } else {
                         init_new_calculation(variable, id);
                         $('#calc_modal').modal('hide');
+						build_overview();
                     }
                     calc_var.val("");
                 } else {
@@ -1013,6 +1017,7 @@ function init_new_variable(variable){
     update_variable_count();
     refresh_all_char_colors();
     refresh_variables();
+	build_overview();
 }
 
 /**
@@ -1537,8 +1542,8 @@ function error_message(selector, message){
         element = $('#' + selector);
     }
 	$(document).ready(function(){
-		element.after('<p class="error_content">* '+message+'</p>');
-		$('.error_content').show(100).delay(5000).hide(100).queue(function(){
+		element.after('<p class="error_content">'+message+'</p>');
+		$('.error_content').show(100).delay(3000).hide(100).queue(function(){
 			$(this).remove();
 		});
 	});
@@ -1938,12 +1943,13 @@ function refresh_variables(){
 function insert_editable_data(){
 	// Initialize valid variables
 	var var_str = $('#used_variables').text();
-	var_str = var_str.split(' ');
+	if(var_str != "0") { // 0 is the default if no variable has been defined for the template.
+	var_str = var_str.split(' '); // the check above prevents the editor from crashing when a template has no variables
 	for(var v = 0; v < var_str.length; v++){
 		var tmp_var = var_str[v].split('§');
 		VARIABLES[tmp_var[0]] = tmp_var.join('§');
         init_new_variable(tmp_var[1]);
-	}
+	}}
 	//window.console.log(VARIABLES);
 
 	// Inserting text-substitution

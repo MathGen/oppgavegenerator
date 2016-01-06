@@ -2,24 +2,19 @@
 {% load app_filters %}
 
 {% block title %}{{ title }}{% endblock %}
+{% block head %}
+    <link href="/static/css/game.css?02" rel="stylesheet">
+    <link href="/static/css/stud_style.css" rel="stylesheet">
+{% endblock %}
 
 {% block panels %}
-    {% block js %}
-        <script>
-        var current_level = {{ level_id }};
-        var current_chapter = {{ chapter_id }};
-        var current_set = {{ set_id }};
-        </script>
-        <script src="/static/js/graph.js?011"></script>
-        <script src="https://www.desmos.com/api/v0.6/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"
-                async></script>
-    {% endblock %}
-{#    <script src="/static/js/game_functions.js"></script>#}
-    <script src="/static/js/game_template_init.js"></script>
-    <link href="/static/css/game.css?02" rel="stylesheet">
+    {#    <script src="/static/js/game_functions.js"></script>#}
+
+
     <div id="game_screen" class="jumbotron">
         <div id="set_id" hidden>{{ set_id }}</div>
-        <h2 class="set_title">{{ set_title }}<span id="chapter_title"> - {{ chapter_title }}</span><span id="level_title"> - {{ level_title }}</span></h2>
+        <h2 class="set_title">{{ set_title }}<span id="chapter_title"> - {{ chapter_title }}</span><span
+                id="level_title"> - {{ level_title }}</span></h2>
 
         <div id="game_loading" style="display: none"><img src="/static/img/loading.gif"></div>
         <div id="game_content">
@@ -33,12 +28,8 @@
             <div hidden id="get_graph">{{ graph }}</div>
             <div hidden id="get_graph_color">{{ graph_color }}</div>
             <div hidden id="get_graph_settings">{{ graph_settings }}</div>
-
-
-            <link href="/static/css/stud_style.css" rel="stylesheet">
-            <script src="/static/js/answer_input.js?025"></script>
             <div id="num_stars" hidden>{{ stars }}</div>
-            <div id="get_ulp" hidden>{{ ulp }}</div>
+            <div id="get_ulp" hidden>{{ ulp }}</div> {# user level progress #}
 
             <section class="panel panel-default">
                 <div class="panel-heading">
@@ -77,7 +68,7 @@
                                 </div>
                                 <div class="col-md-5">
                                     <div id="graph_container" style="width: auto; height: 250px;"></div>
-                                    </br>
+                                    <br>
                                 </div>
                             </div>
                             <div id="w_target" class="row"></div>
@@ -107,7 +98,22 @@
             </section>
         </div>
         <div id="game_nav" style="display: none">
-            <a href="{% url 'game' set_id %}" class="btn btn-link"><span class="btn_game_back glyphicon glyphicon-arrow-left"></span></a>
+            <a href="{% url 'game' set_id %}" class="btn btn-link"><span
+                    class="btn_game_back glyphicon glyphicon-arrow-left"></span></a>
         </div>
     </div>
+{% endblock %}
+{% block js %}
+    <script src="/static/js/game_template_init.js"></script>
+    <script src="/static/js/answer_input.js?025"></script>
+    <script>
+        var current_level = {{ level_id }};
+        var current_chapter = {{ chapter_id }};
+        var current_set = {{ set_id }};
+    </script>
+    {% if graph|length > 2 %}
+        <script src="/static/js/graph.js?011"></script>
+        <script src="https://www.desmos.com/api/v0.6/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"
+                async></script>
+    {% endif %}
 {% endblock %}

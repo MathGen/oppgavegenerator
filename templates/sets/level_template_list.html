@@ -21,7 +21,10 @@
                         Endre tittel
                     </button>
                     <button class="btn btn-default btn-xs btn-edit-kfactor">
-                        Endre progresjonsfaktor
+                        Progresjonsfaktor
+                    </button>
+                    <button class="btn btn-default btn-xs btn-edit-randomness">
+                        Tilfeldighet
                     </button>
                     <span id="save_success" class="glyphicon glyphicon-ok text-success"
                           style="margin-left: 10px;display:none"></span>
@@ -89,6 +92,7 @@
     {% include 'sets/includes/edit_title_modal.html' %}
     {% include 'sets/includes/preview_modal.html' %}
     {% include 'sets/includes/progression_modal.html' %}
+    {% include 'sets/includes/randomness_modal.html' %}
 
 {% endblock %}
 

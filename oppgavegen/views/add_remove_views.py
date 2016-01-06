@@ -3,6 +3,7 @@
 import json
 
 from oppgavegen.view_logic.add_remove import *
+from oppgavegen.models import User
 
 
 def new_set_view(request, set_name='Navn på sett'):
@@ -156,27 +157,30 @@ def copy_set_as_requirement(request,set_id):
 
     return HttpResponse(msg)
 
+
+def update_set_view(request):
+    msg = 'Failed update of set'
+    if request.method == 'POST':
+        form = request.POST
+        title = form['title']
+        order = form['order']
+        password = form['password']
+        set_id = int(form['set_id'])
+        set = Set.objects.get(pk=set_id)
+        msg = update_set(set, title, order, password, request.user)
+
+    return HttpResponse(msg)
+
+
 def update_chapter_view(request):
-    msg = 'Noe gikk galt'
+    msg = 'Failed update of chapter'
     if request.method == 'POST':
         form = request.POST
         title = form['title']
         order = form['order']
         chapter_id = int(form['chapter_id'])
         chapter = Chapter.objects.get(pk=chapter_id)
-        msg = update_chapter_or_set(chapter, title, order, request.user)
-    return HttpResponse(msg)
-
-def update_set_view(request):
-    msg = 'Noe gikk galt'
-    if request.method == 'POST':
-        form = request.POST
-        title = form['title']
-        order = form['order']
-        set_id = int(form['set_id'])
-        set = Set.objects.get(pk=set_id)
-        msg = update_chapter_or_set(set, title, order, request.user)
-
+        msg = update_chapter(chapter, title, order, request.user)
     return HttpResponse(msg)
 
 
@@ -186,9 +190,11 @@ def update_level_view(request):
         form = request.POST
         title = form['title']
         k_factor = form['k_factor']
+        k_factor_template = form['k_factor_template']
+        randomness = form['randomness']
         level_id = int(form['level_id'])
         level = Level.objects.get(pk=level_id)
-        msg = update_level(level, title, request.user, k_factor)
+        msg = update_level(level, title, request.user, k_factor, k_factor_template, randomness)
     return HttpResponse(msg)
 
 def add_user_to_set_view(request):
@@ -197,7 +203,23 @@ def add_user_to_set_view(request):
         if request.method == 'POST':
             form = request.POST
             set_id = int(form['set_id'])
-            msg = add_user_to_set(request.user, set_id)
+            user_password = form['password']
+            msg = add_user_to_set(request.user, user_password, set_id)
+    except Exception as e:
+        print('error')
+        print(e)
+    return HttpResponse(msg)
+
+def remove_user_from_set_view(request):
+    # "admin" function for removing students from requirement-type sets.
+    msg = 'Failed removing user from set'
+    try:
+        if request.method == 'POST':
+            form = request.POST
+            set_id = int(form['set_id'])
+            #request_user_id = request.user.id
+            user_id = int(form['user_id'])
+            msg = remove_user_from_set(user_id, set_id)
     except Exception as e:
         print('error')
         print(e)

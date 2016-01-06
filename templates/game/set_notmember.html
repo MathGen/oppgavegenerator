@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load app_filters %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block panels %}
+
+    <link href="/static/css/game.css?02" rel="stylesheet">
+    <div id="game_screen" class="jumbotron">
+        <div id="set_id" hidden>{{ set.id }}</div>
+        <h2 class="set_title">{{ set.name }}<span id="chapter_title"></span><span id="level_title"></span></h2>
+
+        <div id="game_content">
+
+            {% if set.is_requirement %}
+
+                <p class="alert alert-info text-center">
+                    Ved å bli med i dette settet gir du eieren av settet full tillatelse til å se ditt fulle navn
+                    som du registrerte deg med, samt din framdrift.
+                </p>
+
+            {% endif %}
+
+            {% if set.password_protected %}
+
+                <p class="alert alert-info text-center">
+                    Oppgavesettet krever tilgangskode.
+                </p>
+                <div class="text-center form-group col-lg-12">
+                <input id="joinSetPassword" type="text" class="form-control joinset-password"
+                       placeholder="Tilgangskode" style="width:50%;margin: 0 auto;float:none">
+                </div>
+            {% endif %}
+            <div class="row">
+            <div class="col-lg-12 text-center">
+
+            <button data-set-id="{{ set.id }}" data-user-id="{{ user.id }}" {% if set.password_protected %}
+                    data-pw-required="true" {% else %} data-pw-required="false" {% endif %}
+                    class="btn btn_add_user_to_set">Bli med i sett</button>
+            </div>
+            </div>
+
+        </div>
+        <div id="game_nav" style="display: none">
+            <a class="btn btn-link"><span class="btn_game_back glyphicon glyphicon-arrow-left"></span></a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        var set_id = {{ set.id }};
+        var password_required = false;
+        {% if set.password_protected %}
+             password_required = true;
+        {% endif %}
+    </script>
+    <script src="/static/js/set_membership_functions.js"></script>
+    {% comment %}
+    Since these graph javascript files add 2 seconds of loading time, i'll comment them out since they're loaded
+    in template_noajax.html if a graph has a graph anyway.
+
+    <script src="/static/js/graph.js?011"></script>
+    <script src="https://www.desmos.com/api/v0.6/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6" async></script>
+    {% endcomment %}
+{% endblock %}
+

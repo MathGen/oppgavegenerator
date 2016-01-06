@@ -558,6 +558,12 @@ ol li.list-group-item {
     border-bottom-left-radius: 0;
 }
 
+.set-url[readonly] {
+    cursor: text;
+    background-color: #fff;
+    opacity: 1;
+}
+
 /**** SLIDERS ****/
 .ui-slider {
     background-color: lightgrey;
@@ -631,4 +637,71 @@ ol li.list-group-item {
 
 .slider_end {
     left: 90%;
+}
+
+.variable-overview-show {
+    position: fixed;
+    right: 0;
+    top: 50px;
+    color: #000;
+    background-color: #fff;
+    cursor: hand;
+}
+
+#draggable-overview {
+    position: fixed !important;
+    right:0;
+    width: auto;
+    height: auto;
+    z-index: 1040;
+}
+
+#variable-overview {
+    font-size: small;
+    width: auto;
+    /*position: fixed;*/
+    right: 0;
+    top: 50px;
+    display: none;
+}
+
+#variable-overview .panel-body {
+    max-height: 650px;
+    overflow-y: scroll;
+}
+
+#variable-overview .btn_calc_edit {
+    position: relative;
+    top: 0;
+    bottom: auto;
+    right: auto;
+    width: auto;
+    height: auto;
+    border-radius: 3px;
+    font-size: 0.80em;
+}
+
+#variable-overview .mq-math-mode {
+    font-size: 1.5em;
+    /*line-height: 5px;*/
+}
+
+#variable-overview .input_field {
+    margin-left: 5px;
+    margin-top: 5px;
+    /* line-height: 5px; */
+}
+
+#variable-overview a {
+    color: #000;
+    text-decoration: none;
+}
+
+#variable-overview hr {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.overview-calc-entry {
+    background-color: #eff4ed;
 }

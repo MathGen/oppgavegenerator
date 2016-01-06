@@ -3,6 +3,7 @@ var number_of_answers = "";
 var num_boxx = 0;
 
 $(document).ready(function () {
+    var submit_button = $('#submit_answer');
     var graph_expressions = $('#get_graph').text();
     if(($('#task_view').text() == "true") && (graph_expressions != "[]") && (graph_expressions != 'None') && (graph_expressions != "")){
         dcg_init_game_graph();
@@ -17,6 +18,7 @@ $(document).ready(function () {
     var w_target = $('#w_target');
     if (String(template_type) == 'multiple') {
         $('.keypad_answer').hide();
+        submit_button.prop('disabled', true);
         var output = $('#get_question').text();
         $('#mathquill_field').append('<div id="mathquill_output" class="static-math output_mathquill">'+output+'</div>');
         var choices = template_specific;
@@ -41,18 +43,22 @@ $(document).ready(function () {
         redraw_mathquill_elements();
     }
     else if (template_type == 'blanks') {
+        //submit_button.prop('disabled', true); // disable answer button
         var output = $('#get_question').text();
         var arr_output = output.split('§');
         for(var i = 0; i < arr_output.length; i++){
             if(i < 1){
-                $('#mathquill_field').append('<div class="input_field"><span id="mathquill_output_'+i+'" class="static-math output_mathquill">'+arr_output[i]+'</span></div><hr/>');
+                $('#mathquill_field').append('<div class="input_field"><span id="mathquill_output_'+i+'" class="static-math output_mathquill" style="width:100%">'+arr_output[i]+'</span></div><hr/>');
             }
             else{
-                $('#mathquill_field').append('<div class="input_field"><span id="mathquill_output_'+i+'" class="static-math output_mathquill">'+arr_output[i]+'</span></div><br/>');
+                $('#mathquill_field').append('<div class="input_field"><span id="mathquill_output_'+i+'" class="static-math output_mathquill" style="display:inline-block;min-width:700px">'+arr_output[i]+'</span></div><br/>');
             }
+            //$('#mathquill_output_'+i).css('display','inline'); // safari fix
             //$('.static-math').addClass('form-control blank_input');
         }
+
         redraw_mathquill_elements();
+        $('.input_field').css('display','inline-block'); // fix for safari
         $('.mq-editable-field').each(function(b){
             $(this).attr('id', 'w_input_mathquill_' + b).addClass('input_blanks');
         });
@@ -71,17 +77,20 @@ $(document).ready(function () {
         });
     }
 
-    $('#submit_answer').click(function (e) {
+    submit_button.click(function (e) {
         e.preventDefault();
         var user_answer = "";
         if (template_type == 'multiple') {
             user_answer = get_radio_value('answer_button');
         }
         else if(template_type == 'blanks'){
+            num_boxx = 0;
             $('#mathquill_field').find('.mq-editable-field').each(function(f){
+                num_boxx += 1;
                 if(f > 0) {
                     user_answer += '§';
                 }
+                console.log(this);
                 user_answer += get_latex_from_mathfield(this);
             });
         }
@@ -124,6 +133,10 @@ $(document).ready(function () {
 
     });
 
+    $(document).on('answer_button').change(function(){
+        submit_button.prop('disabled', false)
+    });
+
     $(document).on('keyup', '.input_mathquill', function(e){
         if(e.keyCode == 13){
             $('#submit_answer').click();
@@ -149,11 +162,12 @@ function answer_validation(){
         }
     }
     if(template_type == 'blanks'){
+        console.log('num boxx = ' + num_boxx);
         for(var bla = 0; bla < num_boxx; bla++){
-            if(get_latex_from_mathfield('#blank_' + bla) == ''){
+            if(get_latex_from_mathfield('#w_input_mathquill_' + bla) == ''){
                 valid = false;
-                $('#blank_' + bla).addClass('select_error');
-                error_message('blank_' + bla, 'Fyll ut!');
+                $('#w_input_mathquill_' + bla).addClass('select_error');
+                error_message('#w_input_mathquill_' + bla, '!');
             }
         }
     }

@@ -91,7 +91,7 @@ class Template(models.Model):
 
     def __str__(self):  # Makes it so that self.question_text shows up instead of topic(object)
         """Returns the question_text field of the object"""
-        return str(self.pk) + ':   ' + self.question_text
+        return str(self.pk) + ': ' + self.question_text
 
     def editor_to_creator(self):
         """ Recover old templates without editor to set editor to creator """
@@ -109,10 +109,11 @@ class Level(models.Model):
     k_factor_template = models.PositiveIntegerField(default=8)
     offset = models.IntegerField(default=0, null=True, blank=True)  # Offset for the level.
     copy = models.BooleanField(default=False)
+    randomness = models.FloatField(default=0.50)
 
     def __str__(self):  # return self.name instead of level-object
         """Returns the level name"""
-        return str(self.pk) + ':   ' + self.name
+        return str(self.pk) + ': ' + self.name
 
 
 class Chapter(models.Model):
@@ -128,7 +129,7 @@ class Chapter(models.Model):
 
     def __str__(self):  # Makes it so that self.name shows up instead of set(object)
         """Returns the chapter name"""
-        return str(self.pk) + ':   ' + self.name
+        return str(self.pk) + ': ' + self.name
 
 
 class Set(models.Model):
@@ -143,6 +144,8 @@ class Set(models.Model):
     users = models.ManyToManyField(User, blank=True, related_name='sets_joined')
     is_public = models.BooleanField(default=False) # Set by a teacher when a Set is ready to be played by students
     is_requirement = models.BooleanField(default=False)
+    password_protected = models.BooleanField(default=False)
+    password = models.CharField(max_length=20, blank=True)
 
     def __str__(self):  # Makes it so that self.name shows up instead of set(object)
         """Returns the set name"""

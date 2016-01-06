@@ -3,9 +3,11 @@
 {% load app_filters %}
 {% block head %}<link href="/static/css/jquery-ui.min.css" rel="stylesheet">{% endblock %}
 {% block js %}
+    <script src="/static/js/diff_match_patch.js?02"></script>
     <script src="/static/js/graph.js?011"></script>
     <script src="/static/js/jquery-ui.min.js"></script>
     <script src="https://www.desmos.com/api/v0.6/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6" async></script>
+    <script src="/static/js/editor_variable_drawer.js"></script>
 {% endblock %}
 
 {% block panels %}
@@ -33,6 +35,8 @@
     <div hidden id="get_graph_color">{{ graph_color }}</div>
     <div hidden id="get_graph_settings">{{ graph_settings }}</div>
     {% endif %}
+
+    {% include 'includes/variable_overview.html' %}
 
     <!-- PANELS -->
     <!--QUESTION PANEL-->
@@ -260,6 +264,7 @@
                 <div class="col-md-4">
                     <div class="pull-right btn-group">
                         {% if template_id %}
+                        <button id="o_btn_delete_template" class="btn btn-danger" data-toggle="modal" data-target="#delete_template_modal">Slett mal</button>
                         <button id="o_btn_save_new" class="btn btn-default" type="submit">Lagre som ny mal</button>
                         {% endif %}
                         <button id="o_btn_save" class="btn btn-primary" type="submit">
@@ -521,6 +526,26 @@
             </section>
         </div>
     </div>
+    {% if template_id %}
+    <div id="delete_template_modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Slette oppgavemal?</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Vennligst bekreft at du vil slette denne oppgavemalen.
+                    Denne slettingen er permanent og malen vil ikke kunne hentes tilbake.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Avbryt</button>
+                    <a href="{% url 'delete_template' template_id %}" type="button" class="btn btn-danger">Slett</a>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    {% endif %}
 
-    <script src="/static/js/diff_match_patch.js?02"></script>
 {% endblock %}

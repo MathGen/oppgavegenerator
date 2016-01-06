@@ -1,0 +1,27 @@
+{# LEVEL EDITOR SET CHAPTERS LIST SNIPPET - INCLUDED IN user_set_list.html #}
+
+{% for student in students %}
+    <div class="panel panel-default editable-object" data-object_id="{{ student.id }}">
+
+        <div class="panel-body">
+            <strong class="text-left">
+                <span class="glyphicon glyphicon-user"></span>
+                {{ student.first_name }} {{ student.last_name }} ({{ student.username }})
+            </strong>
+
+
+            <div class="btn-group btn-group-sm pull-right object-options" role="group">
+                <button class="btn btn-danger btn-remove-student" data-object-type="student"
+                        data-object-id="{{ student.id }}">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+{% empty %}
+    <div class="alert alert-info text-center">
+        Ingen brukere i settet enda.
+    </div>
+{% endfor %}

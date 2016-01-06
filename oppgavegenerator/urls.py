@@ -42,11 +42,12 @@ urlpatterns = patterns('',
     url(r'^edit/(\d+)/$', edit_template, name='edit_template'),
     url(r'^submit/', submit, name='submit'), # JS: gen.js
 
-    # Template overview and copying
+    # Template overview and copy/delete
     url(r'^templates/$', TemplatesListView.as_view(), name='all_templates_list'),
     url(r'^user/templates/$', UserTemplatesListView.as_view(), name='user_templates_list'),
     url(r'^user/templates/nocopies/$', UserTemplatesListViewNoCopies.as_view(), name='user_original_templates_list'),
     url(r'^template/(\d+)/copy/next/([\w ]+)/$', confirm_template_copy, name='confirm_template_copy'),
+    url(r'^template/(\d+)/delete/$', delete_template, name='delete_template'),
 
     # Problem generation
     url(r'^task/$', task, name='task_by_user_rating'),
@@ -66,7 +67,9 @@ urlpatterns = patterns('',
     url(r'^game/(\d+)/chapters/$', chapters, name='chapters'), # JS: game.js
     url(r'^game/template/$', get_template, name='get_template'), # JS: game.js
     url(r'^game/(\d+)/answer/$', get_solution, name='get_answer'), # JS: game.js
-    url(r'^add-user-to-set/', add_user_to_set_view, name='add_user_to_set'), # JS: game.js
+    url(r'^add-user-to-set/', add_user_to_set_view, name='add_user_to_set'), # JS: set_membership_functions.js
+    url(r'^remove-user-from-set/', remove_user_from_set_view, name='remove_user_from_set'), #JS: set_membership_funcs.js
+
 
     # JS: set_edit_functions.js, search_functions.js
     url(r'^template/([\w ]+)/preview/$', preview_template, name='preview_template'),
@@ -74,6 +77,7 @@ urlpatterns = patterns('',
     # Sets, chapters and level management urls
     url(r'^user/sets/$', UserSetListView.as_view(), name='user_sets'),
     url(r'^set/(\d+)/chapters/$', SetChapterListView.as_view(), name='chapters_by_set'),
+    url(r'^set/(\d+)/useradmin/$', set_students_admin, name='students_by_set'),
     url(r'^set/(\d+)/setpublic/$', set_public, name='set_to_public'),
     url(r'^set/(\d+)/setprivate/$', set_private, name='set_to_private'),
     url(r'^set/(\d+)/stats/$', set_stats_view, name='set_stats'),

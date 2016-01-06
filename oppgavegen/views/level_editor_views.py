@@ -1,10 +1,11 @@
 from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 
 from oppgavegen.models import Set, Chapter, Level
-from oppgavegen.views.login_required_mixin import LoginRequiredMixin
+from oppgavegen.views.mixins import LoginRequiredMixin
 from oppgavegen.view_logic.current_work import set_current_set, set_current_chapter, set_current_level
+from django.contrib.sites.models import Site
 
 
 class UserSetListView(LoginRequiredMixin, ListView):
@@ -34,6 +35,7 @@ class SetChapterListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(SetChapterListView, self).get_context_data(**kwargs)
         context['set'] = self.set
+        context['site'] = Site.objects.last()
         set_current_set(self.request.user, self.set)
         return context
 
@@ -102,3 +104,15 @@ class LevelsTemplatesListView(LoginRequiredMixin, ListView):
         context['k_factor'] = self.level.k_factor
         context['k_factor_template'] = self.level.k_factor_template
         return context
+
+@login_required
+def set_students_admin(request, set_id):
+    # get an editable list of students in a set
+    set = Set.objects.get(id=set_id)
+    if set.editor == request.user and set.is_requirement:
+        students = set.users.all().order_by('last_name')
+        goto = render(request, 'sets/set_students_admin.html', {'set': set, 'students': students})
+    else:
+        goto = redirect('index')
+    return goto
+

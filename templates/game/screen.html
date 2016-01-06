@@ -2,11 +2,8 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block panels %}
-{% block js %}
-    <script src="/static/js/graph.js?011"></script>
-    <script src="https://www.desmos.com/api/v0.6/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6" async></script>
-{% endblock %}
-<script src="/static/js/game_functions.js?031"></script>
+
+
 <link href="/static/css/game.css?02" rel="stylesheet">
 <div id="game_screen" class="jumbotron">
     <div id="set_id" hidden>{{ set_id }}</div>
@@ -17,4 +14,15 @@
         <a class="btn btn-link"><span class="btn_game_back glyphicon glyphicon-arrow-left"></span></a>
     </div>
 </div>
+{% endblock %}
+
+{% block js %}
+    {% comment %}
+    Since these graph javascript files add 2 seconds of loading time, i'll comment them out since they're loaded
+    in template_noajax.html if a graph has a graph anyway.
+
+    <script src="/static/js/graph.js?011"></script>
+    <script src="https://www.desmos.com/api/v0.6/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6" async></script>
+    {% endcomment %}
+    <script src="/static/js/game_functions.js?031"></script>
 {% endblock %}
