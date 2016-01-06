@@ -1075,7 +1075,8 @@ function init_new_calculation(variable, id){
  * Update all calculations to avoid dependencies giving wrong results using the "unchanged" dictionary
  * this is called every time a calculation is edited.
  * Given C = A + B
- * Updating A should update C since C originally meant (the content of A) + (content of B)
+ * Updating A should update C since C originally meant (the content of A) + (content of B) in the dictionary
+ * submitted to the backend.
  * this function updates C to (the new content of A) + (new content of B)
  * */
  function update_calculations() {
