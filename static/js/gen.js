@@ -561,12 +561,27 @@ $(document).ready(function() {
 	// Domain input-insertion to advanced settings
 	$('#opt_domain_from').on('input', function(){
 		$('.opt_domain_from').val($('#opt_domain_from').val());
+        build_overview();
 	});
 	$('#opt_domain_to').on('input', function(){
 		$('.opt_domain_to').val($('#opt_domain_to').val());
+        build_overview();
 	});
 	$('#opt_domain_dec').on('input', function(){
-		$('.opt_domain_dec').val($('#opt_domain_dec').val());
+		//$('.opt_domain_dec').val($('#opt_domain_dec').val());
+        build_overview();
+	});
+    $('.opt_domain_from').on('input', function(){
+		//$('.opt_domain_from').val($('#opt_domain_from').val());
+        build_overview();
+	});
+	$('.opt_domain_to').on('input', function(){
+		//$('.opt_domain_to').val($('#opt_domain_to').val());
+        build_overview();
+	});
+	$('.opt_domain_dec').on('input', function(){
+		//$('.opt_domain_dec').val($('#opt_domain_dec').val());
+        build_overview();
 	});
 
 	// Open condition modal
