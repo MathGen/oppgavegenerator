@@ -8,20 +8,26 @@
 $(document).ready(function () {
     build_overview();
     $('#draggable-overview').draggable();
-    $('#variable-overview').resizable({handles: "n,s,e,w"})
+    $('#variable-overview').resizable({
+        handles: "n,s,e,w",
+        minWidth: 165
+    })
 });
 
 var overview = $('#variable-overview');
 var calc_overview = $('#calculations_overview');
 var vars_overview = $('#vars_overview');
+var centered_content = $('#centeredContent');
 
 $('.variable-overview-show').click(function () {
+    centered_content.css('margin-left', '10px');
     overview.show('slide', {'direction': 'right'});
     redraw_mathquill_elements();
     refresh_all_char_colors()
 });
 
 $('.variable-overview-close').click(function () {
+    centered_content.css('margin', 'auto');
     overview.hide('slide', {'direction': 'right'});
 });
 
