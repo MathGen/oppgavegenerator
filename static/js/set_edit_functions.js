@@ -321,11 +321,11 @@ function get_content_order() {
 function init_k_factor_sliders() {
     var k_value_user = $('#k_factor_user_amount').text();
     if (k_value_user == '') {
-        k_value_user = 8 }
+        k_value_user = 32 }
 
     var k_value_template = $('#k_factor_template_amount').text();
     if (k_value_template == '') {
-        k_value_template = 8 }
+        k_value_template = 32 }
 
     $('#k_factor_user_slider').slider({
         value: k_value_user,
