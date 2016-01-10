@@ -105,8 +105,8 @@ class Level(models.Model):
     creator = models.ForeignKey(User, blank=True, null=True, related_name='levels_created')
     editor = models.ForeignKey(User, blank=True, null=True, related_name='levels_edited')  # Editor of template
     creation_date = models.DateTimeField('date created', blank=True, null=True, auto_now_add=True)  # Date and time of creation
-    k_factor = models.PositiveIntegerField(default=8, null=True, blank=True)  # Decides how fast a user progress
-    k_factor_template = models.PositiveIntegerField(default=8)
+    k_factor = models.PositiveIntegerField(default=32, null=True, blank=True)  # Decides how fast a user progress
+    k_factor_template = models.PositiveIntegerField(default=32)
     offset = models.IntegerField(default=0, null=True, blank=True)  # Offset for the level.
     copy = models.BooleanField(default=False)
     randomness = models.FloatField(default=0.50)
