@@ -12,7 +12,7 @@ def new_chapter(chapter_name, user):
 
 
 def new_level(level_name, user):
-    level = Level(name=level_name, creator=user, editor=user, creation_date=datetime.now(), k_factor=3, copy=False)
+    level = Level(name=level_name, creator=user, editor=user, creation_date=datetime.now(), copy=False)
     level.save()
     return level
 
