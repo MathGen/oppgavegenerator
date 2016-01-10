@@ -354,7 +354,7 @@ function init_randomness_slider() {
     var randomness = $('#randomness_amount').text();
     if (randomness == '') {
         randomness = 0.5 }
-
+// test
     $('#randomness_slider_handle').slider({
         value: randomness,
         min: 0,
