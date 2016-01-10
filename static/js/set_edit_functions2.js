@@ -359,7 +359,7 @@ function init_randomness_slider() {
         value: randomness,
         min: 0,
         max: 1,
-        step: 0.05,
+        step: 0.1,
         slide: function (event, ui) {
             $('#randomness_amount').text(ui.value);
         }
