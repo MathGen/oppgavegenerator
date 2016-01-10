@@ -329,11 +329,13 @@ def update_chapter_or_set(set_or_chapter, title, order, user):
         msg = 'Successful update'
     return msg
 
-def update_level(level, title, user, k_factor):
+def update_level(level, title, user, k_factor, k_factor_template, randomness):
     msg = 'Failed update.'
     if level.editor == user:
         level.name = title
         level.k_factor = k_factor
+        level.k_factor_template = k_factor_template
+        level.randomness = randomness
         level.save()
         msg = 'Successful update'
     return msg
