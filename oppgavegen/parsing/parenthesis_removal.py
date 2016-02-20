@@ -15,7 +15,7 @@ def parenthesis_removal(s):
     # empty text fields sometimes get into equations, this will split the equation and result in incorrect
     # parenthesis removal. Which is why the empty text fields are replaced.
     split_list = ['=', '§', '\\arrow', '\\and', '\\or', '\\union', '\\intersection', '\\rightarrow', '\\leftarrow'
-                  '\\leftrightarrow',]# '.'] #fixme: the '.' causes parenthesis removal to not work for floating point
+                  '\\leftrightarrow', '<', '>', '\\le', '\\ge', '.']
     replace_dict = make_replace_text_dict(s) # unsure of other cases where a "." could occur except end of sentences
     print('b<<')
     print(replace_dict)
@@ -44,7 +44,7 @@ def parenthesis_remover(s):
     s = s.replace('(+', '(')
     s = s.replace('(+', '(')
 
-    pairs = find_pairs(s, '(', ')')
+    pairs = find_parenthesis_pairs(s, '(', ')')
     removable = []
     for pair in pairs:
         temp_s =  remove_all_from_list(s, pair)
@@ -91,6 +91,47 @@ def remove_character(s, position):
     """Removes the character at the given position ie. 'abc', 1 -> 'ac'"""
     s = s[0:position] + s[position+1:len(s)]
     return s
+
+
+def find_parenthesis_pairs(s, one, two):
+    """
+    :param s: The string to look for pairs in.
+    :param one: The first of a pair.
+    :param two: The second of a pair.
+    :return: returns a list of pairs.
+    """
+    counter = 0
+    pairs = []
+    for i in range(0, len(s)):
+        if s[i] == one:
+            # START CODE INSERTED BY SIEBE
+            # this code checks if the last non-whitespace before the parenthesis was '\cdot'
+            # and the first non-whitespace after the parenthesis is '-'
+            # in that case, there should always be a parenthesis (as *- is not desirable)
+            prev = ' '
+            cdot_finder = ''
+            j = i
+            while j > 4 and prev == ' ':
+                prev = s[j - 1]
+                cdot_finder = s[j-5:j]
+                j -= 1
+            next = ' '
+            j = i
+            while j < len(s)-2 and next == ' ':
+                next = s[j + 1]
+                j += 1
+            if not (cdot_finder == '\cdot' and next == '-'):
+                # END CODE INSERTED BY SIEBE
+                for j in range(i+1, len(s)):
+                    if s[j] == two and counter == 0:
+                        pairs.append([i, j])
+                        counter = 0
+                        break
+                    if s[j] == one:
+                        counter += 1
+                    elif s[j] == two:
+                        counter -= 1
+    return pairs
 
 
 def find_pairs(s, one, two):
@@ -246,11 +287,19 @@ def splitter(s, split_list):
     split_indexes = []
     new_list = []
     for split in split_list:
-       for i in range(len(s)):
-           if s.startswith(split, i):
-               split_indexes.append(i)
-               split_dict[i] = split
-
+        for i in range(len(s)):
+            if split != '.' and s.startswith(split, i):
+                split_indexes.append(i)
+                split_dict[i] = split
+    #START ADDED BY SIEBE to avoid parentheses when a period (.) is used, or when a float is used.
+    for i in range(len(s)-1):
+        if (s[i] == '.' and s[i+1] not in "0123456789"): # period is used, not in a float
+            split_indexes.append(i)
+            split_dict[i] = '.'
+    if (s[len(s)-1] == '.'):        # period is used at end of sentence
+        split_indexes.append(len(s)-1)
+        split_dict[len(s)-1] = '.'
+    #END ADDED BY SIEBE
     start = 0
     split_indexes.sort()
     for split_index in split_indexes:

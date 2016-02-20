@@ -71,8 +71,9 @@ def make_holes(hole_dict, fill_in):
     """
     holes_to_replace = list(hole_dict.values())
     for s in holes_to_replace:
-        fill_in = fill_in.replace('@xxxx@'+s, '\\MathQuillMathField{}'+'@xxxx@')
-    fill_in = fill_in.replace('@xxxx@', '')
+        fill_in = fill_in.replace('@xxxx@'+s+'@xxxx@', '\\MathQuillMathField{}') # BY SIEBE
+        #fill_in = fill_in.replace('@xxxx@'+s, '\\MathQuillMathField{}' + '@xxxx@') # BY SIEBE
+    #fill_in = fill_in.replace('@xxxx@', '') # REMOVED BY SIEBE
     return_dict = {'fill_in': fill_in, 'holes_replaced': holes_to_replace}
     return return_dict
 
@@ -106,5 +107,17 @@ def get_fillin_answers(s):
     answers = []
     for x in range(0, len(s)):
         if x % 2 == 1:
+            #START BY SIEBE
+            if s[x][-1]=='{' or s[x][-1]=='}':
+                if s[x][-2]=='{' or s[x][-2]=='}':
+                    s[x] = s[x][:-2]
+                else:
+                    s[x] = s[x][:-1]
+            if s[x][0]=='{' or s[x][0]=='}':
+                if s[x][1]=='{' or s[x][1]=='}':
+                    s[x] = s[x][2:]
+                else:
+                    s[x] = s[x][1:]
             answers.append(s[x])
+            #END BY SIEBE
     return array_to_string(answers)

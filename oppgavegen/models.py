@@ -32,9 +32,9 @@ class Template(models.Model):
     """Stores information for Templates"""
     name = models.CharField(max_length=50, blank=True, default='Uten Tittel') # The template name. Main identifier for teacher users.
     tags = models.ManyToManyField(Tag, blank=True)  # Template tags. Tags should describe content of math problems i.e "arithmetic"
-    question_text = models.CharField(max_length=2000)  # Math expression or text question ex. "Solve: ax = b + cx"
+    question_text = models.CharField(max_length=10000)  # Math expression or text question ex. "Solve: ax = b + cx"
     solution = models.CharField(max_length=10000)  # Step by step solution to the answer
-    answer = models.CharField(max_length=1000)  # The answer of the question.
+    answer = models.CharField(max_length=10000)  # The answer of the question.
     creator = models.ForeignKey(User, blank=True, null=True, related_name='templates_created')  # User ID of creator of template
     editor = models.ForeignKey(User, blank=True, null=True, related_name='templates_edited')  # Editor of template
 
@@ -52,13 +52,13 @@ class Template(models.Model):
     difficulty_blanks = models.PositiveSmallIntegerField(default=14, blank=True)
 
 
-    choices = models.CharField(max_length=700, blank=True, null=True)  # Holds the choices for multiple choice.
+    choices = models.CharField(max_length=10000, blank=True, null=True)  # Holds the choices for multiple choice.
     dictionary = models.CharField(max_length=10000, blank=True, null=True, default="")
     conditions = models.CharField(max_length=10000, blank=True, null=True, default="")
     fill_in = models.CharField(max_length=10000, blank=True, null=True, default="")
     valid_flag = models.BooleanField(default=False, choices=valid_choices)
-    disallowed = models.CharField(max_length=5000, blank=True, null=True, default="")
-    required = models.CharField(max_length=5000, blank=True, null=True, default="")
+    disallowed = models.CharField(max_length=10000, blank=True, null=True, default="")
+    required = models.CharField(max_length=10000, blank=True, null=True, default="")
     multiple_support = models.BooleanField(default=False)  # Denotes whether the template supports multiple choice.
     fill_in_support = models.BooleanField(default=False)  # Denotes whether the template supports fill in the blanks.
 
@@ -72,13 +72,13 @@ class Template(models.Model):
     used_variables = models.CharField(max_length=200, blank=True, null=True)
     question_text_latex = models.CharField(max_length=200, blank=True, null=True)
     solution_latex = models.CharField(max_length=10000, blank=True, null=True)
-    answer_latex = models.CharField(max_length=200, blank=True, null=True)
+    answer_latex = models.CharField(max_length=1000, blank=True, null=True)
     choices_latex = models.CharField(max_length=10000, blank=True, null=True)
 
     conditions_latex = models.CharField(max_length=10000, blank=True, null=True, default="")
     fill_in_latex = models.CharField(max_length=10000, blank=True, null=True, default="")
-    calculation_ref = models.CharField(max_length=1000, blank=True, null=True)
-    unchanged_ref = models.CharField(max_length=1000, blank=True, null=True)
+    calculation_ref = models.CharField(max_length=10000, blank=True, null=True)
+    unchanged_ref = models.CharField(max_length=10000, blank=True, null=True)
     unchanged_required = models.CharField(max_length=10000, blank=True, null=True)
     unchanged_disallowed = models.CharField(max_length=10000, blank=True, null=True)
     unchanged_graph = models.CharField(max_length=4500, null=True, blank=True)
@@ -123,7 +123,7 @@ class Chapter(models.Model):
     creator = models.ForeignKey(User, blank=True, null=True, related_name='chapters_created')
     editor = models.ForeignKey(User, blank=True, null=True, related_name='chapters_edited')  # Editor of template
     creation_date = models.DateTimeField('date created', blank=True, null=True, auto_now_add=True)  # Date and time of creation
-    order = models.CharField(max_length=400, default='', blank=True) #CSV list of the order of levels.
+    order = models.CharField(max_length=1000, default='', blank=True) #CSV list of the order of levels.
     copy = models.BooleanField(default=False)
     in_requirement_set = models.BooleanField(default=False)
 
@@ -139,7 +139,7 @@ class Set(models.Model):
     creator = models.ForeignKey(User, blank=True, null=True, related_name='sets_created')
     editor = models.ForeignKey(User, blank=True, null=True, related_name='sets_edited')  # Editor of set
     creation_date = models.DateTimeField('date created', blank=True, null=True)  # Date and time of creation
-    order = models.CharField(max_length=400, default='')
+    order = models.CharField(max_length=1000, default='')
     copy = models.BooleanField(default=False)
     users = models.ManyToManyField(User, blank=True, related_name='sets_joined')
     is_public = models.BooleanField(default=False) # Set by a teacher when a Set is ready to be played by students

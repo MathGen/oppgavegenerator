@@ -324,9 +324,10 @@
                     break;
                 case -1: 	// Old text
                     if(b[g-1] == '^') {
-                        b[g] = '<span>@xxxx@' + '{' + j + '}' + "@xxxx@</span>";
+                            b[g] = '<span>@xxxx@' + '{' + j + '}' + "@xxxx@</span>";
+                          // b[g] = '<span>' + '{' + '@xxxx@' + j + "@xxxx@" + '}' + "</span>"; // BY SIEBE - NOT SURE IF CORRECT
                     }
-                    else {
+                    else if(j != '{' && j != '}'){              // BY SIEBE - reason: fill in the blanks answer should never be a parenthesis anyway. This solves problems where the extra parenthesis which is put in for an exponential function is noted as a difference, such that it is replaced in a fill-in-the-blanks exercise
                         b[g] = '<span>@xxxx@' + j + "@xxxx@</span>"; //'<del style="background:#ffe6e6;">@boxx@' + j + "@boxx@</del>";
                     }
                     break;

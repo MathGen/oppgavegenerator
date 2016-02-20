@@ -1207,6 +1207,8 @@ function convert_variables(latex){
 						'Q' : dict_calc[16],'R' : dict_calc[17],'S' : dict_calc[18],'T' : dict_calc[19],'U' : dict_calc[20], 'V' : dict_calc[21]};
 	var la2 = '';
 	// Iteration for adding required {} to single exponents and subscripts.
+
+/*
 	for(var j = 0; j < la.length; j++){
 		if(la[j] == '^' || la[j] == '_'){
 			if(la[j+1] != '{' && la[j+1] != '@'){
@@ -1217,6 +1219,9 @@ function convert_variables(latex){
 			}
 		}
 	}
+	// REMOVED BY SIEBE
+*/
+
 	// Iteration for converting variables to computable values, and fixing conflicts with latex-commands.
 	for(var i = 0; i < la.length; i++) {
 		try {
