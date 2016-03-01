@@ -1209,17 +1209,16 @@ function convert_variables(latex){
 	// Iteration for adding required {} to single exponents and subscripts.
 
 
-	for(var j = 0; j < la.length; j++) {
-		if (la[j] == '^' || la[j] == '_') {
-			if (la[j + 1] != '{' && la[j + 1] != '@') {
-				la = la.substring(0, j + 1) + '{' + la[j + 1] + '}' + la.substring(j + 2, la.length);
+	for(var j = 0; j < la.length; j++){
+		if(la[j] == '^' || la[j] == '_'){
+			if(la[j+1] != '{' && la[j+1] != '@'){
+				la = la.substring(0, j+1) + '{' + la[j+1] + '}' + la.substring(j+2, la.length);
 			} // Workaround for fill in. this fixes x^2 -> x^{@}xxxx@ to x^{@xxxx@}.
-			else if (la[j + 1] == '@' && la[j + 2] == 'x' && la[j + 8] == '@') {  //find the opening @xxxx@, insert { before.
-				la = la.substring(0, j + 1) + '{' + la.substring(j + 1, j + 14) + '}' + la.substring(j + 14, la.length);
+			else if(la[j+1] == '@' && la[j+2] == 'x' && la[j+3] == 'x' && la[j+4] == 'x' && la[j+5] == 'x' && la[j+6] == '@' && la[j+8] == '@' && la[j+9] == 'x') {  //find the opening @xxxx@, insert { before.
+				la = la.substring(0, j+1) + '{' + la.substring(j+1, j+14) + '}'+ la.substring(j+14, la.length);
 			}
 		}
 	}
-
 
 	// Iteration for converting variables to computable values, and fixing conflicts with latex-commands.
 	for(var i = 0; i < la.length; i++) {

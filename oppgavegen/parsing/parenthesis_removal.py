@@ -15,7 +15,7 @@ def parenthesis_removal(s):
     # empty text fields sometimes get into equations, this will split the equation and result in incorrect
     # parenthesis removal. Which is why the empty text fields are replaced.
     split_list = ['=', '§', '\\arrow', '\\and', '\\or', '\\union', '\\intersection', '\\rightarrow', '\\leftarrow'
-                  '\\leftrightarrow', '<', '>', '\\le', '\\ge', '.']
+                  '\\leftrightarrow', '<', '>', '\\le', '\\ge', '.', ',', '\\inf', '[', ']']
     replace_dict = make_replace_text_dict(s) # unsure of other cases where a "." could occur except end of sentences
     print('b<<')
     print(replace_dict)
@@ -288,7 +288,7 @@ def splitter(s, split_list):
     new_list = []
     for split in split_list:
         for i in range(len(s)):
-            if split != '.' and s.startswith(split, i):
+            if split != ',' and split != '.' and s.startswith(split, i):
                 split_indexes.append(i)
                 split_dict[i] = split
     #START ADDED BY SIEBE to avoid parentheses when a period (.) is used, or when a float is used.
@@ -296,9 +296,17 @@ def splitter(s, split_list):
         if (s[i] == '.' and s[i+1] not in "0123456789"): # period is used, not in a float
             split_indexes.append(i)
             split_dict[i] = '.'
+        elif (s[i] == ',' and s[i+1] not in "0123456789"): # comma is used, not in a float
+            split_indexes.append(i)
+            split_dict[i] = ','
+
     if (s[len(s)-1] == '.'):        # period is used at end of sentence
         split_indexes.append(len(s)-1)
         split_dict[len(s)-1] = '.'
+    elif (s[len(s)-1] == ','):        # period is used at end of sentence
+        split_indexes.append(len(s)-1)
+        split_dict[len(s)-1] = ','
+
     #END ADDED BY SIEBE
     start = 0
     split_indexes.sort()
