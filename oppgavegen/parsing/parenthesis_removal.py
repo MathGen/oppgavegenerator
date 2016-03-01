@@ -12,6 +12,7 @@ def parenthesis_removal(s):
     :return: returns the string with redundant parenthesis removed
     """
     s = s.replace('\\text{ }', ' ')
+    s = s.replace('\ ', '')
     # empty text fields sometimes get into equations, this will split the equation and result in incorrect
     # parenthesis removal. Which is why the empty text fields are replaced.
     split_list = ['=', '§', '\\arrow', '\\and', '\\or', '\\union', '\\intersection', '\\rightarrow', '\\leftarrow'
@@ -43,14 +44,28 @@ def parenthesis_remover(s):
     s = s.replace('§', '+paragraftegn+')
     s = s.replace('(+', '(')
     s = s.replace('(+', '(')
-
+    s = s.replace(' ', '')
+    #IF EXPRESSION STARTS AND/OR ENDS WITH { OR }, THESE SHOULD BE REMOVED BEFORE MATHEMATICAL COMPARISON (BY SIEBE)
+    r = s
+    if len(r) > 0:
+        if r[0] == '{':
+            r=r[1:]
+        if r[-1] == '}':
+            r=r[:-1]
     pairs = find_parenthesis_pairs(s, '(', ')')
     removable = []
     for pair in pairs:
         temp_s =  remove_all_from_list(s, pair)
+        #IF EXPRESSION STARTS AND/OR ENDS WITH '{' OR '}', THESE SHOULD BE REMOVED BEFORE MATHEMATICAL COMPARISON (BY SIEBE)
+        temp_r=temp_s
+        if temp_r[0] == '{':
+            temp_r=temp_r[1:]
+        if temp_r[-1] == '}':
+            temp_r=temp_r[:-1]
+        helpvar = False # by siebe. Used to enable multiple tests in sympy.
         try:
-            #  Note: +0 is added so the string never ends with + (which would stop sympy)
-            if  parse_using_sympy(latex_to_sympy(temp_s) + '+0' + '==' + latex_to_sympy(s) + '+0'):
+            if (parse_using_sympy(latex_to_sympy(temp_s) + '+0' + '==' + latex_to_sympy(s) + '+0')):
+                helpvar = True
                 removable.append(pair[0])
                 removable.append(pair[1])
         except Exception as e:
@@ -58,7 +73,32 @@ def parenthesis_remover(s):
             print(e)
             print(s)
             print('^ string that failed. end of exception.')
-
+        # ADDED BY SIEBE: If an expression starts or ends with '{' or '}', these should be removed before mathematically comparing the expressions with and without parenthesis pairs ().
+        if helpvar == False:
+            try:
+                if (parse_using_sympy(latex_to_sympy(temp_r) + '+0' + '==' + latex_to_sympy(r) + '+0')):
+                    removable.append(pair[0])
+                    removable.append(pair[1])
+                    helpvar = True
+            except Exception as e:
+                print('exception in parenthesis remover:')
+                print(e)
+                print(s)
+                print('^ string that failed. end of exception.')
+        # ADDED BY SIEBE: If an expression contains '}' but no opening '{' and proceeds after '}', the rest of the expression should be removed before mathematically comparing the expressions with and without parenthesis pairs ().
+        if helpvar == False:
+            r = r.split('}')[0]
+            temp_r = temp_r.split('}')[0]
+            try:
+                if (parse_using_sympy(latex_to_sympy(temp_r) + '+0' + '==' + latex_to_sympy(r) + '+0')):
+                    removable.append(pair[0])
+                    removable.append(pair[1])
+                    helpvar = True
+            except Exception as e:
+                print('exception in parenthesis remover:')
+                print(e)
+                print(s)
+                print('^ string that failed. end of exception.')
     s = remove_all_from_list(s, removable)
     #s = replace_key_with_value(s, replace_dict)
     s = s.replace('+parenthesisleft+', '(')
