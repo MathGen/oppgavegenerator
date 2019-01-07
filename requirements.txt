@@ -2,7 +2,7 @@ Django==1.8.19
 django-bootstrap3==6.1.0
 django-admin-bootstrapped==2.5.4
 django-registration-redux==1.2
-gunicorn==19.2.1
+gunicorn==19.5.0
 sympy==0.7.6
 whoosh==2.7.0
 django-haystack==2.4.0
